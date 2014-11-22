@@ -2,6 +2,7 @@ package com.matelau.junior.centsproject.Controllers;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +19,10 @@ import com.matelau.junior.centsproject.R;
 public class MainActivity extends Activity {
 //    Hex Color #884412
     private EditText _editText;
+    private String classLogTag = "MainActivity";
+    private String _city;
+    private String _state;
+    private String _occupation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,18 +54,39 @@ public class MainActivity extends Activity {
 
     private void handleSubmit(){
         String searchText = _editText.getText().toString();
+        Log.v(classLogTag, "handleSubmit: "+ searchText);
         if(validSubmission(searchText)){
             CharSequence cs = "Seaching for: "+ searchText;
             Toast.makeText(getApplicationContext(), cs  , Toast.LENGTH_SHORT).show();
+            //TODO call glassdoor/jobs api
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "Invalid Search", Toast.LENGTH_SHORT).show();
         }
 
 
     }
 
     private boolean validSubmission(String searchText) {
-        //TODO - insure searchText is of the form City, State, Occupation
+        //insure searchText is of the form City, State, Occupation
         String value = searchText.replace(',', ' ');
-        return true;
+        String[] tokens = value.split("\\s");
+        //remove extra white spaces
+        String[] cleansedTokens = new String[3];
+        for(int i = 0; i < tokens.length; i++){
+            if(!tokens[i].equals(' '))
+                cleansedTokens[i] = tokens[i];
+        }
+
+        _city = cleansedTokens[0];
+        _state = cleansedTokens[1];
+        _occupation = cleansedTokens[2];
+        if((_city != null) && (_city != "") && (_state != null) && (_state != "") && (_occupation != null) && (_occupation != "")  ) {
+            Log.v(classLogTag, "validSubmission - city: "+ _city+" state: "+ _state+" occupation: "+_occupation );
+            return true;
+        }
+        Log.v(classLogTag, "invalidSubmission");
+       return false;
     }
 
     @Override
