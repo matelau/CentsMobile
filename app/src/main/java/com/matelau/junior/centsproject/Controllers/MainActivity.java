@@ -1,6 +1,7 @@
 package com.matelau.junior.centsproject.Controllers;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ import com.google.gson.reflect.TypeToken;
 import com.matelau.junior.centsproject.Models.Col;
 import com.matelau.junior.centsproject.Models.IndeedQueryResults;
 import com.matelau.junior.centsproject.Models.IndeedService;
+import com.matelau.junior.centsproject.Models.Result;
 import com.matelau.junior.centsproject.R;
 
 import java.io.BufferedReader;
@@ -262,8 +264,13 @@ public class MainActivity extends Activity {
                 @Override
                 public void success(IndeedQueryResults iqr, Response response) {
                     Log.v(classLogTag, "indeed search results: "+ iqr.getResults().size());
-                    //TODO launch activity to create cards from search results
-                    //TODO store results within application
+                    //store results within application
+                    List<Result> jobSearchResultList = iqr.getResults();
+                    CentsApplication.set_jobSearchResultList(jobSearchResultList);
+                    //launch activity to create cards from search results
+                    Intent jobListIntent = new Intent(getApplicationContext(), JobListActivity.class);
+                    startActivity(jobListIntent);
+
 
                 }
 

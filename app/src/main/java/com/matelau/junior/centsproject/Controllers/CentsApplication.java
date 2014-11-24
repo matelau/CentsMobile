@@ -3,6 +3,10 @@ package com.matelau.junior.centsproject.Controllers;
 import android.app.Application;
 import android.content.Context;
 
+import com.matelau.junior.centsproject.Models.Result;
+
+import java.util.List;
+
 import retrofit.RestAdapter;
 
 /**
@@ -12,7 +16,7 @@ public class CentsApplication extends Application{
     private static Context _centsContext;
     private static RestAdapter _gdRestAdapter = new RestAdapter.Builder().setEndpoint("http://api.glassdoor.com/api/api.htm?").build();
     private static RestAdapter _indeedRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("http://api.indeed.com").build();
-
+    private static List<Result> _jobSearchResultList;
     public CentsApplication(){
         _centsContext = this;
     }
@@ -26,5 +30,13 @@ public class CentsApplication extends Application{
 
     public static void set_indeedRestAdapter(RestAdapter _indeedRestAdapter) {
         CentsApplication._indeedRestAdapter = _indeedRestAdapter;
+    }
+
+    public static List<Result> get_jobSearchResultList() {
+        return _jobSearchResultList;
+    }
+
+    public static void set_jobSearchResultList(List<Result> _jobSearchResultList) {
+        CentsApplication._jobSearchResultList = _jobSearchResultList;
     }
 }
