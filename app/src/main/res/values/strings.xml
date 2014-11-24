@@ -5,5 +5,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="state_text_view">Select State</string>
+    <string name="city_text_view">Select City</string>
+    <string name="occupation_text_view">Enter Occupation</string>
+    <string name="submit_button">Submission Button</string>
 
 </resources>
