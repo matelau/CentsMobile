@@ -8,7 +8,9 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -20,6 +22,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.matelau.junior.centsproject.Models.Col;
+import com.matelau.junior.centsproject.Models.IndeedQueryResults;
+import com.matelau.junior.centsproject.Models.IndeedService;
 import com.matelau.junior.centsproject.R;
 
 import java.io.BufferedReader;
@@ -30,9 +34,15 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /*
  * @Author: Asaeli Matelau
@@ -73,7 +83,7 @@ public class MainActivity extends Activity {
         stateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                _citiesSpinner.setEnabled(true);
+
                 TextView v = (TextView) view;
                 _state = v.getText().toString();
                 Log.v(classLogTag, "State Spinner item Selected: "+_state);
@@ -118,11 +128,15 @@ public class MainActivity extends Activity {
         _editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH ||
                         actionId == EditorInfo.IME_ACTION_DONE ||
                         event.getAction() == KeyEvent.ACTION_DOWN &&
                                 event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    //hide keyboard after submit
+                    InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(_editText.getWindowToken(), 0);
                     handleSubmit();
+
                     return true;
                 }
                 return false;
@@ -134,6 +148,7 @@ public class MainActivity extends Activity {
                 handleSubmit();
             }
         });
+
     }
 
     private void loadLocations(){
@@ -143,83 +158,121 @@ public class MainActivity extends Activity {
 
     private void loadCities(){
         String[] cities = null;
-        //AZ
-        if(_state.equals(_states[0])){
-            cities = Arrays.copyOfRange(_supportedCities,0,3);
-        }
-        //CA
-        else if(_state.equals(_states[1])){
-            cities = Arrays.copyOfRange(_supportedCities,3,8);
-        }
-        else if(_state.equals(_states[2])){
-            cities = Arrays.copyOfRange(_supportedCities,8,11);
-        }
-        else if(_state.equals(_states[3])){
-            cities = Arrays.copyOfRange(_supportedCities,11,12);
-        }
-        else if(_state.equals(_states[4])){
-            cities = Arrays.copyOfRange(_supportedCities,12,16);
-        }
-        else if(_state.equals(_states[5])){
-            cities = Arrays.copyOfRange(_supportedCities,16,18);
-        }
-        else if(_state.equals(_states[6])){
-            cities = Arrays.copyOfRange(_supportedCities,18,19);
-        }
-        else if(_state.equals(_states[7])){
-            cities = Arrays.copyOfRange(_supportedCities,19,20);
-        }
-        else if(_state.equals(_states[8])){
-            cities = Arrays.copyOfRange(_supportedCities,20,21);
-        }
-        else if(_state.equals(_states[9])){
-            cities = Arrays.copyOfRange(_supportedCities,21,22);
-        }
-        else if(_state.equals(_states[10])){
-            cities = Arrays.copyOfRange(_supportedCities,22,23);
-        }
-        //New York
-        else if(_state.equals(_states[11])){
-            cities = Arrays.copyOfRange(_supportedCities,23,26);
-        }
-        else if(_state.equals(_states[12])){
-            cities = Arrays.copyOfRange(_supportedCities,26,27);
-        }
-        else if(_state.equals(_states[13])){
-            cities = Arrays.copyOfRange(_supportedCities,27,29);
-        }
-        else if(_state.equals(_states[14])){
-            cities = Arrays.copyOfRange(_supportedCities,29,35);
-        }
-        else if(_state.equals(_states[15])){
-            cities = Arrays.copyOfRange(_supportedCities,35,39);
-        }
-        else if(_state.equals(_states[16])){
-            cities = Arrays.copyOfRange(_supportedCities,39,42);
-        }
-        //utah
-        else{
-            cities = Arrays.copyOfRange(_supportedCities,42,45);
-        }
-        //update cities adapter
-        if(cities != null){
-            _citiesAdapter.clear();
-            //reset city to match new list
-            _city = cities[0];
-            for(String s: cities){
-                _citiesAdapter.add(s);
+        if(_supportedCities!= null){
+            _citiesSpinner.setEnabled(true);
+            //AZ
+            if(_state.equals(_states[0])){
+                cities = Arrays.copyOfRange(_supportedCities,0,3);
+            }
+            //CA
+            else if(_state.equals(_states[1])){
+                cities = Arrays.copyOfRange(_supportedCities,3,8);
+            }
+            else if(_state.equals(_states[2])){
+                cities = Arrays.copyOfRange(_supportedCities,8,11);
+            }
+            else if(_state.equals(_states[3])){
+                cities = Arrays.copyOfRange(_supportedCities,11,12);
+            }
+            else if(_state.equals(_states[4])){
+                cities = Arrays.copyOfRange(_supportedCities,12,16);
+            }
+            else if(_state.equals(_states[5])){
+                cities = Arrays.copyOfRange(_supportedCities,16,18);
+            }
+            else if(_state.equals(_states[6])){
+                cities = Arrays.copyOfRange(_supportedCities,18,19);
+            }
+            else if(_state.equals(_states[7])){
+                cities = Arrays.copyOfRange(_supportedCities,19,20);
+            }
+            else if(_state.equals(_states[8])){
+                cities = Arrays.copyOfRange(_supportedCities,20,21);
+            }
+            else if(_state.equals(_states[9])){
+                cities = Arrays.copyOfRange(_supportedCities,21,22);
+            }
+            else if(_state.equals(_states[10])){
+                cities = Arrays.copyOfRange(_supportedCities,22,23);
+            }
+            //New York
+            else if(_state.equals(_states[11])){
+                cities = Arrays.copyOfRange(_supportedCities,23,26);
+            }
+            else if(_state.equals(_states[12])){
+                cities = Arrays.copyOfRange(_supportedCities,26,27);
+            }
+            else if(_state.equals(_states[13])){
+                cities = Arrays.copyOfRange(_supportedCities,27,29);
+            }
+            else if(_state.equals(_states[14])){
+                cities = Arrays.copyOfRange(_supportedCities,29,35);
+            }
+            else if(_state.equals(_states[15])){
+                cities = Arrays.copyOfRange(_supportedCities,35,39);
+            }
+            else if(_state.equals(_states[16])){
+                cities = Arrays.copyOfRange(_supportedCities,39,42);
+            }
+            //utah
+            else{
+                cities = Arrays.copyOfRange(_supportedCities,42,45);
+            }
+            //update cities adapter
+            if(cities != null){
+                _citiesAdapter.clear();
+                //reset city to match new list
+                _city = cities[0];
+                for(String s: cities){
+                    _citiesAdapter.add(s);
+                }
+
             }
 
         }
-
     }
 
 
     private void handleSubmit(){
         String searchText = _editText.getText().toString();
         Log.v(classLogTag, "in handleSubmit: "+ searchText);
+
         if(validSubmission(searchText)){
-            //TODO call glassdoor/jobs api
+            //Animate submit button
+            ImageButton submitBtn = (ImageButton) findViewById(R.id.search_button);
+            submitBtn.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate));
+            //call indeed jobs api
+            IndeedService service = CentsApplication.get_indeedRestAdapter().create(IndeedService.class);
+            Map<String,String> queryMap = new HashMap<String,String>();
+            //TODO Mask publisher key
+            queryMap.put("publisher", "4507844392785871" );
+            String location = (_city+"+"+_state).toLowerCase();
+            //TODO create preference for users to set limit, radius, fromage, jt
+            queryMap.put("l", location);
+            queryMap.put("v","2");
+            queryMap.put("limit", "25");
+            queryMap.put("radius", "25");
+            queryMap.put("fromage","30");
+            queryMap.put("jt", "fulltime");
+            queryMap.put("q", _occupation.toLowerCase());
+            queryMap.put("userip", "1.2.3.4");
+            queryMap.put("useragent","Mozilla/%2F4.0%28Firefox%29" );
+            queryMap.put("format", "json");
+            service.listResults(queryMap, new Callback<IndeedQueryResults>() {
+                @Override
+                public void success(IndeedQueryResults iqr, Response response) {
+                    Log.v(classLogTag, "indeed search results: "+ iqr.getResults().size());
+                    //TODO launch activity to create cards from search results
+                    //TODO store results within application
+
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(classLogTag,error.getMessage());
+
+                }
+            });
         }
         else{
             Toast.makeText(getApplicationContext(), "Invalid Search", Toast.LENGTH_SHORT).show();
