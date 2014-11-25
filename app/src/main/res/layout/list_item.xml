@@ -3,14 +3,43 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card_view"
     android:layout_gravity="center"
-    android:layout_width="200dp"
-    android:layout_height="200dp"
-    card_view:cardCornerRadius="4dp">
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    card_view:cardCornerRadius="4dp"
+    android:layout_margin="5dp"
+    android:elevation="10dp">
+    
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
 
 
     <TextView
-        android:id="@+id/example"
-        android:text="Hello World"
+        android:id="@+id/job_company"
+        android:gravity="center"
+        android:background="@color/primary"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:textColor="@color/text_primary"
+        android:layout_height="20dp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:src="@drawable/placeholder"
+        android:layout_below="@id/job_company"
+        android:id="@+id/company_image"
+        />
+
+    <TextView
+        android:id="@+id/job_title"
+        android:gravity="center"
+        android:layout_below ="@id/company_image"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+
+
+
+    </RelativeLayout>
 </android.support.v7.widget.CardView>

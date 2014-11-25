@@ -56,6 +56,7 @@ public class MainActivity extends Activity {
     private String classLogTag = MainActivity.class.getSimpleName();
 
     private Spinner _citiesSpinner;
+    private Spinner _statesSpinner;
     private String _city;
     private String _state;
     private String _occupation;
@@ -71,8 +72,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_search);
 
-        Spinner stateSpinner = (Spinner) findViewById(R.id.state_spinner);
-//      //currently supported states
+        _statesSpinner = (Spinner) findViewById(R.id.state_spinner);
+        //currently supported states
         _states = new String[]{"Arizona", "California", "Colorado", "District of Columbia", "Florida", "Illinois", "Indiana",
                 "Massachusetts", "Michigan", "Ohio", "North Carolina", "New York", "Pennsylvania", "Tennessee", "Texas", "Washington",
                 "Wisconsin", "Utah"};
@@ -81,13 +82,14 @@ public class MainActivity extends Activity {
         _stateAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, _states);
         loadLocations();
         _stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        stateSpinner.setAdapter(_stateAdapter);
-        stateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        _statesSpinner.setAdapter(_stateAdapter);
+        _statesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 TextView v = (TextView) view;
                 _state = v.getText().toString();
+                CentsApplication.set_stateSpinPos(position);
                 Log.v(classLogTag, "State Spinner item Selected: "+_state);
                 //load cities based on state selected
                 loadCities();
@@ -114,6 +116,7 @@ public class MainActivity extends Activity {
 
             TextView v = (TextView) view;
             _city = v.getText().toString();
+            CentsApplication.set_citySpinPos(position);
             Log.v(classLogTag, "City Spinner item Selected: "+_city);
 
         }
@@ -144,6 +147,9 @@ public class MainActivity extends Activity {
                 return false;
             }
         });
+        if(_occupation != null){
+            _editText.setText(_occupation);
+        }
         search_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,6 +166,7 @@ public class MainActivity extends Activity {
 
     private void loadCities(){
         String[] cities = null;
+        //return only the cities in a selected state
         if(_supportedCities!= null){
             _citiesSpinner.setEnabled(true);
             //AZ
@@ -241,6 +248,10 @@ public class MainActivity extends Activity {
 
         if(validSubmission(searchText)){
             //Animate submit button
+            //store submitted text
+            CentsApplication.set_searchedCity(_city);
+            CentsApplication.set_searchState(_state);
+            CentsApplication.set_searchedOccupation(_occupation);
             ImageButton submitBtn = (ImageButton) findViewById(R.id.search_button);
             submitBtn.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate));
             //call indeed jobs api
@@ -267,11 +278,9 @@ public class MainActivity extends Activity {
                     //store results within application
                     List<Result> jobSearchResultList = iqr.getResults();
                     CentsApplication.set_jobSearchResultList(jobSearchResultList);
+                    FetchGlassdoorDataTask ft = new FetchGlassdoorDataTask();
+                    ft.execute(jobSearchResultList);
                     //launch activity to create cards from search results
-                    Intent jobListIntent = new Intent(getApplicationContext(), JobListActivity.class);
-                    startActivity(jobListIntent);
-
-
                 }
 
                 @Override
@@ -285,6 +294,22 @@ public class MainActivity extends Activity {
             Toast.makeText(getApplicationContext(), "Invalid Search", Toast.LENGTH_SHORT).show();
         }
 
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(CentsApplication.get_searchedOccupation() != null){
+            _editText.setText(CentsApplication.get_searchedOccupation());
+        }
+        if(CentsApplication.get_stateSpinPos() > 0 ){
+            _statesSpinner.setSelection(CentsApplication.get_stateSpinPos());
+        }
+        if(CentsApplication.get_citySpinPos() > 0){
+            _citiesSpinner.setSelection(CentsApplication.get_citySpinPos());
+        }
 
     }
 
@@ -325,25 +350,24 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    protected class FetchLocationsTask extends AsyncTask<Void, Void, String[]>{
+    protected class FetchLocationsTask extends AsyncTask<Void, Void, String[]> {
 
         private final String LOG_TAG = FetchLocationsTask.class.getSimpleName();
         private String[] states = null;
 
         @Override
         protected void onPostExecute(String[] strings) {
-            if(strings!= null){
-                //TODO return only the cities based on selected state
+            if (strings != null) {
                 Log.i(LOG_TAG, "onPostExecute - updating _supportedcities");
                 _supportedCities = new String[strings.length];
                 int index = 0;
-                for(String s: strings){
+                for (String s : strings) {
                     //Check that location is not a state
                     //edge case city is named after state
-                    if(!_supportedStatesHash.contains(s) ||  (s.equals("Washington") && index < 15) || (s.equals("New York") && index == 23)){
+                    if (!_supportedStatesHash.contains(s) || (s.equals("Washington") && index < 15) || (s.equals("New York") && index == 23)) {
                         _supportedCities[index] = s;
                         index++;
-                        Log.i(LOG_TAG,"Added: "+s+" To supportedCities");
+                        Log.i(LOG_TAG, "Added: " + s + " To supportedCities");
                     }
 
                 }
@@ -357,12 +381,13 @@ public class MainActivity extends Activity {
             Log.i(LOG_TAG, "doInBackground - Loading File");
             //load Json file
             try {
-                Type tp = new TypeToken<Collection<Col>>(){}.getType();
+                Type tp = new TypeToken<Collection<Col>>() {
+                }.getType();
                 InputStream is = getApplicationContext().getAssets().open("col.json");
-                BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
+                BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                 StringBuilder sb = new StringBuilder();
                 String line;
-                while((line = br.readLine())!= null){
+                while ((line = br.readLine()) != null) {
                     sb.append(line);
                 }
                 String json = sb.toString();
@@ -374,12 +399,12 @@ public class MainActivity extends Activity {
                 e.printStackTrace();
             }
 
-            if(_cols != null){
+            if (_cols != null) {
                 Log.i(LOG_TAG, "doInBackground - Processing col.json");
                 //pull locations add to result
                 results = new String[_cols.size()];
                 int i = 0;
-                for(Col c: _cols){
+                for (Col c : _cols) {
                     results[i] = c.getLocation();
                     i++;
                 }
@@ -389,5 +414,90 @@ public class MainActivity extends Activity {
             return results;
 
         }
+    }
+
+    protected class FetchGlassdoorDataTask extends AsyncTask<List<Result>, Void, Void> {
+
+
+        @Override
+        protected Void doInBackground(List<Result>... params) {
+            loadGlassdoorResults(params[0]);
+            Intent jobListIntent = new Intent(getApplicationContext(), JobListActivity.class);
+            startActivity(jobListIntent);
+            return null;
+        }
+
+
+
+        //TODO write async task to do this work
+        private void loadGlassdoorResults(List<Result> results){
+
+//            //TODO get company data from Glassdoor
+////        String company = ji.jobCompany;
+////        http://api.glassdoor.com/api/api.htm?t.p=27350&t.k=irqFFDe0Rvo&userip=0.0.0.0&useragent=&format=json&v=1&action=employers&q=american+express&ps=1
+//            GlassdoorService service = CentsApplication.get_gdRestAdapter().create(GlassdoorService.class);
+//            for(int i = 0; i < results.size(); i++){
+//                String company = results.get(i).getCompany();
+//                company = company.replace(' ','+').toLowerCase();
+//                Log.v(classLogTag, "Glassdoor query:" + company);
+//                //build QueryMap
+//                Map<String,String> qMap = new HashMap<String,String>();
+//                qMap.put("t.p","27350");
+//                qMap.put("t.k","irqFFDe0Rvo" );
+//                qMap.put("userip","0.0.0.0");
+//                qMap.put("useragent", "");  //Mozilla/%2F4.0%28Firefox%29
+//                qMap.put("format", "json");
+//                qMap.put("v", "1");
+//                qMap.put("action","employers");
+//                qMap.put("q", company);
+//                qMap.put("ps", "1");
+//                service.listResults(qMap, new Callback<GlassdoorResults>() {
+//                    @Override
+//                    public void success(GlassdoorResults glassdoorResults, Response response) {
+//                        Log.v(classLogTag, "GlassdoorResults.callback");
+//                        //get response body
+//                        if(response.getBody().length() > 0){
+//                            BufferedReader reader = null;
+//                            StringBuilder sb = new StringBuilder();
+//                            try{
+//                                reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
+//                                String line;
+//                                try{
+//                                    while((line = reader.readLine()) != null){
+//                                        sb.append(line);
+//                                    }
+//                                }
+//                                catch(IOException e){
+//
+//                                }
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//
+//                            String result = sb.toString();
+//                            Log.v(classLogTag,"glassdoor response"+result);
+//
+//                        }
+//                        else{
+//                            Log.e(classLogTag,"glassdoor response is empty: "+response.getUrl());
+//
+//                        }
+//
+//                    }
+//
+//                    @Override
+//                    public void failure(RetrofitError error) {
+//                        Log.v(classLogTag, error.getMessage());
+//
+//                    }
+//                });
+//
+//            }
+
+
+
+
+        }
+
     }
 }

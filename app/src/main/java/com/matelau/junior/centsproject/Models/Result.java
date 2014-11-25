@@ -41,4 +41,28 @@ public class Result {
     private String formattedLocationFull;
     @Expose
     private String formattedRelativeTime;
+
+    public String getJobtitle() {
+        return jobtitle;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getSnippet() {
+        return snippet;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getJobkey() {
+        return jobkey;
+    }
 }

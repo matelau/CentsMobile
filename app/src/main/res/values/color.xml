@@ -2,5 +2,5 @@
 <resources>
     <item name="primary" type="color">#FF884412</item>
     <item name="text_primary" type="color">#FFEFF6FA</item>
-    <item name="primary_dark" type="color">#FF784422</item>
+    <item name="primary_dark" type="color">#FF7A3D10</item>
 </resources>

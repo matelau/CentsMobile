@@ -3,6 +3,7 @@ package com.matelau.junior.centsproject.Controllers;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -10,14 +11,16 @@ import com.matelau.junior.centsproject.R;
 
 public class JobListActivity extends Activity {
     JobListFragment _jobListFragment;
+    private String LOG_TAG = JobListActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FragmentTransaction addTransaction = getFragmentManager().beginTransaction();
+        Log.v(LOG_TAG, "On Create");
         _jobListFragment = new JobListFragment();
-        addTransaction.add(R.id.container, _jobListFragment );
-//        setContentView(R.layout.activity_job_list);
+        addTransaction.add(R.id.container, _jobListFragment ).commit();
+        setContentView(R.layout.activity_job_list);
 
     }
 
