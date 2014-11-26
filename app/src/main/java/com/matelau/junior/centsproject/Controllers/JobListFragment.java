@@ -34,6 +34,8 @@ public class JobListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
+
         Log.v(LOG_TAG, "On CreateView");
         _jiToLogo = new ArrayList<String>();
         View rootView = inflater.inflate(R.layout.fragment_job_list, container, false);
@@ -45,7 +47,19 @@ public class JobListFragment extends Fragment {
 
 
         List<JobInfo> jl = CentsApplication.get_jobSearchResultList();
+        //Check if list is empty and supply place holder values to adapter.
+        if(jl.size() == 0){
+
+            JobInfo ji = new JobInfo("Please Try Again", "Search Returned No Results");
+            //TODO ask wesley to create a try again image?
+            ji.jobUrl="http://www.okiwoki.com/images/produits/jeux-video/try-again-pulls-noir-h-l_1.jpg";
+//            jl.clear();
+            jl.add(ji);
+
+        }
         _recyclerView.setAdapter(new JobListRecycleAdapter(jl));
+
+
 
         _recyclerView.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
             @Override

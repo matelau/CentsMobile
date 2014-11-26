@@ -31,7 +31,7 @@ public class SpendingBreakdownFragment extends Fragment {
     private PieChartView _chart;
     private TextView _occupation;
     private PieChartData data;
-    private boolean hasLabels = true;
+    private boolean hasLabels = false;
     private boolean hasLabelsOutside = true;
     private boolean hasCenterCircle = true;
     private boolean hasCenterText1 = true;
@@ -54,6 +54,7 @@ public class SpendingBreakdownFragment extends Fragment {
         CardView cv = (CardView) rootView.findViewById(R.id.spending_card_view);
          _chart = (PieChartView) rootView.findViewById(R.id.spending_vis);
         _occupation = (TextView) rootView.findViewById(R.id.sd_occ);
+
         _occupation.setText(CentsApplication.get_searchedOccupation());
 
         _back = (ImageButton) rootView.findViewById(R.id.go_to_col);
@@ -80,8 +81,16 @@ public class SpendingBreakdownFragment extends Fragment {
         String sSalary = ""+salary;
         if(CentsApplication.get_occupationSalary() != null){
             sSalary = CentsApplication.get_occupationSalary();
-            //todo write try catch
-            salary = Integer.parseInt(sSalary);
+            //insure valid int is returned if not reset vals
+            try{
+                salary = Integer.parseInt(sSalary);
+            }catch(NumberFormatException e){
+                e.printStackTrace();
+                salary = 27450;
+                sSalary =""+ salary;
+                _occupation.setText("Natl Median Wage");
+            }
+
         }
 
         String[] labels = {"housing", "food", "transportation", "utilities","student loans","other debt", "insurance","savings","health","misc"};

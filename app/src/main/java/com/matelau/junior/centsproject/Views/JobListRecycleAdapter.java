@@ -37,8 +37,14 @@ public class JobListRecycleAdapter extends RecyclerView.Adapter<JobViewHolder> {
         jobViewHolder._jobTitle.setText(ji.jobTitle);
         jobViewHolder._jobCompany.setText(ji.jobCompany);
 
+        if(ji.jobUrl != null){
+            Ion.with(jobViewHolder._companyImg).load(ji.jobUrl);
+        }
+        else{
+            jobViewHolder._companyImg.setImageResource(R.drawable.placeholder);
+//            Ion.with(jobViewHolder._companyImg).load(R.drawable.placeholder);
+        }
 
-        Ion.with(jobViewHolder._companyImg).load("https://circlegdesigns.files.wordpress.com/2011/02/g-brand-scan.jpg");
         if(CentsApplication.is_imgUrlsRdy()){
 //            Toast.makeText(_context, "Img Urls Loaded", Toast.LENGTH_SHORT).show();
 //            CentsApplication.get_imgUrls().get()

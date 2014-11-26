@@ -16,8 +16,7 @@ public class JobInfo {
     public JobInfo(String jt, String jc){
         jobTitle = jt;
         jobCompany = jc;
-//        getUrl();
-//        jobUrl = jUrl;
+
     }
 
 
