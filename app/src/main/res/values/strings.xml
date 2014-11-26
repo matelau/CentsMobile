@@ -10,5 +10,6 @@
     <string name="occupation_text_view">Enter Occupation</string>
     <string name="submit_button">Submission Button</string>
     <string name="title_activity_job_list">JobListActivity</string>
+    <string name="title_activity_cost_of_living">CostOfLiving</string>
 
 </resources>

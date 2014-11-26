@@ -3,7 +3,7 @@ package com.matelau.junior.centsproject.Controllers;
 import android.app.Application;
 import android.content.Context;
 
-import com.matelau.junior.centsproject.Models.Result;
+import com.matelau.junior.centsproject.Models.JobInfo;
 
 import java.util.List;
 
@@ -14,20 +14,22 @@ import retrofit.RestAdapter;
  */
 public class CentsApplication extends Application{
     private static Context _centsContext;
-    private static RestAdapter _gdRestAdapter = new RestAdapter.Builder().setEndpoint("http://api.glassdoor.com").build();
-    private static RestAdapter _indeedRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("http://api.indeed.com").build();
+    private static RestAdapter _googRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("https://ajax.googleapis.com").build();
+    private static RestAdapter _indeedRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.BASIC).setEndpoint("http://api.indeed.com").build();
     private static String _searchedCity;
     private static String _searchState;
     private static String _searchedOccupation;
     private static int _citySpinPos;
     private static int _stateSpinPos;
-    private static List<Result> _jobSearchResultList;
+    private static List<JobInfo> _jobSearchResultList;
+    private static List<String> _imgUrls;
     public CentsApplication(){
         _centsContext = this;
     }
+    private static boolean _imgUrlsRdy = false;
 
     public static Context getAppContext() {return _centsContext;}
-    public static RestAdapter get_gdRestAdapter() {return _gdRestAdapter;}
+    public static RestAdapter get_googRestAdapter() {return _googRestAdapter;}
 
     public static RestAdapter get_indeedRestAdapter() {
         return _indeedRestAdapter;
@@ -37,11 +39,11 @@ public class CentsApplication extends Application{
         CentsApplication._indeedRestAdapter = _indeedRestAdapter;
     }
 
-    public static List<Result> get_jobSearchResultList() {
+    public static List<JobInfo> get_jobSearchResultList() {
         return _jobSearchResultList;
     }
 
-    public static void set_jobSearchResultList(List<Result> _jobSearchResultList) {
+    public static void set_jobSearchResultList(List<JobInfo> _jobSearchResultList) {
         CentsApplication._jobSearchResultList = _jobSearchResultList;
     }
 
@@ -83,5 +85,25 @@ public class CentsApplication extends Application{
 
     public static void set_stateSpinPos(int _stateSpinPos) {
         CentsApplication._stateSpinPos = _stateSpinPos;
+    }
+
+    public static List<String> get_imgUrls() {
+        return _imgUrls;
+    }
+
+    public static void add_imgUrl(String _imgUrl) {
+        CentsApplication._imgUrls.add(_imgUrl);
+    }
+
+    public static boolean is_imgUrlsRdy() {
+        return _imgUrlsRdy;
+    }
+
+    public static void set_imgUrlsRdy(boolean _imgUrlsRdy) {
+        CentsApplication._imgUrlsRdy = _imgUrlsRdy;
+    }
+
+    public static void set_imgUrls(List<String> _imgUrls) {
+        CentsApplication._imgUrls = _imgUrls;
     }
 }

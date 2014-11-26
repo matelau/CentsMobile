@@ -28,6 +28,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.matelau.junior.centsproject.Controllers.MainActivity" />
         </activity>
+        <activity
+            android:name=".Controllers.CostOfLivingActivity"
+            android:label="@string/title_activity_cost_of_living" >
+        </activity>
     </application>
 
 </manifest>

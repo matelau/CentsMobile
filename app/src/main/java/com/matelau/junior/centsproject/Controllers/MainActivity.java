@@ -22,10 +22,15 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.matelau.junior.centsproject.Models.Col;
-import com.matelau.junior.centsproject.Models.IndeedQueryResults;
-import com.matelau.junior.centsproject.Models.IndeedService;
-import com.matelau.junior.centsproject.Models.Result;
+import com.matelau.junior.centsproject.Models.GoogleAPIModels.GoogleImageService;
+import com.matelau.junior.centsproject.Models.GoogleAPIModels.ResponseData;
+import com.matelau.junior.centsproject.Models.IndeedAPIModels.IndeedQueryResults;
+import com.matelau.junior.centsproject.Models.IndeedAPIModels.IndeedService;
+import com.matelau.junior.centsproject.Models.IndeedAPIModels.Result;
+import com.matelau.junior.centsproject.Models.JobInfo;
 import com.matelau.junior.centsproject.R;
 
 import java.io.BufferedReader;
@@ -66,12 +71,18 @@ public class MainActivity extends Activity {
     private Set<String> _supportedStatesHash;
     private String[] _states;
     private String[] _supportedCities;
+    private List<Result> _jobSearchResultList;
+    private int _callbacksExe = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_search);
-
+        //init model
+        CentsApplication.set_imgUrls(new ArrayList<String>());
+        //reset count
+        _callbacksExe = 0;
         _statesSpinner = (Spinner) findViewById(R.id.state_spinner);
         //currently supported states
         _states = new String[]{"Arizona", "California", "Colorado", "District of Columbia", "Florida", "Illinois", "Indiana",
@@ -276,12 +287,25 @@ public class MainActivity extends Activity {
                 public void success(IndeedQueryResults iqr, Response response) {
                     Log.v(classLogTag, "indeed search results: "+ iqr.getResults().size());
                     //store results within application
-                    List<Result> jobSearchResultList = iqr.getResults();
-                    CentsApplication.set_jobSearchResultList(jobSearchResultList);
-                    FetchGlassdoorDataTask ft = new FetchGlassdoorDataTask();
-                    ft.execute(jobSearchResultList);
-                    //launch activity to create cards from search results
+                    _jobSearchResultList = iqr.getResults();
+                    String[] companies = new String[_jobSearchResultList.size()];
+                    for(int i = 0; i < _jobSearchResultList.size(); i++){
+                        companies[i] = _jobSearchResultList.get(i).getCompany();
+                    }
+
+                    buildJobInfoList();
+                    // wait before launching activity to create cards from search results
+//                    Handler handler = new Handler();
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+
+//                        }
+//                    }, 2000);
+
                 }
+
+
 
                 @Override
                 public void failure(RetrofitError error) {
@@ -294,8 +318,48 @@ public class MainActivity extends Activity {
             Toast.makeText(getApplicationContext(), "Invalid Search", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    private void buildJobInfoList(){
+        //Setadapter - preload data
+        List<JobInfo> jl = new ArrayList<JobInfo>();
+        for(int i = 0; i < _jobSearchResultList.size(); i++)
+        {
+            Result currResult = _jobSearchResultList.get(i);
+            JobInfo ji = new JobInfo(currResult.getJobtitle(),currResult.getCompany());
+            String company = ji.jobCompany.replace(' ','+').toLowerCase();
+            String baseUrl = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&imgsz=small=&rsz=1&";
+            String query = "q=g="+company+"+brand";
+            String url = baseUrl+query;
+            //get goog Image results
+            Ion.with(this).load(url).as(new TypeToken<ResponseData>(){}).setCallback(new FutureCallback<ResponseData>() {
+                @Override
+                public void onCompleted(Exception e, ResponseData result) {
+                    if(result != null && result.getResults().size() > 0){
+                        CentsApplication.add_imgUrl(result.getResults().get(0).getUrl());
+                        //count _callbacks to know when data is ready
+
+                    }
+                    _callbacksExe++;
+                    //cheap blocking
+                    if(_callbacksExe == 25){
+                        CentsApplication.set_imgUrlsRdy(true);
+                    }
+
+                }
+            });
+            jl.add(ji);
+        }
+
+        CentsApplication.set_jobSearchResultList(jl);
+
+//        FetchGoogleIMGDataTask ft = new FetchGoogleIMGDataTask();
+//        ft.execute();
+        Intent jobListIntent = new Intent(getApplicationContext(), JobListActivity.class);
+        startActivity(jobListIntent);
 
     }
+
 
 
     @Override
@@ -416,87 +480,58 @@ public class MainActivity extends Activity {
         }
     }
 
-    protected class FetchGlassdoorDataTask extends AsyncTask<List<Result>, Void, Void> {
-
+    protected class FetchGoogleIMGDataTask extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected Void doInBackground(List<Result>... params) {
-            loadGlassdoorResults(params[0]);
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
             Intent jobListIntent = new Intent(getApplicationContext(), JobListActivity.class);
             startActivity(jobListIntent);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            buildGoogImageList();
             return null;
         }
 
+        private void buildGoogImageList(){
+            String company = "";
+            for(JobInfo ji: CentsApplication.get_jobSearchResultList() ){
 
 
-        //TODO write async task to do this work
-        private void loadGlassdoorResults(List<Result> results){
+            }
+            getUrl(company);
+        }
 
-//            //TODO get company data from Glassdoor
-////        String company = ji.jobCompany;
-////        http://api.glassdoor.com/api/api.htm?t.p=27350&t.k=irqFFDe0Rvo&userip=0.0.0.0&useragent=&format=json&v=1&action=employers&q=american+express&ps=1
-//            GlassdoorService service = CentsApplication.get_gdRestAdapter().create(GlassdoorService.class);
-//            for(int i = 0; i < results.size(); i++){
-//                String company = results.get(i).getCompany();
-//                company = company.replace(' ','+').toLowerCase();
-//                Log.v(classLogTag, "Glassdoor query:" + company);
-//                //build QueryMap
-//                Map<String,String> qMap = new HashMap<String,String>();
-//                qMap.put("t.p","27350");
-//                qMap.put("t.k","irqFFDe0Rvo" );
-//                qMap.put("userip","0.0.0.0");
-//                qMap.put("useragent", "");  //Mozilla/%2F4.0%28Firefox%29
-//                qMap.put("format", "json");
-//                qMap.put("v", "1");
-//                qMap.put("action","employers");
-//                qMap.put("q", company);
-//                qMap.put("ps", "1");
-//                service.listResults(qMap, new Callback<GlassdoorResults>() {
-//                    @Override
-//                    public void success(GlassdoorResults glassdoorResults, Response response) {
-//                        Log.v(classLogTag, "GlassdoorResults.callback");
-//                        //get response body
-//                        if(response.getBody().length() > 0){
-//                            BufferedReader reader = null;
-//                            StringBuilder sb = new StringBuilder();
-//                            try{
-//                                reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
-//                                String line;
-//                                try{
-//                                    while((line = reader.readLine()) != null){
-//                                        sb.append(line);
-//                                    }
-//                                }
-//                                catch(IOException e){
-//
-//                                }
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                            String result = sb.toString();
-//                            Log.v(classLogTag,"glassdoor response"+result);
-//
-//                        }
-//                        else{
-//                            Log.e(classLogTag,"glassdoor response is empty: "+response.getUrl());
-//
-//                        }
-//
-//                    }
-//
-//                    @Override
-//                    public void failure(RetrofitError error) {
-//                        Log.v(classLogTag, error.getMessage());
-//
-//                    }
-//                });
-//
-//            }
+        public void getUrl(String company){
+            //TODO call goog image api here
+            //get company logo url
+//            https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=g=dell+logo&imgsz=small=&rsz=1&as_sitesearch=wikimedia.org
+            Map<String, String> qMap = new HashMap<String,String>();
+            qMap.put("v", "1");
+            qMap.put("q=g",company);
+            qMap.put("imgsz", "small");
+            qMap.put("rsz", "1");
+            qMap.put("as_sitesearch", "wikimedia.org");
+            GoogleImageService service = CentsApplication.get_googRestAdapter().create(GoogleImageService.class);
+            service.getImage(qMap, new Callback<ResponseData>() {
+                @Override
+                public void success(ResponseData responseData, Response response) {
 
+                    com.matelau.junior.centsproject.Models.GoogleAPIModels.Result r = responseData.getResults().get(0);
+                    if(r.getUrl() != null){
+//                    Log.v(LOG_TAG, "Goog API: " + r.getUrl());
+                        CentsApplication.add_imgUrl(r.getUrl());
+                    }
 
+                }
 
-
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(classLogTag, error.getMessage());
+                }
+            });
         }
 
     }

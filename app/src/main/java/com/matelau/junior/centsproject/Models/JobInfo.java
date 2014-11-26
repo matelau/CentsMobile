@@ -11,10 +11,14 @@ public class JobInfo {
     public String jobCompany;
     public Bitmap companyImg;
     public String jobUrl;
+    private String LOG_TAG = JobInfo.class.getSimpleName();
 
-    public JobInfo(String jt, String jc, String jUrl){
+    public JobInfo(String jt, String jc){
         jobTitle = jt;
         jobCompany = jc;
-        jobUrl = jUrl;
+//        getUrl();
+//        jobUrl = jUrl;
     }
+
+
 }
