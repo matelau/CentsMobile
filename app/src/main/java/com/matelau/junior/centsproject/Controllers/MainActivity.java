@@ -288,25 +288,20 @@ public class MainActivity extends Activity {
                     Log.v(classLogTag, "indeed search results: "+ iqr.getResults().size());
                     //store results within application
                     _jobSearchResultList = iqr.getResults();
-                    String[] companies = new String[_jobSearchResultList.size()];
-                    for(int i = 0; i < _jobSearchResultList.size(); i++){
-                        companies[i] = _jobSearchResultList.get(i).getCompany();
+//                    String[] companies = new String[_jobSearchResultList.size()];
+//                    for(int i = 0; i < _jobSearchResultList.size(); i++){
+//                        companies[i] = _jobSearchResultList.get(i).getCompany();
+//                    }
+
+                    //set col data
+                    for(Col c: _cols){
+                        if(c.getLocation().equals(_city)){
+                            CentsApplication.set_c(c);
+                        }
                     }
 
                     buildJobInfoList();
-                    // wait before launching activity to create cards from search results
-//                    Handler handler = new Handler();
-//                    handler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-
-//                        }
-//                    }, 2000);
-
                 }
-
-
-
                 @Override
                 public void failure(RetrofitError error) {
                     Log.e(classLogTag,error.getMessage());
@@ -331,7 +326,7 @@ public class MainActivity extends Activity {
             String baseUrl = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&imgsz=small=&rsz=1&";
             String query = "q=g="+company+"+brand";
             String url = baseUrl+query;
-            //get goog Image results
+            // TODO get goog Image results to work
             Ion.with(this).load(url).as(new TypeToken<ResponseData>(){}).setCallback(new FutureCallback<ResponseData>() {
                 @Override
                 public void onCompleted(Exception e, ResponseData result) {
@@ -472,7 +467,6 @@ public class MainActivity extends Activity {
                     results[i] = c.getLocation();
                     i++;
                 }
-
             }
 
             return results;

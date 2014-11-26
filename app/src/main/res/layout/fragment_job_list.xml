@@ -7,8 +7,18 @@
         android:id="@+id/job_recycler_view"
         android:scrollbars="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content">
+
+        </android.support.v7.widget.RecyclerView>
+    <!--<ImageButton-->
+        <!--android:id="@+id/go_to_search"-->
+        <!--android:layout_width="50dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--android:elevation="20dp"-->
+        <!--android:background="@drawable/reverse_circle_arrow"-->
+        <!--android:layout_alignBottom="@+id/job_recycler_view"/>-->
+
 
 
 

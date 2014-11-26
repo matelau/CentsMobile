@@ -3,6 +3,7 @@ package com.matelau.junior.centsproject.Controllers;
 import android.app.Application;
 import android.content.Context;
 
+import com.matelau.junior.centsproject.Models.Col;
 import com.matelau.junior.centsproject.Models.JobInfo;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class CentsApplication extends Application{
         _centsContext = this;
     }
     private static boolean _imgUrlsRdy = false;
+    private static Col _c;
 
     public static Context getAppContext() {return _centsContext;}
     public static RestAdapter get_googRestAdapter() {return _googRestAdapter;}
@@ -106,4 +108,13 @@ public class CentsApplication extends Application{
     public static void set_imgUrls(List<String> _imgUrls) {
         CentsApplication._imgUrls = _imgUrls;
     }
+
+    public static Col get_c() {
+        return _c;
+    }
+
+    public static void set_c(Col _c) {
+        CentsApplication._c = _c;
+    }
+
 }

@@ -1,10 +1,35 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.matelau.junior.centsproject.Controllers.SpendingBreakdownFragment">
+    tools:context="com.matelau.junior.centsproject.Controllers.CostOfLivingFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/spending_card_view"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        card_view:cardCornerRadius="4dp"
+        android:layout_margin="5dp"
+        android:elevation="30dp">
 
-</FrameLayout>
+        <include layout="@layout/spending_breakdown_vis"
+            android:layout_alignParentTop="true"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"></include>
+
+
+    </android.support.v7.widget.CardView>
+
+    <ImageButton
+        android:id="@+id/go_to_col"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="left"
+        android:layout_marginTop="15dp"
+        android:elevation="20dp"
+        android:background="@drawable/reverse_circle_arrow"
+        android:layout_below="@+id/spending_card_view"
+        android:layout_alignLeft="@+id/spending_card_view" />
+
+</RelativeLayout>

@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.koushikdutta.ion.Ion;
 import com.matelau.junior.centsproject.Models.JobInfo;
@@ -51,7 +50,6 @@ public class JobListFragment extends Fragment {
         _recyclerView.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
             @Override
             public void onSwipeLeft() {
-                Toast.makeText(getActivity(), "Left", Toast.LENGTH_SHORT).show();
                 //launch col activity
                 Intent costLivingIntent = new Intent(getActivity(),CostOfLivingActivity.class);
                 startActivity(costLivingIntent);
@@ -59,7 +57,6 @@ public class JobListFragment extends Fragment {
 
             @Override
             public void onSwipeRight() {
-                Toast.makeText(getActivity(), "Right", Toast.LENGTH_SHORT).show();
                 Intent mainIntent = new Intent(getActivity(),MainActivity.class);
                 startActivity(mainIntent);
             }

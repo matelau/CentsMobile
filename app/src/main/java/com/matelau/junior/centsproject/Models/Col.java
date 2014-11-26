@@ -12,12 +12,13 @@ public class Col {
     String transportation;
     String utilities;
     String location;
+    String housing;
 
     public Col(){
 
     }
 
-    public Col(String col, String go, String groc, String hc, String trans, String util, String loc)
+    public Col(String col, String go, String groc, String hc, String trans, String util, String loc, String housing)
     {
         location = loc;
         cost_of_living = col;
@@ -26,6 +27,7 @@ public class Col {
         health_care = hc;
         transportation = trans;
         utilities = util;
+        this.housing = housing;
 
     }
 
@@ -56,5 +58,9 @@ public class Col {
 
     public String getLocation() {
         return location;
+    }
+
+    public String getHousing() {
+        return housing;
     }
 }
