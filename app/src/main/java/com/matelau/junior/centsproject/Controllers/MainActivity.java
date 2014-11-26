@@ -33,6 +33,11 @@ import com.matelau.junior.centsproject.Models.IndeedAPIModels.Result;
 import com.matelau.junior.centsproject.Models.JobInfo;
 import com.matelau.junior.centsproject.R;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -77,6 +82,7 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //TODO play with weights
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_search);
         //init model
@@ -308,6 +314,9 @@ public class MainActivity extends Activity {
 
                 }
             });
+
+            FetchSalaryTask ft =  new FetchSalaryTask();
+            ft.execute(_occupation,_city, _state);
         }
         else{
             Toast.makeText(getApplicationContext(), "Invalid Search", Toast.LENGTH_SHORT).show();
@@ -450,6 +459,7 @@ public class MainActivity extends Activity {
                     sb.append(line);
                 }
                 String json = sb.toString();
+                is.close();
                 Log.i(LOG_TAG, json);
                 //Convert to objects
                 _cols = gson.fromJson(json, tp);
@@ -470,6 +480,60 @@ public class MainActivity extends Activity {
             }
 
             return results;
+
+        }
+    }
+
+    protected class FetchSalaryTask extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            CentsApplication.set_occupationSalary(s);
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String occupation = params[0].replace(' ','+').toLowerCase();
+            String city = params[1].replace(' ','+').toLowerCase();
+            String state = params[2].replace(' ','+').toLowerCase();
+            String url = "http://www.indeed.com/salary?q1="+occupation+"&l1="+city+"+"+state;
+            HttpClient client = new DefaultHttpClient();
+            HttpGet request = new HttpGet(url);
+            HttpResponse response;
+            String html = "";
+            try {
+                response = client.execute(request);
+                InputStream in = response.getEntity().getContent();
+                BufferedReader reader = new BufferedReader(new InputStreamReader((in)));
+                StringBuilder str =  new StringBuilder();
+                String line = null;
+                while((line = reader.readLine()) != null){
+                    str.append(line);
+                }
+                in.close();
+                html = str.toString();
+//                html.c
+//
+//                String salary = html.s
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String salary = "";
+            if(!html.equals("")){
+                //get rid of html before salary
+                int index = html.indexOf("<span class=\"salary\">");
+                salary = html.substring(index+22);
+                //get rid of html after salary
+                index = salary.indexOf("<img");
+                salary = salary.substring(0,index);
+                salary = salary.replaceAll("[^0-9]+","").trim();
+
+            }
+//            http://www.indeed.com/salary?q1=software&l1=arizona
+            return salary;
+
 
         }
     }
@@ -499,7 +563,7 @@ public class MainActivity extends Activity {
         }
 
         public void getUrl(String company){
-            //TODO call goog image api here
+
             //get company logo url
 //            https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=g=dell+logo&imgsz=small=&rsz=1&as_sitesearch=wikimedia.org
             Map<String, String> qMap = new HashMap<String,String>();
@@ -520,7 +584,6 @@ public class MainActivity extends Activity {
                     }
 
                 }
-
                 @Override
                 public void failure(RetrofitError error) {
                     Log.e(classLogTag, error.getMessage());

@@ -20,6 +20,7 @@ public class CentsApplication extends Application{
     private static String _searchedCity;
     private static String _searchState;
     private static String _searchedOccupation;
+    private static String _occupationSalary;
     private static int _citySpinPos;
     private static int _stateSpinPos;
     private static List<JobInfo> _jobSearchResultList;
@@ -117,4 +118,11 @@ public class CentsApplication extends Application{
         CentsApplication._c = _c;
     }
 
+    public static String get_occupationSalary() {
+        return _occupationSalary;
+    }
+
+    public static void set_occupationSalary(String _occupationSalary) {
+        CentsApplication._occupationSalary = _occupationSalary;
+    }
 }

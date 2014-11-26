@@ -151,7 +151,7 @@ public class CostOfLivingFragment extends Fragment {
             Axis axisY = new Axis().setHasLines(true);
             if (hasAxesNames) {
                 axisX.setName(_c.getLocation());
-                axisY.setName("Cost of (x) 100 = Natl. Avg");
+                axisY.setName("Percentage of Natl. Average");
             }
             _chartdata.setAxisXBottom(new Axis(axisVals));
             _chartdata.setAxisYLeft(axisY);

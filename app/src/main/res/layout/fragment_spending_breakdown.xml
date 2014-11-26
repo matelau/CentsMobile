@@ -21,6 +21,34 @@
 
     </android.support.v7.widget.CardView>
 
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/occ_card"
+        android:layout_gravity="center"
+        android:layout_width="200dp"
+        android:layout_height="120dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/spending_card_view"
+        card_view:cardCornerRadius="4dp"
+        android:layout_margin="5dp"
+        android:elevation="50dp">
+    <TextView
+        android:id="@+id/sd_occ"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="@android:color/black"
+        android:text="test"
+        android:textSize="18dp"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+
+    </TextView> </android.support.v7.widget.CardView>
+
     <ImageButton
         android:id="@+id/go_to_col"
         android:layout_width="50dp"
@@ -31,5 +59,12 @@
         android:background="@drawable/reverse_circle_arrow"
         android:layout_below="@+id/spending_card_view"
         android:layout_alignLeft="@+id/spending_card_view" />
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="15dp"
+        android:background="@drawable/rectangle"
+        android:layout_below="@+id/go_to_col"
+        android:layout_centerHorizontal="true" />
+
 
 </RelativeLayout>
