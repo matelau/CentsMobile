@@ -28,14 +28,14 @@ public class SpendingBreakdownFragment extends Fragment {
     private PieChartView _chart;
     private TextView _occupation;
     private PieChartData data;
-    private boolean hasLabels = false;
+    private boolean hasLabels = true;
     private boolean hasLabelsOutside = true;
     private boolean hasCenterCircle = true;
     private boolean hasCenterText1 = true;
     private boolean hasCenterText2 = true;
     private boolean isExploaded = false;
     private boolean hasArcSeparated = false;
-    private boolean hasLabelForSelected = true;
+    private boolean hasLabelForSelected = false;
 
 
 
