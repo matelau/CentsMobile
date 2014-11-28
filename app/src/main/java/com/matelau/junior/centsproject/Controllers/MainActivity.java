@@ -359,8 +359,12 @@ public class MainActivity extends Activity {
 
 //        FetchGoogleIMGDataTask ft = new FetchGoogleIMGDataTask();
 //        ft.execute();
-        Intent jobListIntent = new Intent(getApplicationContext(), JobListActivity.class);
-        startActivity(jobListIntent);
+//        Intent jobListIntent = new Intent(getApplicationContext(), JobListActivity.class);
+//        startActivity(jobListIntent);
+
+        Intent tabHostIntent = new Intent(getApplicationContext(), TabHostActivity.class);
+        startActivity(tabHostIntent);
+
 
     }
 
