@@ -1,14 +1,11 @@
 package com.matelau.junior.centsproject.Controllers;
 
-import android.support.v4.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -57,30 +54,6 @@ public class CostOfLivingFragment extends Fragment {
         _c = CentsApplication.get_c();
         if(_c != null)
             generateData();
-
-         _back = (ImageButton) rootView.findViewById(R.id.go_to_jobList);
-        _back.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                _back.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
-                Intent jLIntent = new Intent(getActivity(), JobListActivity.class);
-                startActivity(jLIntent);
-
-                return true;
-            }
-        });
-
-        _forward = (ImageButton) rootView.findViewById(R.id.go_to_spending);
-        _forward.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                _forward.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
-                Intent sBIntent = new Intent(getActivity(), SpendingBreakdown.class);
-                startActivity(sBIntent);
-                return true;
-            }
-        });
-
         TextView tv = (TextView) rootView.findViewById(R.id.col_location);
         String location = CentsApplication.get_searchedCity()+", "+CentsApplication.get_searchState();
         tv.setText(location);
@@ -111,7 +84,7 @@ public class CostOfLivingFragment extends Fragment {
         for(int i = 0; i < numColumns; i++){
             List<ColumnValue> values = new ArrayList<ColumnValue>();
             float column_value = Float.parseFloat(col_vals[i]);
-            ColumnValue cv = new ColumnValue(column_value, getResources().getColor(R.color.primary_dark));
+            ColumnValue cv = new ColumnValue(column_value, getResources().getColor(R.color.listing_color));
             cv.setLabel(col_vals[i].toCharArray());
             values.add(cv);
             Column column = new Column(values);
@@ -120,29 +93,6 @@ public class CostOfLivingFragment extends Fragment {
             columns.add(column);
             axisVals.add(new AxisValue(i,labels_short[i].toCharArray()));
         }
-
-//        ColumnValue col_cv = new ColumnValue( col, Utils.pickColor());
-//
-//
-//
-//
-//        ColumnValue housing_cv = new ColumnValue(housing, Utils.pickColor());
-//
-//        ColumnValue trans_cv = new ColumnValue(transportation, Utils.pickColor());
-//
-//        ColumnValue groc_cv = new ColumnValue(groceries, Utils.pickColor());
-//
-//        ColumnValue util_cv = new ColumnValue(utilities, Utils.pickColor());
-//
-//        ColumnValue hc_cv = new ColumnValue(healthCare, Utils.pickColor());
-//
-//        ColumnValue goods_cv = new ColumnValue(goods, Utils.pickColor());
-////            cv.setLabel()
-//            values.add(new ColumnValue(goods, Utils.pickColor()));
-//
-//
-
-//        }
 
         _chartdata = new ColumnChartData(columns);
 

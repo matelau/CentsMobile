@@ -78,7 +78,7 @@ public class MainActivity extends Activity {
     private String[] _supportedCities;
     private List<Result> _jobSearchResultList;
     private int _callbacksExe = 0;
-
+    ImageButton _submitBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,8 +269,8 @@ public class MainActivity extends Activity {
             CentsApplication.set_searchedCity(_city);
             CentsApplication.set_searchState(_state);
             CentsApplication.set_searchedOccupation(_occupation);
-            ImageButton submitBtn = (ImageButton) findViewById(R.id.search_button);
-            submitBtn.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate));
+            _submitBtn = (ImageButton) findViewById(R.id.search_button);
+            _submitBtn.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate));
             //call indeed jobs api
             IndeedService service = CentsApplication.get_indeedRestAdapter().create(IndeedService.class);
             Map<String,String> queryMap = new HashMap<String,String>();
@@ -294,11 +294,6 @@ public class MainActivity extends Activity {
                     Log.v(classLogTag, "indeed search results: "+ iqr.getResults().size());
                     //store results within application
                     _jobSearchResultList = iqr.getResults();
-//                    String[] companies = new String[_jobSearchResultList.size()];
-//                    for(int i = 0; i < _jobSearchResultList.size(); i++){
-//                        companies[i] = _jobSearchResultList.get(i).getCompany();
-//                    }
-
                     //set col data
                     for(Col c: _cols){
                         if(c.getLocation().equals(_city)){
@@ -357,10 +352,7 @@ public class MainActivity extends Activity {
 
         CentsApplication.set_jobSearchResultList(jl);
 
-//        FetchGoogleIMGDataTask ft = new FetchGoogleIMGDataTask();
-//        ft.execute();
-//        Intent jobListIntent = new Intent(getApplicationContext(), JobListActivity.class);
-//        startActivity(jobListIntent);
+        _submitBtn.clearAnimation();
 
         Intent tabHostIntent = new Intent(getApplicationContext(), TabHostActivity.class);
         startActivity(tabHostIntent);

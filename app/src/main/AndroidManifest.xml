@@ -29,21 +29,6 @@
                 android:value="com.matelau.junior.centsproject.Controllers.MainActivity" />
         </activity>
         <activity
-            android:name="com.matelau.junior.centsproject.Controllers.CostOfLivingActivity"
-            android:label="@string/title_activity_cost_of_living" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.matelau.junior.centsproject.Controllers.JobListActivity" />
-        </activity>
-        <activity
-            android:name="com.matelau.junior.centsproject.Controllers.SpendingBreakdown"
-            android:label="@string/title_activity_spending_breakdown"
-            android:parentActivityName="com.matelau.junior.centsproject.Controllers.CostOfLivingActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.matelau.junior.centsproject.Controllers.CostOfLivingActivity" />
-        </activity>
-        <activity
             android:name="com.matelau.junior.centsproject.Controllers.TabHostActivity"
             android:label="@string/title_activity_tab_host" >
         </activity>

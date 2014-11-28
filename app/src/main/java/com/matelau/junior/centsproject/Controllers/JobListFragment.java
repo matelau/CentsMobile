@@ -62,14 +62,7 @@ public class JobListFragment extends Fragment {
 
 
         _recyclerView.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
-            @Override
-            public void onSwipeLeft() {
-                //launch col activity
-                Intent costLivingIntent = new Intent(getActivity(),CostOfLivingActivity.class);
-                startActivity(costLivingIntent);
-            }
-
-            @Override
+              @Override
             public void onSwipeRight() {
                 Intent mainIntent = new Intent(getActivity(),MainActivity.class);
                 startActivity(mainIntent);

@@ -1,16 +1,13 @@
 package com.matelau.junior.centsproject.Controllers;
 
-import android.support.v4.app.Fragment;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -53,20 +50,10 @@ public class SpendingBreakdownFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_spending_breakdown, container, false);
         CardView cv = (CardView) rootView.findViewById(R.id.spending_card_view);
          _chart = (PieChartView) rootView.findViewById(R.id.spending_vis);
-        _occupation = (TextView) rootView.findViewById(R.id.sd_occ);
+        _occupation = (TextView) rootView.findViewById(R.id.spending_desc);
 
         _occupation.setText(CentsApplication.get_searchedOccupation());
 
-        _back = (ImageButton) rootView.findViewById(R.id.go_to_col);
-        _back.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                _back.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
-                Intent colIntent = new Intent(getActivity(), CostOfLivingActivity.class);
-                startActivity(colIntent);
-                return true;
-            }
-        });
 
         generateData();
 
@@ -123,12 +110,9 @@ public class SpendingBreakdownFragment extends Fragment {
 //            // Get roboto-italic font.
             Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Italic.ttf");
             data.setCenterText1Typeface(tf);
-            data.setCenterText1Color(getResources().getColor(R.color.primary));
+            data.setCenterText1Color(getResources().getColor(R.color.listing_color));
             data.setCenterText1FontSize(Utils.px2sp(getResources().getDisplayMetrics().scaledDensity,28));
-//
-//            // Get font size from dimens.xml and convert it to sp(library uses sp values).
-//            data.setCenterText1FontSize(Utils.px2sp(getResources().getDisplayMetrics().scaledDensity,
-//                    (int) getResources().getDimension(R.dimen.pie_chart_text1_size)));
+
         }
 
         if (hasCenterText2) {
