@@ -24,11 +24,9 @@ public class CentsApplication extends Application{
     private static int _citySpinPos;
     private static int _stateSpinPos;
     private static List<JobInfo> _jobSearchResultList;
-    private static List<String> _imgUrls;
     public CentsApplication(){
         _centsContext = this;
     }
-    private static boolean _imgUrlsRdy = false;
     private static Col _c;
 
     public static Context getAppContext() {return _centsContext;}
@@ -90,25 +88,7 @@ public class CentsApplication extends Application{
         CentsApplication._stateSpinPos = _stateSpinPos;
     }
 
-    public static List<String> get_imgUrls() {
-        return _imgUrls;
-    }
 
-    public static void add_imgUrl(String _imgUrl) {
-        CentsApplication._imgUrls.add(_imgUrl);
-    }
-
-    public static boolean is_imgUrlsRdy() {
-        return _imgUrlsRdy;
-    }
-
-    public static void set_imgUrlsRdy(boolean _imgUrlsRdy) {
-        CentsApplication._imgUrlsRdy = _imgUrlsRdy;
-    }
-
-    public static void set_imgUrls(List<String> _imgUrls) {
-        CentsApplication._imgUrls = _imgUrls;
-    }
 
     public static Col get_c() {
         return _c;
@@ -125,4 +105,5 @@ public class CentsApplication extends Application{
     public static void set_occupationSalary(String _occupationSalary) {
         CentsApplication._occupationSalary = _occupationSalary;
     }
+
 }

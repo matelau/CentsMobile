@@ -20,7 +20,7 @@ public class JobListActivity extends Activity {
         Log.v(LOG_TAG, "On Create");
         _jobListFragment = new JobListFragment();
 //        addTransaction.add(R.id.container, _jobListFragment ).commit();
-        setContentView(R.layout.activity_job_list);
+        setContentView(R.layout.activity_job_detail);
 
     }
 

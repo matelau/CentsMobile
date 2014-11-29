@@ -32,6 +32,10 @@
             android:name="com.matelau.junior.centsproject.Controllers.TabHostActivity"
             android:label="@string/title_activity_tab_host" >
         </activity>
+        <activity
+            android:name="com.matelau.junior.centsproject.Controllers.JobDetailActivity"
+            android:label="@string/title_activity_job_detail" >
+        </activity>
     </application>
 
 </manifest>

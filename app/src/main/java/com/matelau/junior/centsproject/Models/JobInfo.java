@@ -1,7 +1,5 @@
 package com.matelau.junior.centsproject.Models;
 
-import android.graphics.Bitmap;
-
 /**
  * Created by matelau on 11/24/14.
  * Holds important information for cards from both indeed and glassdoor
@@ -9,13 +7,13 @@ import android.graphics.Bitmap;
 public class JobInfo {
     public String jobTitle;
     public String jobCompany;
-    public Bitmap companyImg;
-    public String jobUrl;
-    private String LOG_TAG = JobInfo.class.getSimpleName();
+    public String url;
+    public String jobLogoUrl;
 
-    public JobInfo(String jt, String jc){
+    public JobInfo(String jt, String jc, String applyUrl){
         jobTitle = jt;
         jobCompany = jc;
+        url = applyUrl;
 
     }
 

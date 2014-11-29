@@ -4,7 +4,7 @@
     android:id="@+id/card_view"
     android:layout_gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     card_view:cardCornerRadius="4dp"
     android:layout_margin="5dp"
     android:elevation="10dp">
@@ -22,22 +22,18 @@
         android:background="@color/listing_color"
         android:layout_width="match_parent"
         android:textColor="@color/text_primary"
-        android:layout_height="20dp" />
+        android:textSize="24dp"
+        android:layout_height="wrap_content" />
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:src="@drawable/placeholder"
-        android:layout_below="@id/job_company"
-        android:id="@+id/company_image"
-        />
 
     <TextView
         android:id="@+id/job_title"
         android:gravity="center"
-        android:layout_below ="@id/company_image"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:layout_below ="@id/job_company"
         android:layout_width="match_parent"
-        android:layout_height="40dp" />
+        android:layout_height="wrap_content" />
 
 
 

@@ -33,7 +33,6 @@ public class SpendingBreakdownFragment extends Fragment {
     private boolean hasCenterCircle = true;
     private boolean hasCenterText1 = true;
     private boolean hasCenterText2 = true;
-    private boolean isExploaded = false;
     private boolean hasArcSeparated = false;
     private boolean hasLabelForSelected = false;
 
@@ -86,10 +85,6 @@ public class SpendingBreakdownFragment extends Fragment {
         List<ArcValue> values = new ArrayList<ArcValue>();
         for (int i = 0; i < numValues; ++i) {
             ArcValue arcValue = new ArcValue(percents[i], colors[i]);
-            if (isExploaded) {
-                arcValue.setArcSpacing(24);
-            }
-
             if (hasArcSeparated && i == 0) {
                 arcValue.setArcSpacing(10);
             }

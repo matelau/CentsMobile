@@ -1,14 +1,15 @@
 package com.matelau.junior.centsproject.Views;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import com.koushikdutta.ion.Ion;
-import com.matelau.junior.centsproject.Controllers.CentsApplication;
+import com.matelau.junior.centsproject.Controllers.JobDetailActivity;
 import com.matelau.junior.centsproject.Models.JobInfo;
 import com.matelau.junior.centsproject.R;
 
@@ -17,14 +18,15 @@ import java.util.List;
 /**
  * Created by matelau on 11/24/14.
  */
-public class JobListRecycleAdapter extends RecyclerView.Adapter<JobViewHolder> {
+public class JobListRecycleAdapter extends RecyclerView.Adapter<JobListRecycleAdapter.JobViewHolder> {
 
     private String LOG_TAG = JobListRecycleAdapter.class.getSimpleName();
     private List<JobInfo> _jInfo;
     private Context _context;
 
-    public JobListRecycleAdapter(List<JobInfo> ji){
+    public JobListRecycleAdapter(List<JobInfo> ji, Context context){
         _jInfo = ji;
+        _context = context;
     }
 
     @Override
@@ -37,25 +39,14 @@ public class JobListRecycleAdapter extends RecyclerView.Adapter<JobViewHolder> {
         jobViewHolder._jobTitle.setText(ji.jobTitle);
         jobViewHolder._jobCompany.setText(ji.jobCompany);
 
-        if(ji.jobUrl != null){
-            Ion.with(jobViewHolder._companyImg).load(ji.jobUrl);
-        }
-        else{
-            jobViewHolder._companyImg.setImageResource(R.drawable.placeholder);
-//            Ion.with(jobViewHolder._companyImg).load(R.drawable.placeholder);
-        }
 
-        if(CentsApplication.is_imgUrlsRdy()){
-//            Toast.makeText(_context, "Img Urls Loaded", Toast.LENGTH_SHORT).show();
-//            CentsApplication.get_imgUrls().get()
-        }
-//        if(CentsApplication.get_imgUrls() != null){ //&& CentsApplication.get_imgUrls().size() >= i ){
-//            List<String> urls = CentsApplication.get_imgUrls();
-//            JobListFragment.get_aq().id(jobViewHolder._companyImg.getId()).image(urls.get(i),true,true,50, R.drawable.placeholder);
+//        if(ji.jobLogoUrl != null){
+//            Ion.with(jobViewHolder._companyImg).load(ji.jobLogoUrl);
 //        }
 
-
     }
+
+
 
 
     @Override
@@ -73,4 +64,33 @@ public class JobListRecycleAdapter extends RecyclerView.Adapter<JobViewHolder> {
     public int getItemCount() {
         return _jInfo.size();
     }
+
+    public class JobViewHolder extends RecyclerView.ViewHolder {
+
+        private String LOG_TAG = JobViewHolder.class.getSimpleName();
+
+        protected TextView _jobCompany;
+        protected TextView _jobTitle;
+
+
+        public JobViewHolder(View itemView) {
+            super(itemView);
+            Log.v(LOG_TAG, "Constructor");
+            //Pull Portions of CardView
+            _jobCompany = (TextView) itemView.findViewById(R.id.job_company);
+            _jobTitle = (TextView) itemView.findViewById(R.id.job_title);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent jobDetailIntent = new Intent(_context, JobDetailActivity.class);
+////               jobDetailIntent.putExtra("Company",)
+                    _context.startActivity(jobDetailIntent);
+                }
+            });
+        }
+
+    }
+
 }
+
+

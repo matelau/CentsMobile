@@ -1,8 +1,7 @@
 package com.matelau.junior.centsproject.Controllers;
 
-import android.support.v4.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,8 +14,9 @@ import com.matelau.junior.centsproject.Models.JobInfo;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.JobListRecycleAdapter;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
 
@@ -24,10 +24,13 @@ import java.util.List;
 public class JobListFragment extends Fragment {
     private RecyclerView _recyclerView;
     private LinearLayoutManager _recyclerLayoutMan;
+    private JobListRecycleAdapter _recyclerAdapter;
     private String LOG_TAG = JobListFragment.class.getSimpleName();
-    private ArrayList<String> _jiToLogo;
     private Ion _ion;
-
+    private Map<String, String> _companyImg = new HashMap<String,String>();
+    private String[] urls = new String[25];
+    private int _urlsIndex = 0;
+    private List<JobInfo> _jl;
 
 
     @Override
@@ -37,7 +40,6 @@ public class JobListFragment extends Fragment {
 
 
         Log.v(LOG_TAG, "On CreateView");
-        _jiToLogo = new ArrayList<String>();
         View rootView = inflater.inflate(R.layout.fragment_job_list, container, false);
         _recyclerView = (RecyclerView) rootView.findViewById(R.id.job_recycler_view);
         _recyclerView.setHasFixedSize(true);
@@ -46,37 +48,55 @@ public class JobListFragment extends Fragment {
         _recyclerView.setLayoutManager(_recyclerLayoutMan);
 
 
-        List<JobInfo> jl = CentsApplication.get_jobSearchResultList();
+       _jl = CentsApplication.get_jobSearchResultList();
         //Check if list is empty and supply place holder values to adapter.
-        if(jl.size() == 0){
+        if(_jl.size() == 0){
 
-            JobInfo ji = new JobInfo("Please Try Again", "Search Returned No Results");
-            //TODO ask wesley to create a try again image?
-            ji.jobUrl="http://www.okiwoki.com/images/produits/jeux-video/try-again-pulls-noir-h-l_1.jpg";
+            JobInfo ji = new JobInfo("Please Try Again", "Search Returned No Results", null);
+            //try again image?
+            ji.jobLogoUrl ="http://www.okiwoki.com/images/produits/jeux-video/try-again-pulls-noir-h-l_1.jpg";
 //            jl.clear();
-            jl.add(ji);
+            _jl.add(ji);
 
         }
-        _recyclerView.setAdapter(new JobListRecycleAdapter(jl));
+
+        _recyclerAdapter = new JobListRecycleAdapter(_jl, getActivity());
+        _recyclerView.setAdapter(_recyclerAdapter);
 
 
+//        _recyclerView.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
+//            @Override
+//            public void onSwipeRight() {
+//                Intent mainIntent = new Intent(getActivity(), MainActivity.class);
+//                startActivity(mainIntent);
+//            }
+//        });
 
-        _recyclerView.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
-              @Override
-            public void onSwipeRight() {
-                Intent mainIntent = new Intent(getActivity(),MainActivity.class);
-                startActivity(mainIntent);
-            }
-        });
-
-
-
-
+//       _recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+//           @Override
+//           public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+//               return false;
+//           }
+//
+//           @Override
+//           public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+//               recyclerView.findViewById(R.id.job_company);
+//
+//               Intent jobDetailIntent = new Intent(getActivity(), JobDetailActivity.class);
+////               jobDetailIntent.putExtra("Company",)
+//               startActivity(jobDetailIntent);
+//
+//           }
+//       });
 
 
         return rootView;
 
     }
+
+
+
+
 
 
 
