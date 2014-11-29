@@ -15,7 +15,7 @@ import retrofit.RestAdapter;
  */
 public class CentsApplication extends Application{
     private static Context _centsContext;
-    private static RestAdapter _googRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("https://ajax.googleapis.com").build();
+    private static RestAdapter _gdRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("https://api.glassdoor.com/").build();
     private static RestAdapter _indeedRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.BASIC).setEndpoint("http://api.indeed.com").build();
     private static String _searchedCity;
     private static String _searchState;
@@ -30,7 +30,7 @@ public class CentsApplication extends Application{
     private static Col _c;
 
     public static Context getAppContext() {return _centsContext;}
-    public static RestAdapter get_googRestAdapter() {return _googRestAdapter;}
+    public static RestAdapter get_gdRestAdapter() {return _gdRestAdapter;}
 
     public static RestAdapter get_indeedRestAdapter() {
         return _indeedRestAdapter;

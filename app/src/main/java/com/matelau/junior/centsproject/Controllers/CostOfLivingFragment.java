@@ -58,6 +58,7 @@ public class CostOfLivingFragment extends Fragment {
         String location = CentsApplication.get_searchedCity()+", "+CentsApplication.get_searchState();
         tv.setText(location);
         return rootView;
+        //TODO draw a line across data points @100
     }
 
     @Override

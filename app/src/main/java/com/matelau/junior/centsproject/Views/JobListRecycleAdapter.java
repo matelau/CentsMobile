@@ -83,7 +83,8 @@ public class JobListRecycleAdapter extends RecyclerView.Adapter<JobListRecycleAd
                 @Override
                 public void onClick(View v) {
                     Intent jobDetailIntent = new Intent(_context, JobDetailActivity.class);
-////               jobDetailIntent.putExtra("Company",)
+                    jobDetailIntent.putExtra("Company",_jobCompany.getText());
+                    jobDetailIntent.putExtra("Title", _jobTitle.getText());
                     _context.startActivity(jobDetailIntent);
                 }
             });

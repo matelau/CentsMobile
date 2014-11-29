@@ -125,9 +125,11 @@ public class MainActivity extends Activity {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
             TextView v = (TextView) view;
-            _city = v.getText().toString();
-            CentsApplication.set_citySpinPos(position);
-            Log.v(classLogTag, "City Spinner item Selected: "+_city);
+            if(v != null){
+                _city = v.getText().toString();
+                CentsApplication.set_citySpinPos(position);
+                Log.v(classLogTag, "City Spinner item Selected: "+_city);
+            }
 
         }
 
@@ -502,6 +504,7 @@ public class MainActivity extends Activity {
             String occupation = params[0].replace(' ','+').toLowerCase();
             String city = params[1].replace(' ','+').toLowerCase();
             String state = params[2].replace(' ','+').toLowerCase();
+            //http://www.indeed.com/salary?q1=software&l1=arizona
             String url = "http://www.indeed.com/salary?q1="+occupation+"&l1="+city+"+"+state;
             HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet(url);
@@ -518,10 +521,6 @@ public class MainActivity extends Activity {
                 }
                 in.close();
                 html = str.toString();
-//                html.c
-//
-//                String salary = html.s
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -536,37 +535,11 @@ public class MainActivity extends Activity {
                 salary = salary.replaceAll("[^0-9]+","").trim();
 
             }
-//            http://www.indeed.com/salary?q1=software&l1=arizona
+
             return salary;
 
 
         }
     }
 
-//    protected class FetchGoogleIMGDataTask extends AsyncTask<Void, Void, Void> {
-//
-//        @Override
-//        protected void onPostExecute(Void aVoid) {
-//            super.onPostExecute(aVoid);
-//            Intent jobListIntent = new Intent(getApplicationContext(), JobListActivity.class);
-//            startActivity(jobListIntent);
-//        }
-//
-//        @Override
-//        protected Void doInBackground(Void... params) {
-//            buildGoogImageList();
-//            return null;
-//        }
-//
-//        private void buildGoogImageList(){
-//            String company = "";
-//            for(JobInfo ji: CentsApplication.get_jobSearchResultList() ){
-//
-//
-//            }
-////            getUrl(company);
-//        }
-//
-//
-//    }
 }
