@@ -20,6 +20,10 @@ import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
 import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.ColumnValue;
+import lecho.lib.hellocharts.model.Line;
+import lecho.lib.hellocharts.model.LineChartData;
+import lecho.lib.hellocharts.model.PointValue;
+import lecho.lib.hellocharts.util.Utils;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
 /**
@@ -84,8 +88,9 @@ public class CostOfLivingFragment extends Fragment {
         List<AxisValue> axisVals = new ArrayList<AxisValue>();
         for(int i = 0; i < numColumns; i++){
             List<ColumnValue> values = new ArrayList<ColumnValue>();
-            float column_value = Float.parseFloat(col_vals[i]);
-            ColumnValue cv = new ColumnValue(column_value, getResources().getColor(R.color.listing_color));
+            float column_value = Float.parseFloat(col_vals[i]) - 100f;
+            col_vals[i] = ""+ column_value;
+            ColumnValue cv = new ColumnValue(column_value, getResources().getColor(R.color.default_user_color));
             cv.setLabel(col_vals[i].toCharArray());
             values.add(cv);
             Column column = new Column(values);
@@ -102,7 +107,7 @@ public class CostOfLivingFragment extends Fragment {
             Axis axisY = new Axis().setHasLines(true);
             if (hasAxesNames) {
                 axisX.setName(_c.getLocation());
-                axisY.setName("Percentage of Natl. Average");
+                axisY.setName("% diff of Natl. Average (0)");
             }
             _chartdata.setAxisXBottom(new Axis(axisVals));
             _chartdata.setAxisYLeft(axisY);
@@ -112,6 +117,31 @@ public class CostOfLivingFragment extends Fragment {
         }
 
         _chart.setColumnChartData(_chartdata);
+    }
+
+    private LineChartData generateLineData() {
+
+        List<Line> lines = new ArrayList<Line>();
+        for (int i = 0; i < 1; ++i) {
+
+            List<PointValue> values = new ArrayList<PointValue>();
+            for (int j = 0; j < 7; ++j) {
+                values.add(new PointValue(j, 100f));
+            }
+
+            Line line = new Line(values);
+            line.setColor(Utils.COLORS[i]);
+            line.setCubic(false);
+            line.setHasLabels(hasLabels);
+            line.setHasLines(true);
+            line.setHasPoints(false);
+            lines.add(line);
+        }
+
+        LineChartData lineChartData = new LineChartData(lines);
+
+        return lineChartData;
+
     }
 
 

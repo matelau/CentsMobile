@@ -19,7 +19,7 @@
     <TextView
         android:id="@+id/job_company"
         android:gravity="center"
-        android:background="@color/listing_color"
+        android:background="@color/default_user_color"
         android:layout_width="match_parent"
         android:textColor="@color/text_primary"
         android:textSize="24dp"

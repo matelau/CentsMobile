@@ -38,11 +38,7 @@ public class JobListRecycleAdapter extends RecyclerView.Adapter<JobListRecycleAd
         Log.v(LOG_TAG, "On BindViewHolder setting JTitle: " + ji.jobTitle);
         jobViewHolder._jobTitle.setText(ji.jobTitle);
         jobViewHolder._jobCompany.setText(ji.jobCompany);
-
-
-//        if(ji.jobLogoUrl != null){
-//            Ion.with(jobViewHolder._companyImg).load(ji.jobLogoUrl);
-//        }
+        jobViewHolder._jobUrl = ji.url;
 
     }
 
@@ -71,6 +67,7 @@ public class JobListRecycleAdapter extends RecyclerView.Adapter<JobListRecycleAd
 
         protected TextView _jobCompany;
         protected TextView _jobTitle;
+        protected String _jobUrl;
 
 
         public JobViewHolder(View itemView) {
@@ -85,6 +82,7 @@ public class JobListRecycleAdapter extends RecyclerView.Adapter<JobListRecycleAd
                     Intent jobDetailIntent = new Intent(_context, JobDetailActivity.class);
                     jobDetailIntent.putExtra("Company",_jobCompany.getText());
                     jobDetailIntent.putExtra("Title", _jobTitle.getText());
+                    jobDetailIntent.putExtra("url", _jobUrl);
                     _context.startActivity(jobDetailIntent);
                 }
             });

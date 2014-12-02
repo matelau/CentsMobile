@@ -5,5 +5,22 @@
         <item name="android:textColorPrimary">@color/text_primary</item>
         <item name="android:colorPrimaryDark">@color/primary_dark</item>
     </style>
+    <style name="ActionBar" parent="android:Theme.Material.Light.DarkActionBar">
+
+    </style>
+    <style name="AppThemeWithoutActionBarTitle" parent="@style/AppTheme">
+        <item name="android:actionBarStyle">@style/ActionBarWithoutTitle</item>
+    </style>
+    <style name="ActionBarWithoutTitle" parent="@style/ActionBar">
+        <item name="android:displayOptions">useLogo</item>
+    </style>
+
+
+    <style name="MenuTextAppearance" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Menu">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+
+
 
 </resources>

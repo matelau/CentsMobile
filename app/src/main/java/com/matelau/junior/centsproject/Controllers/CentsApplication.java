@@ -15,7 +15,7 @@ import retrofit.RestAdapter;
  */
 public class CentsApplication extends Application{
     private static Context _centsContext;
-    private static RestAdapter _gdRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("https://api.glassdoor.com/").build();
+    private static RestAdapter _gdRestAdapter = new RestAdapter.Builder().setEndpoint("https://api.glassdoor.com/").build();
     private static RestAdapter _indeedRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.BASIC).setEndpoint("http://api.indeed.com").build();
     private static String _searchedCity;
     private static String _searchState;

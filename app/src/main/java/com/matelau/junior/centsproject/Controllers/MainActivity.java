@@ -20,6 +20,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidquery.util.AQUtility;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.matelau.junior.centsproject.Models.Col;
@@ -81,6 +82,13 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_search);
 
+        //get icon to display in actionbar
+        setTitle("");
+        getActionBar().setDisplayShowTitleEnabled(false);
+        getActionBar().setIcon(R.drawable.logo2);
+        getActionBar().setDisplayShowHomeEnabled(true);
+
+
         //reset count
         _statesSpinner = (Spinner) findViewById(R.id.state_spinner);
         //currently supported states
@@ -98,9 +106,13 @@ public class MainActivity extends Activity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 TextView v = (TextView) view;
-                _state = v.getText().toString();
-                CentsApplication.set_stateSpinPos(position);
-                Log.v(classLogTag, "State Spinner item Selected: "+_state);
+                String state = v.getText().toString();
+                if(state != null){
+                    _state = v.getText().toString();
+                    CentsApplication.set_stateSpinPos(position);
+                    Log.v(classLogTag, "State Spinner item Selected: "+_state);
+                }
+
                 //load cities based on state selected
                 loadCities();
             }
@@ -126,9 +138,13 @@ public class MainActivity extends Activity {
 
             TextView v = (TextView) view;
             if(v != null){
-                _city = v.getText().toString();
-                CentsApplication.set_citySpinPos(position);
-                Log.v(classLogTag, "City Spinner item Selected: "+_city);
+                String city = v.getText().toString();
+                if(city != null){
+                    _city = v.getText().toString();
+                    CentsApplication.set_citySpinPos(position);
+                    Log.v(classLogTag, "City Spinner item Selected: "+_city);
+                }
+
             }
 
         }
@@ -174,6 +190,12 @@ public class MainActivity extends Activity {
     private void loadLocations(){
         FetchLocationsTask ft = new FetchLocationsTask();
         ft.execute();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AQUtility.cleanCacheAsync(this);
     }
 
     private void loadCities(){

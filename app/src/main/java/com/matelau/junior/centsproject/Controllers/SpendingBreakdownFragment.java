@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.matelau.junior.centsproject.R;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,25 +65,29 @@ public class SpendingBreakdownFragment extends Fragment {
     public void generateData(){
         int numValues = 10;
         //default values
-        int salary = 27450; // national median 2013
+        float salary = 27450; // national median 2013
         String sSalary = ""+salary;
         if(CentsApplication.get_occupationSalary() != null){
             sSalary = CentsApplication.get_occupationSalary();
             //insure valid int is returned if not reset vals
             try{
                 salary = Integer.parseInt(sSalary);
+                salary = salary/12f;
             }catch(NumberFormatException e){
                 e.printStackTrace();
-                salary = 27450;
                 sSalary =""+ salary;
+                salary = 27450/12f;
                 _occupation.setText("Natl Median Wage");
             }
 
         }
-
+        //only show two decimal places in
+        DecimalFormat df = new DecimalFormat("##.##");
+        df.setRoundingMode(RoundingMode.DOWN);
         String[] labels = {"housing", "food", "transportation", "utilities","student loans","other debt", "insurance","savings","health","misc"};
         float[] percents = {.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f};
-        int[] colors = {Color.RED,Color.DKGRAY,Color.MAGENTA, Color.BLUE, Color.CYAN,Color.LTGRAY, Color.GREEN,  Color.BLACK,Color.YELLOW,Color.argb(255,170,90,12)};
+//        int[] colors = {Color.RED,Color.DKGRAY,Color.MAGENTA, Color.BLUE, Color.CYAN,Color.LTGRAY, Color.GREEN,  Color.BLACK,Color.YELLOW,Color.argb(255,170,90,12)};
+        int[] colors = {Color.argb(255, 0x4d, 0x4d, 0x4d),Color.argb(255,0x5d, 0xa5,0xda), Color.argb(255, 0xFA, 0xA4, 0x3A), Color.LTGRAY, Color.argb(255,0x60, 0xBD, 0x68), Color.argb(255, 0xF1, 0x7C,0xB0),Color.argb(255,0xB2,0x91, 0x2F), Color.argb(255,0xB2,0x76, 0xB2),  Color.argb(255, 0xDE,0xCF, 0x3F),Color.argb(255, 0xF1, 0x58, 0x54)};
         List<ArcValue> values = new ArrayList<ArcValue>();
         for (int i = 0; i < numValues; ++i) {
             ArcValue arcValue = new ArcValue(percents[i], colors[i]);
@@ -89,7 +95,7 @@ public class SpendingBreakdownFragment extends Fragment {
                 arcValue.setArcSpacing(10);
             }
             float portion = percents[i] * salary;
-            String label = labels[i]+" "+portion;
+            String label = labels[i]+" "+df.format(portion);
             values.add(arcValue.setLabel(label.toCharArray()));
         }
 
@@ -100,7 +106,7 @@ public class SpendingBreakdownFragment extends Fragment {
         data.setHasCenterCircle(hasCenterCircle);
 
         if (hasCenterText1) {
-            data.setCenterText1("Annual Spending");
+            data.setCenterText1("Monthly Spending");
 
 //            // Get roboto-italic font.
             Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Italic.ttf");
@@ -111,7 +117,7 @@ public class SpendingBreakdownFragment extends Fragment {
         }
 
         if (hasCenterText2) {
-            data.setCenterText2("based on salary: "+sSalary);
+            data.setCenterText2("based on yearly salary: "+sSalary);
 
             Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Italic.ttf");
 
