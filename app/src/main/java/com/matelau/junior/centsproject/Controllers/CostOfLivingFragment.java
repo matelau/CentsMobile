@@ -1,5 +1,6 @@
 package com.matelau.junior.centsproject.Controllers;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -90,7 +91,13 @@ public class CostOfLivingFragment extends Fragment {
             List<ColumnValue> values = new ArrayList<ColumnValue>();
             float column_value = Float.parseFloat(col_vals[i]) - 100f;
             col_vals[i] = ""+ column_value;
-            ColumnValue cv = new ColumnValue(column_value, getResources().getColor(R.color.default_user_color));
+            //if pos val black else red
+            int c;
+            if(column_value < 0)
+                c = Color.BLACK;
+            else
+                c = Color.RED;
+            ColumnValue cv = new ColumnValue(column_value, c);
             cv.setLabel(col_vals[i].toCharArray());
             values.add(cv);
             Column column = new Column(values);
