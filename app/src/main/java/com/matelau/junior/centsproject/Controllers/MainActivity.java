@@ -24,7 +24,6 @@ import com.androidquery.util.AQUtility;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.matelau.junior.centsproject.Models.Col;
-import com.matelau.junior.centsproject.Models.Company;
 import com.matelau.junior.centsproject.Models.IndeedAPIModels.IndeedQueryResults;
 import com.matelau.junior.centsproject.Models.IndeedAPIModels.IndeedService;
 import com.matelau.junior.centsproject.Models.IndeedAPIModels.Result;
@@ -335,6 +334,7 @@ public class MainActivity extends Activity {
                 }
                 @Override
                 public void failure(RetrofitError error) {
+                    Toast.makeText(getApplicationContext(), "Trouble Accessing Internet", Toast.LENGTH_SHORT).show();
                     Log.e(classLogTag,error.getMessage());
 
                 }
@@ -468,50 +468,6 @@ public class MainActivity extends Activity {
         }
     }
 
-    protected class LoadCompanyImgUrlTask extends AsyncTask<Void, Void,Map<String,String>>{
-        String LOG_TAG = LoadCompanyImgUrlTask.class.getSimpleName();
-
-        @Override
-        protected void onPostExecute(Map<String, String> stringStringMap) {
-            super.onPostExecute(stringStringMap);
-            Log.v(LOG_TAG, "Map completed");
-        }
-
-        @Override
-        protected Map<String, String> doInBackground(Void... params) {
-            Gson gson = new Gson();
-
-            try {
-                Type tp = new TypeToken<Collection<Company>>() {
-                }.getType();
-                InputStream is = getApplicationContext().getAssets().open("logos.json");
-                BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                StringBuilder sb = new StringBuilder();
-                String line;
-                while ((line = br.readLine()) != null) {
-                    sb.append(line);
-                }
-                String json = sb.toString();
-                is.close();
-                Log.v(LOG_TAG, json);
-                //Convert to objects
-                List<Company> results = gson.fromJson(json, tp);
-                Map<String, String> companyToUrl = new HashMap<String,String>();
-                if(results !=null){
-                    for(Company c: results){
-                        companyToUrl.put(c.company.toLowerCase(), c.url.toLowerCase());
-                    }
-
-                    return companyToUrl;
-
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
 
     protected class FetchSalaryTask extends AsyncTask<String, Void, String>{
 

@@ -13,6 +13,6 @@
     <string name="title_activity_cost_of_living">Cost Of Living</string>
     <string name="title_activity_spending_breakdown">SpendingBreakdown</string>
     <string name="title_activity_tab_host">Search Results</string>
-    <string name="title_activity_job_detail">JobDetailActivity</string>
+    <string name="title_activity_job_detail">Job Details</string>
 
 </resources>

@@ -79,9 +79,11 @@ public class JobListRecycleAdapter extends RecyclerView.Adapter<JobListRecycleAd
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    CharSequence company = _jobCompany.getText();
+                    CharSequence title =  _jobTitle.getText();
                     Intent jobDetailIntent = new Intent(_context, JobDetailActivity.class);
-                    jobDetailIntent.putExtra("Company",_jobCompany.getText());
-                    jobDetailIntent.putExtra("Title", _jobTitle.getText());
+                    jobDetailIntent.putExtra("Company", company);
+                    jobDetailIntent.putExtra("Title", title);
                     jobDetailIntent.putExtra("url", _jobUrl);
                     _context.startActivity(jobDetailIntent);
                 }
