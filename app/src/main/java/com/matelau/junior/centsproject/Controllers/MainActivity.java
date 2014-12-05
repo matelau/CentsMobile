@@ -82,11 +82,10 @@ public class MainActivity extends Activity {
         setContentView(R.layout.fragment_search);
 
         //get icon to display in actionbar
-//        setTitle("");
-//        getActionBar().setDisplayShowTitleEnabled(false);
-//        getActionBar().setIcon(R.drawable.logo2);
-//        getActionBar().setDisplayShowHomeEnabled(true);
-          getActionBar().setIcon(R.drawable.ic_launcher);
+        setTitle("");
+        getActionBar().setDisplayShowTitleEnabled(false);
+        getActionBar().setIcon(R.drawable.logo2);
+        getActionBar().setDisplayShowHomeEnabled(true);
 
 
         //reset count
@@ -356,11 +355,14 @@ public class MainActivity extends Activity {
         if(CentsApplication.get_searchedOccupation() != null){
             _editText.setText(CentsApplication.get_searchedOccupation());
         }
+
         if(CentsApplication.get_stateSpinPos() > 0 ){
-            _statesSpinner.setSelection(CentsApplication.get_stateSpinPos());
+            if (_statesSpinner.getChildCount() <= CentsApplication.get_stateSpinPos())
+                    _statesSpinner.setSelection(CentsApplication.get_stateSpinPos());
         }
         if(CentsApplication.get_citySpinPos() > 0){
-            _citiesSpinner.setSelection(CentsApplication.get_citySpinPos());
+            if (_citiesSpinner.getChildCount() <= CentsApplication.get_citySpinPos())
+                    _citiesSpinner.setSelection(CentsApplication.get_citySpinPos());
         }
 
     }
