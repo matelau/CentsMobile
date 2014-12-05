@@ -106,7 +106,7 @@ public class MainActivity extends Activity {
 
                 TextView v = (TextView) view;
                 String state = v.getText().toString();
-                if(state != null){
+                if(v != null && state != null){
                     _state = v.getText().toString();
                     CentsApplication.set_stateSpinPos(position);
                     Log.v(classLogTag, "State Spinner item Selected: "+_state);
