@@ -38,7 +38,8 @@ public class CostOfLivingFragment extends Fragment {
     private boolean hasAxes = true;
     private boolean hasAxesNames = true;
     private boolean hasLabels = true;
-    private boolean hasLabelForSelected = false;
+    private boolean hasLabelForSelected = true;
+    private String _location;
     private Col _c;
     private ImageButton _back;
     private ImageButton _forward;
@@ -51,6 +52,7 @@ public class CostOfLivingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // create visualizations!
+        _location = CentsApplication.get_searchedCity()+", "+CentsApplication.get_searchState();
         View rootView = inflater.inflate(R.layout.fragment_cost_of_living, container, false);
         _cv = (CardView) rootView.findViewById(R.id.col_card_view);
 
@@ -60,8 +62,7 @@ public class CostOfLivingFragment extends Fragment {
         if(_c != null)
             generateData();
         TextView tv = (TextView) rootView.findViewById(R.id.col_location);
-        String location = CentsApplication.get_searchedCity()+", "+CentsApplication.get_searchState();
-        tv.setText(location);
+        tv.setText(_location);
         return rootView;
         //TODO draw a line across data points @100
     }
@@ -69,6 +70,7 @@ public class CostOfLivingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        _location = CentsApplication.get_searchedCity()+", "+CentsApplication.get_searchState();
         //check to see if selection has been updated
         _c = CentsApplication.get_c();
         if(_c != null)
@@ -81,7 +83,7 @@ public class CostOfLivingFragment extends Fragment {
 
         // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
         List<Column> columns = new ArrayList<Column>();
-        String[] labels_long = {"overall", "Housing","Transportation","Groceries", "Utilties", "Health Care", "Goods & Services"};
+        String[] labels_long = {"|yyy|", "|yyy|","|yyy|","Groceries costs are |yyy|", "Utilities costs are |yyy|", "H.C. costs are |yyy|", "G&S costs are |yyy|"};
         String[] labels_short = {"overall", "housing", "trans", "groc", "util","health","goods"};
         String[] col_vals = {_c.getCost_of_living(), _c.getHousing(), _c.getTransportation(), _c.getGroceries(),_c.getUtilities(),_c.getHealth_care(),_c.getGoods()};
 
@@ -93,18 +95,24 @@ public class CostOfLivingFragment extends Fragment {
             col_vals[i] = ""+ column_value;
             //if pos val black else red
             int c;
-            if(column_value < 0)
+            String label = "";
+            if(column_value < 0) {
                 c = Color.BLACK;
-            else
+                label =  Math.abs(column_value) + "% below";
+            }
+            else{
                 c = Color.RED;
-            ColumnValue cv = new ColumnValue(column_value, c);
-            cv.setLabel(col_vals[i].toCharArray());
+                label = column_value + "% above";
+            }
+
+            ColumnValue cv = new ColumnValue(column_value, getResources().getColor(R.color.primary_gray) );
+            cv.setLabel(label.toCharArray());
             values.add(cv);
             Column column = new Column(values);
             column.setHasLabels(hasLabels);
             column.setHasLabelsOnlyForSelected(hasLabelForSelected);
             columns.add(column);
-            axisVals.add(new AxisValue(i,labels_short[i].toCharArray()));
+            axisVals.add(new AxisValue(i,labels_short[i].toUpperCase().toCharArray()));
         }
 
         _chartdata = new ColumnChartData(columns);

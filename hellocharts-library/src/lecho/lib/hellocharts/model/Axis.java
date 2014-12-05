@@ -1,10 +1,10 @@
 package lecho.lib.hellocharts.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.graphics.Color;
 import android.graphics.Typeface;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import lecho.lib.hellocharts.util.Utils;
 
@@ -37,7 +37,7 @@ public class Axis {
 	private boolean isInside = false;
 
 	/** Axis labels and name text color. */
-	private int textColor = Color.LTGRAY;
+	private int textColor = Color.BLACK;
 
 	/** Axis grid lines color. */
 	private int lineColor = Utils.DEFAULT_DARKEN_COLOR;
