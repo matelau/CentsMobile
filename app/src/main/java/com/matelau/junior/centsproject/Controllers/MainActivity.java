@@ -82,10 +82,11 @@ public class MainActivity extends Activity {
         setContentView(R.layout.fragment_search);
 
         //get icon to display in actionbar
-        setTitle("");
-        getActionBar().setDisplayShowTitleEnabled(false);
-        getActionBar().setIcon(R.drawable.logo2);
-        getActionBar().setDisplayShowHomeEnabled(true);
+//        setTitle("");
+//        getActionBar().setDisplayShowTitleEnabled(false);
+//        getActionBar().setIcon(R.drawable.logo2);
+//        getActionBar().setDisplayShowHomeEnabled(true);
+          getActionBar().setIcon(R.drawable.ic_launcher);
 
 
         //reset count
@@ -105,8 +106,7 @@ public class MainActivity extends Activity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 TextView v = (TextView) view;
-                String state = v.getText().toString();
-                if(v != null && state != null){
+                if(v != null){
                     _state = v.getText().toString();
                     CentsApplication.set_stateSpinPos(position);
                     Log.v(classLogTag, "State Spinner item Selected: "+_state);
@@ -383,7 +383,7 @@ public class MainActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 

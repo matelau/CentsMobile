@@ -1,5 +1,40 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" android:showAsAction="never" />
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity"
+    >
+    <item
+        android:id="@+id/action_new"
+        android:icon="@drawable/search_orange"
+        android:title="test"
+        android:showAsAction="always">
+
+        <menu>
+
+            <item
+                android:id="@+id/action_photo"
+                android:icon="@drawable/search_orange"
+                android:title="test"
+                android:showAsAction="always|withText" />
+            <item
+                android:id="@+id/action_video"
+                android:icon="@drawable/search_orange"
+                android:title="test"
+                android:showAsAction="always|withText" />
+            <item
+                android:id="@+id/action_text"
+                android:icon="@drawable/search_orange"
+                android:title="test"
+                android:showAsAction="always|withText" />
+            <item
+                android:id="@+id/action_place"
+                android:icon="@drawable/search_orange"
+                android:title="test"
+                android:showAsAction="always|withText" />
+            <item
+                android:id="@+id/action_more"
+                android:title="test"
+                android:visible="false"
+                android:showAsAction="always|withText" />
+
+        </menu>
+    </item>
 </menu>
