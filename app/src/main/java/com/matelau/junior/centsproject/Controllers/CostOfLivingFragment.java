@@ -1,6 +1,5 @@
 package com.matelau.junior.centsproject.Controllers;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -64,7 +63,6 @@ public class CostOfLivingFragment extends Fragment {
         TextView tv = (TextView) rootView.findViewById(R.id.col_location);
         tv.setText(_location);
         return rootView;
-        //TODO draw a line across data points @100
     }
 
     @Override
@@ -83,7 +81,7 @@ public class CostOfLivingFragment extends Fragment {
 
         // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
         List<Column> columns = new ArrayList<Column>();
-        String[] labels_long = {"|yyy|", "|yyy|","|yyy|","Groceries costs are |yyy|", "Utilities costs are |yyy|", "H.C. costs are |yyy|", "G&S costs are |yyy|"};
+//        String[] labels_long = {"|yyy|", "|yyy|","|yyy|","Groceries costs are |yyy|", "Utilities costs are |yyy|", "H.C. costs are |yyy|", "G&S costs are |yyy|"};
         String[] labels_short = {"overall", "housing", "trans", "groc", "util","health","goods"};
         String[] col_vals = {_c.getCost_of_living(), _c.getHousing(), _c.getTransportation(), _c.getGroceries(),_c.getUtilities(),_c.getHealth_care(),_c.getGoods()};
 
@@ -91,21 +89,23 @@ public class CostOfLivingFragment extends Fragment {
         List<AxisValue> axisVals = new ArrayList<AxisValue>();
         for(int i = 0; i < numColumns; i++){
             List<ColumnValue> values = new ArrayList<ColumnValue>();
+            //normalize col_vals National avg = 0
             float column_value = Float.parseFloat(col_vals[i]) - 100f;
-            col_vals[i] = ""+ column_value;
-            //if pos val black else red
+//            col_vals[i] = ""+ column_value;
             int c;
             String label = "";
             if(column_value < 0) {
-                c = Color.BLACK;
+//                c = Color.BLACK;
                 label =  Math.abs(column_value) + "% below";
             }
             else{
-                c = Color.RED;
+//                c = Color.RED;
                 label = column_value + "% above";
             }
-
-            ColumnValue cv = new ColumnValue(column_value, getResources().getColor(R.color.primary_gray) );
+            //if column_value = 0 add a negligible value to display
+            if(column_value == 0f)
+                column_value = 0.1f;
+            ColumnValue cv = new ColumnValue(column_value, getResources().getColor(R.color.compliment_primary) );
             cv.setLabel(label.toCharArray());
             values.add(cv);
             Column column = new Column(values);
@@ -122,7 +122,7 @@ public class CostOfLivingFragment extends Fragment {
             Axis axisY = new Axis().setHasLines(true);
             if (hasAxesNames) {
                 axisX.setName(_c.getLocation());
-                axisY.setName("% diff of Natl. Average (0)");
+                axisY.setName("Cost of Living(%) : National Avg. = 0");
             }
             _chartdata.setAxisXBottom(new Axis(axisVals));
             _chartdata.setAxisYLeft(axisY);

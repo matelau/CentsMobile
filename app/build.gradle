@@ -31,8 +31,8 @@ dependencies {
     compile 'com.android.support:palette-v7:+'
     compile 'com.google.code.gson:gson:2.3'
     compile 'com.squareup.retrofit:retrofit:1.8.0'
-    compile 'com.koushikdutta.ion:ion:2.0.1'
     compile 'com.squareup.picasso:picasso:2.4.0'
+    compile 'com.github.traex.rippleeffect:library:1.2.2'
     compile 'com.googlecode.android-query:android-query:0.25.9'
     compile project(':hellocharts-library')
 }

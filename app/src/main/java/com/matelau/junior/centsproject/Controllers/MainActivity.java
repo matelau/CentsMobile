@@ -295,7 +295,7 @@ public class MainActivity extends Activity {
             //TODO create preference for users to set limit, radius, fromage, jt
             queryMap.put("l", location);
             queryMap.put("v","2");
-            queryMap.put("limit", "25");
+            queryMap.put("limit", "50"); // 50 results
             queryMap.put("radius", "25");
             queryMap.put("fromage","30");
             queryMap.put("jt", "fulltime");

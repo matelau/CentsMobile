@@ -76,19 +76,32 @@ public class JobListRecycleAdapter extends RecyclerView.Adapter<JobListRecycleAd
             //Pull Portions of CardView
             _jobCompany = (TextView) itemView.findViewById(R.id.job_company);
             _jobTitle = (TextView) itemView.findViewById(R.id.job_title);
-            itemView.setOnClickListener(new View.OnClickListener() {
+            _jobTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CharSequence company = _jobCompany.getText();
-                    CharSequence title =  _jobTitle.getText();
-                    Intent jobDetailIntent = new Intent(_context, JobDetailActivity.class);
-                    jobDetailIntent.putExtra("Company", company);
-                    jobDetailIntent.putExtra("Title", title);
-                    jobDetailIntent.putExtra("url", _jobUrl);
-                    _context.startActivity(jobDetailIntent);
+                   launchIntent();
+                }
+            });
+
+            _jobCompany.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    launchIntent();
                 }
             });
         }
+
+
+             public void launchIntent(){
+                CharSequence company = _jobCompany.getText();
+                CharSequence title = _jobTitle.getText();
+                Intent jobDetailIntent = new Intent(_context, JobDetailActivity.class);
+                jobDetailIntent.putExtra("Company", company);
+                jobDetailIntent.putExtra("Title", title);
+                jobDetailIntent.putExtra("url", _jobUrl);
+                _context.startActivity(jobDetailIntent);
+            }
+
 
     }
 

@@ -1,12 +1,5 @@
 package lecho.lib.hellocharts.renderer;
 
-import lecho.lib.hellocharts.ChartComputator;
-import lecho.lib.hellocharts.model.Axis;
-import lecho.lib.hellocharts.model.AxisValue;
-import lecho.lib.hellocharts.model.Viewport;
-import lecho.lib.hellocharts.util.AxisAutoValues;
-import lecho.lib.hellocharts.util.Utils;
-import lecho.lib.hellocharts.view.Chart;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -15,6 +8,14 @@ import android.graphics.Paint.FontMetricsInt;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.text.TextUtils;
+
+import lecho.lib.hellocharts.ChartComputator;
+import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
+import lecho.lib.hellocharts.model.Viewport;
+import lecho.lib.hellocharts.util.AxisAutoValues;
+import lecho.lib.hellocharts.util.Utils;
+import lecho.lib.hellocharts.view.Chart;
 
 /**
  * Default axes renderer. Can draw maximum four axes - two horizontal(top/bottom) and two vertical(left/right).
@@ -255,7 +256,7 @@ public class AxesRenderer {
 
 	private void prepareAxis(Axis axis, int position) {
 		final ChartComputator computator = chart.getChartComputator();
-
+        //TODO add middle position
 		if (BOTTOM == position) {
 			textPaintTab[position].setTextAlign(Align.CENTER);
 

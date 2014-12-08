@@ -37,6 +37,7 @@ public class SpendingBreakdownFragment extends Fragment {
     private boolean hasCenterText2 = true;
     private boolean hasArcSeparated = false;
     private boolean hasLabelForSelected = false;
+    private int _height = 800; // default val
 
 
 
@@ -52,7 +53,8 @@ public class SpendingBreakdownFragment extends Fragment {
         CardView cv = (CardView) rootView.findViewById(R.id.spending_card_view);
          _chart = (PieChartView) rootView.findViewById(R.id.spending_vis);
         _occupation = (TextView) rootView.findViewById(R.id.spending_desc);
-
+        //modify circle text to be x percentage in size based on view height
+        _height = container.getHeight();
         _occupation.setText(CentsApplication.get_searchedOccupation());
 
 
@@ -95,7 +97,7 @@ public class SpendingBreakdownFragment extends Fragment {
                 arcValue.setArcSpacing(10);
             }
             float portion = percents[i] * salary;
-            String label = labels[i]+" "+df.format(portion);
+            String label = labels[i].toUpperCase()+" "+df.format(portion);
             values.add(arcValue.setLabel(label.toCharArray()));
         }
 
@@ -104,15 +106,17 @@ public class SpendingBreakdownFragment extends Fragment {
         data.setHasLabelsOnlyForSelected(hasLabelForSelected);
         data.setHasLabelsOutside(hasLabelsOutside);
         data.setHasCenterCircle(hasCenterCircle);
-
+        //dynamicaly generate fontsize
+        double fontsize =  40f; // (_height *(.1) )/4;
         if (hasCenterText1) {
             data.setCenterText1("Monthly Spending");
 
 //            // Get roboto-italic font.
             Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Italic.ttf");
             data.setCenterText1Typeface(tf);
+
             data.setCenterText1Color(getResources().getColor(R.color.listing_color));
-            data.setCenterText1FontSize(Utils.px2sp(getResources().getDisplayMetrics().scaledDensity,28));
+            data.setCenterText1FontSize(Utils.px2sp(getResources().getDisplayMetrics().scaledDensity, (int)fontsize));
 
         }
 
@@ -123,11 +127,16 @@ public class SpendingBreakdownFragment extends Fragment {
 
             data.setCenterText2Typeface(tf);
             data.setCenterText2FontSize(Utils.px2sp(getResources().getDisplayMetrics().scaledDensity,
-                    20));
+                    (int)fontsize - 8));
         }
 
         _chart.setPieChartData(data);
 
     }
 
+    @Override
+    public void onResume() {
+        generateData();
+        super.onResume();
+    }
 }

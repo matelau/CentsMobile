@@ -19,7 +19,7 @@
     <TextView
         android:id="@+id/job_company"
         android:gravity="center"
-        android:background="@color/default_user_color"
+        android:background="@color/compliment_primary"
         android:layout_width="match_parent"
         android:textColor="@color/text_primary"
         android:textSize="24dp"
@@ -34,6 +34,7 @@
         android:layout_below ="@id/job_company"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
 
 
 

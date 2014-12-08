@@ -6,4 +6,7 @@
     <item name="listing_color" type="color">#8FBC8F</item>
     <item name="default_user_color" type="color">#FF5DA5DA</item>
     <item name="primary_gray" type="color">#FF8A8889</item>
+    <item name="compliment_primary" type="color">#FF125688</item>
+    <item name="accent_primary" type="color">#FFD18C59</item>
+    <item name="accent_mild_primary" type="color">#FFAC6530</item>
 </resources>

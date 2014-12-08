@@ -39,12 +39,21 @@
                 android:layout_height="fill_parent"
                 android:layout_gravity="center">
                 <ImageView
+                    android:id="@+id/company_logo_border"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:gravity="center"
+                    android:background="@drawable/border_rectangle"
+                    android:padding="50dp"
+                    android:layout_margin="5dp"
+                    />
+                <ImageView
                     android:id="@+id/company_logo"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:background="@drawable/border_rectangle"
                     android:layout_weight="1"
                     android:layout_centerInParent="true"
+                    android:padding="10dp"
                     android:layout_margin="5dp"/>
                 <ProgressBar
                     android:id="@+id/progress_bar"
@@ -122,6 +131,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:text="Visit Glassdoor"
+                    android:background="@color/compliment_primary"
+                    android:layout_margin="5dp"
                     android:id="@+id/button"
                     android:layout_weight="1"/>
             </LinearLayout>
@@ -146,6 +157,8 @@
                         android:layout_height="fill_parent"
                         android:text="Apply"
                         android:id="@+id/button2"
+                        android:layout_margin="5dp"
+                        android:background="@color/compliment_primary"
                         android:layout_weight="1"/>
 
                 </LinearLayout>
@@ -160,6 +173,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Visit Company Website"
+                    android:padding="5dp"
+                    android:background="@color/compliment_primary"
                     android:id="@+id/company_site"/>
             </LinearLayout>
         </LinearLayout>

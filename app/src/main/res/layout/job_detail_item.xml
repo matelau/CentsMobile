@@ -19,7 +19,7 @@
         <TextView
             android:id="@+id/detail_category"
             android:gravity="center"
-            android:background="@color/default_user_color"
+            android:background="@color/compliment_primary"
             android:layout_width="match_parent"
             android:textColor="@color/text_primary"
             android:textSize="16dp"

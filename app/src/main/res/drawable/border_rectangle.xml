@@ -4,7 +4,7 @@
 
     <solid android:color="@color/text_primary" />
     <stroke
-        android:color = "@color/listing_color"
+        android:color = "@color/accent_mild_primary"
         android:width= "5dp"
         />
 </shape>

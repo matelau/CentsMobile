@@ -63,10 +63,6 @@ public class JobDetailFragment extends Fragment {
         _rootView = inflater.inflate(R.layout.fragment_job_detail, container, false);
         _logoView = (ImageView) _rootView.findViewById(R.id.company_logo);
         aq = new AQuery(getActivity());
-        pic = Picasso.with(getActivity());
-        pic.setIndicatorsEnabled(true);
-
-
 
         loadGlassdoorData();
 
