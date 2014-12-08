@@ -27,6 +27,7 @@ public class TabHostActivity extends FragmentActivity {
         _tabHost.addTab(_tabHost.newTabSpec("tab3").setIndicator("Spending"),
                 SpendingBreakdownFragment.class, null);
 
+
     }
 
 

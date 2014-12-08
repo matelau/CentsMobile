@@ -55,7 +55,7 @@ import retrofit.client.Response;
 
 /*
  * @Author: Asaeli Matelau
- * Using Libraries for visualizations Processing, and RetroFit for api calls
+ * Using Hellocharts for visualizations AndroidQuery for image loading, and RetroFit for api calls
  */
 public class MainActivity extends Activity {
 //    Hex Color #884412
