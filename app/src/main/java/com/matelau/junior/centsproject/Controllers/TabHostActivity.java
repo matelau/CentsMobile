@@ -40,6 +40,9 @@ public class TabHostActivity extends FragmentActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        //reset extra search results
+        CentsApplication.set_searchedCity2(null);
+        CentsApplication.set_searchState2(null);
         //always return to main
         Intent returnToSearch = new Intent(this, MainActivity.class);
         startActivity(returnToSearch);

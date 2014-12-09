@@ -7,15 +7,7 @@
         <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
     </style>
-    <style name="ActionBar" parent="android:Theme.Material.Light.DarkActionBar">
 
-    </style>
-    <style name="AppThemeWithoutActionBarTitle" parent="@style/AppTheme">
-        <item name="android:actionBarStyle">@style/ActionBarWithoutTitle</item>
-    </style>
-    <style name="ActionBarWithoutTitle" parent="@style/ActionBar">
-        <item name="android:displayOptions">useLogo</item>
-    </style>
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>

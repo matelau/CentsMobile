@@ -19,15 +19,19 @@ public class CentsApplication extends Application{
     private static RestAdapter _indeedRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.BASIC).setEndpoint("http://api.indeed.com").build();
     private static String _searchedCity;
     private static String _searchState;
+    private static String _searchedCity2;
+    private static String _searchState2;
     private static String _searchedOccupation;
     private static String _occupationSalary;
     private static int _citySpinPos;
     private static int _stateSpinPos;
     private static List<JobInfo> _jobSearchResultList;
+    private static String[] _states;
+    private static String[] _cities;
     public CentsApplication(){
         _centsContext = this;
     }
-    private static Col _c;
+    private static List<Col> _cols;
 
     public static Context getAppContext() {return _centsContext;}
     public static RestAdapter get_gdRestAdapter() {return _gdRestAdapter;}
@@ -88,16 +92,6 @@ public class CentsApplication extends Application{
         CentsApplication._stateSpinPos = _stateSpinPos;
     }
 
-
-
-    public static Col get_c() {
-        return _c;
-    }
-
-    public static void set_c(Col _c) {
-        CentsApplication._c = _c;
-    }
-
     public static String get_occupationSalary() {
         return _occupationSalary;
     }
@@ -106,4 +100,43 @@ public class CentsApplication extends Application{
         CentsApplication._occupationSalary = _occupationSalary;
     }
 
+    public static String[] get_states() {
+        return _states;
+    }
+
+    public static void set_states(String[] _states) {
+        CentsApplication._states = _states;
+    }
+
+    public static String[] get_cities() {
+        return _cities;
+    }
+
+    public static void set_cities(String[] _cities) {
+        CentsApplication._cities = _cities;
+    }
+
+    public static String get_searchedCity2() {
+        return _searchedCity2;
+    }
+
+    public static void set_searchedCity2(String _searchedCity2) {
+        CentsApplication._searchedCity2 = _searchedCity2;
+    }
+
+    public static String get_searchState2() {
+        return _searchState2;
+    }
+
+    public static void set_searchState2(String _searchState2) {
+        CentsApplication._searchState2 = _searchState2;
+    }
+
+    public static List<Col> get_cols() {
+        return _cols;
+    }
+
+    public static void set_cols(List<Col> _cols) {
+        CentsApplication._cols = _cols;
+    }
 }

@@ -94,6 +94,7 @@ public class MainActivity extends Activity {
         _states = new String[]{"Arizona", "California", "Colorado", "District of Columbia", "Florida", "Illinois", "Indiana",
                 "Massachusetts", "Michigan", "Ohio", "North Carolina", "New York", "Pennsylvania", "Tennessee", "Texas", "Washington",
                 "Wisconsin", "Utah"};
+        CentsApplication.set_states(_states);
         _supportedStatesHash = new HashSet<String>(Arrays.asList(_states));
         //load state data
         _stateAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, _states);
@@ -309,13 +310,6 @@ public class MainActivity extends Activity {
                     Log.v(classLogTag, "indeed search results: "+ iqr.getResults().size());
                     //store results within application
                     _jobSearchResultList = iqr.getResults();
-                    //search for col data for provided loc
-                    for(Col c: _cols){
-                        if(c.getLocation().equals(_city)){
-                            CentsApplication.set_c(c);
-                            break;
-                        }
-                    }
                     List<JobInfo> jl = new ArrayList<JobInfo>();
                     for(int i=0; i < _jobSearchResultList.size();i++){
                         Result r = _jobSearchResultList.get(i);
@@ -425,6 +419,8 @@ public class MainActivity extends Activity {
                     }
 
                 }
+
+                CentsApplication.set_cities(_supportedCities);
             }
         }
 
@@ -450,15 +446,18 @@ public class MainActivity extends Activity {
                 //Convert to objects
                 _cols = gson.fromJson(json, tp);
 
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             if (_cols != null) {
                 Log.i(LOG_TAG, "doInBackground - Processing col.json");
+                CentsApplication.set_cols(_cols);
                 //pull locations add to result
                 results = new String[_cols.size()];
                 int i = 0;
+                //Get Locations from cols
                 for (Col c : _cols) {
                     results[i] = c.getLocation();
                     i++;

@@ -7,49 +7,29 @@
     android:id="@+id/search"
     android:layout_gravity="center"
     android:gravity="center_vertical">
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/state_text_view"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/black"
-        android:id="@+id/stateTextView"
-        android:layout_alignParentTop="true"
-        android:layout_alignEnd="@+id/cityTextView"
    />
 
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:id="@+id/state_spinner"
-        android:elevation="10dp"
-        android:textColor="@android:color/black"
-        android:background="@drawable/rounded_rectangle"
-        android:layout_below="@+id/stateTextView"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
+    <include layout="@layout/state_spinner"
+        android:layout_marginTop="20dp"
+        android:layout_margin="20dp"
+        android:id="@+id/include_state_spin"
         android:layout_height="wrap_content"
-        android:text="@string/city_text_view"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/black"
-        android:id="@+id/cityTextView"
-        android:layout_below="@+id/state_spinner"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="55dp"/>
+        android:layout_width="wrap_content">
 
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:id="@+id/city_spinner"
-        android:elevation="10dp"
-        android:textColor="@android:color/black"
-        android:background="@drawable/rounded_rectangle"
-        android:layout_below="@+id/cityTextView"
-        android:layout_alignParentStart="true" />
+        </include>
+
+
+    <include layout="@layout/city_spinner"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/include_state_spin"
+        android:layout_marginTop="55dp"
+        android:layout_marginBottom="75dp"
+        android:id="@+id/include_city_spin">
+
+        </include>
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -58,15 +38,16 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@android:color/black"
         android:id="@+id/textView"
-        android:layout_below="@+id/city_spinner"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="55dp"/>
+        android:layout_below="@+id/include_city_spin"
+        android:layout_centerHorizontal="true"/>
 
     <include
         android:id="@+id/search_bar"
         layout = "@layout/search_bar"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:elevation="10dp"
         android:layout_below="@+id/textView"
         android:layout_alignParentStart="true" />
@@ -80,7 +61,7 @@
         android:elevation="10dp"
         android:layout_below="@+id/search_bar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="25dp"/>
 
 
 </RelativeLayout>

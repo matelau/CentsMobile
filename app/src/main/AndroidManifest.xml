@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--TODO create a popup menu to allow the modification of # of search results-->
+    <!-- TODO create a popup menu to allow the modification of # of search results -->
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -12,23 +12,31 @@
         android:logo="@drawable/logo"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.matelau.junior.centsproject.Controllers.MainActivity"
+            android:name=".Controllers.SearchActivity"
+            android:label="@string/title_activity_search" >
+
+
+        </activity>
+        <activity
+            android:name=".Controllers.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
-            android:name="com.matelau.junior.centsproject.Controllers.TabHostActivity"
+            android:name=".Controllers.TabHostActivity"
             android:label="@string/title_activity_tab_host" >
         </activity>
         <activity
-            android:name="com.matelau.junior.centsproject.Controllers.JobDetailActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_job_detail" >
+            android:name=".Controllers.JobDetailActivity"
+            android:label="@string/title_activity_job_detail"
+            android:screenOrientation="portrait" >
         </activity>
+
     </application>
 
 </manifest>
