@@ -1,5 +1,6 @@
 package com.matelau.junior.centsproject.Controllers;
 
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -106,8 +107,17 @@ public class SpendingBreakdownFragment extends Fragment {
         data.setHasLabelsOnlyForSelected(hasLabelForSelected);
         data.setHasLabelsOutside(hasLabelsOutside);
         data.setHasCenterCircle(hasCenterCircle);
-        //dynamicaly generate fontsize
-        double fontsize =  40f; // (_height *(.1) )/4;
+        //todo dynamicaly generate fontsize
+        double fontsize =  32f;
+        int currentOrientation = getResources().getConfiguration().orientation;
+        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // Landscape
+            fontsize =  22f;
+        }
+        else {
+            // Portrait
+             fontsize =  32f;
+        }
         if (hasCenterText1) {
             data.setCenterText1("Monthly Spending");
 
@@ -129,7 +139,8 @@ public class SpendingBreakdownFragment extends Fragment {
             data.setCenterText2FontSize(Utils.px2sp(getResources().getDisplayMetrics().scaledDensity,
                     (int)fontsize - 8));
         }
-
+        //limits the amount of space the pie chart can take from 0-1
+        _chart.setCircleFillRatio(0.6f);
         _chart.setPieChartData(data);
 
     }
@@ -138,5 +149,6 @@ public class SpendingBreakdownFragment extends Fragment {
     public void onResume() {
         generateData();
         super.onResume();
+
     }
 }

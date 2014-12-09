@@ -77,16 +77,19 @@ public class CostOfLivingFragment extends Fragment{
         TextView loc1 = (TextView) rootView.findViewById(R.id.col_location1);
         loc1.setText(_location);
         validateLocation2();
+        if(_plusBtn != null){
+            _plusBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //start Animation
+                    _plusBtn.startAnimation((AnimationUtils.loadAnimation(getActivity(), R.anim.rotate)));
+                    //TODO show Popup
+                    showSecondCityDialog();
+                }
+          });
 
-        _plusBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                 //start Animation
-                _plusBtn.startAnimation((AnimationUtils.loadAnimation(getActivity(), R.anim.rotate)));
-                //TODO show Popup
-                showSecondCityDialog();
-            }
-        });
+        }
+
 
         return rootView;
     }
@@ -242,7 +245,8 @@ public class CostOfLivingFragment extends Fragment{
             Axis axisY = new Axis().setHasLines(true);
             if (hasAxesNames) {
                 axisX.setName(_c1.getLocation());
-                axisY.setName("Cost of Living(%) : National Avg. = 0");
+//                axisY.setName("Cost of Living(%) : National Avg. = 0");
+                axisY.setName("");
             }
             _chartdata.setAxisXBottom(new Axis(axisVals));
             _chartdata.setAxisYLeft(axisY);

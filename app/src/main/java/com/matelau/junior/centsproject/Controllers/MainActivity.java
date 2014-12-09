@@ -58,7 +58,6 @@ import retrofit.client.Response;
  * Using Hellocharts for visualizations AndroidQuery for image loading, and RetroFit for api calls
  */
 public class MainActivity extends Activity {
-//    Hex Color #884412
     private EditText _editText;
     private String classLogTag = MainActivity.class.getSimpleName();
 
@@ -87,8 +86,6 @@ public class MainActivity extends Activity {
         getActionBar().setIcon(R.drawable.logo2);
         getActionBar().setDisplayShowHomeEnabled(true);
 
-
-        //reset count
         _statesSpinner = (Spinner) findViewById(R.id.state_spinner);
         //currently supported states
         _states = new String[]{"Arizona", "California", "Colorado", "District of Columbia", "Florida", "Illinois", "Indiana",
@@ -197,6 +194,8 @@ public class MainActivity extends Activity {
         AQUtility.cleanCacheAsync(this);
     }
 
+
+    //TODO move loadcities to a helper
     private void loadCities(){
         String[] cities = null;
         //return only the cities in a selected state
