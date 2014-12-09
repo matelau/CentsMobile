@@ -99,9 +99,14 @@ public class CostOfLivingFragment extends Fragment{
         else{
             rootView.findViewById(R.id.second_location).setVisibility(View.VISIBLE);
             _loc2.setText(_location2);
+
             //remove plus icon
-            ViewGroup viewGroup = (ViewGroup) _plusBtn.getParent();
-            viewGroup.removeView(_plusBtn);
+            if(_plusBtn != null){
+                ViewGroup viewGroup = (ViewGroup) _plusBtn.getParent();
+                viewGroup.removeView(_plusBtn);
+                _plusBtn = null;
+            }
+
             //update layout
             rootView.invalidate();
 //            _plusBtn.setVisibility(View.GONE);
@@ -162,12 +167,13 @@ public class CostOfLivingFragment extends Fragment{
             _city2 = CentsApplication.get_searchedCity2();
             _location2 = _city2 + ", " + CentsApplication.get_searchState2();
             _c2 = getCol(_city2);
+            validateLocation2();
         }
         //check to see if selection has been updated
         _c1 = getCol(CentsApplication.get_searchedCity());
         if(_c1 != null)
             generateData();
-        validateLocation2();
+
     }
 
     private void generateData(){
