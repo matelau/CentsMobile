@@ -11,6 +11,8 @@ average. The user can also add one or more areas to be shown in the comparison.
 
 
 **To Run this Application**
+
+
 -Load the project into Android Studio ( I used Android Studio 1.0 to develop and this required me to upgrade gradle, so you may need to do so as well)
 
 
@@ -21,5 +23,31 @@ average. The user can also add one or more areas to be shown in the comparison.
 
 
 **Time**
+
+1. Main Search Screen
+..* Query Glassdoor.com and Indeed API - 8hrs
+..* View - 6hrs (First time using Custom shapes and Custom Animations, I also spent timelearning how to begin and end animations in a fluid manner
+
+2. Job Listings
+..* View - 12hrs 
+(I spent a great deal of time trying to get the list to contain logos, including writing a script to scrape popular company logos and store this list in a json file
+to load when the list is populated, but I was not successfull. So I decided to create a jobdetail activity)
+
+2.5 Job Detail
+..* View - 4hrs
+..* Glassdoor Data processing - 1hr
+
+3. Area Data
+..* View - 8hrs ( I originally created custom views that allowed you to scroll between the different fragments views, but I preferred the look of tabhost. So, I gutted the project and used tabhost)
+..* Dialog Fragment to select a second city - 2hrs
+..* Logic for including 2nd view - 2hrs
+..* Modified Viz Library to show text on axis differently - 1hr
+
+4. Spending Breakdown 
+..* View - 6hrs
+
+
+Total: 50 hours
+
 
 
