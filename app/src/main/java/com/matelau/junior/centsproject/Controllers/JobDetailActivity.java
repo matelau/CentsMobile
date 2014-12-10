@@ -58,7 +58,8 @@ public class JobDetailActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent i = getIntent();
-
+        //set back button
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         _company =  i.getCharSequenceExtra("Company").toString();
         _title = i.getCharSequenceExtra("Title").toString();
         _jobUrl = i.getStringExtra("url");
