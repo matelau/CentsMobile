@@ -33,17 +33,17 @@ average. The user can also add one or more areas to be shown in the comparison.
 (I spent a great deal of time trying to get the list to contain logos, including writing a script to scrape popular company logos and store this list in a json file
 to load when the list is populated, but I was not successfull. So I decided to create a jobdetail activity)
 
-2.5 Job Detail
+3. Job Detail
 ..* View - 4hrs
 ..* Glassdoor Data processing - 1hr
 
-3. Area Data
+4. Area Data
 ..* View - 8hrs ( I originally created custom views that allowed you to scroll between the different fragments views, but I preferred the look of tabhost. So, I gutted the project and used tabhost)
 ..* Dialog Fragment to select a second city - 2hrs
 ..* Logic for including 2nd view - 2hrs
 ..* Modified Viz Library to show text on axis differently - 1hr
 
-4. Spending Breakdown 
+5. Spending Breakdown 
 ..* View - 6hrs
 
 
