@@ -104,11 +104,12 @@ public class CostOfLivingFragment extends Fragment{
             _loc2.setText(_location2);
 
             //remove plus icon
-            if(_plusBtn != null){
-                ViewGroup viewGroup = (ViewGroup) _plusBtn.getParent();
-                viewGroup.removeView(_plusBtn);
-                _plusBtn = null;
-            }
+//            if(_plusBtn != null){
+////                ViewGroup viewGroup = (ViewGroup) _plusBtn.getParent();
+////                viewGroup.removeView(_plusBtn);
+////                _plusBtn = null;
+////                _plusBt
+//            }
 
             //update layout
             rootView.invalidate();

@@ -81,12 +81,12 @@
             <ImageButton
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:padding="2dp"
+                android:padding="5dp"
                 android:id="@+id/plus_icon"
                 android:src="@drawable/ic_action_new"
                 android:background="@drawable/circle"
-                android:gravity="center"
-                android:layout_centerVertical="true"/>
+                android:layout_marginLeft="20dp"
+                android:layout_centerVertical="true" />
             </RelativeLayout>
         </LinearLayout>
         </LinearLayout>

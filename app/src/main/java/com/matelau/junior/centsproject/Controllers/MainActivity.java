@@ -48,6 +48,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -361,7 +363,11 @@ public class MainActivity extends Activity {
     }
 
     private boolean validSubmission(String searchText) {
-        if((_city != null) && (!_city.equals("")) && (_state != null) && (!_state.equals("")) && (searchText != null) && (!searchText.equals(""))) {
+        //check for special chars
+        Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(searchText);
+        boolean specialChars = m.find();
+        if((_city != null) && (!_city.equals("")) && (_state != null) && (!_state.equals("")) && (searchText != null) && (!searchText.equals("")) && !specialChars) {
             _occupation = searchText;
             Log.v(classLogTag, "validSubmission - city: "+ _city+" state: "+ _state+" occupation: "+_occupation );
             return true;
