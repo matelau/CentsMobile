@@ -185,6 +185,10 @@ public class MainActivity extends Activity {
 
     }
 
+
+    /**
+     * opens col.json and loads locations in an async task
+     */
     private void loadLocations(){
         FetchLocationsTask ft = new FetchLocationsTask();
         ft.execute();
@@ -198,6 +202,10 @@ public class MainActivity extends Activity {
 
 
     //TODO move loadcities to a helper
+
+    /**
+     * Loads the subset of supported cities into the city spinner
+     */
     private void loadCities(){
         String[] cities = null;
         //return only the cities in a selected state
@@ -275,7 +283,10 @@ public class MainActivity extends Activity {
         }
     }
 
-
+    /**
+     * if submission is valid initiates indeed request and starts tabhost activity
+     * else toast an error
+     */
     private void handleSubmit(){
         String searchText = _editText.getText().toString();
         Log.v(classLogTag, "in handleSubmit: "+ searchText);
@@ -333,7 +344,7 @@ public class MainActivity extends Activity {
 
                 }
             });
-
+            //get salary information for current options
             FetchSalaryTask ft =  new FetchSalaryTask();
             ft.execute(_occupation,_city, _state);
         }
@@ -347,14 +358,27 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        //Reset 2nd city search
+        CentsApplication.set_searchedCity2(null);
+        CentsApplication.set_searchState2(null);
+
         if(CentsApplication.get_searchedOccupation() != null){
             _editText.setText(CentsApplication.get_searchedOccupation());
         }
 
-        if(CentsApplication.get_stateSpinPos() > 0 ){
-            if (_statesSpinner.getChildCount() <= CentsApplication.get_stateSpinPos())
-                    _statesSpinner.setSelection(CentsApplication.get_stateSpinPos());
-        }
+        //reinstate state spinner
+        if (_statesSpinner.getChildCount() <= CentsApplication.get_stateSpinPos())
+                _statesSpinner.setSelection(CentsApplication.get_stateSpinPos());
+
+
+        //Reinstate vars for citiesSpinner loading
+        _state = CentsApplication.get_searchState();
+        _supportedCities = CentsApplication.get_cities();
+        _states = new String[]{"Arizona", "California", "Colorado", "District of Columbia", "Florida", "Illinois", "Indiana",
+                "Massachusetts", "Michigan", "Ohio", "North Carolina", "New York", "Pennsylvania", "Tennessee", "Texas", "Washington",
+                "Wisconsin", "Utah"};
+        loadCities();
+        //update the city spinner to what was stored
         if(CentsApplication.get_citySpinPos() > 0){
             if (_citiesSpinner.getChildCount() <= CentsApplication.get_citySpinPos())
                     _citiesSpinner.setSelection(CentsApplication.get_citySpinPos());
@@ -403,6 +427,10 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    /**
+     * Process Col.json
+     */
     protected class FetchLocationsTask extends AsyncTask<Void, Void, String[]> {
 
         private final String LOG_TAG = FetchLocationsTask.class.getSimpleName();
@@ -474,7 +502,9 @@ public class MainActivity extends Activity {
         }
     }
 
-
+    /**
+     * makes a request to indeed.com/salary with current occupation & location then scrapes out salary value
+     */
     protected class FetchSalaryTask extends AsyncTask<String, Void, String>{
 
         @Override

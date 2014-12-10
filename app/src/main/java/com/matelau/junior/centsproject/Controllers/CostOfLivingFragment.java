@@ -76,7 +76,7 @@ public class CostOfLivingFragment extends Fragment{
         //update locations
         TextView loc1 = (TextView) rootView.findViewById(R.id.col_location1);
         loc1.setText(_location);
-        validateLocation2();
+        processLocation2();
         if(_plusBtn != null){
             _plusBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -94,7 +94,10 @@ public class CostOfLivingFragment extends Fragment{
         return rootView;
     }
 
-    private void validateLocation2() {
+    /**
+     * Checks for a second location and updates UI accordingly
+     */
+    private void processLocation2() {
         if(_location2 == null){
             rootView.findViewById(R.id.second_location).setVisibility(View.GONE);
 
@@ -103,26 +106,19 @@ public class CostOfLivingFragment extends Fragment{
             rootView.findViewById(R.id.second_location).setVisibility(View.VISIBLE);
             _loc2.setText(_location2);
 
-            //remove plus icon
-//            if(_plusBtn != null){
-////                ViewGroup viewGroup = (ViewGroup) _plusBtn.getParent();
-////                viewGroup.removeView(_plusBtn);
-////                _plusBtn = null;
-////                _plusBt
-//            }
 
-            //update layout
             rootView.invalidate();
-//            _plusBtn.setVisibility(View.GONE);
+
 
         }
 
     }
 
-
+    /*
+        Pulls up Dialog box to select a second location
+     */
     public void showSecondCityDialog(){
        FragmentManager fm = getFragmentManager();
-//        getFragmentManager()
         SecondCityDialogFragment secondCity = new SecondCityDialogFragment();
         secondCity.setTargetFragment(this, 01);
         secondCity.show(fm, "tag");
@@ -130,6 +126,12 @@ public class CostOfLivingFragment extends Fragment{
 
     }
 
+    /**
+     * Functions called once a user closes dialog
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         _plusBtn.clearAnimation();
@@ -142,7 +144,7 @@ public class CostOfLivingFragment extends Fragment{
             //set the second col data
             _c2 = getCol(_city2);
             //restore Second Text View and remove + btn
-            validateLocation2();
+            processLocation2();
             //update display
             generateData();
 
@@ -150,7 +152,9 @@ public class CostOfLivingFragment extends Fragment{
         }
     }
 
-
+    /*
+        Searches the Cost of Living List and returns the cost of living for this city
+     */
     public Col getCol(String city){
         if(_cols == null ){
             _cols = CentsApplication.get_cols();
@@ -171,7 +175,7 @@ public class CostOfLivingFragment extends Fragment{
             _city2 = CentsApplication.get_searchedCity2();
             _location2 = _city2 + ", " + CentsApplication.get_searchState2();
             _c2 = getCol(_city2);
-            validateLocation2();
+            processLocation2();
         }
         //check to see if selection has been updated
         _c1 = getCol(CentsApplication.get_searchedCity());
@@ -180,6 +184,9 @@ public class CostOfLivingFragment extends Fragment{
 
     }
 
+    /**
+     * builds visualization bar chart
+     */
     private void generateData(){
         int numSubcolumns = 1;
         int numColumns = 7;

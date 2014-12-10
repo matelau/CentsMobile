@@ -66,15 +66,15 @@ public class JobDetailFragment extends Fragment {
 
         loadGlassdoorData();
 
-
-        //TODO build out detail view
         return _rootView;
 
 
     }
 
 
-
+    /**
+     * Requests Company review data from glassdoor.com
+     */
     public void loadGlassdoorData(){
         String company = getCompanyString();
         String location = CentsApplication.get_searchedCity().toLowerCase().replace(' ', '+')+"+"+CentsApplication.get_searchState().toLowerCase().replace(' ', '+');
@@ -121,6 +121,9 @@ public class JobDetailFragment extends Fragment {
     }
 
 
+    /**
+     * updates UI with data prodivded from glassdoor
+     */
     private void updateUI(){
         //load image
         Log.v(LOG_TAG, "Loading img: "+_img_url);
@@ -143,20 +146,13 @@ public class JobDetailFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 //        menu.add("Refresh");
         inflater.inflate(R.menu.menu_job_detail,menu);
-//        return true;
 
 
-//        menu.
-//        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.v(LOG_TAG, "invalidating views");
-        int id = item.getItemId();
-
-//            _rootView.invalidate();
-//        _logoView.invalidate();
+//        int id = item.getItemId();
         return true;
     }
 

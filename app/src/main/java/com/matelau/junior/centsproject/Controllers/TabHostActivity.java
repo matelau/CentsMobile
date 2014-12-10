@@ -16,7 +16,7 @@ public class TabHostActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab_host);
-
+        //add fragments to host
         _tabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
         _tabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 

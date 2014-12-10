@@ -65,6 +65,9 @@ public class SpendingBreakdownFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Build Pie Chart
+     */
     public void generateData(){
         int numValues = 10;
         //default values
@@ -121,7 +124,7 @@ public class SpendingBreakdownFragment extends Fragment {
         if (hasCenterText1) {
             data.setCenterText1("Monthly Spending");
 
-//            // Get roboto-italic font.
+        // Get roboto-italic font.
             Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Italic.ttf");
             data.setCenterText1Typeface(tf);
 
