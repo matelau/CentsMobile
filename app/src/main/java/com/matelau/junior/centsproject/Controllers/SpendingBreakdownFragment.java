@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,16 +111,27 @@ public class SpendingBreakdownFragment extends Fragment {
         data.setHasLabelsOnlyForSelected(hasLabelForSelected);
         data.setHasLabelsOutside(hasLabelsOutside);
         data.setHasCenterCircle(hasCenterCircle);
+
+        //limits the amount of space the pie chart can take from 0-1
+        _chart.setCircleFillRatio(0.6f);
+
+
         //todo dynamicaly generate fontsize
-        double fontsize =  32f;
+        double fontsize =   _chart.getHeight() *.1;
+        Log.v("PieChart", "Chart: " + _chart.getHeight() + " font: " + fontsize);
+
         int currentOrientation = getResources().getConfiguration().orientation;
         if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
             // Landscape
-            fontsize =  22f;
+//            fontsize =  18f     ;
+            //large device
+            fontsize = 18f;
         }
         else {
             // Portrait
-             fontsize =  32f;
+//             fontsize =  24f;
+            //large device
+            fontsize = 30f;
         }
         if (hasCenterText1) {
             data.setCenterText1("Monthly Spending");
@@ -134,7 +146,7 @@ public class SpendingBreakdownFragment extends Fragment {
         }
 
         if (hasCenterText2) {
-            data.setCenterText2("based on yearly salary: "+sSalary);
+            data.setCenterText2("Annual Salary of: "+sSalary);
 
             Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Italic.ttf");
 
@@ -142,8 +154,7 @@ public class SpendingBreakdownFragment extends Fragment {
             data.setCenterText2FontSize(Utils.px2sp(getResources().getDisplayMetrics().scaledDensity,
                     (int)fontsize - 8));
         }
-        //limits the amount of space the pie chart can take from 0-1
-        _chart.setCircleFillRatio(0.6f);
+
         _chart.setPieChartData(data);
 
     }

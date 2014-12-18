@@ -373,6 +373,8 @@ public class MainActivity extends Activity {
 
         //Reinstate vars for citiesSpinner loading
         _state = CentsApplication.get_searchState();
+        if(_state == null)
+            _state = "Arizona";
         _supportedCities = CentsApplication.get_cities();
         _states = new String[]{"Arizona", "California", "Colorado", "District of Columbia", "Florida", "Illinois", "Indiana",
                 "Massachusetts", "Michigan", "Ohio", "North Carolina", "New York", "Pennsylvania", "Tennessee", "Texas", "Washington",

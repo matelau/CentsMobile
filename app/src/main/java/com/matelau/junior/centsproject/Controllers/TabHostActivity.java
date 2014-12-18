@@ -22,7 +22,7 @@ public class TabHostActivity extends FragmentActivity {
 
         _tabHost.addTab(_tabHost.newTabSpec("tab1").setIndicator("Job Listings"),
                 JobListFragment.class, null);
-        _tabHost.addTab(_tabHost.newTabSpec("tab2").setIndicator("Cost of Living"),
+        _tabHost.addTab(_tabHost.newTabSpec("tab2").setIndicator("Area Cost"),
                 CostOfLivingFragment.class, null);
         _tabHost.addTab(_tabHost.newTabSpec("tab3").setIndicator("Spending"),
                 SpendingBreakdownFragment.class, null);
