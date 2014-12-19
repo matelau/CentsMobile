@@ -15,8 +15,11 @@ public class SearchActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_search);
-        _toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        getLayoutInflater().inflate(R.id.toolbar, this);
+
+        _toolbar =  new Toolbar(this);//(Toolbar) findViewById(R.id.toolbar);
         if(_toolbar != null){
             setActionBar(_toolbar);
             getActionBar().setTitle("");
