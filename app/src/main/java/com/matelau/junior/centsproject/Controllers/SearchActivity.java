@@ -18,12 +18,20 @@ public class SearchActivity extends Activity {
 
         setContentView(R.layout.activity_search);
 //        getLayoutInflater().inflate(R.id.toolbar, this);
+//        RelativeLayout basic = new RelativeLayout(this);
+//        getLayoutInflater().inflate(R.layout.toolbar, basic);
+//        ViewGroup
+        //Todo modify toolbar layout to hold navigation drawer
+        _toolbar = (Toolbar) findViewById(R.id.toolbar);
+        _toolbar.setTitle("Hello World");
+        setActionBar(_toolbar);
 
-        _toolbar =  new Toolbar(this);//(Toolbar) findViewById(R.id.toolbar);
+
+//        _toolbar =  tb;//(Toolbar) findViewById(R.id.toolbar1);
         if(_toolbar != null){
-            setActionBar(_toolbar);
-            getActionBar().setTitle("");
-            getActionBar().setDisplayUseLogoEnabled(true);
+//            setSupportActionBar(_toolbar);
+//            getActionBar().setTitle("");
+//            getActionBar().setDisplayUseLogoEnabled(true);
 
             //TODO change apptheme parent to be material.noActionbar so toolbar won't conflict
         }
