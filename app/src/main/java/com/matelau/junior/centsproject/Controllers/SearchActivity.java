@@ -2,8 +2,10 @@ package com.matelau.junior.centsproject.Controllers;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.Toolbar;
 
 import com.matelau.junior.centsproject.R;
@@ -11,6 +13,9 @@ import com.matelau.junior.centsproject.R;
 public class SearchActivity extends Activity {
 
     private Toolbar _toolbar;
+    private DrawerLayout _drawerLayout;
+    private ListView _drawerList;
+    private String[] _navElements;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,8 +28,14 @@ public class SearchActivity extends Activity {
 //        ViewGroup
         //Todo modify toolbar layout to hold navigation drawer
         _toolbar = (Toolbar) findViewById(R.id.toolbar);
-        _toolbar.setTitle("Hello World");
+        _toolbar.setTitle("Add Navigation Drawer");
         setActionBar(_toolbar);
+
+        _drawerLayout =  (DrawerLayout) findViewById(R.id.my_drawer_layout);
+        _drawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark));
+
+        _drawerList = (ListView) findViewById(R.id.nav_list);
+
 
 
 //        _toolbar =  tb;//(Toolbar) findViewById(R.id.toolbar1);
