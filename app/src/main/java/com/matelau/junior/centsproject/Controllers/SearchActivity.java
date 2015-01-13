@@ -22,30 +22,16 @@ public class SearchActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_search);
-//        getLayoutInflater().inflate(R.id.toolbar, this);
-//        RelativeLayout basic = new RelativeLayout(this);
-//        getLayoutInflater().inflate(R.layout.toolbar, basic);
-//        ViewGroup
         //Todo modify toolbar layout to hold navigation drawer
         _toolbar = (Toolbar) findViewById(R.id.toolbar);
         _toolbar.setTitle("Add Navigation Drawer");
+        //Todo add logo etc - after gathering view feedback
         setActionBar(_toolbar);
-
         _drawerLayout =  (DrawerLayout) findViewById(R.id.my_drawer_layout);
         _drawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark));
-
         _drawerList = (ListView) findViewById(R.id.nav_list);
 
 
-
-//        _toolbar =  tb;//(Toolbar) findViewById(R.id.toolbar1);
-        if(_toolbar != null){
-//            setSupportActionBar(_toolbar);
-//            getActionBar().setTitle("");
-//            getActionBar().setDisplayUseLogoEnabled(true);
-
-            //TODO change apptheme parent to be material.noActionbar so toolbar won't conflict
-        }
     }
 
 
