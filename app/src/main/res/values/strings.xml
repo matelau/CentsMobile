@@ -15,5 +15,16 @@
     <string name="title_activity_tab_host">Search Results</string>
     <string name="title_activity_job_detail">Job Details</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_closed">Closed</string>
+    <string-array name="nav_array">
+        <item>Home</item>
+        <item>Login</item>
+        <item>Profile</item>
+        <item>Example</item>
+        <item>Wizard</item>
+        <item>About</item>
+        <item>Search</item>
+    </string-array>
 
 </resources>

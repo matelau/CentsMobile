@@ -1,11 +1,20 @@
 package com.matelau.junior.centsproject.Controllers;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.matelau.junior.centsproject.R;
@@ -16,45 +25,143 @@ public class SearchActivity extends Activity {
     private DrawerLayout _drawerLayout;
     private ListView _drawerList;
     private String[] _navElements;
+    private ActionBarDrawerToggle _drawerToggle;
+    private String LOG_TAG = SearchActivity.class.getSimpleName();
+    private LinearLayout _drawerLinear;
+    private boolean _isDrawerOpen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_search);
-        //Todo modify toolbar layout to hold navigation drawer
+
+        //Setup Toolbar
         _toolbar = (Toolbar) findViewById(R.id.toolbar);
-        _toolbar.setTitle("Add Navigation Drawer");
+        _toolbar.setTitle("Cents");
         //Todo add logo etc - after gathering view feedback
         setActionBar(_toolbar);
-        _drawerLayout =  (DrawerLayout) findViewById(R.id.my_drawer_layout);
+
+
+        //Setup Navigation Drawer
+        _drawerLayout =  (DrawerLayout) findViewById(R.id.drawer_layout);
         _drawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark));
-        _drawerList = (ListView) findViewById(R.id.nav_list);
+        //Todo set drawer shadow
+//        _drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        _drawerLinear = (LinearLayout) findViewById(R.id.drawer_linear);
+        _drawerList = (ListView) findViewById(R.id.left_drawer);
+        _navElements = getResources().getStringArray(R.array.nav_array);
+        _drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_nav_element, _navElements));
+        _drawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayShowHomeEnabled(true);
+
+        _drawerToggle = new ActionBarDrawerToggle(this,_drawerLayout, R.string.drawer_open, R.string.drawer_closed) {
+            /**
+             * Called when a drawer has settled in a completely closed state.
+             */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                Log.d(LOG_TAG, "Drawer Closed");
+//                getActionBar().setTitle("Closed");
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /**
+             * Called when a drawer has settled in a completely open state.
+             */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                Log.d(LOG_TAG, "Drawer Opened");
+//                getActionBar().setTitle("Open");
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+//            public void onDrawerSlide(View drawerView, float slideOffset) {
+//                if(slideOffset > .55 && !_isDrawerOpen){
+//                    onDrawerOpened(drawerView);
+//                    _isDrawerOpen = true;
+//                } else if(slideOffset < .45 && _isDrawerOpen) {
+//                    onDrawerClosed(drawerView);
+//                    _isDrawerOpen = false;
+//                }
+//            }
+
+        };
+        _drawerLayout.setDrawerListener(_drawerToggle);
+//        _drawerToggle.syncState();
+
+        //TODO add drawer open/closed state, click response - http://developer.android.com/training/implementing-navigation/nav-drawer.html
+        if(savedInstanceState == null){
+            selectItem(0);
+        }
+
+
 
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    /* Called whenever we call invalidateOptionsMenu() */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content view
+       boolean drawerOpen = _drawerLayout.isDrawerOpen(_drawerLinear);
+        Log.d(LOG_TAG, "onPrepareOptionsMenu");
+        menu.findItem(R.id.action_new).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_search, menu);
-        return true;
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        _drawerToggle.syncState();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if(_drawerToggle.onOptionsItemSelected(item))
             return true;
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        _drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        private String LOG_TAG = DrawerItemClickListener.class.getSimpleName();
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
         }
 
-        return super.onOptionsItemSelected(item);
+
+
+        public void setTitle(CharSequence title){
+            getActionBar().setTitle(title);
+        }
+    }
+
+    /**
+     * Switch out fragment based on Nav Drawer element clicked
+     * @param pos
+     */
+    private void selectItem(int pos){
+        Log.d(LOG_TAG, "Item Selected: "+pos);
+        Toast.makeText(this, "Selected item:"+pos, Toast.LENGTH_SHORT).show();
+
     }
 }

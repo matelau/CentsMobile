@@ -4,36 +4,30 @@
     <item
         android:id="@+id/action_new"
         android:icon="@drawable/search_orange"
-        android:title="test"
-        android:showAsAction="always">
+        android:title="test">
 
         <menu>
 
             <item
                 android:id="@+id/action_photo"
                 android:icon="@drawable/search_orange"
-                android:title="test"
-                android:showAsAction="always|withText" />
+                android:title="test" />
             <item
                 android:id="@+id/action_video"
                 android:icon="@drawable/search_orange"
-                android:title="test"
-                android:showAsAction="always|withText" />
+                android:title="test" />
             <item
                 android:id="@+id/action_text"
                 android:icon="@drawable/search_orange"
-                android:title="test"
-                android:showAsAction="always|withText" />
+                android:title="test" />
             <item
                 android:id="@+id/action_place"
                 android:icon="@drawable/search_orange"
-                android:title="test"
-                android:showAsAction="always|withText" />
+                android:title="test" />
             <item
                 android:id="@+id/action_more"
                 android:title="test"
-                android:visible="false"
-                android:showAsAction="always|withText" />
+                android:visible="false" />
 
         </menu>
     </item>
