@@ -92,7 +92,7 @@ public class SearchActivity extends Activity {
         _drawerLayout.setDrawerListener(_drawerToggle);
 //        _drawerToggle.syncState();
 
-        //TODO add drawer open/closed state, click response - http://developer.android.com/training/implementing-navigation/nav-drawer.html
+
         if(savedInstanceState == null){
             selectItem(0);
         }
@@ -145,6 +145,7 @@ public class SearchActivity extends Activity {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            //TODO add animation for onClick Selections
             selectItem(position);
         }
 
@@ -162,6 +163,8 @@ public class SearchActivity extends Activity {
     private void selectItem(int pos){
         Log.d(LOG_TAG, "Item Selected: "+pos);
         Toast.makeText(this, "Selected item:"+pos, Toast.LENGTH_SHORT).show();
+        //launch and attach fragment based on clicked item
+        //TODO add drawer open/closed state, click response - http://developer.android.com/training/implementing-navigation/nav-drawer.html
 
     }
 }
