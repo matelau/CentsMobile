@@ -34,6 +34,15 @@
         android:elevation="10dp"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="18dp"
+        android:text="Need Help? Check out the Wizard or Examples"
+        android:gravity="center"
+        android:id="@+id/help_text"
+        android:layout_below="@+id/search_bar"
+        android:layout_margin="10dp"
+        android:layout_alignParentEnd="true" />
 
     <ImageButton
         android:contentDescription="@string/submit_button"
@@ -42,9 +51,9 @@
         android:id ="@+id/search_button"
         android:background="@drawable/circle_arrow"
         android:elevation="10dp"
-        android:layout_below="@+id/search_bar"
+        android:layout_below="@+id/help_text"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"/>
+        android:layout_marginTop="15dp"/>
 </RelativeLayout>
 
 
