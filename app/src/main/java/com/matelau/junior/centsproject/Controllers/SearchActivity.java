@@ -12,8 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -32,11 +30,6 @@ public class SearchActivity extends FragmentActivity {
     private ActionBarDrawerToggle _drawerToggle;
     private LinearLayout _drawerLinear;
     private boolean _isDrawerOpen;
-
-    //Search Properties
-    private   ImageButton _submitBtn;
-    private EditText _editText;
-    private String _query;
 
 
     @Override
