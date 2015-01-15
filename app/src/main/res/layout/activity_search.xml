@@ -16,44 +16,13 @@
         android:layout_alignParentTop="true"
         android:fitsSystemWindows="true"/>
 
-    <TextView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:text="WHAT WOULD YOU LIKE TO KNOW?"
-        android:gravity="center"
-        android:id="@+id/searchbar_text"
-        android:layout_above="@+id/search_bar"
-        android:layout_alignParentEnd="true" />
-    <include
-        android:id="@+id/search_bar"
-        layout = "@layout/search_bar"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:elevation="10dp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="18dp"
-        android:text="Need Help? Check out the Wizard or Examples"
-        android:gravity="center"
-        android:id="@+id/help_text"
-        android:layout_below="@+id/search_bar"
-        android:layout_margin="10dp"
-        android:layout_alignParentEnd="true" />
+        android:id="@+id/fragment_placeholder"
+        android:layout_height="match_parent">
+    </FrameLayout>
 
-    <ImageButton
-        android:contentDescription="@string/submit_button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:id ="@+id/search_button"
-        android:background="@drawable/circle_arrow"
-        android:elevation="10dp"
-        android:layout_below="@+id/help_text"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"/>
+
 </RelativeLayout>
 
 

@@ -1,0 +1,67 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.matelau.junior.centsproject.Controllers.MainActivity"
+    android:id="@+id/search"
+    android:layout_gravity="center"
+    android:gravity="center_vertical">
+   />
+
+    <include layout="@layout/state_spinner"
+        android:layout_marginTop="20dp"
+        android:layout_margin="20dp"
+        android:id="@+id/include_state_spin"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content">
+
+        </include>
+
+
+    <include layout="@layout/city_spinner"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/include_state_spin"
+        android:layout_marginTop="55dp"
+        android:layout_marginBottom="75dp"
+        android:id="@+id/include_city_spin">
+
+        </include>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/occupation_text_view"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/black"
+        android:id="@+id/textView"
+        android:layout_below="@+id/include_city_spin"
+        android:layout_centerHorizontal="true"/>
+
+    <include
+        android:id="@+id/search_bar"
+        layout = "@layout/search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:elevation="10dp"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentStart="true" />
+
+    <ImageButton
+        android:contentDescription="@string/submit_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id ="@+id/search_button"
+        android:background="@drawable/circle_arrow"
+        android:elevation="10dp"
+        android:layout_below="@+id/search_bar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"/>
+
+
+</RelativeLayout>

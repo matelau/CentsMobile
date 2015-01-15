@@ -80,7 +80,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_search);
+        setContentView(R.layout.fragment_search_col);
 
         //get icon to display in actionbar
         setTitle("");
