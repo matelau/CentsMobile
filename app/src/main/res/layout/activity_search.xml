@@ -58,6 +58,8 @@
         android:id="@+id/drawer_linear"
         android:fitsSystemWindows="true">
 
+
+
         <!-- Your drawer content -->
         <ListView
             android:id="@+id/left_drawer"

@@ -7,7 +7,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -78,20 +77,9 @@ public class SearchActivity extends Activity {
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
-//            public void onDrawerSlide(View drawerView, float slideOffset) {
-//                if(slideOffset > .55 && !_isDrawerOpen){
-//                    onDrawerOpened(drawerView);
-//                    _isDrawerOpen = true;
-//                } else if(slideOffset < .45 && _isDrawerOpen) {
-//                    onDrawerClosed(drawerView);
-//                    _isDrawerOpen = false;
-//                }
-//            }
 
         };
         _drawerLayout.setDrawerListener(_drawerToggle);
-//        _drawerToggle.syncState();
-
 
         if(savedInstanceState == null){
             selectItem(0);
@@ -104,8 +92,8 @@ public class SearchActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -113,9 +101,9 @@ public class SearchActivity extends Activity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
-       boolean drawerOpen = _drawerLayout.isDrawerOpen(_drawerLinear);
+//       boolean drawerOpen = _drawerLayout.isDrawerOpen(_drawerLinear);
         Log.d(LOG_TAG, "onPrepareOptionsMenu");
-        menu.findItem(R.id.action_new).setVisible(!drawerOpen);
+//        menu.findItem(R.id.action_new).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
