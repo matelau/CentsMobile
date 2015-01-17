@@ -98,15 +98,15 @@ public class SearchFragment extends Fragment {
                 Log.v(LOG_TAG, "Query Service Response: "+response.toString());
                 _query =  _editText.getText().toString();
                 //TODO Process Response and route accordingly
+                _submitBtn.clearAnimation();
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Log.e(LOG_TAG, "Query Service Error: "+error.getMessage());
-
+                _submitBtn.clearAnimation();
             }
         });
-
     }
 
 
