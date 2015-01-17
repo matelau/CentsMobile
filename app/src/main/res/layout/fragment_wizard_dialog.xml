@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/primary"
+    tools:context="com.matelau.junior.centsproject.Controllers.WizardDialogFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
+        android:id="@+id/wizard_question"
+        android:text="test"
+        android:gravity="center"
+        android:textSize="24dp"
+        android:textColor="@color/text_primary"/>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/wizard_options"></ListView>
+
+</LinearLayout>
