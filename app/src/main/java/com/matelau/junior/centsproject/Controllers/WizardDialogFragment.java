@@ -56,6 +56,7 @@ public class WizardDialogFragment extends DialogFragment {
         _answers.setAdapter(_answersAdapter);
 
         builder.setView(_rootLayout);
+        builder.setCancelable(true);
 
         return builder.create();
     }
@@ -76,7 +77,7 @@ public class WizardDialogFragment extends DialogFragment {
                 break;
             case 1:
                 //Career inquiry
-                //TODO launch career comparison fragment
+                //TODO launch career comparison viz view pager
                 break;
             case 2:
                 //Cost of Living or spending breakdown inquiry
@@ -88,10 +89,10 @@ public class WizardDialogFragment extends DialogFragment {
                         selectCost(position);
                     }
                 });
-                //TODO launch living inquiry
                 break;
             default:
-                //Examples?
+                //Examples
+                //TODO launch examples Dialog Fragment
                 break;
 
         }
@@ -103,9 +104,11 @@ public class WizardDialogFragment extends DialogFragment {
         switch(pos){
             case 0:
                 //College Inquiry
+                //TODO Launch college viz view pager
                 break;
             case 1:
                 //Major Inquiry
+                //TODO launch Major viz view pager
                 break;
             default:
                 //still unsure
@@ -118,9 +121,11 @@ public class WizardDialogFragment extends DialogFragment {
         switch(pos) {
             case 0:
                 //Cost of Living
+                //TODO launch cost living viz view pager
                 break;
             case 1:
                 //Spending
+                //TODO launch spending viz view pager
                 break;
             default:
                 break;
