@@ -1,8 +1,9 @@
 package com.matelau.junior.centsproject.Controllers;
 
-import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
@@ -18,16 +19,18 @@ import android.widget.Toolbar;
 
 import com.matelau.junior.centsproject.R;
 
-public class SearchActivity extends Activity {
+public class SearchActivity extends FragmentActivity {
 
+    private String LOG_TAG = SearchActivity.class.getSimpleName();
     private Toolbar _toolbar;
+    //Nav Drawer Properties
     private DrawerLayout _drawerLayout;
     private ListView _drawerList;
     private String[] _navElements;
     private ActionBarDrawerToggle _drawerToggle;
-    private String LOG_TAG = SearchActivity.class.getSimpleName();
     private LinearLayout _drawerLinear;
     private boolean _isDrawerOpen;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,9 +88,14 @@ public class SearchActivity extends Activity {
             selectItem(0);
         }
 
-
-
-
+        //Attach Search Fragment
+        // Begin the transaction
+       FragmentTransaction ft = getFragmentManager().beginTransaction();
+        // Replace the container with the new fragment
+        ft.replace(R.id.fragment_placeholder, new SearchFragment());
+        // or ft.add(R.id.your_placeholder, new FooFragment());
+        // Execute the changes specified
+        ft.commit();
     }
 
     @Override
@@ -150,9 +158,20 @@ public class SearchActivity extends Activity {
      */
     private void selectItem(int pos){
         Log.d(LOG_TAG, "Item Selected: "+pos);
-        Toast.makeText(this, "Selected item:"+pos, Toast.LENGTH_SHORT).show();
+
         //launch and attach fragment based on clicked item
         //TODO add drawer open/closed state, click response - http://developer.android.com/training/implementing-navigation/nav-drawer.html
+        switch (pos) {
+            case 4:
+                //Launch Wizard Dialog
+                break;
+            default:
+                Toast.makeText(this, "Selected item:" + pos, Toast.LENGTH_SHORT).show();
+        }
+
 
     }
+
+
 }
+
