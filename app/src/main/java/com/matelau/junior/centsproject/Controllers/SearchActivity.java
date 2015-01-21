@@ -1,5 +1,6 @@
 package com.matelau.junior.centsproject.Controllers;
 
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -164,11 +165,23 @@ public class SearchActivity extends FragmentActivity {
         switch (pos) {
             case 4:
                 //Launch Wizard Dialog
+                showWizardDialog();
+                _drawerLayout.closeDrawers();
                 break;
             default:
                 Toast.makeText(this, "Selected item:" + pos, Toast.LENGTH_SHORT).show();
         }
 
+
+    }
+
+
+    private void showWizardDialog(){
+        FragmentManager fm = getFragmentManager();
+        WizardDialogFragment wizard = new WizardDialogFragment();
+        wizard.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
+//        secondCity.setTargetFragment(this, 01);
+        wizard.show(fm, "tag");
 
     }
 
