@@ -17,6 +17,7 @@
     <string name="title_activity_search">Cents</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_closed">Closed</string>
+
     <string-array name="nav_array">
         <item>Home</item>
         <item>Login</item>
@@ -26,5 +27,7 @@
         <item>About</item>
         <item>Search</item>
     </string-array>
+
+    <string name="title_activity_visualization_pager">VisualizationPagerActivity</string>
 
 </resources>

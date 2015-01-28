@@ -6,8 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
@@ -75,7 +73,7 @@ public class MainActivity extends Activity {
     private String[] _states;
     private String[] _supportedCities;
     private List<Result> _jobSearchResultList;
-    ImageButton _submitBtn;
+    private ImageButton _submitBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,8 +199,6 @@ public class MainActivity extends Activity {
     }
 
 
-    //TODO move loadcities to a helper
-
     /**
      * Loads the subset of supported cities into the city spinner
      */
@@ -302,7 +298,6 @@ public class MainActivity extends Activity {
             //call indeed jobs api
             IndeedService service = CentsApplication.get_indeedRestAdapter().create(IndeedService.class);
             Map<String,String> queryMap = new HashMap<String,String>();
-            //TODO Mask publisher key
             queryMap.put("publisher", "4507844392785871" );
             String location = (_city+"+"+_state).toLowerCase();
             //TODO create preference for users to set limit, radius, fromage, jt
@@ -406,29 +401,6 @@ public class MainActivity extends Activity {
         }
 
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 
     /**
      * Process Col.json
