@@ -6,16 +6,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.matelau.junior.centsproject.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CareerComparisonSummary extends Fragment {
+public class CollegeComparisonSummary extends Fragment {
+
+    RelativeLayout _rootLayout;
+    TextView _summary;
 
 
-    public CareerComparisonSummary() {
+    public CollegeComparisonSummary() {
         // Required empty public constructor
     }
 
@@ -24,11 +29,11 @@ public class CareerComparisonSummary extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_career_comparison_summary, container, false);
+        _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_college_comparison_summary, container, false);
+        _summary = (TextView) _rootLayout.findViewById(R.id.api_sum_college);
+        _summary.setText("TODO CALL API and Return Data here");
+        return _rootLayout;
     }
-
-
-
 
 
 }
