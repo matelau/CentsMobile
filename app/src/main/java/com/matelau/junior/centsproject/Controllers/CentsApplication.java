@@ -20,6 +20,7 @@ public class CentsApplication extends Application{
     private static RestAdapter _gdRestAdapter = new RestAdapter.Builder().setEndpoint("https://api.glassdoor.com/").build();
     private static RestAdapter _indeedRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.BASIC).setEndpoint("http://api.indeed.com").build();
     private static RestAdapter _queryParsingRestAdapter = new RestAdapter.Builder().setEndpoint("http://54.67.106.77:6001/").build();
+    private static RestAdapter _centsRestAdapter = new RestAdapter.Builder().setEndpoint("https:/54.67.106.77").build();
     //Current Selections Vars
     private static String _searchedCity;
     private static String _searchState;
