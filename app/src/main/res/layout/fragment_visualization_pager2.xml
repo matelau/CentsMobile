@@ -3,16 +3,15 @@
     android:layout_height="match_parent"
     tools:context="com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="Vis Fragment"
-        android:gravity="center"/>
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="48dip" />
+        android:layout_height="48dp"
+        android:layout_marginTop="48dp"/>
     <android.support.v4.view.ViewPager
         android:layout_width="fill_parent" android:layout_height="fill_parent"
-        android:id="@+id/viewPager" />
+        android:id="@+id/viewPager"
+        android:layout_below="@+id/tabs"/>
+
 
 </RelativeLayout>

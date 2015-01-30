@@ -164,6 +164,7 @@ public class SearchActivity extends FragmentActivity {
         switch (pos) {
             case 0:
                 //Home
+                _toolbar.setTitle("Cents");
                 //Attach Search Fragment
                 // Begin the transaction
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -172,6 +173,8 @@ public class SearchActivity extends FragmentActivity {
                 // or ft.add(R.id.your_placeholder, new FooFragment());
                 // Execute the changes specified
                 ft.commit();
+                _drawerLayout.closeDrawers();
+                break;
             case 4:
                 //Launch Wizard Dialog
                 showWizardDialog();
@@ -184,6 +187,11 @@ public class SearchActivity extends FragmentActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+    }
 
     private void showWizardDialog(){
         FragmentManager fm = getSupportFragmentManager();

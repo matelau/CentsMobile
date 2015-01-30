@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.matelau.junior.centsproject.Controllers.VisualizationFragments.CareerComparisonSummary;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CareerComparisonSummary;
 import com.matelau.junior.centsproject.R;
 
 import java.util.List;
@@ -44,6 +44,7 @@ public class VisualizationPagerFragment extends Fragment {
         //bind sliding tabs
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) _rootlayout.findViewById(R.id.tabs);
         tabs.setViewPager(_viewPager);
+
         return _rootlayout;
     }
 
@@ -53,23 +54,28 @@ public class VisualizationPagerFragment extends Fragment {
     private void initialisePaging() {
         List<Fragment> fragments = new Vector<Fragment>();
         String selectedVis = CentsApplication.get_selectedVis();
+//        String title = selectedVis.replace("Comparison", " Comparison");
+        getActivity().getActionBar().setTitle(selectedVis);
         Log.d(LOG_TAG, "InitialisePaging - SelectedVis: "+selectedVis);
         Toast.makeText(getActivity(), "Loading Vis: "+selectedVis, Toast.LENGTH_SHORT).show();
         //TODO load fragments based on user selections
         switch (selectedVis){
-            case "CareerComparison":
+            case "Career Comparison":
                 fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummary.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummary.class.getName()));
                 break;
-            case "CollegeComparison":
-                break;
-            case "MajorComparison":
-                break;
-            case "COLComparison":
-                break;
-            case "SpendingBreakdown":
-                break;
+//            case "College Comparison":
+//                break;
+//            case "Major Comparison":
+//                break;
+//            case "COL Comparison":
+//                break;
+//            case "Spending Breakdown":
+//                break;
             default:
+                //TODO switch to examples fragments
+                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummary.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummary.class.getName()));
                 break;
         }
 
@@ -120,7 +126,8 @@ public class VisualizationPagerFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return "Test";
+            //TODO find a better way to determine proper fragment page titles
+            return "Test:"+position;
         }
     }
 

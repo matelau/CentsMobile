@@ -21,11 +21,10 @@
     <string-array name="nav_array">
         <item>Home</item>
         <item>Login</item>
-        <item>Profile</item>
+        <item>Register</item>
         <item>Example</item>
         <item>Wizard</item>
         <item>About</item>
-        <item>Search</item>
     </string-array>
 
     <string name="title_activity_visualization_pager">VisualizationPagerActivity</string>

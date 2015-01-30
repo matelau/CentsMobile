@@ -79,7 +79,7 @@ public class WizardDialogFragment extends DialogFragment {
             case 1:
                 //Career inquiry
                 //launch career comparison viz view pager
-                switchToVisFrag("CareerComparison");
+                switchToVisFrag("Career Comparison");
 
                 break;
             case 2:
@@ -120,12 +120,12 @@ public class WizardDialogFragment extends DialogFragment {
             case 0:
                 //College Inquiry
                 //TODO Launch college viz view pager
-                switchToVisFrag("CollegeComparison");
+                switchToVisFrag("College Comparison");
                 break;
             case 1:
                 //Major Inquiry
                 //TODO launch Major viz view pager
-                switchToVisFrag("MajorComparison");
+                switchToVisFrag("Major Comparison");
                 break;
             default:
                 //still unsure
@@ -139,12 +139,12 @@ public class WizardDialogFragment extends DialogFragment {
             case 0:
                 //Cost of Living
                 //TODO launch cost living viz view pager
-                switchToVisFrag("COLComparison");
+                switchToVisFrag("COL Comparison");
                 break;
             case 1:
                 //Spending
                 //TODO launch spending viz view pager
-                switchToVisFrag("SpendingBreakdown");
+                switchToVisFrag("Spending Breakdown");
                 break;
             default:
                 break;

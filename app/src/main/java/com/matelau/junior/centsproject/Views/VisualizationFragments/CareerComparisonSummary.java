@@ -1,4 +1,4 @@
-package com.matelau.junior.centsproject.Controllers.VisualizationFragments;
+package com.matelau.junior.centsproject.Views.VisualizationFragments;
 
 
 import android.os.Bundle;
