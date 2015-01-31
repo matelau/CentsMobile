@@ -31,7 +31,7 @@ public class MajorComparisonSummary extends Fragment {
         // Inflate the layout for this fragment
         _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_major_comparison_summary, container, false);
         _summary = (TextView) _rootLayout.findViewById(R.id.api_sum_major);
-        _summary.setText("TODO API CALL SUM GOES HERE");
+        _summary.setText("TODO API CALL Major GOES HERE");
         return _rootLayout;
 
 

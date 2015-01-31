@@ -101,6 +101,7 @@ public class VisualizationPagerFragment extends Fragment {
         }
         _pageAdapter = new PageAdapter(getActivity().getSupportFragmentManager(), fragments);
         _viewPager.setAdapter(_pageAdapter);
+        _viewPager.invalidate();
     }
 
 
@@ -131,6 +132,7 @@ public class VisualizationPagerFragment extends Fragment {
 
         @Override
         public android.support.v4.app.Fragment getItem(int position) {
+            _viewPager.invalidate();
             return _fragments.get(position);
         }
 

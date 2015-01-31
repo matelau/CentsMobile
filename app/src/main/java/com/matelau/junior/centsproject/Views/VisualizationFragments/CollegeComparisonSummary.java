@@ -31,7 +31,7 @@ public class CollegeComparisonSummary extends Fragment {
         // Inflate the layout for this fragment
         _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_college_comparison_summary, container, false);
         _summary = (TextView) _rootLayout.findViewById(R.id.api_sum_college);
-        _summary.setText("TODO CALL API and Return Data here");
+        _summary.setText("TODO CALL College Comparison API and Return Data here");
         return _rootLayout;
     }
 

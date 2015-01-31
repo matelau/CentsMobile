@@ -30,7 +30,7 @@ public class SpendingBreakdownSummaryFragment extends Fragment {
         // Inflate the layout for this fragment
         _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_spending_breakdown_summary, container, false);
         _summary = (TextView) _rootLayout.findViewById(R.id.api_sum_spending);
-        _summary.setText("TODO PLACE API CALL TEXT HERE");
+        _summary.setText("TODO PLACE SpendingBreakdown API CALL TEXT HERE");
         return _rootLayout;
     }
 

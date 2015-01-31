@@ -29,9 +29,9 @@ public class COLSummaryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_colsummary, container, false);
+        _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_col_summary, container, false);
         _summary = (TextView) _rootLayout.findViewById(R.id.api_sum_col);
-        _summary.setText("TODO CALL API and Return Data here");
+        _summary.setText("TODO CALL COL API and Return Data here");
 
         return _rootLayout;
     }
