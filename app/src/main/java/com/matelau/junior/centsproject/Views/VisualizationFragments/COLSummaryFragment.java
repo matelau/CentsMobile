@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.matelau.junior.centsproject.R;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Displays summary for Cost of Living Visualizations
  */
 public class COLSummaryFragment extends Fragment {
 

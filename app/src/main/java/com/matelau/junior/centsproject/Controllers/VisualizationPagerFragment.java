@@ -2,9 +2,11 @@ package com.matelau.junior.centsproject.Controllers;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,9 +16,10 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.matelau.junior.centsproject.R;
+import com.matelau.junior.centsproject.Views.ExamplesFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.COLSummaryFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CareerComparisonSummaryFragment;
-import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CollegeComparisonSummary;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.MajorComparisonSummary;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdownSummaryFragment;
@@ -30,7 +33,7 @@ import java.util.Vector;
 public class VisualizationPagerFragment extends Fragment {
     protected RelativeLayout _rootlayout;
     protected ViewPager _viewPager;
-    protected FragmentPagerAdapter _pageAdapter;
+    protected FragmentStatePagerAdapter _pageAdapter;
     private String LOG_TAG = VisualizationPagerFragment.class.getSimpleName();
 
 
@@ -42,6 +45,7 @@ public class VisualizationPagerFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         _rootlayout = (RelativeLayout) inflater.inflate(R.layout.fragment_visualization_pager2, container, false);
+        _viewPager = new ViewPager(getActivity());
         _viewPager = (ViewPager) _rootlayout.findViewById(R.id.viewPager);
         //set adapter
         initialisePaging();
@@ -53,7 +57,7 @@ public class VisualizationPagerFragment extends Fragment {
     }
 
     /**
-     * Initialise the fragments to be paged based on
+     * Initialise the fragments to be paged based on selected vis
      */
     private void initialisePaging() {
         List<Fragment> fragments = new Vector<Fragment>();
@@ -95,13 +99,14 @@ public class VisualizationPagerFragment extends Fragment {
                 break;
             default:
                 //TODO switch to examples fragments
-                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), ExamplesFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), ExamplesFragment.class.getName()));
                 break;
         }
+        //set fragments
         _pageAdapter = new PageAdapter(getActivity().getSupportFragmentManager(), fragments);
         _viewPager.setAdapter(_pageAdapter);
-        _viewPager.invalidate();
+
     }
 
 
@@ -120,9 +125,11 @@ public class VisualizationPagerFragment extends Fragment {
         public void onFragmentInteraction(Uri uri);
     }
 
-
-    private class PageAdapter extends FragmentPagerAdapter {
-
+    /**
+     * Adapter used to switch views inside the view pager based on user selections
+     */
+    private class PageAdapter extends FragmentStatePagerAdapter {
+        // holds the list of current fragments used by the view pager
         private List<Fragment> _fragments;
 
         public PageAdapter(FragmentManager fm, List<Fragment> fragments) {
@@ -131,9 +138,14 @@ public class VisualizationPagerFragment extends Fragment {
         }
 
         @Override
-        public android.support.v4.app.Fragment getItem(int position) {
-            _viewPager.invalidate();
+        public android.support.v4.app.Fragment getItem(int position){
+            _fragments.get(position).setRetainInstance(false);
             return _fragments.get(position);
+        }
+
+        @Override
+        public Parcelable saveState() {
+            return null;
         }
 
         @Override
@@ -141,7 +153,25 @@ public class VisualizationPagerFragment extends Fragment {
             return _fragments.size();
         }
 
+
+
         @Override
+        /**
+         * removes views no longer being shown
+         */
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            FragmentManager fm = ((Fragment) object).getChildFragmentManager();
+            FragmentTransaction trans = fm.beginTransaction();
+            trans.remove((Fragment) object);
+            trans.commit();
+        }
+
+
+
+        @Override
+        /**
+         * Returns titles for pager sliding tabs
+         */
         public CharSequence getPageTitle(int position) {
             String selectedVis = CentsApplication.get_selectedVis();
             String[] tabTitles;
@@ -162,7 +192,7 @@ public class VisualizationPagerFragment extends Fragment {
                     tabTitles = new String[]{"Summary"};
                     return tabTitles[position];
                 default:
-                    return "Test:" + position;
+                    return "Example: " + position;
 
             }
         }
