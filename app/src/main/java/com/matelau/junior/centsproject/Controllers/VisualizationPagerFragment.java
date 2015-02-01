@@ -131,6 +131,7 @@ public class VisualizationPagerFragment extends Fragment {
     private class PageAdapter extends FragmentStatePagerAdapter {
         // holds the list of current fragments used by the view pager
         private List<Fragment> _fragments;
+        private String LOG_TAG = PageAdapter.class.getSimpleName();
 
         public PageAdapter(FragmentManager fm, List<Fragment> fragments) {
             super(getActivity().getSupportFragmentManager());
@@ -160,6 +161,7 @@ public class VisualizationPagerFragment extends Fragment {
          * removes views no longer being shown
          */
         public void destroyItem(ViewGroup container, int position, Object object) {
+            Log.d(LOG_TAG, "Destroy Item: "+object.toString());
             FragmentManager fm = ((Fragment) object).getChildFragmentManager();
             FragmentTransaction trans = fm.beginTransaction();
             trans.remove((Fragment) object);
@@ -174,6 +176,7 @@ public class VisualizationPagerFragment extends Fragment {
          */
         public CharSequence getPageTitle(int position) {
             String selectedVis = CentsApplication.get_selectedVis();
+            Log.d(LOG_TAG, "SelectedVis:"+selectedVis+" - GetPageTitle");
             String[] tabTitles;
             switch (selectedVis) {
                 case "Career Comparison":
@@ -193,7 +196,6 @@ public class VisualizationPagerFragment extends Fragment {
                     return tabTitles[position];
                 default:
                     return "Example: " + position;
-
             }
         }
 
