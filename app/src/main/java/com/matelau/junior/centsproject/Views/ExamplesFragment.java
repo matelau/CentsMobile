@@ -25,6 +25,7 @@ public class ExamplesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_examples, container, false);
+        //TODO in the future implement viewpager for examples
         _example = (ImageView) _rootLayout.findViewById(R.id.example);
 
         return _rootLayout;
