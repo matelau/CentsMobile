@@ -106,6 +106,9 @@ public class VisualizationPagerFragment extends Fragment {
         //set fragments
         _pageAdapter = new PageAdapter(getActivity().getSupportFragmentManager(), fragments);
         _viewPager.setAdapter(_pageAdapter);
+        //This line is required so the viewPager does not destroy pages when they are removed from the screen
+        //if there are more tabs created this number will need to increase
+        _viewPager.setOffscreenPageLimit(5);
 
     }
 
@@ -140,7 +143,7 @@ public class VisualizationPagerFragment extends Fragment {
 
         @Override
         public android.support.v4.app.Fragment getItem(int position){
-            _fragments.get(position).setRetainInstance(false);
+            _fragments.get(position).setRetainInstance(true);
             return _fragments.get(position);
         }
 

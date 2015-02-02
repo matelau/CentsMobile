@@ -161,17 +161,23 @@ public class SearchActivity extends FragmentActivity {
 
         //launch and attach fragment based on clicked item
         //TODO add drawer open/closed state, click response - http://developer.android.com/training/implementing-navigation/nav-drawer.html
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         switch (pos) {
             case 0:
                 //Home
                 _toolbar.setTitle("Cents");
                 //Attach Search Fragment
-                // Begin the transaction
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 // Replace the container with the new fragment
                 ft.replace(R.id.fragment_placeholder, new SearchFragment());
                 // or ft.add(R.id.your_placeholder, new FooFragment());
                 // Execute the changes specified
+                ft.commit();
+                _drawerLayout.closeDrawers();
+                break;
+            case 3:
+                //examples
+                CentsApplication.set_selectedVis("Examples");
+                ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
                 ft.commit();
                 _drawerLayout.closeDrawers();
                 break;
