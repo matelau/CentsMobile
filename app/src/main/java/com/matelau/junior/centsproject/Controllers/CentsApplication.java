@@ -12,26 +12,30 @@ import retrofit.RestAdapter;
 
 /**
  * Created by matelau on 11/20/14.
+ * Maintains a Central state of the application
  */
 public class CentsApplication extends Application{
     private static Context _centsContext;
+    //Api Services
     private static RestAdapter _gdRestAdapter = new RestAdapter.Builder().setEndpoint("https://api.glassdoor.com/").build();
     private static RestAdapter _indeedRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.BASIC).setEndpoint("http://api.indeed.com").build();
     private static RestAdapter _queryParsingRestAdapter = new RestAdapter.Builder().setEndpoint("http://54.67.106.77:6001/").build();
+    private static RestAdapter _centsRestAdapter = new RestAdapter.Builder().setEndpoint("https:/54.67.106.77").build();
+    //Current Selections Vars
     private static String _searchedCity;
     private static String _searchState;
     private static String _searchedCity2;
     private static String _searchState2;
     private static String _searchedOccupation;
     private static String _occupationSalary;
+    //maintaining ui vars
     private static int _citySpinPos;
     private static int _stateSpinPos;
+    private static String _selectedVis = "default";
+    //Lists
     private static List<JobInfo> _jobSearchResultList;
     private static String[] _states;
     private static String[] _cities;
-    public CentsApplication(){
-        _centsContext = this;
-    }
     private static List<Col> _cols;
 
     public static Context getAppContext() {return _centsContext;}
@@ -146,5 +150,11 @@ public class CentsApplication extends Application{
         return _queryParsingRestAdapter;
     }
 
+    public static String get_selectedVis() {
+        return _selectedVis;
+    }
 
+    public static void set_selectedVis(String _selectedVis) {
+        CentsApplication._selectedVis = _selectedVis;
+    }
 }

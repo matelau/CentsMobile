@@ -1,7 +1,7 @@
 package com.matelau.junior.centsproject.Controllers;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -91,10 +91,9 @@ public class SearchActivity extends FragmentActivity {
 
         //Attach Search Fragment
         // Begin the transaction
-       FragmentTransaction ft = getFragmentManager().beginTransaction();
+       FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         // Replace the container with the new fragment
         ft.replace(R.id.fragment_placeholder, new SearchFragment());
-        // or ft.add(R.id.your_placeholder, new FooFragment());
         // Execute the changes specified
         ft.commit();
     }
@@ -163,6 +162,19 @@ public class SearchActivity extends FragmentActivity {
         //launch and attach fragment based on clicked item
         //TODO add drawer open/closed state, click response - http://developer.android.com/training/implementing-navigation/nav-drawer.html
         switch (pos) {
+            case 0:
+                //Home
+                _toolbar.setTitle("Cents");
+                //Attach Search Fragment
+                // Begin the transaction
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                // Replace the container with the new fragment
+                ft.replace(R.id.fragment_placeholder, new SearchFragment());
+                // or ft.add(R.id.your_placeholder, new FooFragment());
+                // Execute the changes specified
+                ft.commit();
+                _drawerLayout.closeDrawers();
+                break;
             case 4:
                 //Launch Wizard Dialog
                 showWizardDialog();
@@ -175,9 +187,14 @@ public class SearchActivity extends FragmentActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+    }
 
     private void showWizardDialog(){
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         WizardDialogFragment wizard = new WizardDialogFragment();
         wizard.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
 //        secondCity.setTargetFragment(this, 01);
