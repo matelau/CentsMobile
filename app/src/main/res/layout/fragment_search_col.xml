@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.matelau.junior.centsproject.Controllers.MainActivity"
+    tools:context="com.matelau.junior.centsproject.Controllers.Design.MainActivity"
     android:id="@+id/search"
     android:layout_gravity="center"
     android:gravity="center_vertical">

@@ -3,8 +3,8 @@ package com.matelau.junior.centsproject.Controllers;
 import android.app.Application;
 import android.content.Context;
 
-import com.matelau.junior.centsproject.Models.Col;
-import com.matelau.junior.centsproject.Models.JobInfo;
+import com.matelau.junior.centsproject.Models.Design.Col;
+import com.matelau.junior.centsproject.Models.Design.JobInfo;
 
 import java.util.List;
 
