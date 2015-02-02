@@ -3,9 +3,10 @@ package com.matelau.junior.centsproject.Controllers;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,7 +78,9 @@ public class WizardDialogFragment extends DialogFragment {
                 break;
             case 1:
                 //Career inquiry
-                //TODO launch career comparison viz view pager
+                //launch career comparison viz view pager
+                switchToVisFrag("Career Comparison");
+
                 break;
             case 2:
                 //Cost of Living or spending breakdown inquiry
@@ -93,11 +96,23 @@ public class WizardDialogFragment extends DialogFragment {
             default:
                 //Examples
                 //TODO launch examples Dialog Fragment
+                switchToVisFrag("Examples");
                 break;
 
         }
     }
 
+    /**
+     * Switches the current fragment to viz fragment selected within wizard dialog
+     * @param selected
+     */
+    private void switchToVisFrag(String selected){
+        CentsApplication.set_selectedVis(selected);
+        dismiss();
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+        ft.commit();
+    }
 
     private void selectCollegeOrMajor(int pos){
         Log.d(LOG_TAG, "College Item Selected: " + pos);
@@ -105,10 +120,12 @@ public class WizardDialogFragment extends DialogFragment {
             case 0:
                 //College Inquiry
                 //TODO Launch college viz view pager
+                switchToVisFrag("College Comparison");
                 break;
             case 1:
                 //Major Inquiry
                 //TODO launch Major viz view pager
+                switchToVisFrag("Major Comparison");
                 break;
             default:
                 //still unsure
@@ -122,10 +139,12 @@ public class WizardDialogFragment extends DialogFragment {
             case 0:
                 //Cost of Living
                 //TODO launch cost living viz view pager
+                switchToVisFrag("COL Comparison");
                 break;
             case 1:
                 //Spending
                 //TODO launch spending viz view pager
+                switchToVisFrag("Spending Breakdown");
                 break;
             default:
                 break;

@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
     <!-- TODO create a popup menu to allow the modification of # of search results -->
     <application
         android:allowBackup="true"
@@ -13,19 +14,20 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".Controllers.SearchActivity"
-            android:label="@string/title_activity_search" >
+            android:label="@string/title_activity_search"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-
         </activity>
         <activity
             android:name=".Controllers.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
-            <!-- Android Dev Main-->
+
+            <!-- Android Dev Main -->
         </activity>
         <activity
             android:name=".Controllers.TabHostActivity"
@@ -36,7 +38,14 @@
             android:label="@string/title_activity_job_detail"
             android:screenOrientation="portrait" >
         </activity>
-
+        <activity
+            android:name=".Controllers.VisualizationPagerActivity"
+            android:label="@string/title_activity_visualization_pager"
+            android:parentActivityName=".Controllers.SearchActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.matelau.junior.centsproject.Controllers.SearchActivity" />
+        </activity>
     </application>
 
 </manifest>

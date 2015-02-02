@@ -93,6 +93,7 @@ public class SpendingBreakdownFragment extends Fragment {
         df.setRoundingMode(RoundingMode.DOWN);
         String[] labels = {"housing", "food", "transportation", "utilities","student loans","other debt", "insurance","savings","health","misc"};
         float[] percents = {.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f};
+        //Percents from Wesley - Food 17, Housing 25, Utilities 6, Transportation 12, Healthcare 5, Insurance 8, Student/Credit Debt 12, Savings 10, Misc 5
 //        int[] colors = {Color.RED,Color.DKGRAY,Color.MAGENTA, Color.BLUE, Color.CYAN,Color.LTGRAY, Color.GREEN,  Color.BLACK,Color.YELLOW,Color.argb(255,170,90,12)};
         int[] colors = {Color.argb(255, 0x4d, 0x4d, 0x4d),Color.argb(255,0x5d, 0xa5,0xda), Color.argb(255, 0xFA, 0xA4, 0x3A), Color.LTGRAY, Color.argb(255,0x60, 0xBD, 0x68), Color.argb(255, 0xF1, 0x7C,0xB0),Color.argb(255,0xB2,0x91, 0x2F), Color.argb(255,0xB2,0x76, 0xB2),  Color.argb(255, 0xDE,0xCF, 0x3F),Color.argb(255, 0xF1, 0x58, 0x54)};
         List<ArcValue> values = new ArrayList<ArcValue>();
