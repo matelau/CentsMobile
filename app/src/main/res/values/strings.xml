@@ -17,6 +17,7 @@
     <string name="title_activity_search">Cents</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_closed">Closed</string>
+    <string name="about">Cents is a financial decision engine; a way to help potential and current college students realize the impact of their educational and vocational choices. Cents has been built by acquiring information from prospective users, current academic advisors, and the best data sources on the Internet, which come together in a complete package to make it an easy-to-navigate and always accessible career guidance counselor.  Cents provides information, in a very intuitive way, that will allow users to prepare for their education, understand their career options, and visualize their future expenses.</string>
 
     <string-array name="nav_array">
         <item>Home</item>

@@ -32,6 +32,7 @@ public class CentsApplication extends Application{
     private static int _citySpinPos;
     private static int _stateSpinPos;
     private static String _selectedVis = "default";
+    private static boolean _loggedIN = false;
     //Lists
     private static List<JobInfo> _jobSearchResultList;
     private static String[] _states;
@@ -39,6 +40,7 @@ public class CentsApplication extends Application{
     private static List<Col> _cols;
 
     public static Context getAppContext() {return _centsContext;}
+
     public static RestAdapter get_gdRestAdapter() {return _gdRestAdapter;}
 
     public static RestAdapter get_indeedRestAdapter() {
@@ -156,5 +158,13 @@ public class CentsApplication extends Application{
 
     public static void set_selectedVis(String _selectedVis) {
         CentsApplication._selectedVis = _selectedVis;
+    }
+
+    public static boolean is_loggedIN() {
+        return _loggedIN;
+    }
+
+    public static void set_loggedIN(boolean _loggedIN) {
+        CentsApplication._loggedIN = _loggedIN;
     }
 }
