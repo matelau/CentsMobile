@@ -162,7 +162,7 @@ public class VisualizationPagerFragment extends Fragment {
          */
         public void destroyItem(ViewGroup container, int position, Object object) {
             Log.d(LOG_TAG, "Destroy Item: "+object.toString());
-            FragmentManager fm = ((Fragment) object).getChildFragmentManager();
+            FragmentManager fm = ((Fragment) object).getFragmentManager();
             FragmentTransaction trans = fm.beginTransaction();
             trans.remove((Fragment) object);
             trans.commit();
