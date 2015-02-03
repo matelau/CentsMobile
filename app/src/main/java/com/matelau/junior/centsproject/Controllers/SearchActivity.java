@@ -55,7 +55,13 @@ public class SearchActivity extends FragmentActivity {
 //        _drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         _drawerLinear = (LinearLayout) findViewById(R.id.drawer_linear);
         _drawerList = (ListView) findViewById(R.id.left_drawer);
-        _navElements = getResources().getStringArray(R.array.nav_array);
+        if(CentsApplication.is_loggedIN()){
+            _navElements = getResources().getStringArray(R.array.nav_array_logged_in);
+        }
+        else{
+            _navElements = getResources().getStringArray(R.array.nav_array_logged_out);
+        }
+
         _drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_nav_element, _navElements));
         _drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -163,39 +169,45 @@ public class SearchActivity extends FragmentActivity {
 
         //launch and attach fragment based on clicked item
         //TODO add drawer open/closed state, click response - http://developer.android.com/training/implementing-navigation/nav-drawer.html
-        if(!CentsApplication.is_loggedIN()){
-            switch (pos) {
-                case 0:
-                    showHome();
-                    _drawerLayout.closeDrawers();
-                    break;
-                case 1:
+        switch (pos) {
+            case 0:
+                showHome();
+                _drawerLayout.closeDrawers();
+                break;
+            case 1:
+                if(CentsApplication.is_loggedIN()){
+                    //Logout
+                }
+                else {
                     showLoginDialog();
-                    break;
-                case 2:
+                }
+                break;
+            case 2:
+                if(CentsApplication.is_loggedIN()){
+                    //showProfile();
+                }
+                else{
                     showRegistration();
-                    break;
-                case 3:
-                    //examples
-                    showExamples();
-                    break;
-                case 4:
-                    //Launch Wizard Dialog
-                    showWizardDialog();
-                    break;
-                case 5:
-                    showAbout();
-                    break;
-                default:
-                    Toast.makeText(this, "Selected item:" + pos, Toast.LENGTH_SHORT).show();
-            }
-            _drawerLayout.closeDrawers();
-
+                }
+                break;
+            case 3:
+                //examples
+                showExamples();
+                break;
+            case 4:
+                //Launch Wizard Dialog
+                showWizardDialog();
+                break;
+            case 5:
+                showAbout();
+                break;
+            default:
+                Toast.makeText(this, "Selected item:" + pos, Toast.LENGTH_SHORT).show();
         }
-
-
+        _drawerLayout.closeDrawers();
 
     }
+
 
     @Override
     protected void onResume() {
