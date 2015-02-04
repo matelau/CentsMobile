@@ -32,7 +32,11 @@ public class CentsApplication extends Application{
     private static int _citySpinPos;
     private static int _stateSpinPos;
     private static String _selectedVis = "default";
+
+    //User vars
     private static boolean _loggedIN = false;
+    private static String _user;
+    private static String _password;
 
     //Lists
     private static List<JobInfo> _jobSearchResultList;
@@ -181,7 +185,23 @@ public class CentsApplication extends Application{
         return debug;
     }
 
-//    private static OkHttpClient getTrustingClient(){
+    public static String get_password() {
+        return _password;
+    }
+
+    public static void set_password(String _password) {
+        CentsApplication._password = _password;
+    }
+
+    public static String get_user() {
+        return _user;
+    }
+
+    public static void set_user(String _user) {
+        CentsApplication._user = _user;
+    }
+
+    //    private static OkHttpClient getTrustingClient(){
 //        SelfSignedSSLSocketFactory sf;
 //        OkHttpClient client = new OkHttpClient();
 //        try {

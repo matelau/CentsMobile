@@ -4,6 +4,8 @@ package com.matelau.junior.centsproject.Controllers;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -130,11 +132,22 @@ public class LoginDialogFragment extends DialogFragment {
 //                    String sResponse = response.().toString();
                     if(CentsApplication.isDebug())
                         Toast.makeText(getActivity(), "Login Success", Toast.LENGTH_SHORT).show();
+                    //Store Login information and update app state
+                    CentsApplication.set_loggedIN(true);
+                    SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+                    settings.edit().
+                            putString("EMAIL", _email.getText().toString()).
+                            putString("PASSWORD", _password.getText().toString()).
+                            commit();
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
                     Log.e(LOG_TAG, error.getMessage());
+                    //Remove Login information and update app state
+                    CentsApplication.set_loggedIN(false);
+                    SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+                    settings.edit().remove("EMAIL").remove("Password").commit();
                     _errorMsg.setTextColor(getResources().getColor(R.color.red));
                     _errorMsg.setText("Authentication Failed");
                     _errorMsg.setVisibility(View.VISIBLE);
