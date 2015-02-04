@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.matelau.junior.centsproject.R;
 
@@ -16,6 +17,7 @@ import com.matelau.junior.centsproject.R;
 public class RegistrationFragment extends Fragment {
 
     private String LOG_TAG = RegistrationFragment.class.getSimpleName();
+    private LinearLayout _rootLayout;
 
 
     public RegistrationFragment() {

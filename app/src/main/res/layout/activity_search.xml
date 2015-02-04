@@ -4,26 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.matelau.junior.centsproject.Controllers.SearchActivity">
+    android:orientation="vertical"
+    tools:context="com.matelau.junior.centsproject.Controllers.SearchActivity"
+    android:weightSum="10">
 
     <include layout="@layout/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:fitsSystemWindows="true"/>
+        android:fitsSystemWindows="true"
+        android:layout_weight="0.5"/>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:id="@+id/fragment_placeholder"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="9">
     </FrameLayout>
 
 
-</RelativeLayout>
+</LinearLayout>
 
 
     <!-- Your drawer view. This can be any view, LinearLayout
