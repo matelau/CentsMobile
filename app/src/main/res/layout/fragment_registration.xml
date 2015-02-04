@@ -49,7 +49,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="left"
                             android:text="First Name"
-                            android:textSize="20dp"/>
+                            android:textSize="18dp"/>
                         <EditText
                             android:layout_gravity="center"
                             android:inputType="textPersonName"
@@ -65,7 +65,7 @@
                             android:layout_gravity="left"
                             android:paddingTop="5dp"
                             android:text="Last Name"
-                            android:textSize="20dp"/>
+                            android:textSize="18dp"/>
                         <EditText
                             android:layout_gravity="center"
                             android:inputType="textPersonName"
@@ -81,7 +81,7 @@
                             android:layout_gravity="left"
                             android:text="Email"
                             android:paddingTop="5dp"
-                            android:textSize="20dp"/>
+                            android:textSize="18dp"/>
                         <EditText
                             android:layout_gravity="center"
                             android:inputType="textEmailAddress"
@@ -97,7 +97,7 @@
                             android:layout_gravity="left"
                             android:text="Password"
                             android:paddingTop="5dp"
-                            android:textSize="20dp"/>
+                            android:textSize="18dp"/>
                         <EditText
                             android:layout_gravity="center"
                             android:inputType="textPassword"
@@ -113,7 +113,7 @@
                             android:paddingTop="5dp"
                             android:layout_gravity="left"
                             android:text="Confirm Password"
-                            android:textSize="20dp"/>
+                            android:textSize="18dp"/>
                         <EditText
                             android:paddingTop="5dp"
                             android:layout_gravity="center"
@@ -165,8 +165,6 @@
                     android:layout_weight="1"/>
             </LinearLayout>
         </LinearLayout>
-
-
     </android.support.v7.widget.CardView>
 
 </LinearLayout>
