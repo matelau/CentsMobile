@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 
 import com.matelau.junior.centsproject.R;
 
+import java.util.regex.Pattern;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -18,6 +20,9 @@ public class RegistrationFragment extends Fragment {
 
     private String LOG_TAG = RegistrationFragment.class.getSimpleName();
     private LinearLayout _rootLayout;
+    private static final String EMAIL_PATTERN =
+            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
 
     public RegistrationFragment() {
@@ -32,6 +37,12 @@ public class RegistrationFragment extends Fragment {
         Log.d(LOG_TAG, "onCreateView");
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_registration, container, false);
+    }
+
+
+    private boolean validateEmail(final String hex) {
+        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+        return pattern.matcher(hex).matches();
     }
 
 

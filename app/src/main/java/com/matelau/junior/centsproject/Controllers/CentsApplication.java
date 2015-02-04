@@ -5,24 +5,14 @@ import android.content.Context;
 
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.Models.Design.JobInfo;
-import com.squareup.okhttp.OkHttpClient;
 
-import java.security.cert.CertificateException;
 import java.util.List;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
 import retrofit.RestAdapter;
-import retrofit.client.OkClient;
 
 /**
  * Created by matelau on 11/20/14.
- * Maintains a Central state of the application
+ * Maintains Central state of the application
  */
 public class CentsApplication extends Application{
     private static Context _centsContext;
@@ -30,7 +20,7 @@ public class CentsApplication extends Application{
     private static RestAdapter _gdRestAdapter = new RestAdapter.Builder().setEndpoint("https://api.glassdoor.com/").build();
     private static RestAdapter _indeedRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.BASIC).setEndpoint("http://api.indeed.com").build();
     private static RestAdapter _queryParsingRestAdapter = new RestAdapter.Builder().setEndpoint("http://54.67.106.77:6001/").build();
-    private static RestAdapter _centsRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setClient(new OkClient(getUnsafeOkHttpClient())).setEndpoint("https:/54.67.106.77/api/v1").build();
+    private static RestAdapter _centsRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("https:/54.67.106.77/api/v1").build(); //.setClient(new OkClient(getUnsafeOkHttpClient()))
     //Current Selections Vars
     private static String _searchedCity;
     private static String _searchState;
@@ -43,11 +33,16 @@ public class CentsApplication extends Application{
     private static int _stateSpinPos;
     private static String _selectedVis = "default";
     private static boolean _loggedIN = false;
+
     //Lists
     private static List<JobInfo> _jobSearchResultList;
     private static String[] _states;
     private static String[] _cities;
     private static List<Col> _cols;
+
+    //debug true = show toast, set login credentials
+    private static boolean debug = true;
+
 
     public static Context getAppContext() {return _centsContext;}
 
@@ -182,45 +177,65 @@ public class CentsApplication extends Application{
         return _centsRestAdapter;
     }
 
-    private static OkHttpClient getUnsafeOkHttpClient() {
-        try {
-            // Create a trust manager that does not validate certificate chains
-            final TrustManager[] trustAllCerts = new TrustManager[] {
-                    new X509TrustManager() {
-                        @Override
-                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-                        }
-
-                        @Override
-                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-                        }
-
-                        @Override
-                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                            return null;
-                        }
-                    }
-            };
-
-            // Install the all-trusting trust manager
-            final SSLContext sslContext = SSLContext.getInstance("SSL");
-            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-            // Create an ssl socket factory with our all-trusting manager
-            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-
-            OkHttpClient okHttpClient = new OkHttpClient();
-            okHttpClient.setSslSocketFactory(sslSocketFactory);
-            okHttpClient.setHostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            });
-
-            return okHttpClient;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public static boolean isDebug() {
+        return debug;
     }
+
+//    private static OkHttpClient getTrustingClient(){
+//        SelfSignedSSLSocketFactory sf;
+//        OkHttpClient client = new OkHttpClient();
+//        try {
+//            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+//            trustStore.load(null, null);
+//            sf = new SelfSignedSSLSocketFactory(trustStore);
+//            sf.setHostnameVerifier(SelfSignedSSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+//            client.setSslSocketFactory(sf);
+////            client.setSSLSocketFactory(sf);
+//        }
+//        catch (Exception e) {
+//        }
+//
+//        return client;
+//    }
+    //    private static OkHttpClient getUnsafeOkHttpClient() {
+//        try {
+//            // Create a trust manager that does not validate certificate chains
+//            final TrustManager[] trustAllCerts = new TrustManager[] {
+//                    new X509TrustManager() {
+//                        @Override
+//                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+//                        }
+//
+//                        @Override
+//                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+//                        }
+//
+//                        @Override
+//                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+//                            return null;
+//                        }
+//                    }
+//            };
+//
+//            // Install the all-trusting trust manager
+//            final SSLContext sslContext = SSLContext.getInstance("SSL");
+//            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+//            // Create an ssl socket factory with our all-trusting manager
+//            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+//
+//            OkHttpClient okHttpClient = new OkHttpClient();
+//            okHttpClient.setSslSocketFactory(sslSocketFactory);
+//            okHttpClient.setHostnameVerifier(new HostnameVerifier() {
+//                @Override
+//                public boolean verify(String hostname, SSLSession session) {
+//                    return true;
+//                }
+//            });
+//
+//            return okHttpClient;
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
 }

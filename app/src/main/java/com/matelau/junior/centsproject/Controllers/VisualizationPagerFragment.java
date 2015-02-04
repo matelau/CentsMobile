@@ -65,7 +65,8 @@ public class VisualizationPagerFragment extends Fragment {
 //        String title = selectedVis.replace("Comparison", " Comparison");
         getActivity().getActionBar().setTitle(selectedVis);
         Log.d(LOG_TAG, "InitialisePaging - SelectedVis: " + selectedVis);
-        Toast.makeText(getActivity(), "Loading Vis: " + selectedVis, Toast.LENGTH_SHORT).show();
+        if(CentsApplication.isDebug())
+            Toast.makeText(getActivity(), "Loading Vis: " + selectedVis, Toast.LENGTH_SHORT).show();
         //TODO load fragments based on user selections
         //TODO update proper tabs once created
         switch (selectedVis) {

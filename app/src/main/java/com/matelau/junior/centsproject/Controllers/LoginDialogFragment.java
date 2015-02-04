@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.matelau.junior.centsproject.Models.CentsAPIModels.Login;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.LoginService;
@@ -98,8 +99,11 @@ public class LoginDialogFragment extends DialogFragment {
         //password must be 6 chars long no white space
         String pass = _password.getText().toString();
         String email = _email.getText().toString();
-        email = "fake@xkcd.com";
-        pass = "correcthorsebatterystaple";
+        if(CentsApplication.isDebug()){
+            email = "fake@xkcd.com";
+            pass = "correcthorsebatterystaple";
+        }
+
         if(pass.length() < 6){
             passValid = false;
         }
@@ -116,6 +120,7 @@ public class LoginDialogFragment extends DialogFragment {
             _errorMsg.setText("Logging In...");
             _errorMsg.setVisibility(View.VISIBLE);
             Log.d(LOG_TAG, "Logging In: "+email);
+            //call api
             LoginService service = CentsApplication.get_centsRestAdapter().create(LoginService.class);
             service.login(new Login(email, pass), new Callback<String>() {
                 @Override
@@ -123,7 +128,8 @@ public class LoginDialogFragment extends DialogFragment {
                     Log.d(LOG_TAG, "Login Success ");
                     _errorMsg.setVisibility(View.GONE);
 //                    String sResponse = response.().toString();
-
+                    if(CentsApplication.isDebug())
+                        Toast.makeText(getActivity(), "Login Success", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

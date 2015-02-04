@@ -202,7 +202,8 @@ public class SearchActivity extends FragmentActivity {
                 showAbout();
                 break;
             default:
-                Toast.makeText(this, "Selected item:" + pos, Toast.LENGTH_SHORT).show();
+                if(CentsApplication.isDebug())
+                    Toast.makeText(this, "Selected item:" + pos, Toast.LENGTH_SHORT).show();
         }
         _drawerLayout.closeDrawers();
 
