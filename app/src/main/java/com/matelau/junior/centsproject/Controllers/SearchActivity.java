@@ -1,5 +1,7 @@
 package com.matelau.junior.centsproject.Controllers;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -39,8 +41,6 @@ public class SearchActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_search);
 
-        //TODO check if user is logged in or not
-
         //Setup Toolbar
         _toolbar = (Toolbar) findViewById(R.id.toolbar);
         _toolbar.setTitle("Cents");
@@ -48,20 +48,58 @@ public class SearchActivity extends FragmentActivity {
         setActionBar(_toolbar);
 
 
+        //check if user is logged in or not
+        loginStatus();
+
+
         //Setup Navigation Drawer
+        configureDrawer();
+
+        if(savedInstanceState == null){
+            selectItem(0);
+        }
+
+        //Attach Search Fragment
+        // Begin the transaction
+       FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        // Replace the container with the new fragment
+        ft.replace(R.id.fragment_placeholder, new SearchFragment());
+        // Execute the changes specified
+        ft.commit();
+    }
+
+
+    /**
+     * Reads sharedPreferences to determine if a user is logged in or not and sets nav drawer elements accordingly
+     */
+    private  void loginStatus(){
+        SharedPreferences settings = this.getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        if (settings.contains("EMAIL") && settings.contains("PASSWORD")){
+            Log.d(LOG_TAG, "Logged in as:"+settings.getString("EMAIL", ""));
+            CentsApplication.set_loggedIN(true);
+            CentsApplication.set_user(settings.getString("EMAIL", ""));
+            CentsApplication.set_password(settings.getString("PASSWORD", ""));
+            _navElements = getResources().getStringArray(R.array.nav_array_logged_in);
+            if(CentsApplication.isDebug())
+                Toast.makeText(this, "Logged in as: "+ CentsApplication.get_user(), Toast.LENGTH_SHORT).show();
+        }
+        else{
+            CentsApplication.set_loggedIN(false);
+            Log.d(LOG_TAG, "Not Logged in");
+            _navElements = getResources().getStringArray(R.array.nav_array_logged_out);
+        }
+    }
+
+    /**
+     * Configures Navigation Drawer
+     */
+    private void configureDrawer(){
         _drawerLayout =  (DrawerLayout) findViewById(R.id.drawer_layout);
         _drawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark));
         //Todo set drawer shadow
 //        _drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         _drawerLinear = (LinearLayout) findViewById(R.id.drawer_linear);
         _drawerList = (ListView) findViewById(R.id.left_drawer);
-        if(CentsApplication.is_loggedIN()){
-            _navElements = getResources().getStringArray(R.array.nav_array_logged_in);
-        }
-        else{
-            _navElements = getResources().getStringArray(R.array.nav_array_logged_out);
-        }
-
         _drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_nav_element, _navElements));
         _drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -92,18 +130,6 @@ public class SearchActivity extends FragmentActivity {
 
         };
         _drawerLayout.setDrawerListener(_drawerToggle);
-
-        if(savedInstanceState == null){
-            selectItem(0);
-        }
-
-        //Attach Search Fragment
-        // Begin the transaction
-       FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        // Replace the container with the new fragment
-        ft.replace(R.id.fragment_placeholder, new SearchFragment());
-        // Execute the changes specified
-        ft.commit();
     }
 
     @Override
@@ -212,7 +238,9 @@ public class SearchActivity extends FragmentActivity {
 
     @Override
     protected void onResume() {
-        //TODO check if user is logged in or not
+        //TODO check if user is logged in or not modify nav drawer accordingly
+        loginStatus();
+        configureDrawer();
         super.onResume();
     }
 
