@@ -23,28 +23,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Controllers.MainActivity"
+            android:name=".Controllers.Design.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
 
             <!-- Android Dev Main -->
         </activity>
         <activity
-            android:name=".Controllers.TabHostActivity"
+            android:name=".Controllers.Design.TabHostActivity"
             android:label="@string/title_activity_tab_host" >
         </activity>
         <activity
-            android:name=".Controllers.JobDetailActivity"
+            android:name=".Controllers.Design.JobDetailActivity"
             android:label="@string/title_activity_job_detail"
             android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".Controllers.VisualizationPagerActivity"
-            android:label="@string/title_activity_visualization_pager"
-            android:parentActivityName=".Controllers.SearchActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.matelau.junior.centsproject.Controllers.SearchActivity" />
         </activity>
     </application>
 

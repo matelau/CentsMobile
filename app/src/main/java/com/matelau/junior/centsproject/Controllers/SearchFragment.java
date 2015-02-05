@@ -87,14 +87,16 @@ public class SearchFragment extends Fragment {
         //TODO post to Query Parsing Service and handle response
         _submitBtn = (ImageButton) _rootLayout.findViewById(R.id.search_button);
         _submitBtn.startAnimation(AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.rotate));
-        Toast.makeText(getActivity(), "Search for:" + searchText, Toast.LENGTH_SHORT).show();
+        if(CentsApplication.isDebug())
+            Toast.makeText(getActivity(), "Search for:" + searchText, Toast.LENGTH_SHORT).show();
         //Todo if valid response from query service store searchText to _query
         //http://54.183.8.236:6001/query/
         QueryService service = CentsApplication.get_queryParsingRestAdapter().create(QueryService.class);
         service.results(searchText, new Callback<QueryService>() {
             @Override
             public void success(QueryService queryService, Response response) {
-                Toast.makeText(getActivity(),response.toString(), Toast.LENGTH_SHORT);
+                if(CentsApplication.isDebug())
+                    Toast.makeText(getActivity(),response.toString(), Toast.LENGTH_SHORT);
                 Log.v(LOG_TAG, "Query Service Response: "+response.toString());
                 _query =  _editText.getText().toString();
                 //TODO Process Response and route accordingly

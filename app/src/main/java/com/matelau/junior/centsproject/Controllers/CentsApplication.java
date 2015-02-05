@@ -3,8 +3,8 @@ package com.matelau.junior.centsproject.Controllers;
 import android.app.Application;
 import android.content.Context;
 
-import com.matelau.junior.centsproject.Models.Col;
-import com.matelau.junior.centsproject.Models.JobInfo;
+import com.matelau.junior.centsproject.Models.Design.Col;
+import com.matelau.junior.centsproject.Models.Design.JobInfo;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import retrofit.RestAdapter;
 
 /**
  * Created by matelau on 11/20/14.
- * Maintains a Central state of the application
+ * Maintains Central state of the application
  */
 public class CentsApplication extends Application{
     private static Context _centsContext;
@@ -20,7 +20,7 @@ public class CentsApplication extends Application{
     private static RestAdapter _gdRestAdapter = new RestAdapter.Builder().setEndpoint("https://api.glassdoor.com/").build();
     private static RestAdapter _indeedRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.BASIC).setEndpoint("http://api.indeed.com").build();
     private static RestAdapter _queryParsingRestAdapter = new RestAdapter.Builder().setEndpoint("http://54.67.106.77:6001/").build();
-    private static RestAdapter _centsRestAdapter = new RestAdapter.Builder().setEndpoint("https:/54.67.106.77").build();
+    private static RestAdapter _centsRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("https:/54.67.106.77/api/v1").build(); //.setClient(new OkClient(getUnsafeOkHttpClient()))
     //Current Selections Vars
     private static String _searchedCity;
     private static String _searchState;
@@ -32,13 +32,24 @@ public class CentsApplication extends Application{
     private static int _citySpinPos;
     private static int _stateSpinPos;
     private static String _selectedVis = "default";
+
+    //User vars
+    private static boolean _loggedIN = false;
+    private static String _user;
+    private static String _password;
+
     //Lists
     private static List<JobInfo> _jobSearchResultList;
     private static String[] _states;
     private static String[] _cities;
     private static List<Col> _cols;
 
+    //debug true = show toast, set login credentials
+    private static boolean debug = true;
+
+
     public static Context getAppContext() {return _centsContext;}
+
     public static RestAdapter get_gdRestAdapter() {return _gdRestAdapter;}
 
     public static RestAdapter get_indeedRestAdapter() {
@@ -157,4 +168,94 @@ public class CentsApplication extends Application{
     public static void set_selectedVis(String _selectedVis) {
         CentsApplication._selectedVis = _selectedVis;
     }
+
+    public static boolean is_loggedIN() {
+        return _loggedIN;
+    }
+
+    public static void set_loggedIN(boolean _loggedIN) {
+        CentsApplication._loggedIN = _loggedIN;
+    }
+
+    public static RestAdapter get_centsRestAdapter() {
+        return _centsRestAdapter;
+    }
+
+    public static boolean isDebug() {
+        return debug;
+    }
+
+    public static String get_password() {
+        return _password;
+    }
+
+    public static void set_password(String _password) {
+        CentsApplication._password = _password;
+    }
+
+    public static String get_user() {
+        return _user;
+    }
+
+    public static void set_user(String _user) {
+        CentsApplication._user = _user;
+    }
+
+    //    private static OkHttpClient getTrustingClient(){
+//        SelfSignedSSLSocketFactory sf;
+//        OkHttpClient client = new OkHttpClient();
+//        try {
+//            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+//            trustStore.load(null, null);
+//            sf = new SelfSignedSSLSocketFactory(trustStore);
+//            sf.setHostnameVerifier(SelfSignedSSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+//            client.setSslSocketFactory(sf);
+////            client.setSSLSocketFactory(sf);
+//        }
+//        catch (Exception e) {
+//        }
+//
+//        return client;
+//    }
+    //    private static OkHttpClient getUnsafeOkHttpClient() {
+//        try {
+//            // Create a trust manager that does not validate certificate chains
+//            final TrustManager[] trustAllCerts = new TrustManager[] {
+//                    new X509TrustManager() {
+//                        @Override
+//                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+//                        }
+//
+//                        @Override
+//                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+//                        }
+//
+//                        @Override
+//                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+//                            return null;
+//                        }
+//                    }
+//            };
+//
+//            // Install the all-trusting trust manager
+//            final SSLContext sslContext = SSLContext.getInstance("SSL");
+//            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+//            // Create an ssl socket factory with our all-trusting manager
+//            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+//
+//            OkHttpClient okHttpClient = new OkHttpClient();
+//            okHttpClient.setSslSocketFactory(sslSocketFactory);
+//            okHttpClient.setHostnameVerifier(new HostnameVerifier() {
+//                @Override
+//                public boolean verify(String hostname, SSLSession session) {
+//                    return true;
+//                }
+//            });
+//
+//            return okHttpClient;
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
 }

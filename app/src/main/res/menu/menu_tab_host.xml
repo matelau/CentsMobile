@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.matelau.junior.centsproject.Controllers.TabHostActivity">
+    tools:context="com.matelau.junior.centsproject.Controllers.Design.TabHostActivity">
     <item android:id="@+id/search" android:title="@string/action_settings"
         android:icon="@drawable/search_white"
         android:orderInCategory="100" android:showAsAction="always" />

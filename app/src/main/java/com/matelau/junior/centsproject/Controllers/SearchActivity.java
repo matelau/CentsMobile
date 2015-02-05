@@ -1,10 +1,12 @@
 package com.matelau.junior.centsproject.Controllers;
 
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
@@ -46,14 +48,58 @@ public class SearchActivity extends FragmentActivity {
         setActionBar(_toolbar);
 
 
+        //check if user is logged in or not
+        loginStatus();
+
+
         //Setup Navigation Drawer
+        configureDrawer();
+
+        if(savedInstanceState == null){
+            selectItem(0);
+        }
+
+        //Attach Search Fragment
+        // Begin the transaction
+       FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        // Replace the container with the new fragment
+        ft.replace(R.id.fragment_placeholder, new SearchFragment());
+        // Execute the changes specified
+        ft.commit();
+    }
+
+
+    /**
+     * Reads sharedPreferences to determine if a user is logged in or not and sets nav drawer elements accordingly
+     */
+    private  void loginStatus(){
+        SharedPreferences settings = this.getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        if (settings.contains("EMAIL") && settings.contains("PASSWORD")){
+            Log.d(LOG_TAG, "Logged in as:"+settings.getString("EMAIL", ""));
+            CentsApplication.set_loggedIN(true);
+            CentsApplication.set_user(settings.getString("EMAIL", ""));
+            CentsApplication.set_password(settings.getString("PASSWORD", ""));
+            _navElements = getResources().getStringArray(R.array.nav_array_logged_in);
+            if(CentsApplication.isDebug())
+                Toast.makeText(this, "Logged in as: "+ CentsApplication.get_user(), Toast.LENGTH_SHORT).show();
+        }
+        else{
+            CentsApplication.set_loggedIN(false);
+            Log.d(LOG_TAG, "Not Logged in");
+            _navElements = getResources().getStringArray(R.array.nav_array_logged_out);
+        }
+    }
+
+    /**
+     * Configures Navigation Drawer
+     */
+    private void configureDrawer(){
         _drawerLayout =  (DrawerLayout) findViewById(R.id.drawer_layout);
         _drawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark));
         //Todo set drawer shadow
 //        _drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         _drawerLinear = (LinearLayout) findViewById(R.id.drawer_linear);
         _drawerList = (ListView) findViewById(R.id.left_drawer);
-        _navElements = getResources().getStringArray(R.array.nav_array);
         _drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_nav_element, _navElements));
         _drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -80,22 +126,8 @@ public class SearchActivity extends FragmentActivity {
 //                getActionBar().setTitle("Open");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
-
-
         };
         _drawerLayout.setDrawerListener(_drawerToggle);
-
-        if(savedInstanceState == null){
-            selectItem(0);
-        }
-
-        //Attach Search Fragment
-        // Begin the transaction
-       FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        // Replace the container with the new fragment
-        ft.replace(R.id.fragment_placeholder, new SearchFragment());
-        // Execute the changes specified
-        ft.commit();
     }
 
     @Override
@@ -163,42 +195,118 @@ public class SearchActivity extends FragmentActivity {
         //TODO add drawer open/closed state, click response - http://developer.android.com/training/implementing-navigation/nav-drawer.html
         switch (pos) {
             case 0:
-                //Home
-                _toolbar.setTitle("Cents");
-                //Attach Search Fragment
-                // Begin the transaction
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                // Replace the container with the new fragment
-                ft.replace(R.id.fragment_placeholder, new SearchFragment());
-                // or ft.add(R.id.your_placeholder, new FooFragment());
-                // Execute the changes specified
-                ft.commit();
+                showHome();
                 _drawerLayout.closeDrawers();
+                break;
+            case 1:
+                if(CentsApplication.is_loggedIN()){
+                    //Logout
+                }
+                else {
+                    showLoginDialog();
+                }
+                break;
+            case 2:
+                if(CentsApplication.is_loggedIN()){
+                    //showProfile();
+                }
+                else{
+                    showRegistration();
+                }
+                break;
+            case 3:
+                //examples
+                showExamples();
                 break;
             case 4:
                 //Launch Wizard Dialog
                 showWizardDialog();
-                _drawerLayout.closeDrawers();
+                break;
+            case 5:
+                showAbout();
                 break;
             default:
-                Toast.makeText(this, "Selected item:" + pos, Toast.LENGTH_SHORT).show();
+                if(CentsApplication.isDebug())
+                    Toast.makeText(this, "Selected item:" + pos, Toast.LENGTH_SHORT).show();
         }
-
+        _drawerLayout.closeDrawers();
 
     }
+
 
     @Override
     protected void onResume() {
-
+        //TODO check if user is logged in or not modify nav drawer accordingly
+        loginStatus();
+        configureDrawer();
         super.onResume();
     }
 
+    /**
+     * Loads the Wizard ontop of current view
+     */
     private void showWizardDialog(){
         FragmentManager fm = getSupportFragmentManager();
         WizardDialogFragment wizard = new WizardDialogFragment();
         wizard.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
 //        secondCity.setTargetFragment(this, 01);
         wizard.show(fm, "tag");
+
+    }
+
+    private void showLoginDialog(){
+        FragmentManager fm = getSupportFragmentManager();
+        LoginDialogFragment login = new LoginDialogFragment();
+        login.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 02);
+        login.show(fm, "login");
+    }
+
+    /**
+     * Set placeholder to main search view
+     */
+    private void showHome(){
+        //Home
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        _toolbar.setTitle("Cents");
+        //Attach Search Fragment
+        // Replace the container with the new fragment
+        ft.replace(R.id.fragment_placeholder, new SearchFragment());
+        // Execute the changes specified
+        ft.commit();
+    }
+
+    /**
+     * Set placeholder to examples views
+     */
+    private void showExamples(){
+        CentsApplication.set_selectedVis("Examples");
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+        ft.commit();
+    }
+
+    /**
+     * Set placeholder to Registration Views
+     */
+    private void showRegistration(){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        _toolbar.setTitle("Register");
+        //Attach Search Fragment
+        // Replace the container with the new fragment
+        ft.replace(R.id.fragment_placeholder, new RegistrationFragment());
+        // Execute the changes specified
+        ft.commit();
+    }
+
+
+    /**
+     * Set placeholder to About view
+     */
+    private void showAbout(){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        _toolbar.setTitle("About");
+        ft.replace(R.id.fragment_placeholder, new AboutFragment());
+        ft.commit();
 
     }
 
