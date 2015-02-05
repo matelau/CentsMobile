@@ -1,6 +1,6 @@
 package com.matelau.junior.centsproject.Models.VizModels;
 
-import com.matelau.junior.centsproject.Models.User.User;
+import com.matelau.junior.centsproject.Models.CentsAPIModels.User;
 
 import retrofit.Callback;
 import retrofit.http.Body;
