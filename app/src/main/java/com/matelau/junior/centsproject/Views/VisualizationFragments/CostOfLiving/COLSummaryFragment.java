@@ -1,4 +1,4 @@
-package com.matelau.junior.centsproject.Views.VisualizationFragments;
+package com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving;
 
 
 import android.os.Bundle;
@@ -35,6 +35,7 @@ public class COLSummaryFragment extends Fragment {
         _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_col_summary, container, false);
         _summary = (TextView) _rootLayout.findViewById(R.id.api_sum_col);
         _summary.setText("TODO CALL COL API and Return Data here");
+//        Launch Selection Of Cities
 
         return _rootLayout;
     }

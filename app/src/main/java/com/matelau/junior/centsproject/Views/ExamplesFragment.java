@@ -19,8 +19,8 @@ public class ExamplesFragment extends Fragment {
     private RelativeLayout _rootLayout;
     private ImageView _example;
     private String LOG_TAG = ExamplesFragment.class.getSimpleName();
-    public ExamplesFragment(){
 
+    public ExamplesFragment(){
     }
 
     @Override
@@ -29,7 +29,6 @@ public class ExamplesFragment extends Fragment {
         //TODO in the future implement viewpager for examples
         _example = (ImageView) _rootLayout.findViewById(R.id.example);
         Log.d(LOG_TAG, "CreateView - Examples");
-
         return _rootLayout;
     }
 }
