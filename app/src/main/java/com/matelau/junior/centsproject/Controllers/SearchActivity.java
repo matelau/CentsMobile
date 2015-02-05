@@ -126,8 +126,6 @@ public class SearchActivity extends FragmentActivity {
 //                getActionBar().setTitle("Open");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
-
-
         };
         _drawerLayout.setDrawerListener(_drawerToggle);
     }

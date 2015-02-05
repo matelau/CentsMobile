@@ -143,16 +143,7 @@
                 android:orientation="horizontal"
                 android:layout_weight="8"
                 android:weightSum="2">
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Cancel"
-                    android:background="@color/white"
-                    android:textColor="@color/black"
-                    android:id="@+id/login_cancel"
-                    android:layout_margin="10dp"
-                    android:visibility="gone"
-                    android:layout_weight="1"/>
+
 
                 <Button
                     android:layout_width="match_parent"
