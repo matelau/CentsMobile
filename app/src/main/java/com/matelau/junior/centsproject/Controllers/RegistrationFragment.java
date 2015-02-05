@@ -67,8 +67,9 @@ public class RegistrationFragment extends Fragment {
         _submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO register
+                //register
                 String message = validateSubmision();
+                _messages.setText("Registering..");
                 if(message.equals("")){
                     if(CentsApplication.isDebug())
                         Toast.makeText(getActivity(), "Registering - "+_email.getText().toString(), Toast.LENGTH_SHORT).show();
@@ -145,15 +146,24 @@ public class RegistrationFragment extends Fragment {
         return message;
     }
 
-    public boolean isAlpha(String name) {
-        return name.matches("[a-zA-Z]+");
+    /**
+     * returns true if string only contains alpha chars
+     * @param name
+     * @return
+     */
+    private boolean isAlpha(String name) {
+        boolean isAlpha = name.matches("^.*[^a-zA-Z].*$");
+        return isAlpha;
     }
 
-
+    /**
+     * checks against regex for valid email
+     * @param hex
+     * @return
+     */
     private boolean validateEmail(final String hex) {
         Pattern pattern = Pattern.compile(EMAIL_PATTERN);
         return pattern.matcher(hex).matches();
     }
-
 
 }
