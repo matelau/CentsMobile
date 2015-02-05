@@ -70,6 +70,7 @@ public class RegistrationFragment extends Fragment {
                 //register
                 String message = validateSubmision();
                 _messages.setText("Registering..");
+                _messages.setTextColor(getResources().getColor(R.color.green));
                 if(message.equals("")){
                     if(CentsApplication.isDebug())
                         Toast.makeText(getActivity(), "Registering - "+_email.getText().toString(), Toast.LENGTH_SHORT).show();
@@ -95,7 +96,8 @@ public class RegistrationFragment extends Fragment {
                         @Override
                         public void failure(RetrofitError error) {
                             Log.e(LOG_TAG, error.getMessage());
-                            //TODO improve registration error message
+                            //TODO improve registration error message by parsing response body
+//                            String s =error.getResponse().getBody().toString();
                             _messages.setText("Registration Error");
                             _messages.setTextColor(getResources().getColor(R.color.red));
                         }
