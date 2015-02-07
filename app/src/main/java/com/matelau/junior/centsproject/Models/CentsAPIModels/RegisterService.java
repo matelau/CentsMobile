@@ -1,6 +1,8 @@
 package com.matelau.junior.centsproject.Models.CentsAPIModels;
 
+
 import retrofit.Callback;
+import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.POST;
 
@@ -17,5 +19,5 @@ import retrofit.http.POST;
 //        }
 public interface RegisterService {
     @POST("/api/v1/register")
-    void register(@Body User u, Callback<String> s);
+    void register(@Body User u, Callback<Response> s);
 }

@@ -49,13 +49,11 @@ public class SearchActivity extends FragmentActivity {
         //Todo add logo etc - after gathering view feedback
         setActionBar(_toolbar);
 
-
         //check if user is logged in or not
         loginStatus();
 
-
         //Setup Navigation Drawer
-        configureDrawer();
+        configureDrawer(CentsApplication.is_loggedIN());
 
         if(savedInstanceState == null){
             selectItem(0);
@@ -72,39 +70,39 @@ public class SearchActivity extends FragmentActivity {
 
 
     /**
-     * Reads sharedPreferences to determine if a user is logged in or not and sets nav drawer elements accordingly
+     * Reads sharedPreferences to determine if a user is logged in or not and sets flag
      */
     private  void loginStatus(){
         SharedPreferences settings = this.getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
-
         if (settings.contains("EMAIL") && settings.contains("PASSWORD")){
             HashMap<String, String> contents = (HashMap<String, String>) settings.getAll();
             Log.d(LOG_TAG, "Logged in as:"+contents.get("EMAIL"));
             CentsApplication.set_loggedIN(true);
             CentsApplication.set_user(contents.get("EMAIL"));
-            CentsApplication.set_password(settings.getString("PASSWORD", ""));
-            _navElements = getResources().getStringArray(R.array.nav_array_logged_in);
+            CentsApplication.set_password(contents.get("PASSWORD"));
             if(CentsApplication.isDebug())
                 Toast.makeText(this, "Logged in as: "+ CentsApplication.get_user(), Toast.LENGTH_SHORT).show();
         }
         else{
             CentsApplication.set_loggedIN(false);
             Log.d(LOG_TAG, "Not Logged in");
-            _navElements = getResources().getStringArray(R.array.nav_array_logged_out);
         }
     }
 
     /**
      * Configures Navigation Drawer
      */
-    private void configureDrawer(){
+    private void configureDrawer(Boolean loggedIn){
         _drawerLayout =  (DrawerLayout) findViewById(R.id.drawer_layout);
         _drawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark));
         //Todo set drawer shadow
 //        _drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         _drawerLinear = (LinearLayout) findViewById(R.id.drawer_linear);
+
         _drawerList = (ListView) findViewById(R.id.left_drawer);
-        _drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_nav_element, _navElements));
+        //Determine which menu elements to use based on login status
+        setNavElements(loggedIn);
+
         _drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -121,6 +119,7 @@ public class SearchActivity extends FragmentActivity {
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
+
             /**
              * Called when a drawer has settled in a completely open state.
              */
@@ -130,10 +129,25 @@ public class SearchActivity extends FragmentActivity {
 //                getActionBar().setTitle("Open");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
+
+
         };
         _drawerLayout.setDrawerListener(_drawerToggle);
     }
 
+    /**
+     * sets proper nav elements based on flag
+     * @param loggedIn
+     */
+    private void setNavElements(Boolean loggedIn){
+        //Determine which menu elements to use based on login status
+        if(!loggedIn){
+            _navElements = getResources().getStringArray(R.array.nav_array_logged_out);
+        }
+        else{
+            _navElements = getResources().getStringArray(R.array.nav_array_logged_in);
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 //        MenuInflater inflater = getMenuInflater();
@@ -146,10 +160,16 @@ public class SearchActivity extends FragmentActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
 //       boolean drawerOpen = _drawerLayout.isDrawerOpen(_drawerLinear);
+
         Log.d(LOG_TAG, "onPrepareOptionsMenu");
-//        menu.findItem(R.id.action_new).setVisible(!drawerOpen);
+        //Determine which menu elements to use based on login status
+        setNavElements(CentsApplication.is_loggedIN());
+        _drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_nav_element, _navElements));
+        _drawerList.invalidateViews();
         return super.onPrepareOptionsMenu(menu);
     }
+
+
 
 
     @Override
@@ -177,7 +197,6 @@ public class SearchActivity extends FragmentActivity {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            //TODO add animation for onClick Selections
             selectItem(position);
         }
 
@@ -194,7 +213,6 @@ public class SearchActivity extends FragmentActivity {
      */
     private void selectItem(int pos){
         Log.d(LOG_TAG, "Item Selected: "+pos);
-        //TODO detect if I've been logged in and modify buttons
         //launch and attach fragment based on clicked item
         //TODO add drawer open/closed state, click response - http://developer.android.com/training/implementing-navigation/nav-drawer.html
         switch (pos) {
@@ -204,7 +222,7 @@ public class SearchActivity extends FragmentActivity {
                 break;
             case 1:
                 if(CentsApplication.is_loggedIN()){
-                    //Logout
+                    logout();
                 }
                 else {
                     showLoginDialog();
@@ -212,7 +230,7 @@ public class SearchActivity extends FragmentActivity {
                 break;
             case 2:
                 if(CentsApplication.is_loggedIN()){
-                    //showProfile();
+                    showProfile();
                 }
                 else{
                     showRegistration();
@@ -234,7 +252,18 @@ public class SearchActivity extends FragmentActivity {
                     Toast.makeText(this, "Selected item:" + pos, Toast.LENGTH_SHORT).show();
         }
         _drawerLayout.closeDrawers();
+    }
 
+    /**
+     * clears shared prefs and removes flag
+     */
+    private void logout(){
+        SharedPreferences preferences = this.getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        preferences.edit().clear().commit();
+        CentsApplication.set_loggedIN(false);
+        Log.d(LOG_TAG, "Logged out");
+        if(CentsApplication.isDebug())
+            Toast.makeText(this, "Logged Out", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -242,7 +271,7 @@ public class SearchActivity extends FragmentActivity {
     protected void onResume() {
         //TODO check if user is logged in or not modify nav drawer accordingly
         loginStatus();
-        configureDrawer();
+        configureDrawer(CentsApplication.is_loggedIN());
         super.onResume();
     }
 
@@ -255,7 +284,15 @@ public class SearchActivity extends FragmentActivity {
         wizard.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
 //        secondCity.setTargetFragment(this, 01);
         wizard.show(fm, "tag");
+    }
 
+    private void showProfile(){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        _toolbar.setTitle("Profile");
+        // Replace the container with the new fragment
+        ft.replace(R.id.fragment_placeholder, new ProfileFragment());
+        // Execute the changes specified
+        ft.commit();
     }
 
     private void showLoginDialog(){

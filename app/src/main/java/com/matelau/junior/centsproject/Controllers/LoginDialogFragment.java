@@ -24,6 +24,8 @@ import com.matelau.junior.centsproject.Models.Design.IndeedAPIModels.IndeedQuery
 import com.matelau.junior.centsproject.Models.Design.IndeedAPIModels.IndeedService;
 import com.matelau.junior.centsproject.R;
 
+import org.json.JSONObject;
+
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -106,10 +108,10 @@ public class LoginDialogFragment extends DialogFragment {
         //password must be 6 chars long no white space
         String pass = _password.getText().toString();
         String email = _email.getText().toString();
-        if(CentsApplication.isDebug()){
-            email = "fake@xkcd.com";
-            pass = "correcthorsebatterystaple";
-        }
+//        if(CentsApplication.isDebug()){
+//            email = "fake@xkcd.com";
+//            pass = "correcthorsebatterystaple";
+//        }
 
         if(pass.length() < 6){
             passValid = false;
@@ -147,24 +149,11 @@ public class LoginDialogFragment extends DialogFragment {
                             putString("PASSWORD", _password.getText().toString()).
                             commit();
 
-                    //TODO update Navigation Drawer
-
+                    dismiss();
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-                    try{
-                        throw error.getCause();
-                    }
-                    catch(UnknownHostException e){
-                        e.printStackTrace();
-//                        e.getLocalizedMessage()
-                        Log.e("Failure", e.getLocalizedMessage());
-
-                    }
-                     catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
                     Log.e(LOG_TAG, error.getMessage());
                     //Remove Login information and update app state
                     CentsApplication.set_loggedIN(false);

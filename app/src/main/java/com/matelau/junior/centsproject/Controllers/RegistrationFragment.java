@@ -58,7 +58,7 @@ public class RegistrationFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         Log.d(LOG_TAG, "onCreateView");
-        // Inflate the layout for this fragment
+        //Get all the views that will need to be validated or updated
         _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_registration, container, false);
         _firstName = (EditText) _rootLayout.findViewById(R.id.first_name);
         _lastName = (EditText) _rootLayout.findViewById(R.id.last_name);
@@ -67,6 +67,8 @@ public class RegistrationFragment extends Fragment {
         _confirmPassword = (EditText) _rootLayout.findViewById(R.id.confirm_password);
         _submit = (Button) _rootLayout.findViewById(R.id.register_submit);
         _messages = (TextView) _rootLayout.findViewById(R.id.registration_msg);
+
+        //on Submit
         _submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,15 +79,15 @@ public class RegistrationFragment extends Fragment {
                 if(message.equals("")){
                     if(CentsApplication.isDebug())
                         Toast.makeText(getActivity(), "Registering - "+_email.getText().toString(), Toast.LENGTH_SHORT).show();
-                    //TODO validate API CALL
                     RegisterService service = CentsApplication.get_centsRestAdapter().create(RegisterService.class);
-                    String fname = _firstName.getText().toString();
-                    String lname = _lastName.getText().toString();
+                    //added trim - white space is getting added by view on the end of text
+                    String fname = _firstName.getText().toString().trim();
+                    String lname = _lastName.getText().toString().trim();
                     String pass = _password.getText().toString();
                     String confirm = _confirmPassword.getText().toString();
-                    service.register(new User(fname, lname,_email.getText().toString(), pass, confirm), new Callback<String>() {
+                    service.register(new User(fname, lname,_email.getText().toString(), pass, confirm), new Callback<Response>() {
                         @Override
-                        public void success(String s, Response response) {
+                        public void success(Response response, Response response2) {
                             //Store User information
                             Log.d(LOG_TAG, "Register Success");
                             CentsApplication.set_loggedIN(true);
@@ -94,6 +96,11 @@ public class RegistrationFragment extends Fragment {
                                     putString("EMAIL", _email.getText().toString()).
                                     putString("PASSWORD", _password.getText().toString()).
                                     commit();
+
+                            //return to searchFrag
+                            showSearch();
+                            if(CentsApplication.isDebug())
+                                Toast.makeText(getActivity(), "Registered", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -101,22 +108,10 @@ public class RegistrationFragment extends Fragment {
                             Log.e(LOG_TAG, error.getMessage());
                             //TODO improve registration error message by parsing response body
 //                            String s =error.getResponse().getBody().toString();
-                            _messages.setText("Registration Error");
+                            _messages.setText("Registration Error - Try Again");
                             _messages.setTextColor(getResources().getColor(R.color.red));
-
-                            try {
-                                throw (error.getCause());
-                            } catch (UnknownHostException e) {
-                                // unknown host
-                            } catch (SSLHandshakeException e) {
-                                // ssl handshake exception
-                            } catch (Exception e) {
-                                // unknown error
-                            } catch (Throwable throwable) {
-                                throwable.printStackTrace();
-                            }
-
-                            Toast.makeText(getActivity(), error.toString(), Toast.LENGTH_SHORT).show();
+                            if(CentsApplication.isDebug())
+                                Toast.makeText(getActivity(), error.toString(), Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -125,11 +120,16 @@ public class RegistrationFragment extends Fragment {
                     _messages.setText(message);
                     _messages.setTextColor(getResources().getColor(R.color.red));
                 }
-
-
             }
         });
         return _rootLayout;
+    }
+
+    /*
+     * Replaces registration with the searchFragment
+     */
+    private void showSearch(){
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_placeholder, new SearchFragment()).commit();
     }
 
     /**
