@@ -22,6 +22,8 @@ import android.widget.Toolbar;
 
 import com.matelau.junior.centsproject.R;
 
+import java.util.HashMap;
+
 public class SearchActivity extends FragmentActivity {
 
     private String LOG_TAG = SearchActivity.class.getSimpleName();
@@ -74,10 +76,12 @@ public class SearchActivity extends FragmentActivity {
      */
     private  void loginStatus(){
         SharedPreferences settings = this.getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+
         if (settings.contains("EMAIL") && settings.contains("PASSWORD")){
-            Log.d(LOG_TAG, "Logged in as:"+settings.getString("EMAIL", ""));
+            HashMap<String, String> contents = (HashMap<String, String>) settings.getAll();
+            Log.d(LOG_TAG, "Logged in as:"+contents.get("EMAIL"));
             CentsApplication.set_loggedIN(true);
-            CentsApplication.set_user(settings.getString("EMAIL", ""));
+            CentsApplication.set_user(contents.get("EMAIL"));
             CentsApplication.set_password(settings.getString("PASSWORD", ""));
             _navElements = getResources().getStringArray(R.array.nav_array_logged_in);
             if(CentsApplication.isDebug())
@@ -190,7 +194,7 @@ public class SearchActivity extends FragmentActivity {
      */
     private void selectItem(int pos){
         Log.d(LOG_TAG, "Item Selected: "+pos);
-
+        //TODO detect if I've been logged in and modify buttons
         //launch and attach fragment based on clicked item
         //TODO add drawer open/closed state, click response - http://developer.android.com/training/implementing-navigation/nav-drawer.html
         switch (pos) {

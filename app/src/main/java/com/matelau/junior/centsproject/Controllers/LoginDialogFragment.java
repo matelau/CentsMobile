@@ -20,11 +20,16 @@ import android.widget.Toast;
 
 import com.matelau.junior.centsproject.Models.CentsAPIModels.Login;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.LoginService;
+import com.matelau.junior.centsproject.Models.Design.IndeedAPIModels.IndeedQueryResults;
+import com.matelau.junior.centsproject.Models.Design.IndeedAPIModels.IndeedService;
 import com.matelau.junior.centsproject.R;
 
+import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import retrofit.Callback;
+import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -122,6 +127,8 @@ public class LoginDialogFragment extends DialogFragment {
             _errorMsg.setText("Logging In...");
             _errorMsg.setVisibility(View.VISIBLE);
             Log.d(LOG_TAG, "Logging In: "+email);
+
+
             //call api
             LoginService service = CentsApplication.get_centsRestAdapter().create(LoginService.class);
             service.login(new Login(email, pass), new Callback<Response>() {
@@ -140,10 +147,24 @@ public class LoginDialogFragment extends DialogFragment {
                             putString("PASSWORD", _password.getText().toString()).
                             commit();
 
+                    //TODO update Navigation Drawer
+
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
+                    try{
+                        throw error.getCause();
+                    }
+                    catch(UnknownHostException e){
+                        e.printStackTrace();
+//                        e.getLocalizedMessage()
+                        Log.e("Failure", e.getLocalizedMessage());
+
+                    }
+                     catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                     Log.e(LOG_TAG, error.getMessage());
                     //Remove Login information and update app state
                     CentsApplication.set_loggedIN(false);
@@ -155,6 +176,8 @@ public class LoginDialogFragment extends DialogFragment {
                 }
             });
         }
+
+
 
         return passValid && emailValid;
 
