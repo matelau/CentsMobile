@@ -124,9 +124,9 @@ public class LoginDialogFragment extends DialogFragment {
             Log.d(LOG_TAG, "Logging In: "+email);
             //call api
             LoginService service = CentsApplication.get_centsRestAdapter().create(LoginService.class);
-            service.login(new Login(email, pass), new Callback<String>() {
+            service.login(new Login(email, pass), new Callback<Response>() {
                 @Override
-                public void success(String s, Response response) {
+                public void success(Response response, Response response2) {
                     Log.d(LOG_TAG, "Login Success ");
                     _errorMsg.setVisibility(View.GONE);
 //                    String sResponse = response.().toString();
@@ -139,6 +139,7 @@ public class LoginDialogFragment extends DialogFragment {
                             putString("EMAIL", _email.getText().toString()).
                             putString("PASSWORD", _password.getText().toString()).
                             commit();
+
                 }
 
                 @Override

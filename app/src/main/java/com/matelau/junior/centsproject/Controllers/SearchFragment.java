@@ -89,7 +89,7 @@ public class SearchFragment extends Fragment {
         _submitBtn.startAnimation(AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.rotate));
         if(CentsApplication.isDebug())
             Toast.makeText(getActivity(), "Search for:" + searchText, Toast.LENGTH_SHORT).show();
-        //Todo if valid response from query service store searchText to _query
+        //Todo if valid response and user is logged in from query service store searchText to _query
         //http://54.183.8.236:6001/query/
         QueryService service = CentsApplication.get_queryParsingRestAdapter().create(QueryService.class);
         service.results(searchText, new Callback<QueryService>() {

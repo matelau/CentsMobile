@@ -16,6 +16,6 @@ import retrofit.http.POST;
 //        "password_confirmation": "password123"
 //        }
 public interface RegisterService {
-    @POST("/register")
+    @POST("/api/v1/register")
     void register(@Body User u, Callback<String> s);
 }

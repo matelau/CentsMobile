@@ -19,7 +19,10 @@ import com.matelau.junior.centsproject.Models.CentsAPIModels.RegisterService;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.User;
 import com.matelau.junior.centsproject.R;
 
+import java.net.UnknownHostException;
 import java.util.regex.Pattern;
+
+import javax.net.ssl.SSLHandshakeException;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -100,6 +103,20 @@ public class RegistrationFragment extends Fragment {
 //                            String s =error.getResponse().getBody().toString();
                             _messages.setText("Registration Error");
                             _messages.setTextColor(getResources().getColor(R.color.red));
+
+                            try {
+                                throw (error.getCause());
+                            } catch (UnknownHostException e) {
+                                // unknown host
+                            } catch (SSLHandshakeException e) {
+                                // ssl handshake exception
+                            } catch (Exception e) {
+                                // unknown error
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+
+                            Toast.makeText(getActivity(), error.toString(), Toast.LENGTH_SHORT).show();
                         }
                     });
 
