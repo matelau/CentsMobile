@@ -3,6 +3,7 @@ package com.matelau.junior.centsproject.Controllers;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -20,9 +21,22 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.R;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class SearchActivity extends FragmentActivity {
 
@@ -36,6 +50,13 @@ public class SearchActivity extends FragmentActivity {
     private LinearLayout _drawerLinear;
     private boolean _isDrawerOpen;
 
+    //State City processing
+    private List<Col> _cols;
+    private String[] _states;
+    private String[] _supportedCities;
+    private Set<String> _supportedStatesHash;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +69,7 @@ public class SearchActivity extends FragmentActivity {
         _toolbar.setTitle("Cents");
         //Todo add logo etc - after gathering view feedback
         setActionBar(_toolbar);
+        loadLocations();
 
         //check if user is logged in or not
         loginStatus();
@@ -282,7 +304,6 @@ public class SearchActivity extends FragmentActivity {
         FragmentManager fm = getSupportFragmentManager();
         WizardDialogFragment wizard = new WizardDialogFragment();
         wizard.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
-//        secondCity.setTargetFragment(this, 01);
         wizard.show(fm, "tag");
     }
 
@@ -349,6 +370,90 @@ public class SearchActivity extends FragmentActivity {
         ft.replace(R.id.fragment_placeholder, new AboutFragment());
         ft.commit();
 
+    }
+
+    /**
+     * opens col.json and loads locations in an async task
+     */
+    private void loadLocations(){
+        _states = new String[]{"Arizona", "California", "Colorado", "District of Columbia", "Florida", "Illinois", "Indiana",
+                "Massachusetts", "Michigan", "Ohio", "North Carolina", "New York", "Pennsylvania", "Tennessee", "Texas", "Washington",
+                "Wisconsin", "Utah"};
+        CentsApplication.set_states(_states);
+        _supportedStatesHash = new HashSet<String>(Arrays.asList(_states));
+        FetchLocationsTask ft = new FetchLocationsTask();
+        ft.execute();
+    }
+
+    /**
+     * Process Col.json
+     */
+    protected class FetchLocationsTask extends AsyncTask<Void, Void, String[]> {
+
+        private final String LOG_TAG = FetchLocationsTask.class.getSimpleName();
+        private String[] states = null;
+
+        @Override
+        protected void onPostExecute(String[] strings) {
+            if (strings != null) {
+                Log.i(LOG_TAG, "onPostExecute - updating _supportedcities");
+                _supportedCities = new String[strings.length];
+                int index = 0;
+                for (String s : strings) {
+                    //Check that location is not a state
+                    //edge case city is named after state
+                    if (!_supportedStatesHash.contains(s) || (s.equals("Washington") && index < 15) || (s.equals("New York") && index == 23)) {
+                        _supportedCities[index] = s;
+                        index++;
+                        Log.i(LOG_TAG, "Added: " + s + " To supportedCities");
+                    }
+
+                }
+
+                CentsApplication.set_cities(_supportedCities);
+            }
+        }
+
+        @Override
+        protected String[] doInBackground(Void... params) {
+            String[] results = null;
+            Gson gson = new Gson();
+            Log.i(LOG_TAG, "doInBackground - Loading col.json File");
+            //load Json file
+            try {
+                Type tp = new TypeToken<Collection<Col>>() {
+                }.getType();
+                InputStream is = getAssets().open("col.json");
+                BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                String json = sb.toString();
+                is.close();
+                Log.i(LOG_TAG, json);
+                //Convert to objects
+                _cols = gson.fromJson(json, tp);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (_cols != null) {
+                Log.i(LOG_TAG, "doInBackground - Processing col.json");
+                CentsApplication.set_cols(_cols);
+                //pull locations add to result
+                results = new String[_cols.size()];
+                int i = 0;
+                //Get Locations from cols
+                for (Col c : _cols) {
+                    results[i] = c.getLocation();
+                    i++;
+                }
+            }
+
+            return results;
+
+        }
     }
 
 

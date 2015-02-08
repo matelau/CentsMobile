@@ -1,21 +1,21 @@
 package com.matelau.junior.centsproject.Models.VizModels;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by matelau on 1/30/15.
  */
-public class coliQuery {
+public class ColiQuery {
     String operation;
-    String search_by;
-    List<City> objects;
+    List<Location> locations;
 
+    public ColiQuery(String op, List<Location> l){
+        operation = op;
+        locations = l;
 
-    public class City{
-        String city_1;
-        String city_2;
     }
-
 }
+
 
 
