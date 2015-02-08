@@ -7,7 +7,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,18 +19,11 @@ import android.widget.Toast;
 
 import com.matelau.junior.centsproject.Models.CentsAPIModels.Login;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.LoginService;
-import com.matelau.junior.centsproject.Models.Design.IndeedAPIModels.IndeedQueryResults;
-import com.matelau.junior.centsproject.Models.Design.IndeedAPIModels.IndeedService;
 import com.matelau.junior.centsproject.R;
 
-import org.json.JSONObject;
-
-import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -57,7 +49,6 @@ public class LoginDialogFragment extends DialogFragment {
     }
 
 
-    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreateDialog" );

@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -60,7 +59,7 @@ public class CitySelectionDialogFragment extends DialogFragment {
         // Required empty public constructor
     }
 
-    @NonNull
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreateDialog");
@@ -138,7 +137,7 @@ public class CitySelectionDialogFragment extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 _state2 = _states[position];
-                CentsApplication.set_searchState(_state2);
+                CentsApplication.set_searchState2(_state2);
                 Log.v(LOG_TAG, "Setting State2: " + _state2);
                 //update city spinner
                 String[] cities = citiesInState(_state2);
@@ -170,7 +169,7 @@ public class CitySelectionDialogFragment extends DialogFragment {
                 TextView v = (TextView) view;
                 String city = v.getText().toString();
                 if(!city.contains("Select"))
-                    CentsApplication.set_searchedCity(city);
+                    CentsApplication.set_searchedCity2(city);
             }
 
             @Override

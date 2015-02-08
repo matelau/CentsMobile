@@ -1,7 +1,6 @@
 package com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving;
 
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,24 +8,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.matelau.junior.centsproject.Controllers.CentsApplication;
-import com.matelau.junior.centsproject.Controllers.WizardDialogFragment;
-import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.R;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Displays summary for Cost of Living Visualizations
@@ -36,6 +22,7 @@ public class COLSummaryFragment extends Fragment {
     private RelativeLayout _rootLayout;
     private TextView _summary;
     private String LOG_TAG = COLSummaryFragment.class.getSimpleName();
+    private Button _begin;
 
 
 
@@ -53,6 +40,13 @@ public class COLSummaryFragment extends Fragment {
         _summary = (TextView) _rootLayout.findViewById(R.id.api_sum_col);
 
         _summary.setText("TODO CALL COL API and Return Data here");
+        _begin = (Button) _rootLayout.findViewById(R.id.ool_begin);
+        _begin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCitySelectionDialog();
+            }
+        });
 //        Launch Selection Of Cities
 //        showCitySelectionDialog();
         return _rootLayout;
