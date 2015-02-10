@@ -84,7 +84,6 @@ public class CitySelectionDialogFragment extends DialogFragment {
         _citiesSpinner1 = (Spinner) _rootLayout.findViewById(R.id.city_spinner1);
         _citiesAdapter1 = (new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, citiesList));
         _citiesSpinner1.setAdapter(_citiesAdapter1);
-
         _stateSpinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -97,24 +96,20 @@ public class CitySelectionDialogFragment extends DialogFragment {
                 {
                     _citiesSpinner1.setEnabled(true);
                     _citiesAdapter1.clear();
+                    //default to first city in list
+                    CentsApplication.set_searchedCity(cities[0]);
                     for(String city: cities){
-                        Log.v(LOG_TAG, "adding city: " +city);
+//                        Log.v(LOG_TAG, "adding city: " +city);
                         _citiesAdapter1.add(city);
-
                     }
-
                     _citiesSpinner1.invalidate();
                 }
-
-
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
-
         _citiesSpinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -126,7 +121,6 @@ public class CitySelectionDialogFragment extends DialogFragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
@@ -137,7 +131,6 @@ public class CitySelectionDialogFragment extends DialogFragment {
         _citiesSpinner2 = (Spinner) _rootLayout.findViewById(R.id.city_spinner2);
         _citiesAdapter2 = (new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, citiesList));
         _citiesSpinner2.setAdapter(_citiesAdapter2);
-
         _stateSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -150,21 +143,18 @@ public class CitySelectionDialogFragment extends DialogFragment {
                 {
                     _citiesSpinner2.setEnabled(true);
                     _citiesAdapter2.clear();
+                    //default to first city in list
+                    CentsApplication.set_searchedCity2(cities[0]);
                     for(String city: cities){
-                        Log.v(LOG_TAG, "adding city2: " +city);
+//                        Log.v(LOG_TAG, "adding city2: " +city);
                         _citiesAdapter2.add(city);
-
                     }
-
                     _citiesSpinner2.invalidate();
                 }
-
-
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
@@ -175,16 +165,18 @@ public class CitySelectionDialogFragment extends DialogFragment {
                 String city = v.getText().toString();
                 if(!city.contains("Select"))
                     CentsApplication.set_searchedCity2(city);
+                    Log.v(LOG_TAG, "Setting city2: " + city);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
         //store the activity in global so the callback can reference when switching out the view
         _fragAct = getActivity();
+
+        //TODO set selection to match previous selected values if any
 
         //build dialog
         builder.setTitle("Select Locations For Comparison")
@@ -313,5 +305,9 @@ public class CitySelectionDialogFragment extends DialogFragment {
 
 
         }
+
+
+
+
 
 }

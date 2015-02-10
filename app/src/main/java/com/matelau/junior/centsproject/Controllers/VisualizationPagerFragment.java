@@ -16,8 +16,10 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.matelau.junior.centsproject.Controllers.Design.CostOfLivingFragment;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.ExamplesFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLSummaryFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CareerComparisonSummaryFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CollegeComparisonSummary;
@@ -89,8 +91,9 @@ public class VisualizationPagerFragment extends Fragment {
                 fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
                 break;
             case "COL Comparison":
+                getActivity().getActionBar().setTitle("Cost of Living Comparison");
                 fragments.add(Fragment.instantiate(getActivity(), COLSummaryFragment.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), COLSummaryFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), CostOfLivingFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), COLSummaryFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), COLSummaryFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), COLSummaryFragment.class.getName()));
@@ -100,13 +103,16 @@ public class VisualizationPagerFragment extends Fragment {
                 break;
             default:
                 //TODO switch to examples fragments
-                fragments.add(Fragment.instantiate(getActivity(), ExamplesFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), COLIntroFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), ExamplesFragment.class.getName()));
                 break;
         }
         //set fragments
         _pageAdapter = new PageAdapter(getActivity().getSupportFragmentManager(), fragments);
         _viewPager.setAdapter(_pageAdapter);
+        //For Alpha I want to default to view with the viz TODO modify after alpha
+        if(selectedVis.equals("COL Comparison"))
+            _viewPager.setCurrentItem(1);
         //This line is required so the viewPager does not destroy pages when they are removed from the screen
         //if there are more tabs created this number will need to increase
         _viewPager.setOffscreenPageLimit(5);
@@ -199,7 +205,8 @@ public class VisualizationPagerFragment extends Fragment {
                     tabTitles = new String[]{"Summary"};
                     return tabTitles[position];
                 default:
-                    return "Example: " + position;
+                    tabTitles = new String[]{"City Comparison", "Blank Example"};
+                    return tabTitles[position];
             }
         }
 

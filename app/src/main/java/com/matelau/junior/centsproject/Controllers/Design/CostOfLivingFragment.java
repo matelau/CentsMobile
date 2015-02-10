@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.R;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.CitySelectionDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,15 +63,16 @@ public class CostOfLivingFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // create visualizations!
-        _location = CentsApplication.get_searchedCity()+", "+CentsApplication.get_searchState();
+
         rootView = inflater.inflate(R.layout.fragment_cost_of_living, container, false);
         _cv = (CardView) rootView.findViewById(R.id.col_card_view);
-        _plusBtn = (ImageButton) rootView.findViewById(R.id.plus_icon);
+        _plusBtn = (ImageButton) rootView.findViewById(R.id.circle);
         _loc2 = (TextView) rootView.findViewById(R.id.col_location2);
 
 
         _chart = (ColumnChartView) rootView.findViewById(R.id.col_vis);
-        _c1 = getCol(CentsApplication.get_searchedCity());
+        updateLocation();
+
         if(_c1 != null)
             generateData();
 
@@ -119,12 +121,23 @@ public class CostOfLivingFragment extends Fragment{
         Pulls up Dialog box to select a second location
      */
     public void showSecondCityDialog(){
-       FragmentManager fm = getFragmentManager();
-        SecondCityDialogFragment secondCity = new SecondCityDialogFragment();
-        secondCity.setTargetFragment(this, 01);
-        secondCity.show(fm, "tag");
+        FragmentManager fm = getFragmentManager();
+        CitySelectionDialogFragment csd = new CitySelectionDialogFragment();
+        csd.setTargetFragment(this, 01);
+        csd.show(fm, "CitySelection");
+//        SecondCityDialogFragment secondCity = new SecondCityDialogFragment();
+//        secondCity.setTargetFragment(this, 01);
+//        secondCity.show(fm, "tag");
 
 
+    }
+
+    private void updateLocation(){
+        _location = CentsApplication.get_searchedCity()+", "+CentsApplication.get_searchState();
+        _c1 = getCol(CentsApplication.get_searchedCity());
+        _city2 = CentsApplication.get_searchedCity2();
+        _location2 = _city2+", "+CentsApplication.get_searchState2();
+        _c2 = getCol(_city2);
     }
 
     /**
@@ -138,13 +151,9 @@ public class CostOfLivingFragment extends Fragment{
         _plusBtn.clearAnimation();
         //check if valid result is returned
         if(CentsApplication.get_searchedCity2() != null){
-            _city2 = CentsApplication.get_searchedCity2();
-            _location2 = _city2+", "+CentsApplication.get_searchState2();
-            Log.v(LOG_TAG, "Location 2: " + _location2);
 
-            //set the second col data
-            _c2 = getCol(_city2);
-            //restore Second Text View and remove + btn
+            Log.v(LOG_TAG, "Location 2: " + _location2);
+            updateLocation();
             processLocation2();
             //update display
             generateData();
@@ -195,7 +204,7 @@ public class CostOfLivingFragment extends Fragment{
         // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
         List<Column> columns = new ArrayList<Column>();
 //        String[] labels_long = {"|yyy|", "|yyy|","|yyy|","Groceries costs are |yyy|", "Utilities costs are |yyy|", "H.C. costs are |yyy|", "G&S costs are |yyy|"};
-        String[] labels_short = {"overall", "housing", "trans", "groc", "util","health","goods"};
+        String[] labels_short = {"gen", "housing", "trans", "groc", "util","health","goods"};
         String[] col_vals = {_c1.getCost_of_living(), _c1.getHousing(), _c1.getTransportation(), _c1.getGroceries(), _c1.getUtilities(), _c1.getHealth_care(), _c1.getGoods()};
         String[] col_vals2 = null;
         if(_c2 != null){
