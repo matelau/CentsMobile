@@ -17,13 +17,15 @@ import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.matelau.junior.centsproject.Controllers.Design.CostOfLivingFragment;
+import com.matelau.junior.centsproject.Controllers.Design.SpendingBreakdownFragment;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.ExamplesFragment;
-import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLIntroFragment;
-import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLSummaryFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CareerComparisonSummaryFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CollegeComparisonSummary;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLIntroFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLSummaryFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.MajorComparisonSummary;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdownSummaryFragment;
 
 import java.util.List;
@@ -99,11 +101,13 @@ public class VisualizationPagerFragment extends Fragment {
                 fragments.add(Fragment.instantiate(getActivity(), COLSummaryFragment.class.getName()));
                 break;
             case "Spending Breakdown":
+                fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownSummaryFragment.class.getName()));
                 break;
             default:
                 //TODO switch to examples fragments
                 fragments.add(Fragment.instantiate(getActivity(), COLIntroFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownIntroFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), ExamplesFragment.class.getName()));
                 break;
         }
@@ -202,10 +206,10 @@ public class VisualizationPagerFragment extends Fragment {
                     tabTitles = new String[]{"Summary", "Cost of Living", "Labor Stats","Taxes", "Weather"};
                     return tabTitles[position];
                 case "Spending Breakdown":
-                    tabTitles = new String[]{"Summary"};
+                    tabTitles = new String[]{"Breakdown", "Summary"};
                     return tabTitles[position];
                 default:
-                    tabTitles = new String[]{"City Comparison", "Blank Example"};
+                    tabTitles = new String[]{"City Comparison","Spending Breakdown", "Blank Example"};
                     return tabTitles[position];
             }
         }
