@@ -6,6 +6,8 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
+import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
 import com.matelau.junior.centsproject.Models.VizModels.CentsService;
 import com.matelau.junior.centsproject.Models.VizModels.ColiQuery;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
@@ -45,6 +48,8 @@ public class CitySelectionDialogFragment extends DialogFragment {
     private ArrayAdapter<String> _citiesAdapter2;
     private Spinner _stateSpinner2;
     private Spinner _citiesSpinner2;
+    private TextView _error;
+    private FragmentActivity _fragAct;
 
     private String[] _states;
     private String[] _supportedCities;
@@ -66,11 +71,13 @@ public class CitySelectionDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_city_selection_dialog, null, false);
+        _error = (TextView) _rootLayout.findViewById(R.id.city_select_error);
         //set selections
         _states = CentsApplication.get_states();
         _supportedCities = CentsApplication.get_cities();
         ArrayList<String> citiesList = new ArrayList<>();
         citiesList.add("Select State");
+
 
         //set views for city/state 1
         _stateAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, _states);
@@ -178,7 +185,8 @@ public class CitySelectionDialogFragment extends DialogFragment {
             }
         });
 
-
+        //store the activity in global so the callback can reference when switching out the view
+        _fragAct = getActivity();
 
         //build dialog
         builder.setTitle("Select Locations For Comparison")
@@ -190,6 +198,7 @@ public class CitySelectionDialogFragment extends DialogFragment {
                         String state1 = CentsApplication.get_searchState();
                         String city2 = CentsApplication.get_searchedCity2();
                         String state2 = CentsApplication.get_searchState2();
+
 
                         if (city1 != null && state1 != null && city2 != null && state2 != null) {
                             Log.d(LOG_TAG, "ColiQuery - "+city1 + ", "+city2);
@@ -204,12 +213,19 @@ public class CitySelectionDialogFragment extends DialogFragment {
                                 @Override
                                 public void success(ColiResponse coliResponse, Response response) {
                                     Log.d(LOG_TAG, "Successful ColiResponse Loc1" + coliResponse.getLocation1()+ " loc2"+coliResponse.getLocation2());
+                                    CentsApplication.set_selectedVis("COL Comparison");
+                                    FragmentTransaction ft = _fragAct.getSupportFragmentManager().beginTransaction();
+                                    ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+                                    ft.commit();
                                 }
 
                                 @Override
                                 public void failure(RetrofitError error) {
                                     Log.e(LOG_TAG, error.getMessage());
-
+                                    CentsApplication.set_selectedVis("COL Comparison");
+                                    FragmentTransaction ft = _fragAct.getSupportFragmentManager().beginTransaction();
+                                    ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+                                    ft.commit();
                                 }
                             });
 

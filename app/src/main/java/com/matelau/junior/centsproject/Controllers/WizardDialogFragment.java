@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.matelau.junior.centsproject.R;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLIntroFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -107,11 +108,22 @@ public class WizardDialogFragment extends DialogFragment {
      * @param selected
      */
     private void switchToVisFrag(String selected){
-        CentsApplication.set_selectedVis(selected);
+        //close wizard
         dismiss();
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
-        ft.commit();
+        //Add Intros here as they are created
+        if(selected.equals("COL Comparison")){
+            ft.replace(R.id.fragment_placeholder, new COLIntroFragment());
+            ft.commit();
+        }
+        else{
+            CentsApplication.set_selectedVis(selected);
+            ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+            ft.commit();
+
+        }
+
     }
 
     private void selectCollegeOrMajor(int pos){

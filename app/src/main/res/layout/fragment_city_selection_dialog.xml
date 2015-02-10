@@ -78,6 +78,13 @@
         android:textSize="16dp"
         android:id="@+id/cityTextView2"
         android:layout_gravity="center"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/city_select_error"
+        android:text="Error"
+        android:textColor="@color/red"/>
 
     <Spinner
         android:layout_width="match_parent"
