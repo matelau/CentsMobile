@@ -3,11 +3,15 @@ package com.matelau.junior.centsproject.Models.VizModels;
 import java.util.List;
 
 /**
- * Created by matelau on 1/30/15.
+ * Created by matelau on 2/9/15.
  */
 public class ColiQuery {
-    String operation;
-    List<Location> locations;
+    public String operation;
+    public List<Location> locations;
+
+    public ColiQuery(){
+        //empty const
+    }
 
     public ColiQuery(String op, List<Location> l){
         operation = op;
@@ -15,6 +19,3 @@ public class ColiQuery {
 
     }
 }
-
-
-

@@ -48,7 +48,6 @@ public class CitySelectionDialogFragment extends DialogFragment {
     private ArrayAdapter<String> _citiesAdapter2;
     private Spinner _stateSpinner2;
     private Spinner _citiesSpinner2;
-    private TextView _error;
     private FragmentActivity _fragAct;
 
     private String[] _states;
@@ -71,7 +70,6 @@ public class CitySelectionDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_city_selection_dialog, null, false);
-        _error = (TextView) _rootLayout.findViewById(R.id.city_select_error);
         //set selections
         _states = CentsApplication.get_states();
         _supportedCities = CentsApplication.get_cities();
