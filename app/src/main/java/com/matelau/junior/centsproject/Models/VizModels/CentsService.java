@@ -9,5 +9,5 @@ import retrofit.http.POST;
  */
 public interface CentsService {
     @POST("/api/v1/coli")
-    void coliQuery(@Body ColiQuery q, Callback<ColiResponse> cb);
+    void coliQuery(@Body COLQuery q, Callback<ColiResponse> cb);
 }

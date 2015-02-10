@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
 import com.matelau.junior.centsproject.Models.VizModels.CentsService;
-import com.matelau.junior.centsproject.Models.VizModels.ColiQuery;
+import com.matelau.junior.centsproject.Models.VizModels.COLQuery;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.Models.VizModels.Location;
 import com.matelau.junior.centsproject.R;
@@ -206,7 +206,7 @@ public class CitySelectionDialogFragment extends DialogFragment {
                             List<Location> locs = new ArrayList<Location>();
                             locs.add(loc1);
                             locs.add(loc2);
-                            ColiQuery colQuery = new ColiQuery("compare", locs);
+                            COLQuery colQuery = new COLQuery("compare", locs);
                             service.coliQuery(colQuery, new Callback<ColiResponse>() {
                                 @Override
                                 public void success(ColiResponse coliResponse, Response response) {

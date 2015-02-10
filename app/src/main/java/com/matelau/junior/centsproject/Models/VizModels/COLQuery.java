@@ -5,15 +5,15 @@ import java.util.List;
 /**
  * Created by matelau on 2/9/15.
  */
-public class ColiQuery {
+public class COLQuery {
     public String operation;
     public List<Location> locations;
 
-    public ColiQuery(){
+    public COLQuery(){
         //empty const
     }
 
-    public ColiQuery(String op, List<Location> l){
+    public COLQuery(String op, List<Location> l){
         operation = op;
         locations = l;
 
