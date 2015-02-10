@@ -30,7 +30,7 @@ public class COLIntroFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getActivity().getActionBar().setTitle("Cost of Living Comparison");
+//        getActivity().getActionBar().setTitle("Cost of Living Comparison");
         _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_colintro, container, false);
         _beginCOL = (Button) _rootLayout.findViewById(R.id.ool_begin);
         _beginCOL.setOnClickListener(new View.OnClickListener() {

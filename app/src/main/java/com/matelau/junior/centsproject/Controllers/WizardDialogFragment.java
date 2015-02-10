@@ -17,7 +17,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.matelau.junior.centsproject.R;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.CareerIntroFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.College.CollegeIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLIntroFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownIntroFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -111,9 +114,24 @@ public class WizardDialogFragment extends DialogFragment {
         //close wizard
         dismiss();
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        //Add Intros here as they are created
+        //TODO Add Intros here as they are created
+        getActivity().getActionBar().setTitle(selected);
         if(selected.equals("COL Comparison")){
+            //Special Case title change
+            getActivity().getActionBar().setTitle("Cost of Living Comparison");
             ft.replace(R.id.fragment_placeholder, new COLIntroFragment());
+            ft.commit();
+        }
+        else if(selected.equals("College Comparison")){
+            ft.replace(R.id.fragment_placeholder, new CollegeIntroFragment());
+            ft.commit();
+        }
+        else if(selected.equals("Spending Breakdown")){
+            ft.replace(R.id.fragment_placeholder, new SpendingBreakdownIntroFragment());
+            ft.commit();
+        }
+        else if(selected.equals("Career Comparison")){
+            ft.replace(R.id.fragment_placeholder, new CareerIntroFragment());
             ft.commit();
         }
         else{

@@ -20,8 +20,10 @@ import com.matelau.junior.centsproject.Controllers.Design.CostOfLivingFragment;
 import com.matelau.junior.centsproject.Controllers.Design.SpendingBreakdownFragment;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.ExamplesFragment;
-import com.matelau.junior.centsproject.Views.VisualizationFragments.CareerComparisonSummaryFragment;
-import com.matelau.junior.centsproject.Views.VisualizationFragments.CollegeComparisonSummary;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.CareerComparisonSummaryFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.CareerIntroFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.College.CollegeComparisonSummary;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.College.CollegeIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLSummaryFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.MajorComparisonSummary;
@@ -106,8 +108,11 @@ public class VisualizationPagerFragment extends Fragment {
                 break;
             default:
                 //TODO switch to examples fragments
+//                getActivity().getActionBar().setTitle("Examples");
                 fragments.add(Fragment.instantiate(getActivity(), COLIntroFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownIntroFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), CollegeIntroFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), CareerIntroFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), ExamplesFragment.class.getName()));
                 break;
         }
@@ -209,7 +214,7 @@ public class VisualizationPagerFragment extends Fragment {
                     tabTitles = new String[]{"Breakdown", "Summary"};
                     return tabTitles[position];
                 default:
-                    tabTitles = new String[]{"City Comparison","Spending Breakdown", "Blank Example"};
+                    tabTitles = new String[]{"City Comparison","Spending Breakdown", "College Comparison","Career Comparison", "Example"};
                     return tabTitles[position];
             }
         }

@@ -1,4 +1,4 @@
-package com.matelau.junior.centsproject.Views.VisualizationFragments;
+package com.matelau.junior.centsproject.Views.VisualizationFragments.Career;
 
 
 import android.os.Bundle;
