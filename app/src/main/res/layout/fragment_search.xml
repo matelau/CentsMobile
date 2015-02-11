@@ -40,4 +40,18 @@
     android:layout_below="@+id/help_text"
     android:layout_centerHorizontal="true"
     android:layout_marginTop="15dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:text="Submit Feedback"
+        android:textColor="@color/compliment_primary"
+        android:gravity="center"
+        android:id="@+id/feedback"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/help_text" />
+
 </RelativeLayout>

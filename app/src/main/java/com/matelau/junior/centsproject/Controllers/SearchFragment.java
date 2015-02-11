@@ -1,8 +1,10 @@
 package com.matelau.junior.centsproject.Controllers;
 
 
-import android.support.v4.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -33,6 +35,7 @@ public class SearchFragment extends Fragment {
     private String _query;
     private RelativeLayout _rootLayout;
     private   ImageButton _submitBtn;
+    private TextView _feedback;
 
 
     public SearchFragment() {
@@ -72,6 +75,18 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 handleSubmit();
+            }
+        });
+
+        _feedback = (TextView) _rootLayout.findViewById(R.id.feedback);
+        _feedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //allow user to selc
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", "admin@trycents.com", null));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "FEEDBACK");
+                startActivity(Intent.createChooser(emailIntent, "Send email..."));
             }
         });
 
