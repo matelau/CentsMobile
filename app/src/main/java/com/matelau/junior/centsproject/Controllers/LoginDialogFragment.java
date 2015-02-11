@@ -139,7 +139,6 @@ public class LoginDialogFragment extends DialogFragment {
                             putString("EMAIL", _email.getText().toString()).
                             putString("PASSWORD", _password.getText().toString()).
                             commit();
-
                     dismiss();
                 }
 

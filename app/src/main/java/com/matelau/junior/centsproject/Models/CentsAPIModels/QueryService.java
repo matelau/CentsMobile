@@ -1,6 +1,7 @@
 package com.matelau.junior.centsproject.Models.CentsAPIModels;
 
 import retrofit.Callback;
+import retrofit.client.Response;
 import retrofit.http.GET;
 import retrofit.http.Path;
 
@@ -11,7 +12,7 @@ import retrofit.http.Path;
 //http://current_ip:6001\query\#{query_string} with GET
 public interface QueryService {
     @GET("/query/{query}")
-    void results(@Path("query") String query, Callback<QueryService> cb );
+    void results(@Path("query") String query, Callback<Response> cb );
 }
 
 

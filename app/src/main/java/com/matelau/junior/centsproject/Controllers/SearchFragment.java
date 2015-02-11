@@ -82,7 +82,7 @@ public class SearchFragment extends Fragment {
         _feedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //allow user to selc
+                //allow user to select email client and send feedback
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                         "mailto", "admin@trycents.com", null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "FEEDBACK");
@@ -107,9 +107,9 @@ public class SearchFragment extends Fragment {
         //Todo if valid response and user is logged in from query service store searchText to _query
         //http://54.183.8.236:6001/query/
         QueryService service = CentsApplication.get_queryParsingRestAdapter().create(QueryService.class);
-        service.results(searchText, new Callback<QueryService>() {
+        service.results(searchText, new Callback<Response>() {
             @Override
-            public void success(QueryService queryService, Response response) {
+            public void success(Response response1, Response response) {
                 if(CentsApplication.isDebug())
                     Toast.makeText(getActivity(),response.toString(), Toast.LENGTH_SHORT);
                 Log.v(LOG_TAG, "Query Service Response: "+response.toString());
