@@ -19,14 +19,14 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.matelau.junior.centsproject.Controllers.Design.CostOfLivingFragment;
 import com.matelau.junior.centsproject.Controllers.Design.SpendingBreakdownFragment;
 import com.matelau.junior.centsproject.R;
-import com.matelau.junior.centsproject.Views.ExamplesFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.CareerComparisonSummaryFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.CareerIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.College.CollegeComparisonSummary;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.College.CollegeIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLSummaryFragment;
-import com.matelau.junior.centsproject.Views.VisualizationFragments.MajorComparisonSummary;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.MajorComparisonSummary;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.MajorIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdownSummaryFragment;
 
@@ -113,7 +113,7 @@ public class VisualizationPagerFragment extends Fragment {
                 fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownIntroFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), CollegeIntroFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), CareerIntroFragment.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), ExamplesFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), MajorIntroFragment.class.getName()));
                 break;
         }
         //set fragments
@@ -214,7 +214,7 @@ public class VisualizationPagerFragment extends Fragment {
                     tabTitles = new String[]{"Breakdown", "Summary"};
                     return tabTitles[position];
                 default:
-                    tabTitles = new String[]{"City Comparison","Spending Breakdown", "College Comparison","Career Comparison", "Example"};
+                    tabTitles = new String[]{"City Comparison","Spending Breakdown", "College Comparison","Career Comparison", "Major Comparison"};
                     return tabTitles[position];
             }
         }

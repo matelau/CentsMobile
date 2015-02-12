@@ -20,6 +20,7 @@ import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.CareerIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.College.CollegeIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLIntroFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.MajorIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownIntroFragment;
 
 /**
@@ -132,6 +133,10 @@ public class WizardDialogFragment extends DialogFragment {
         }
         else if(selected.equals("Career Comparison")){
             ft.replace(R.id.fragment_placeholder, new CareerIntroFragment());
+            ft.commit();
+        }
+        else if(selected.equals("Major Comparison")){
+            ft.replace(R.id.fragment_placeholder, new MajorIntroFragment());
             ft.commit();
         }
         else{

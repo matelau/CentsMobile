@@ -19,8 +19,8 @@ import android.widget.TextView;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
-import com.matelau.junior.centsproject.Models.VizModels.CentsService;
 import com.matelau.junior.centsproject.Models.VizModels.COLQuery;
+import com.matelau.junior.centsproject.Models.VizModels.CentsService;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.Models.VizModels.Location;
 import com.matelau.junior.centsproject.R;
@@ -220,10 +220,6 @@ public class CitySelectionDialogFragment extends DialogFragment {
                             });
 
                         }
-//                        //update fragment with second location
-//                        TextView tv = (TextView) _citiesSpinner1.getSelectedView();
-//                        CentsApplication.set_searchedCity2(tv.getText().toString());
-//                        getTargetFragment().onActivityResult(getTargetRequestCode(), 00, null);
                         //TODO call api show old vis til new ones are created
 
 
