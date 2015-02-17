@@ -24,7 +24,7 @@
     <!--<string name="college_explanation">Researching potential schools? or do you want to see how your school stacks up? Compare tuition rates, undergrad enrollment rates and the school's graduation rate. </string>-->
     <string name="college_explanation">Researching potential schools, or do you want to see how your school stacks up? Compare tuition rates, undergrad enrollment rates and the school\'s graduation rate.</string>
     <string name="career_explanation">Want to see the job outlook for a career you are considering? Check in to see what your prospective careers have to offer in terms of salary, demand, and unemployment.</string>
-    <string name="major_explanation">Compare potential majors based on potential salaries, recommendations and satisfaction</string>
+    <string name="major_explanation">Curious to see what the top jobs are for what you are studying? or want to compare potential majors based on potential salaries, recommendations and satisfaction?</string>
     <string-array name="nav_array_logged_out">
         <item>Home</item>
         <item>Login</item>

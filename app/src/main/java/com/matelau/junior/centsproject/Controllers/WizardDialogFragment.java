@@ -33,7 +33,7 @@ public class WizardDialogFragment extends DialogFragment {
     ListView _answers;
     ArrayAdapter<String> _answersAdapter;
     String[] _college_answers = new String[] {"I'm not sure where I want to study", "I'm not sure what I want to study","I'm not sure about either"};
-    String[] _cost_answers = new String[] {"I'm curious about the cost of living in a city", "I'm curious about my spending breakdown"};
+    String[] _cost_answers = new String[] {"I'm curious about the cost of living in a city", "I'm curious about how I should be spending my money"};
 
 
     public WizardDialogFragment() {
