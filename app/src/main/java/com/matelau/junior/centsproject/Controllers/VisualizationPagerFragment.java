@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.matelau.junior.centsproject.Controllers.Design.CostOfLivingFragment;
-import com.matelau.junior.centsproject.Controllers.Design.SpendingBreakdownFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownFragment;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.CareerComparisonSummaryFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.CareerIntroFragment;

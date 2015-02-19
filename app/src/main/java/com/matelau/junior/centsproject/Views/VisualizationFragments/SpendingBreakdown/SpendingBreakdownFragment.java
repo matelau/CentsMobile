@@ -1,19 +1,26 @@
-package com.matelau.junior.centsproject.Controllers.Design;
+package com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown;
 
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
+import com.matelau.junior.centsproject.Controllers.WizardDialogFragment;
 import com.matelau.junior.centsproject.R;
 
 import java.math.RoundingMode;
@@ -32,7 +39,11 @@ public class SpendingBreakdownFragment extends Fragment {
     private ImageButton _back;
     private PieChartView _chart;
     private TextView _occupation;
+    private EditText _income;
     private PieChartData data;
+    private Button _default;
+    private Button _student;
+    private Button _custom;
     private boolean hasLabels = true;
     private boolean hasLabelsOutside = true;
     private boolean hasCenterCircle = true;
@@ -52,14 +63,70 @@ public class SpendingBreakdownFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
+        initVisVars();
+
+
         View rootView = inflater.inflate(R.layout.fragment_spending_breakdown, container, false);
         CardView cv = (CardView) rootView.findViewById(R.id.spending_card_view);
+        //get intercation elements
          _chart = (PieChartView) rootView.findViewById(R.id.spending_vis);
-        _occupation = (TextView) rootView.findViewById(R.id.spending_desc);
+        //Income Input
+        _income = (EditText) rootView.findViewById(R.id.editText1);
+        _income.setText(CentsApplication.get_occupationSalary());
+        _income.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String value = s.toString();
+                //verify numeric value
+                boolean number = true;
+                for(int i = 0; i < value.length(); i++){
+                    char c = value.charAt(i);
+
+                    if(!Character.isDigit(c))
+                        number = false;
+
+                }
+                if(!number){
+                    Toast.makeText(getActivity(), "Invalid Number - No special characters", Toast.LENGTH_SHORT).show();
+                }
+                else{
+
+                    CentsApplication.set_occupationSalary(s.toString());
+                    //redraw viz
+                    generateData();
+                }
+
+            }
+        });
+        //Get buttons
+        _default = (Button) rootView.findViewById(R.id.default_btn);
+        _student = (Button) rootView.findViewById(R.id.student_btn);
+        _custom = (Button) rootView.findViewById(R.id.custom_btn);
+
+        _default.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //launch modification dialog frag
+                showModDialog();
+            }
+        });
+
+//        _occupation = (TextView) rootView.findViewById(R.id.spending_desc);
         //modify circle text to be x percentage in size based on view height
         _height = container.getHeight();
-        _occupation.setText(CentsApplication.get_searchedOccupation());
-
+//        _occupation.setText(CentsApplication.get_searchedOccupation());
 
         generateData();
 
@@ -68,12 +135,42 @@ public class SpendingBreakdownFragment extends Fragment {
     }
 
     /**
+     * Sets Vis Options to default if not set
+     */
+    private void initVisVars(){
+        //TODO read file to see if user has saved values
+        if(CentsApplication.get_occupationSalary() == null){
+            CentsApplication.set_occupationSalary("45000");
+        }
+        if(CentsApplication.get_sbLabels() == null){
+            String[] labels = {"housing", "food", "transportation", "utilities","student loans","other debt", "insurance","savings","health","misc"};
+            CentsApplication.set_sbLabels(labels);
+        }
+        if(CentsApplication.get_sbPercents() == null){
+            //Percents from Wesley - Food 17, Housing 25, Utilities 6, Transportation 12, Healthcare 5, Insurance 8, Student/Credit Debt 12, Savings 10, Misc 5
+            float[] percents = {.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f};
+            CentsApplication.set_sbPercents(percents);
+
+        }
+    }
+
+    /**
+     * Loads the Wizard ontop of current view
+     */
+    private void showModDialog(){
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        SpendingBreakdownModDialogFragment mod = new SpendingBreakdownModDialogFragment();
+        mod.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
+        mod.show(fm, "tag");
+    }
+
+    /**
      * Build Pie Chart
      */
     public void generateData(){
         int numValues = 10;
         //default values
-        float salary = 27450; // national median 2013
+        float salary = 45000; // national median 2013
         String sSalary = ""+salary;
         if(CentsApplication.get_occupationSalary() != null){
             sSalary = CentsApplication.get_occupationSalary();
@@ -84,18 +181,17 @@ public class SpendingBreakdownFragment extends Fragment {
             }catch(NumberFormatException e){
                 e.printStackTrace();
                 sSalary =""+ salary;
-                salary = 27450/12f;
-                _occupation.setText("Natl Median Wage");
+                salary = 45000/12f;
+//                _occupation.setText("Natl Median Wage");
             }
 
         }
-        //only show two decimal places in
+        //only show two decimal places in values
         DecimalFormat df = new DecimalFormat("##.##");
         df.setRoundingMode(RoundingMode.DOWN);
-        String[] labels = {"housing", "food", "transportation", "utilities","student loans","other debt", "insurance","savings","health","misc"};
-        float[] percents = {.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f};
-        //Percents from Wesley - Food 17, Housing 25, Utilities 6, Transportation 12, Healthcare 5, Insurance 8, Student/Credit Debt 12, Savings 10, Misc 5
-//        int[] colors = {Color.RED,Color.DKGRAY,Color.MAGENTA, Color.BLUE, Color.CYAN,Color.LTGRAY, Color.GREEN,  Color.BLACK,Color.YELLOW,Color.argb(255,170,90,12)};
+        // get labels and percents
+        String[] labels = CentsApplication.get_sbLabels();
+        float[] percents = CentsApplication.get_sbPercents();
         int[] colors = {Color.argb(255, 0x4d, 0x4d, 0x4d),Color.argb(255,0x5d, 0xa5,0xda), Color.argb(255, 0xFA, 0xA4, 0x3A), Color.LTGRAY, Color.argb(255,0x60, 0xBD, 0x68), Color.argb(255, 0xF1, 0x7C,0xB0),Color.argb(255,0xB2,0x91, 0x2F), Color.argb(255,0xB2,0x76, 0xB2),  Color.argb(255, 0xDE,0xCF, 0x3F),Color.argb(255, 0xF1, 0x58, 0x54)};
         List<ArcValue> values = new ArrayList<ArcValue>();
         for (int i = 0; i < numValues; ++i) {

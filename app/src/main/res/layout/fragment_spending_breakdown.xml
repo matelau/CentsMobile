@@ -9,6 +9,7 @@
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/primary"
         card_view:cardCornerRadius="4dp"
         android:layout_margin="5dp"
         android:elevation="30dp"
@@ -24,22 +25,84 @@
             android:layout_alignParentTop="true"
             android:layout_height="fill_parent"
             android:layout_width="fill_parent"
-            android:layout_weight="1"></include>
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/spending_desc"
-            android:text="Loading"
-            android:textColor="@android:color/black"
-            android:textSize="18dp"
-            android:gravity="center"
-            android:layout_centerHorizontal="true"
-            android:layout_weight="9"/>
-            <ImageView
-                android:layout_width="150dp"
-                android:layout_height="4dp"
-                android:background="@drawable/primary_rectangle"
-                android:layout_gravity="center_horizontal" />
+            android:layout_weight="2"></include>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="8">
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:id="@+id/button_row"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/nav_ripple"
+                        android:textColor="@color/text_primary"
+                        android:id="@+id/default_btn"
+                        android:layout_margin="5dp"
+                        android:text="Default"
+                        android:layout_weight="1"/>
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/nav_ripple"
+                        android:textColor="@color/text_primary"
+                        android:id="@+id/student_btn"
+                        android:layout_margin="5dp"
+                        android:text="Student"
+                        android:layout_weight="1"/>
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/nav_ripple"
+                        android:textColor="@color/text_primary"
+                        android:id="@+id/custom_btn"
+                        android:layout_margin="5dp"
+                        android:text="Custom"
+                        android:layout_weight="1"/>
+                </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_below="@+id/button_row">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:id="@+id/income_txt"
+                    android:text="Annual Income: $"
+                    android:textColor="@color/primary"
+                    android:layout_marginTop="15dp"
+                    android:textSize="18sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_gravity="center_vertical"/>
+                <!--<ImageView-->
+                    <!--android:layout_width="150dp"-->
+                    <!--android:layout_height="4dp"-->
+                    <!--android:layout_below="@+id/income_txt"-->
+                    <!--android:background="@drawable/primary_rectangle"-->
+                    <!--android:id="@+id/imageView" />-->
+                <include
+                    android:layout_height="50dp"
+                    android:layout_width="110dp"
+                    android:id="@+id/income"
+                    layout="@layout/numeric_field"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="30dp"
+                    android:layout_toStartOf="@+id/imageButton"> </include>
+                <ImageButton
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/search_orange"
+                    android:layout_marginEnd="15dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/imageButton" />
+                </RelativeLayout>
+             </RelativeLayout>
 
         </LinearLayout>
 

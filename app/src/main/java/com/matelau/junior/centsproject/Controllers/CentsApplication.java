@@ -48,6 +48,10 @@ public class CentsApplication extends Application{
     //debug true = show toast, set login credentials
     private static boolean debug = true;
 
+    //Spending Breakdown Vis
+    private static String[] _sbLabels;
+    private static float[] _sbPercents;
+
 
     public static Context getAppContext() {return _centsContext;}
 
@@ -200,6 +204,22 @@ public class CentsApplication extends Application{
 
     public static void set_user(String _user) {
         CentsApplication._user = _user;
+    }
+
+    public static String[] get_sbLabels() {
+        return _sbLabels;
+    }
+
+    public static void set_sbLabels(String[] labels) {
+        _sbLabels = labels;
+    }
+
+    public static float[] get_sbPercents() {
+        return _sbPercents;
+    }
+
+    public static void set_sbPercents(float[] percents) {
+        _sbPercents = percents;
     }
 
     //    private static OkHttpClient getTrustingClient(){
