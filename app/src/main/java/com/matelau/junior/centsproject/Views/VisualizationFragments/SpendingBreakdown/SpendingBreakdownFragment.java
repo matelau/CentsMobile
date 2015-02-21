@@ -20,13 +20,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
-import com.matelau.junior.centsproject.Controllers.WizardDialogFragment;
 import com.matelau.junior.centsproject.R;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import lecho.lib.hellocharts.model.ArcValue;
 import lecho.lib.hellocharts.model.PieChartData;
@@ -36,6 +37,7 @@ import lecho.lib.hellocharts.view.PieChartView;
 /**
  */
 public class SpendingBreakdownFragment extends Fragment {
+    private String LOG_TAG = SpendingBreakdownFragment.class.getSimpleName();
     private ImageButton _back;
     private PieChartView _chart;
     private TextView _occupation;
@@ -70,7 +72,7 @@ public class SpendingBreakdownFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_spending_breakdown, container, false);
         CardView cv = (CardView) rootView.findViewById(R.id.spending_card_view);
-        //get intercation elements
+        //get interaction elements
          _chart = (PieChartView) rootView.findViewById(R.id.spending_vis);
         //Income Input
         _income = (EditText) rootView.findViewById(R.id.editText1);
@@ -100,6 +102,7 @@ public class SpendingBreakdownFragment extends Fragment {
                 }
                 if(!number){
                     Toast.makeText(getActivity(), "Invalid Number - No special characters", Toast.LENGTH_SHORT).show();
+                    s.clear();
                 }
                 else{
 
@@ -144,12 +147,12 @@ public class SpendingBreakdownFragment extends Fragment {
         }
         if(CentsApplication.get_sbLabels() == null){
             String[] labels = {"housing", "food", "transportation", "utilities","student loans","other debt", "insurance","savings","health","misc"};
-            CentsApplication.set_sbLabels(labels);
+            CentsApplication.set_sbLabels(Arrays.asList(labels));
         }
         if(CentsApplication.get_sbPercents() == null){
             //Percents from Wesley - Food 17, Housing 25, Utilities 6, Transportation 12, Healthcare 5, Insurance 8, Student/Credit Debt 12, Savings 10, Misc 5
-            float[] percents = {.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f};
-            CentsApplication.set_sbPercents(percents);
+            Float[] percents = {.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f};
+            CentsApplication.set_sbPercents(Arrays.asList(percents));
 
         }
     }
@@ -190,9 +193,17 @@ public class SpendingBreakdownFragment extends Fragment {
         DecimalFormat df = new DecimalFormat("##.##");
         df.setRoundingMode(RoundingMode.DOWN);
         // get labels and percents
-        String[] labels = CentsApplication.get_sbLabels();
-        float[] percents = CentsApplication.get_sbPercents();
-        int[] colors = {Color.argb(255, 0x4d, 0x4d, 0x4d),Color.argb(255,0x5d, 0xa5,0xda), Color.argb(255, 0xFA, 0xA4, 0x3A), Color.LTGRAY, Color.argb(255,0x60, 0xBD, 0x68), Color.argb(255, 0xF1, 0x7C,0xB0),Color.argb(255,0xB2,0x91, 0x2F), Color.argb(255,0xB2,0x76, 0xB2),  Color.argb(255, 0xDE,0xCF, 0x3F),Color.argb(255, 0xF1, 0x58, 0x54)};
+        String[] labels = (String[]) CentsApplication.get_sbLabels().toArray();
+        Float[] percents = (Float[]) CentsApplication.get_sbPercents().toArray();
+        int[] colors = new int[labels.length];
+        if(CentsApplication.get_colors() != null && CentsApplication.get_colors().length == labels.length)
+            colors = CentsApplication.get_colors();
+        else{
+            //generate colors randomly
+            colors = getColors(labels.length);
+            CentsApplication.set_colors(colors);
+
+        }
         List<ArcValue> values = new ArrayList<ArcValue>();
         for (int i = 0; i < numValues; ++i) {
             ArcValue arcValue = new ArcValue(percents[i], colors[i]);
@@ -255,6 +266,40 @@ public class SpendingBreakdownFragment extends Fragment {
 
         _chart.setPieChartData(data);
 
+    }
+
+    private int[] getColors(int count){
+        int[] def = new int[]{Color.argb(255, 0x4d, 0x4d, 0x4d),Color.argb(255,0x5d, 0xa5,0xda), Color.argb(255, 0xFA, 0xA4, 0x3A), Color.LTGRAY, Color.argb(255,0x60, 0xBD, 0x68), Color.argb(255, 0xF1, 0x7C,0xB0),Color.argb(255,0xB2,0x91, 0x2F), Color.argb(255,0xB2,0x76, 0xB2),  Color.argb(255, 0xDE,0xCF, 0x3F),Color.argb(255, 0xF1, 0x58, 0x54)};
+        if(count <= def.length ){
+            return Arrays.copyOfRange(def,0,count);
+        }
+        else
+        {
+            int[] colors = new int[count];
+            //copy over def
+            for(int k = 0; k < def.length; k++){
+                colors[k] = def[k];
+            }
+
+            //get random values for everything else
+            Random rnd = new Random();
+            for(int i = def.length-1; i < count ; i++){
+                //TODO improve color generation - make sure colors are not too bright and not too similar between indices
+                colors[i] = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+                if(i > 0){
+                    int lastcol = colors[i - 1];
+                    // greater than causes more brights less than more darks
+                    while((lastcol - colors[i] <= 77)){
+                        Log.d(LOG_TAG, "color collision");
+                        colors[i] = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+                    }
+
+                }
+            }
+
+            return colors;
+
+        }
     }
 
     @Override

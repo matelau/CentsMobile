@@ -142,7 +142,7 @@ public class WizardDialogFragment extends DialogFragment {
         else{
             CentsApplication.set_selectedVis(selected);
             ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+            ft.replace(R.id.fragment_placeholder,new VisualizationPagerFragment());
             ft.commit();
 
         }

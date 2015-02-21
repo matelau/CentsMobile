@@ -49,8 +49,9 @@ public class CentsApplication extends Application{
     private static boolean debug = true;
 
     //Spending Breakdown Vis
-    private static String[] _sbLabels;
-    private static float[] _sbPercents;
+    private static List<String> _sbLabels;
+    private static List<Float> _sbPercents;
+    private static int[] _colors;
 
 
     public static Context getAppContext() {return _centsContext;}
@@ -206,20 +207,28 @@ public class CentsApplication extends Application{
         CentsApplication._user = _user;
     }
 
-    public static String[] get_sbLabels() {
+    public static List<String> get_sbLabels() {
         return _sbLabels;
     }
 
-    public static void set_sbLabels(String[] labels) {
+    public static void set_sbLabels(List<String> labels) {
         _sbLabels = labels;
     }
 
-    public static float[] get_sbPercents() {
+    public static List<Float> get_sbPercents() {
         return _sbPercents;
     }
 
-    public static void set_sbPercents(float[] percents) {
+    public static void set_sbPercents(List<Float> percents) {
         _sbPercents = percents;
+    }
+
+    public static int[] get_colors() {
+        return _colors;
+    }
+
+    public static void set_colors(int[] _colors) {
+        CentsApplication._colors = _colors;
     }
 
     //    private static OkHttpClient getTrustingClient(){

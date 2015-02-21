@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.matelau.junior.centsproject.Controllers.Design.CostOfLivingFragment;
-import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownFragment;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.CareerComparisonSummaryFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.CareerIntroFragment;
@@ -27,6 +26,7 @@ import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLSummaryFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.MajorComparisonSummary;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.MajorIntroFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdownSummaryFragment;
 
@@ -108,7 +108,6 @@ public class VisualizationPagerFragment extends Fragment {
                 break;
             default:
                 //TODO switch to examples fragments
-//                getActivity().getActionBar().setTitle("Examples");
                 fragments.add(Fragment.instantiate(getActivity(), COLIntroFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownIntroFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), CollegeIntroFragment.class.getName()));
