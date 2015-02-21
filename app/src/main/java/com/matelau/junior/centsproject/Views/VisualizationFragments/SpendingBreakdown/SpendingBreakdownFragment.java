@@ -242,6 +242,8 @@ public class SpendingBreakdownFragment extends Fragment {
             //large device
             fontsize = 30f;
         }
+
+        //TODO check if over/under budget and modify text to show by how much
         if (hasCenterText1) {
             data.setCenterText1("Monthly Spending");
 

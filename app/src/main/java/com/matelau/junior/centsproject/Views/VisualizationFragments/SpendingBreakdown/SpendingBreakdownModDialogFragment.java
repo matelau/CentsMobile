@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
@@ -25,7 +24,7 @@ import java.util.List;
  */
 public class SpendingBreakdownModDialogFragment extends DialogFragment {
     private String LOG_TAG = SpendingBreakdownModDialogFragment.class.getSimpleName();
-    private LinearLayout _rootLayout;
+    private RelativeLayout _rootLayout;
     private RelativeLayout _circle;
     private ImageButton _spending_plus;
     private RecyclerView _sbAttributes;
@@ -46,7 +45,7 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
         Log.d(LOG_TAG, "OnCreateDialog");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
-        _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_spending_breakdown_mod_dialog, null, false);
+        _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_spending_breakdown_mod_dialog, null, false);
         _circle = (RelativeLayout) _rootLayout.findViewById(R.id.plus_spending_category);
         _spending_plus = (ImageButton) _circle.findViewById(R.id.circle_btn);
         //add more cats
