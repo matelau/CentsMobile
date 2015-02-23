@@ -1,5 +1,6 @@
 package com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -146,15 +147,23 @@ public class SpendingBreakdownFragment extends Fragment {
             CentsApplication.set_occupationSalary("45000");
         }
         if(CentsApplication.get_sbLabels() == null){
-            String[] labels = {"housing", "food", "transportation", "utilities","student loans","other debt", "insurance","savings","health","misc"};
-            CentsApplication.set_sbLabels(Arrays.asList(labels));
+            ArrayList<String> labels = new ArrayList<String>(Arrays.asList("housing", "food", "transportation", "utilities","student loans","other debt", "insurance","savings","health","misc"));
+//            String[] labels = {"housing", "food", "transportation", "utilities","student loans","other debt", "insurance","savings","health","misc"};
+            CentsApplication.set_sbLabels(labels);
         }
         if(CentsApplication.get_sbPercents() == null){
             //Percents from Wesley - Food 17, Housing 25, Utilities 6, Transportation 12, Healthcare 5, Insurance 8, Student/Credit Debt 12, Savings 10, Misc 5
-            Float[] percents = {.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f};
-            CentsApplication.set_sbPercents(Arrays.asList(percents));
+            ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f));
+//            Float[] percents = {.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f};
+            CentsApplication.set_sbPercents(percents);
 
         }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        generateData();
     }
 
     /**
@@ -165,6 +174,8 @@ public class SpendingBreakdownFragment extends Fragment {
         SpendingBreakdownModDialogFragment mod = new SpendingBreakdownModDialogFragment();
         mod.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
         mod.show(fm, "tag");
+        //Switch to Breakdown
+//        CentsApplication.get_viewPager().setCurrentItem(1);
     }
 
     /**
@@ -193,8 +204,15 @@ public class SpendingBreakdownFragment extends Fragment {
         DecimalFormat df = new DecimalFormat("##.##");
         df.setRoundingMode(RoundingMode.DOWN);
         // get labels and percents
-        String[] labels = (String[]) CentsApplication.get_sbLabels().toArray();
-        Float[] percents = (Float[]) CentsApplication.get_sbPercents().toArray();
+        List<String> labelList = CentsApplication.get_sbLabels();
+        List<Float> percentList = CentsApplication.get_sbPercents();
+        String[] labels = new String[labelList.size()];
+        Float[] percents = new Float[labelList.size()];
+        for(int i = 0; i < labels.length; i++){
+            labels[i] = labelList.get(i);
+            percents[i] = percentList.get(i);
+        }
+
         int[] colors = new int[labels.length];
         if(CentsApplication.get_colors() != null && CentsApplication.get_colors().length == labels.length)
             colors = CentsApplication.get_colors();
@@ -222,7 +240,7 @@ public class SpendingBreakdownFragment extends Fragment {
         data.setHasCenterCircle(hasCenterCircle);
 
         //limits the amount of space the pie chart can take from 0-1
-        _chart.setCircleFillRatio(0.6f);
+        _chart.setCircleFillRatio(0.65f);
 
 
         //todo dynamicaly generate fontsize
@@ -243,21 +261,53 @@ public class SpendingBreakdownFragment extends Fragment {
             fontsize = 30f;
         }
 
+
+        float completion = percentCompletion(percents);
+
         //TODO check if over/under budget and modify text to show by how much
         if (hasCenterText1) {
-            data.setCenterText1("Monthly Spending");
+
+            if(completion > 1.0f){
+                data.setCenterText1("Over Spending By:");
+                data.setCenterText1Color(getResources().getColor(R.color.red));
+
+            }
+            else if(completion < .99f){
+                data.setCenterText1("Under Spending By:");
+                data.setCenterText1Color(getResources().getColor(R.color.blue));
+            }
+            else{
+                data.setCenterText1("At 100%");
+                data.setCenterText1Color(getResources().getColor(R.color.DarkGreen));
+
+            }
+
 
         // Get roboto-italic font.
             Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Italic.ttf");
             data.setCenterText1Typeface(tf);
 
-            data.setCenterText1Color(getResources().getColor(R.color.listing_color));
+
+
             data.setCenterText1FontSize(Utils.px2sp(getResources().getDisplayMetrics().scaledDensity, (int)fontsize));
 
         }
 
         if (hasCenterText2) {
-            data.setCenterText2("Annual Salary of: "+sSalary);
+            if(completion > 1.0f){
+                data.setCenterText2("" + (completion - 1) + "% You must spend less");
+                data.setCenterText2Color(getResources().getColor(R.color.red));
+
+            }
+            else if(completion < .99f){
+                data.setCenterText2(""+ (1-completion));
+                data.setCenterText2Color(getResources().getColor(R.color.blue));
+            }
+            else{
+                data.setCenterText2("Congratulations");
+                data.setCenterText2Color(getResources().getColor(R.color.DarkGreen));
+
+            }
 
             Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Italic.ttf");
 
@@ -267,8 +317,19 @@ public class SpendingBreakdownFragment extends Fragment {
         }
 
         _chart.setPieChartData(data);
+        _chart.invalidate();
 
     }
+
+
+    private float percentCompletion(Float[] percents){
+        Float test = 0.0f;
+        for(Float f: percents){
+            test += f;
+        }
+        return test;
+    }
+
 
     private int[] getColors(int count){
         int[] def = new int[]{Color.argb(255, 0x4d, 0x4d, 0x4d),Color.argb(255,0x5d, 0xa5,0xda), Color.argb(255, 0xFA, 0xA4, 0x3A), Color.LTGRAY, Color.argb(255,0x60, 0xBD, 0x68), Color.argb(255, 0xF1, 0x7C,0xB0),Color.argb(255,0xB2,0x91, 0x2F), Color.argb(255,0xB2,0x76, 0xB2),  Color.argb(255, 0xDE,0xCF, 0x3F),Color.argb(255, 0xF1, 0x58, 0x54)};

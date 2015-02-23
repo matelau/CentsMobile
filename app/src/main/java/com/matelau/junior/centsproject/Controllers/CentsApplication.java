@@ -2,6 +2,7 @@ package com.matelau.junior.centsproject.Controllers;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.v4.view.ViewPager;
 
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.Models.Design.JobInfo;
@@ -52,6 +53,7 @@ public class CentsApplication extends Application{
     private static List<String> _sbLabels;
     private static List<Float> _sbPercents;
     private static int[] _colors;
+    private static ViewPager _viewPager;
 
 
     public static Context getAppContext() {return _centsContext;}
@@ -229,6 +231,33 @@ public class CentsApplication extends Application{
 
     public static void set_colors(int[] _colors) {
         CentsApplication._colors = _colors;
+    }
+
+    public static ViewPager get_viewPager() {
+        return _viewPager;
+    }
+
+    public static void set_viewPager(ViewPager _viewPager) {
+        CentsApplication._viewPager = _viewPager;
+    }
+
+    /**
+     * Given a string f - representing a float dollar amount of monthly expenses returns a number between 0-1 representing the amt of a monthly salary
+     * f consumes
+     * @param f
+     * @return
+     */
+    public static Float get_conv(String f) {
+        Float amt = 0.0f;
+        try{
+            amt = Float.parseFloat(f);
+            Float monthlySalary = Float.parseFloat(_occupationSalary)/12f;
+            amt = (monthlySalary/amt) * .01f;
+        }
+        catch(NumberFormatException e){
+            e.printStackTrace();
+        }
+        return amt;
     }
 
     //    private static OkHttpClient getTrustingClient(){

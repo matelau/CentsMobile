@@ -46,6 +46,14 @@ public class SpendingBreakdownRecycleAdapter extends RecyclerView.Adapter<Spendi
         return new SpendingBreakdownJobViewHolder(itemView);
     }
 
+
+    public void updateLists(){
+        Log.d(LOG_TAG, "updateLists");
+        _attributes = CentsApplication.get_sbLabels();
+        _values = CentsApplication.get_sbPercents();
+        notifyDataSetChanged();
+
+    }
     @Override
     public void onBindViewHolder(SpendingBreakdownJobViewHolder holder, int position) {
         Log.d(LOG_TAG, "onBindView");
@@ -57,7 +65,6 @@ public class SpendingBreakdownRecycleAdapter extends RecyclerView.Adapter<Spendi
         DecimalFormat df = new DecimalFormat("##.##");
         df.setRoundingMode(RoundingMode.DOWN);
         Float val =  _values.get(position) * _income;
-//        String al = df.format(va);
         holder._value.setText(df.format(val));
 
     }
@@ -72,7 +79,6 @@ public class SpendingBreakdownRecycleAdapter extends RecyclerView.Adapter<Spendi
     public class SpendingBreakdownJobViewHolder extends RecyclerView.ViewHolder {
 
         private String LOG_TAG = SpendingBreakdownJobViewHolder.class.getSimpleName();
-
         protected TextView _attribute;
         protected EditText _value;
 

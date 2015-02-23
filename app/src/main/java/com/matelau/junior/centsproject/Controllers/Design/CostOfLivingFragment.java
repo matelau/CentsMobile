@@ -86,7 +86,7 @@ public class CostOfLivingFragment extends Fragment{
                 public void onClick(View v) {
                     //start Animation
                     _plusBtn.startAnimation((AnimationUtils.loadAnimation(getActivity(), R.anim.rotate)));
-                    //TODO show Popup
+                    //show Popup for selection
                     showSecondCityDialog();
                 }
           });
@@ -125,13 +125,12 @@ public class CostOfLivingFragment extends Fragment{
         CitySelectionDialogFragment csd = new CitySelectionDialogFragment();
         csd.setTargetFragment(this, 01);
         csd.show(fm, "CitySelection");
-//        SecondCityDialogFragment secondCity = new SecondCityDialogFragment();
-//        secondCity.setTargetFragment(this, 01);
-//        secondCity.show(fm, "tag");
-
-
     }
 
+
+    /**
+     *  Sets vars for updated location
+     */
     private void updateLocation(){
         _location = CentsApplication.get_searchedCity()+", "+CentsApplication.get_searchState();
         _c1 = getCol(CentsApplication.get_searchedCity());
