@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +15,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
-import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
 import com.matelau.junior.centsproject.R;
-
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,19 +54,17 @@ public class SpendingBreakdownAttributeAdditionDialogFragment extends DialogFrag
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //validate values
-                // add values to array
-                ArrayList<String> labels= (ArrayList<String>) CentsApplication.get_sbLabels();
-                labels.add(_category.getText().toString());
+                // add values to Application lvl array
+                CentsApplication.get_sbLabels().add(_category.getText().toString());
                 String dollarAmt = _value.getText().toString();
-                Float monthPercent = CentsApplication.get_conv(dollarAmt);
+                Float monthPercent = CentsApplication.convDollarToPercent(dollarAmt);
                 CentsApplication.get_sbPercents().add(monthPercent);
-                Log.d(LOG_TAG, "amt= "+monthPercent);
+                Log.d(LOG_TAG, "amt= " + monthPercent);
                 Log.d(LOG_TAG, "onClick Switch to ViewPager");
-                CentsApplication.set_selectedVis("Spending Breakdown");
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
-                ft.commit();
+                //notify adapter of change
+                CentsApplication.get_rAdapter().add();
+
+
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -87,4 +81,8 @@ public class SpendingBreakdownAttributeAdditionDialogFragment extends DialogFrag
         return builder.create();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 }

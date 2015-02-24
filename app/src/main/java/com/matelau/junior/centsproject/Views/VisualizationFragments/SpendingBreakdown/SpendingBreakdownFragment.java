@@ -127,6 +127,15 @@ public class SpendingBreakdownFragment extends Fragment {
             }
         });
 
+        _student.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //override default labels and percents
+                initStudentVars();
+
+            }
+        });
+
 //        _occupation = (TextView) rootView.findViewById(R.id.spending_desc);
         //modify circle text to be x percentage in size based on view height
         _height = container.getHeight();
@@ -147,22 +156,45 @@ public class SpendingBreakdownFragment extends Fragment {
             CentsApplication.set_occupationSalary("45000");
         }
         if(CentsApplication.get_sbLabels() == null){
-            ArrayList<String> labels = new ArrayList<String>(Arrays.asList("housing", "food", "transportation", "utilities","student loans","other debt", "insurance","savings","health","misc"));
-//            String[] labels = {"housing", "food", "transportation", "utilities","student loans","other debt", "insurance","savings","health","misc"};
+            ArrayList<String> labels = new ArrayList<String>(Arrays.asList("HOUSING", "FOOD", "TRANSPORTATION", "UTILITIES","LOANS","OTHER DEBT", "INSURANCE","SAVINGS","HEALTH","MISC"));
             CentsApplication.set_sbLabels(labels);
         }
         if(CentsApplication.get_sbPercents() == null){
             //Percents from Wesley - Food 17, Housing 25, Utilities 6, Transportation 12, Healthcare 5, Insurance 8, Student/Credit Debt 12, Savings 10, Misc 5
             ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f));
-//            Float[] percents = {.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f};
             CentsApplication.set_sbPercents(percents);
 
         }
     }
 
+    /**
+     *
+     */
+    private void initStudentVars(){
+        ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES",
+                "FOOD",
+                "HOUSING",
+                "UTILITIES",
+                "TRANSPORTATION",
+                "TUITION",
+                "BOOKS",
+                "SAVINGS",
+                "MISC"));
+        //"Taxes":0, "Food":14, "Housing":21, "Utilities":6, "Transportation":12, "Tuition":25, "Books":6, "Savings":8, "Misc":8
+        ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.14f,.21f,.06f,.12f,.25f,.06f,.08f,.08f));
+        CentsApplication.set_sbLabels(labels);
+        CentsApplication.set_sbPercents(percents);
+        showModDialog();
+//        CentsApplication.get_rAdapter().add();
+
+//        generateData();
+
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(LOG_TAG, "OnActivityResult");
         generateData();
     }
 
@@ -174,6 +206,7 @@ public class SpendingBreakdownFragment extends Fragment {
         SpendingBreakdownModDialogFragment mod = new SpendingBreakdownModDialogFragment();
         mod.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
         mod.show(fm, "tag");
+
         //Switch to Breakdown
 //        CentsApplication.get_viewPager().setCurrentItem(1);
     }
@@ -184,7 +217,7 @@ public class SpendingBreakdownFragment extends Fragment {
     public void generateData(){
         int numValues = 10;
         //default values
-        float salary = 45000; // national median 2013
+        float salary = 45000;
         String sSalary = ""+salary;
         if(CentsApplication.get_occupationSalary() != null){
             sSalary = CentsApplication.get_occupationSalary();
@@ -202,7 +235,7 @@ public class SpendingBreakdownFragment extends Fragment {
         }
         //only show two decimal places in values
         DecimalFormat df = new DecimalFormat("##.##");
-        df.setRoundingMode(RoundingMode.DOWN);
+        df.setRoundingMode(RoundingMode.HALF_DOWN);
         // get labels and percents
         List<String> labelList = CentsApplication.get_sbLabels();
         List<Float> percentList = CentsApplication.get_sbPercents();
@@ -228,8 +261,8 @@ public class SpendingBreakdownFragment extends Fragment {
             if (hasArcSeparated && i == 0) {
                 arcValue.setArcSpacing(10);
             }
-            float portion = percents[i] * salary;
-            String label = labels[i].toUpperCase()+" "+df.format(portion);
+            float monthlyPortion = percents[i] * salary;
+            String label = labels[i].toUpperCase()+" "+df.format(monthlyPortion);
             values.add(arcValue.setLabel(label.toCharArray()));
         }
 
@@ -266,19 +299,20 @@ public class SpendingBreakdownFragment extends Fragment {
 
         //TODO check if over/under budget and modify text to show by how much
         if (hasCenterText1) {
+            data.setCenterText1Color(getResources().getColor(R.color.black));
 
             if(completion > 1.0f){
                 data.setCenterText1("Over Spending By:");
-                data.setCenterText1Color(getResources().getColor(R.color.red));
+
 
             }
             else if(completion < .99f){
                 data.setCenterText1("Under Spending By:");
-                data.setCenterText1Color(getResources().getColor(R.color.blue));
+//                data.setCenterText1Color(getResources().getColor(R.color.blue));
             }
             else{
                 data.setCenterText1("At 100%");
-                data.setCenterText1Color(getResources().getColor(R.color.DarkGreen));
+//                data.setCenterText1Color(getResources().getColor(R.color.DarkGreen));
 
             }
 
@@ -294,13 +328,16 @@ public class SpendingBreakdownFragment extends Fragment {
         }
 
         if (hasCenterText2) {
+
             if(completion > 1.0f){
-                data.setCenterText2("" + (completion - 1) + "% You must spend less");
+                Float percent = completion - 1.0f;
+                data.setCenterText2("$"+CentsApplication.convPercentToDollar(percent) + " You must spend less");
                 data.setCenterText2Color(getResources().getColor(R.color.red));
 
             }
-            else if(completion < .99f){
-                data.setCenterText2(""+ (1-completion));
+            else if(completion < .9995f){
+                Float percent = 1f- completion;
+                data.setCenterText2("$"+CentsApplication.convPercentToDollar(percent));
                 data.setCenterText2Color(getResources().getColor(R.color.blue));
             }
             else{

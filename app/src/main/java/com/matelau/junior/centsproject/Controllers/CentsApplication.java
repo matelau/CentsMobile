@@ -6,7 +6,10 @@ import android.support.v4.view.ViewPager;
 
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.Models.Design.JobInfo;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownModDialogFragment;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import retrofit.RestAdapter;
@@ -21,7 +24,7 @@ public class CentsApplication extends Application{
     private static RestAdapter _gdRestAdapter = new RestAdapter.Builder().setEndpoint("https://api.glassdoor.com/").build();
     private static RestAdapter _indeedRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("http://api.indeed.com").build();
     //Note self signed cert is still being used by the query parser
-    private static RestAdapter _queryParsingRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("http://trycents.com:6001/").build();
+    private static RestAdapter _queryParsingRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("https://trycents.com:6001/").build();
     private static RestAdapter _centsRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("https://trycents.com").build(); //.setClient(new OkClient(getUnsafeOkHttpClient()))
     //Current Selections Vars
     private static String _searchedCity;
@@ -54,6 +57,8 @@ public class CentsApplication extends Application{
     private static List<Float> _sbPercents;
     private static int[] _colors;
     private static ViewPager _viewPager;
+    private static SpendingBreakdownModDialogFragment.SBArrayAdapter _rAdapter;
+    private static android.support.v7.widget.RecyclerView _sbAttributes;
 
 
     public static Context getAppContext() {return _centsContext;}
@@ -241,23 +246,52 @@ public class CentsApplication extends Application{
         CentsApplication._viewPager = _viewPager;
     }
 
+
+    public static SpendingBreakdownModDialogFragment.SBArrayAdapter get_rAdapter() {
+        return _rAdapter;
+    }
+
+    public static void set_rAdapter(SpendingBreakdownModDialogFragment.SBArrayAdapter _rAdapter) {
+        CentsApplication._rAdapter = _rAdapter;
+    }
+
+    public static android.support.v7.widget.RecyclerView get_sbAttributes() {
+        return _sbAttributes;
+    }
+
+    public static void set_sbAttributes(android.support.v7.widget.RecyclerView _sbAttributes) {
+        CentsApplication._sbAttributes = _sbAttributes;
+    }
+
     /**
      * Given a string f - representing a float dollar amount of monthly expenses returns a number between 0-1 representing the amt of a monthly salary
      * f consumes
      * @param f
      * @return
      */
-    public static Float get_conv(String f) {
+    public static Float convDollarToPercent(String f) {
         Float amt = 0.0f;
         try{
             amt = Float.parseFloat(f);
             Float monthlySalary = Float.parseFloat(_occupationSalary)/12f;
-            amt = (monthlySalary/amt) * .01f;
+            amt = (amt/monthlySalary);
+            //only show two decimal places in values
         }
         catch(NumberFormatException e){
             e.printStackTrace();
         }
         return amt;
+    }
+
+
+    public static String convPercentToDollar(Float p){
+        Float percent = p;
+        Float monthlySalary = Float.parseFloat(_occupationSalary)/12f;
+        percent = (percent * monthlySalary);
+        //only show two decimal places in values
+        DecimalFormat df = new DecimalFormat("##.##");
+        df.setRoundingMode(RoundingMode.HALF_DOWN);
+        return df.format(percent);
     }
 
     //    private static OkHttpClient getTrustingClient(){
