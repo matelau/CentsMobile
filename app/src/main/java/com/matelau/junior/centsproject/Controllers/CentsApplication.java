@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.Models.Design.JobInfo;
+import com.matelau.junior.centsproject.Models.VizModels.SpendingBreakdownCategory;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownModDialogFragment;
 
 import java.math.RoundingMode;
@@ -55,6 +56,7 @@ public class CentsApplication extends Application{
     //Spending Breakdown Vis
     private static List<String> _sbLabels;
     private static List<Float> _sbPercents;
+    private static List<SpendingBreakdownCategory> _sbValues;
     private static int[] _colors;
     private static ViewPager _viewPager;
     private static SpendingBreakdownModDialogFragment.SBArrayAdapter _rAdapter;
@@ -228,6 +230,14 @@ public class CentsApplication extends Application{
 
     public static void set_sbPercents(List<Float> percents) {
         _sbPercents = percents;
+    }
+
+    public static List<SpendingBreakdownCategory> get_sbValues() {
+        return _sbValues;
+    }
+
+    public static void set_sbValues(List<SpendingBreakdownCategory> _sbValues) {
+        CentsApplication._sbValues = _sbValues;
     }
 
     public static int[] get_colors() {

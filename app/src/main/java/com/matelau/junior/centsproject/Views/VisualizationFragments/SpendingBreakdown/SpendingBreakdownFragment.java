@@ -1,6 +1,5 @@
 package com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -21,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
+import com.matelau.junior.centsproject.Models.VizModels.SpendingBreakdownCategory;
 import com.matelau.junior.centsproject.R;
 
 import java.math.RoundingMode;
@@ -161,15 +161,14 @@ public class SpendingBreakdownFragment extends Fragment {
         if(CentsApplication.get_occupationSalary() == null){
             CentsApplication.set_occupationSalary("45000");
         }
-        if(CentsApplication.get_sbLabels() == null){
+        if(CentsApplication.get_sbValues() == null){
             ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","HOUSING", "FOOD", "TRANSPORTATION", "UTILITIES","LOANS","OTHER DEBT", "INSURANCE","SAVINGS","HEALTH","MISC"));
-            CentsApplication.set_sbLabels(labels);
-        }
-        if(CentsApplication.get_sbPercents() == null){
             //Percents from Wesley - Food 17, Housing 25, Utilities 6, Transportation 12, Healthcare 5, Insurance 8, Student/Credit Debt 12, Savings 10, Misc 5
             ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f));
-            CentsApplication.set_sbPercents(percents);
+            ArrayList<SpendingBreakdownCategory> sbcVals = listBuilder(labels,percents);
+            CentsApplication.set_sbValues(sbcVals);
         }
+
         //only show toast once
         if(CentsApplication.is_sbToast() == false){
             Toast.makeText(getActivity(), "Click default, student, or custom to edit values", Toast.LENGTH_SHORT).show();
@@ -188,8 +187,10 @@ public class SpendingBreakdownFragment extends Fragment {
         ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","FOOD","HOUSING","UTILITIES","TRANSPORTATION","TUITION","BOOKS","SAVINGS","MISC"));
         //"Taxes":0, "Food":14, "Housing":21, "Utilities":6, "Transportation":12, "Tuition":25, "Books":6, "Savings":8, "Misc":8
         ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.14f,.21f,.06f,.12f,.25f,.06f,.08f,.08f));
-        CentsApplication.set_sbLabels(labels);
-        CentsApplication.set_sbPercents(percents);
+        ArrayList<SpendingBreakdownCategory> values = listBuilder(labels, percents);
+//        CentsApplication.set_sbLabels(labels);
+//        CentsApplication.set_sbPercents(percents);
+        CentsApplication.set_sbValues(values);
         showModDialog("student");
     }
 
@@ -198,8 +199,10 @@ public class SpendingBreakdownFragment extends Fragment {
         ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","HOUSING", "FOOD", "TRANSPORTATION", "UTILITIES","LOANS","OTHER DEBT", "INSURANCE","SAVINGS","HEALTH","MISC"));
         //Percents from Wesley - Food 17, Housing 25, Utilities 6, Transportation 12, Healthcare 5, Insurance 8, Student/Credit Debt 12, Savings 10, Misc 5
         ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f));
-        CentsApplication.set_sbLabels(labels);
-        CentsApplication.set_sbPercents(percents);
+        ArrayList<SpendingBreakdownCategory> values = (ArrayList<SpendingBreakdownCategory>) listBuilder(labels, percents);
+//        CentsApplication.set_sbLabels(labels);
+//        CentsApplication.set_sbPercents(percents);
+        CentsApplication.set_sbValues(values);
         showModDialog("default");
     }
 
@@ -211,17 +214,13 @@ public class SpendingBreakdownFragment extends Fragment {
         ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","FOOD","HOUSING","UTILITIES"));
         //"Taxes":0, "Food":14, "Housing":21, "Utilities":6, "Transportation":12, "Tuition":25, "Books":6, "Savings":8, "Misc":8
         ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.17f,.25f,.06f));
-        CentsApplication.set_sbLabels(labels);
-        CentsApplication.set_sbPercents(percents);
+        ArrayList<SpendingBreakdownCategory> values = (ArrayList<SpendingBreakdownCategory>) listBuilder(labels, percents);
+//        CentsApplication.set_sbLabels(labels);
+//        CentsApplication.set_sbPercents(percents);
+        CentsApplication.set_sbValues(values);
         showModDialog("custom");
     }
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(LOG_TAG, "OnActivityResult");
-        generateData();
-    }
 
     /**
      * Loads the Wizard ontop of current view
@@ -234,6 +233,27 @@ public class SpendingBreakdownFragment extends Fragment {
         mod.show(fm, "tag");
 
         selectButton();
+    }
+
+    /**
+     * Given a list of labels and percents creates a List of SBC
+     * @param s
+     * @param p
+     * @return
+     */
+    private ArrayList<SpendingBreakdownCategory> listBuilder(List<String> s, List<Float> p){
+        ArrayList<SpendingBreakdownCategory> values = new ArrayList<SpendingBreakdownCategory>();
+        for(int i = 0; i < s.size(); i++){
+            SpendingBreakdownCategory sbc = new SpendingBreakdownCategory(s.get(i), p.get(i), false);
+            if(s.get(i).toUpperCase().equals("TAXES") ) {
+               sbc._locked = true;
+            }
+            values.add(sbc);
+        }
+
+        return values;
+
+
     }
 
 
@@ -288,14 +308,16 @@ public class SpendingBreakdownFragment extends Fragment {
         DecimalFormat df = new DecimalFormat("##.##");
         df.setRoundingMode(RoundingMode.HALF_DOWN);
         // get labels and percents
-        List<String> labelList = CentsApplication.get_sbLabels();
-        List<Float> percentList = CentsApplication.get_sbPercents();
-        int numValues = labelList.size();
-        String[] labels = new String[labelList.size()];
-        Float[] percents = new Float[labelList.size()];
+//        List<String> labelList = CentsApplication.get_sbLabels();
+//        List<Float> percentList = CentsApplication.get_sbPercents();
+        List<SpendingBreakdownCategory> sbcVals = CentsApplication.get_sbValues();
+
+        int numValues = sbcVals.size();
+        String[] labels = new String[sbcVals.size()];
+        Float[] percents = new Float[sbcVals.size()];
         for(int i = 0; i < labels.length; i++){
-            labels[i] = labelList.get(i);
-            percents[i] = percentList.get(i);
+            labels[i] = sbcVals.get(i)._category;
+            percents[i] = sbcVals.get(i)._percent;
         }
 
         int[] colors = new int[labels.length];

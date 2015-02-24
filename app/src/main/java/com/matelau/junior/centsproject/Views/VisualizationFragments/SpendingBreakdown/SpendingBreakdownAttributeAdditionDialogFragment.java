@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
+import com.matelau.junior.centsproject.Models.VizModels.SpendingBreakdownCategory;
 import com.matelau.junior.centsproject.R;
 
 /**
@@ -55,15 +56,12 @@ public class SpendingBreakdownAttributeAdditionDialogFragment extends DialogFrag
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // add values to Application lvl array
-                CentsApplication.get_sbLabels().add(_category.getText().toString());
                 String dollarAmt = _value.getText().toString();
                 Float monthPercent = CentsApplication.convDollarToPercent(dollarAmt);
-                CentsApplication.get_sbPercents().add(monthPercent);
+                CentsApplication.get_sbValues().add(new SpendingBreakdownCategory(_category.getText().toString().toUpperCase(), monthPercent,false));
                 Log.d(LOG_TAG, "amt= " + monthPercent);
-                Log.d(LOG_TAG, "onClick Switch to ViewPager");
                 //notify adapter of change
                 CentsApplication.get_rAdapter().add();
-
 
             }
         });

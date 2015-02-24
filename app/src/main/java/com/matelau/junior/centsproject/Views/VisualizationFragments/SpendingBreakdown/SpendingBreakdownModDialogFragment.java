@@ -25,9 +25,11 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
+import com.matelau.junior.centsproject.Models.VizModels.SpendingBreakdownCategory;
 import com.matelau.junior.centsproject.R;
 
 import java.util.List;
@@ -40,6 +42,7 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
     private RelativeLayout _rootLayout;
     private RelativeLayout _circle;
     private ImageButton _spending_plus;
+    private ImageButton _lock;
     private ListView _sbAttributes;
     private LinearLayoutManager _sbLayoutManager;
     private SBArrayAdapter _rAdapter;
@@ -50,42 +53,6 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
     public SpendingBreakdownModDialogFragment() {
         // Required empty public constructor
     }
-
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//
-//        _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_spending_breakdown_mod_dialog, null, false);
-//        _circle = (RelativeLayout) _rootLayout.findViewById(R.id.plus_spending_category);
-//        _spending_plus = (ImageButton) _circle.findViewById(R.id.circle_btn);
-//        //add more cats
-//        _spending_plus.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(LOG_TAG, "Spending onClick");
-//                //TODO add spinning animation
-//                _spending_plus.startAnimation((AnimationUtils.loadAnimation(getActivity(), R.anim.rotate)));
-//                FragmentManager fm = getActivity().getSupportFragmentManager();
-//                SpendingBreakdownAttributeAdditionDialogFragment addition = new SpendingBreakdownAttributeAdditionDialogFragment();
-//                addition.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
-//                addition.show(fm, "tag");
-//            }
-//        });
-//
-//        //******  setup Attribute List ********************
-//        //get Attr
-//        _sbAttr = CentsApplication.get_sbLabels();
-//        _sbAttrVals = CentsApplication.get_sbPercents();
-//        //setup dynamic listview
-//        _sbAttributes = (RecyclerView) _rootLayout.findViewById(R.id.sb_attr_list);
-//        _sbAttributes.setHasFixedSize(false);
-//        _sbLayoutManager = new LinearLayoutManager(getActivity());
-//        _sbLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-//        _sbAttributes.setLayoutManager(_sbLayoutManager);
-//        _rAdapter = new SpendingBreakdownRecycleAdapter(_sbAttr, _sbAttrVals, getActivity());
-//        _sbAttributes.setAdapter(_rAdapter);
-//
-//        return _rootLayout;
-//    }
 
     @NonNull
     @Override
@@ -121,39 +88,11 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
         CentsApplication.set_rAdapter(_rAdapter);
         _sbAttributes.setAdapter(_rAdapter);
 
-//        _sbAttributes = (android.support.v7.widget.RecyclerView) _rootLayout.findViewById(R.id.sb_attr_list);
-//        _sbAttributes.setHasFixedSize(false);
-//        _sbLayoutManager = new LinearLayoutManager(getActivity());
-//        _sbLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-//        _sbAttributes.setLayoutManager(_sbLayoutManager);
-//        _rAdapter = new SpendingBreakdownRecycleAdapter(_sbAttr, _sbAttrVals, getActivity());
-//        CentsApplication.set_rAdapter(_rAdapter);
-//        _sbAttributes.setHasFixedSize(true);
-//        _sbAttributes.setAdapter(_rAdapter);
-//        CentsApplication.set_sbAttributes(_sbAttributes);
-
 
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //validate values
-
-
-
-//                ------ normalize values to 1
-
-
-
-
-                // add values to array
-//                ArrayList<String> labels = (ArrayList<String>) CentsApplication.get_sbLabels();
-//
-//                String dollarAmt = _value.getText().toString();
-//                Float monthPercent = CentsApplication.convDollarToPercent(dollarAmt);
-//                CentsApplication.get_sbPercents().add(monthPercent);
-//                Log.d(LOG_TAG, "amt= "+monthPercent);
-//                Log.d(LOG_TAG, "onClick Switch to ViewPager");
+                //reload viz
                 CentsApplication.set_selectedVis("Spending Breakdown");
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
@@ -175,13 +114,15 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
 
 
     public class SBArrayAdapter extends BaseAdapter{
-        List<String> _labels;
-        List<Float> _percents;
+//        List<String> _labels;
+//        List<Float> _percents;
+        List<SpendingBreakdownCategory> _values;
 
         public SBArrayAdapter(){
             Log.v(LOG_TAG, "SBARRAY - create");
-            _percents = CentsApplication.get_sbPercents();
-            _labels = CentsApplication.get_sbLabels();
+//            _percents = CentsApplication.get_sbPercents();
+//            _labels = CentsApplication.get_sbLabels();
+            _values = CentsApplication.get_sbValues();
 
         }
 
@@ -200,9 +141,20 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
             //get subviews
             EditText et = (EditText) rowView.findViewById(R.id.editText1);
             TextView tv = (TextView) rowView.findViewById(R.id.attr_text);
+            ImageButton lock = (ImageButton) rowView.findViewById(R.id.lock);
+            ImageButton delete = (ImageButton) rowView.findViewById(R.id.delete);
+
             //modify subviews
-            et.setText(CentsApplication.convPercentToDollar(_percents.get(position)));
-            tv.setText(_labels.get(position));
+            et.setText(CentsApplication.convPercentToDollar(_values.get(position)._percent));
+            tv.setText(_values.get(position)._category);
+            if(_values.get(position)._locked) {
+                lock.setBackground(getResources().getDrawable(R.drawable.lock_color_small));
+                delete.setVisibility(View.GONE);
+                et.setEnabled(false);
+            }
+            else{
+                et.setEnabled(true);
+            }
 
             //add listeners
             et.addTextChangedListener(new TextWatcher() {
@@ -215,10 +167,7 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     String value = s.toString();
                     Float percent = CentsApplication.convDollarToPercent(value);
-                    _percents.remove(position);
-                    _percents.add(position, percent);
-                    notifyDataSetChanged();
-
+                    _values.get(position)._percent = percent;
 
                 }
 
@@ -227,17 +176,50 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
 
                 }
             });
+
+            lock.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ImageButton lock = (ImageButton) v;
+                    // flip lock state, flip image
+                    if(_values.get(position)._locked){
+                        _values.get(position)._locked = false;
+                        lock.setBackground(getResources().getDrawable(R.drawable.unlock_gray_small));
+                    }
+                    else{
+                        _values.get(position)._locked = true;
+                        lock.setBackground(getResources().getDrawable(R.drawable.lock_color_small));
+                    }
+                    notifyDataSetChanged();
+                }
+            });
+
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(_values.get(position)._locked){
+                        Toast.makeText(getActivity(),"You cannot delete locked items.", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        _values.remove(position);
+                    }
+                    notifyDataSetChanged();
+
+                }
+            });
+
             return rowView;
         }
 
+
         @Override
         public int getCount() {
-            return _labels.size();
+            return _values.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return _labels.get(position);
+            return _values.get(position);
         }
 
         @Override
