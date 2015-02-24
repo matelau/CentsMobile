@@ -67,10 +67,6 @@ public class SpendingBreakdownFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-        initVisVars();
-
-
         View rootView = inflater.inflate(R.layout.fragment_spending_breakdown, container, false);
         CardView cv = (CardView) rootView.findViewById(R.id.spending_card_view);
         //get interaction elements
@@ -118,12 +114,13 @@ public class SpendingBreakdownFragment extends Fragment {
         _default = (Button) rootView.findViewById(R.id.default_btn);
         _student = (Button) rootView.findViewById(R.id.student_btn);
         _custom = (Button) rootView.findViewById(R.id.custom_btn);
+        initVisVars();
 
         _default.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //launch modification dialog frag
-                showModDialog();
+                setDefaultVars();
             }
         });
 
@@ -132,6 +129,15 @@ public class SpendingBreakdownFragment extends Fragment {
             public void onClick(View v) {
                 //override default labels and percents
                 initStudentVars();
+
+            }
+        });
+
+        _custom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //override default labels and percents
+                initCustomVars();
 
             }
         });
@@ -156,39 +162,58 @@ public class SpendingBreakdownFragment extends Fragment {
             CentsApplication.set_occupationSalary("45000");
         }
         if(CentsApplication.get_sbLabels() == null){
-            ArrayList<String> labels = new ArrayList<String>(Arrays.asList("HOUSING", "FOOD", "TRANSPORTATION", "UTILITIES","LOANS","OTHER DEBT", "INSURANCE","SAVINGS","HEALTH","MISC"));
+            ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","HOUSING", "FOOD", "TRANSPORTATION", "UTILITIES","LOANS","OTHER DEBT", "INSURANCE","SAVINGS","HEALTH","MISC"));
             CentsApplication.set_sbLabels(labels);
         }
         if(CentsApplication.get_sbPercents() == null){
             //Percents from Wesley - Food 17, Housing 25, Utilities 6, Transportation 12, Healthcare 5, Insurance 8, Student/Credit Debt 12, Savings 10, Misc 5
-            ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f));
+            ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f));
             CentsApplication.set_sbPercents(percents);
+        }
+        //only show toast once
+        if(CentsApplication.is_sbToast() == false){
+            Toast.makeText(getActivity(), "Click default, student, or custom to edit values", Toast.LENGTH_SHORT).show();
+            CentsApplication.set_sbToast(true);
 
         }
+
+        selectButton();
     }
 
     /**
-     *
+     *Student Default Template
      */
     private void initStudentVars(){
-        ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES",
-                "FOOD",
-                "HOUSING",
-                "UTILITIES",
-                "TRANSPORTATION",
-                "TUITION",
-                "BOOKS",
-                "SAVINGS",
-                "MISC"));
+        //todo if student vars are already saved/loaded use those instead these values overwrite
+        ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","FOOD","HOUSING","UTILITIES","TRANSPORTATION","TUITION","BOOKS","SAVINGS","MISC"));
         //"Taxes":0, "Food":14, "Housing":21, "Utilities":6, "Transportation":12, "Tuition":25, "Books":6, "Savings":8, "Misc":8
         ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.14f,.21f,.06f,.12f,.25f,.06f,.08f,.08f));
         CentsApplication.set_sbLabels(labels);
         CentsApplication.set_sbPercents(percents);
-        showModDialog();
-//        CentsApplication.get_rAdapter().add();
+        showModDialog("student");
+    }
 
-//        generateData();
+    private void setDefaultVars(){
+        //todo if  vars are already saved/loaded use those instead these values overwrite
+        ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","HOUSING", "FOOD", "TRANSPORTATION", "UTILITIES","LOANS","OTHER DEBT", "INSURANCE","SAVINGS","HEALTH","MISC"));
+        //Percents from Wesley - Food 17, Housing 25, Utilities 6, Transportation 12, Healthcare 5, Insurance 8, Student/Credit Debt 12, Savings 10, Misc 5
+        ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f));
+        CentsApplication.set_sbLabels(labels);
+        CentsApplication.set_sbPercents(percents);
+        showModDialog("default");
+    }
 
+    /**
+     *Student Default Template
+     */
+    private void initCustomVars(){
+        //todo if vars are already saved/loaded use those instead these values overwrite
+        ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","FOOD","HOUSING","UTILITIES"));
+        //"Taxes":0, "Food":14, "Housing":21, "Utilities":6, "Transportation":12, "Tuition":25, "Books":6, "Savings":8, "Misc":8
+        ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.17f,.25f,.06f));
+        CentsApplication.set_sbLabels(labels);
+        CentsApplication.set_sbPercents(percents);
+        showModDialog("custom");
     }
 
 
@@ -201,21 +226,47 @@ public class SpendingBreakdownFragment extends Fragment {
     /**
      * Loads the Wizard ontop of current view
      */
-    private void showModDialog(){
+    private void showModDialog(String selection){
+        CentsApplication.set_currentBreakdown(selection);
         FragmentManager fm = getActivity().getSupportFragmentManager();
         SpendingBreakdownModDialogFragment mod = new SpendingBreakdownModDialogFragment();
         mod.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
         mod.show(fm, "tag");
 
-        //Switch to Breakdown
-//        CentsApplication.get_viewPager().setCurrentItem(1);
+        selectButton();
+    }
+
+
+    private void selectButton(){
+        String selection = CentsApplication.get_currentBreakdown();
+        if(selection.equals("default")){
+            _default.setBackgroundColor(getResources().getColor(R.color.compliment_primary));
+            _student.setBackgroundColor(getResources().getColor(R.color.primary));
+            _default.setBackgroundColor(getResources().getColor(R.color.primary));
+
+        }
+
+        else if(selection.equals("student")){
+            _student.setBackgroundColor(getResources().getColor(R.color.compliment_primary));
+            _custom.setBackgroundColor(getResources().getColor(R.color.primary));
+            _default.setBackgroundColor(getResources().getColor(R.color.primary));
+
+        }
+
+        else if(selection.equals("custom")){
+            _custom.setBackgroundColor(getResources().getColor(R.color.compliment_primary));
+            _student.setBackgroundColor(getResources().getColor(R.color.primary));
+            _default.setBackgroundColor(getResources().getColor(R.color.primary));
+
+        }
+
     }
 
     /**
      * Build Pie Chart
      */
     public void generateData(){
-        int numValues = 10;
+        selectButton();
         //default values
         float salary = 45000;
         String sSalary = ""+salary;
@@ -239,6 +290,7 @@ public class SpendingBreakdownFragment extends Fragment {
         // get labels and percents
         List<String> labelList = CentsApplication.get_sbLabels();
         List<Float> percentList = CentsApplication.get_sbPercents();
+        int numValues = labelList.size();
         String[] labels = new String[labelList.size()];
         Float[] percents = new Float[labelList.size()];
         for(int i = 0; i < labels.length; i++){

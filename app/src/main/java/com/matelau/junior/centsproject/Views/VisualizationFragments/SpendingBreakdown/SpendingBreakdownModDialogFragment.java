@@ -213,16 +213,17 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
                     String value = s.toString();
                     Float percent = CentsApplication.convDollarToPercent(value);
                     _percents.remove(position);
                     _percents.add(position, percent);
                     notifyDataSetChanged();
+
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
 
                 }
             });

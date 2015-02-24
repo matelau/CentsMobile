@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.matelau.junior.centsproject.Controllers.Design.CostOfLivingFragment;
@@ -71,9 +70,9 @@ public class VisualizationPagerFragment extends Fragment {
         String selectedVis = CentsApplication.get_selectedVis();
 //        String title = selectedVis.replace("Comparison", " Comparison");
         getActivity().getActionBar().setTitle(selectedVis);
-        Log.d(LOG_TAG, "InitialisePaging - SelectedVis: " + selectedVis);
+//        Log.d(LOG_TAG, "InitialisePaging - SelectedVis: " + selectedVis);
         if(CentsApplication.isDebug())
-            Toast.makeText(getActivity(), "Loading Vis: " + selectedVis, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "Loading Vis: " + selectedVis, Toast.LENGTH_SHORT).show();
         //TODO load fragments based on user selections
         //TODO update proper tabs once created
         switch (selectedVis) {

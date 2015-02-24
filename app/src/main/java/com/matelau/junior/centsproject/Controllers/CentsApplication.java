@@ -58,8 +58,8 @@ public class CentsApplication extends Application{
     private static int[] _colors;
     private static ViewPager _viewPager;
     private static SpendingBreakdownModDialogFragment.SBArrayAdapter _rAdapter;
-    private static android.support.v7.widget.RecyclerView _sbAttributes;
-
+    private static String _currentBreakdown = "default";
+    private static boolean _sbToast = false;
 
     public static Context getAppContext() {return _centsContext;}
 
@@ -255,12 +255,20 @@ public class CentsApplication extends Application{
         CentsApplication._rAdapter = _rAdapter;
     }
 
-    public static android.support.v7.widget.RecyclerView get_sbAttributes() {
-        return _sbAttributes;
+    public static String get_currentBreakdown() {
+        return _currentBreakdown;
     }
 
-    public static void set_sbAttributes(android.support.v7.widget.RecyclerView _sbAttributes) {
-        CentsApplication._sbAttributes = _sbAttributes;
+    public static void set_currentBreakdown(String _currentBreakdown) {
+        CentsApplication._currentBreakdown = _currentBreakdown;
+    }
+
+    public static boolean is_sbToast() {
+        return _sbToast;
+    }
+
+    public static void set_sbToast(boolean _sbToast) {
+        CentsApplication._sbToast = _sbToast;
     }
 
     /**
