@@ -115,14 +115,10 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
 
 
     public class SBArrayAdapter extends BaseAdapter{
-//        List<String> _labels;
-//        List<Float> _percents;
         List<SpendingBreakdownCategory> _values;
 
         public SBArrayAdapter(){
             Log.v(LOG_TAG, "SBARRAY - create");
-//            _percents = CentsApplication.get_sbPercents();
-//            _labels = CentsApplication.get_sbLabels();
             _values = CentsApplication.get_sbValues();
 
         }
@@ -147,7 +143,15 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
             ImageButton delete = (ImageButton) rowView.findViewById(R.id.delete);
 
             //modify subviews
-            et.setText(CentsApplication.convPercentToDollar(_values.get(position)._percent));
+            if(position == 0){
+                //taxed value is different
+                et.setText(CentsApplication.convPercentToDollar(_values.get(position)._percent, true));
+            }
+            else{
+                et.setText(CentsApplication.convPercentToDollar(_values.get(position)._percent, false));
+
+            }
+
             tv.setText(_values.get(position)._category);
             if(_values.get(position)._locked) {
                 lock.setBackground(getResources().getDrawable(R.drawable.lock_color_small));
@@ -168,7 +172,12 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     String value = s.toString();
-                    Float percent = CentsApplication.convDollarToPercent(value);
+                    Float percent = CentsApplication.convDollarToPercent(value, false);
+                    if(position == 0){
+                        percent = CentsApplication.convDollarToPercent(value, true);
+
+                    }
+
                     _values.get(position)._percent = percent;
                     save();
                 }
@@ -208,9 +217,9 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
                     }
                     else{
                         _values.remove(position);
-                        //save change
-                        save();
                     }
+                    //save change
+                    save();
                     notifyDataSetChanged();
 
                 }

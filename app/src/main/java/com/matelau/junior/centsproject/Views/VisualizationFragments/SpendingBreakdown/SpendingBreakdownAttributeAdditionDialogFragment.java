@@ -43,7 +43,6 @@ public class SpendingBreakdownAttributeAdditionDialogFragment extends DialogFrag
         _rootLayout = (FrameLayout) inflater.inflate(R.layout.fragment_spending_breakdown_attribute_addition, null, false);
         _value = (EditText) _rootLayout.findViewById(R.id.editText1);
         _category = (EditText) _rootLayout.findViewById(R.id.attr_category);
-
         _category.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -57,7 +56,7 @@ public class SpendingBreakdownAttributeAdditionDialogFragment extends DialogFrag
             public void onClick(DialogInterface dialog, int which) {
                 // add values to Application lvl array
                 String dollarAmt = _value.getText().toString();
-                Float monthPercent = CentsApplication.convDollarToPercent(dollarAmt);
+                Float monthPercent = CentsApplication.convDollarToPercent(dollarAmt, false);
                 CentsApplication.get_sbValues().add(new SpendingBreakdownCategory(_category.getText().toString().toUpperCase(), monthPercent,false));
                 //Save Addition
                 String filename = CentsApplication.get_currentBreakdown()+".dat";
@@ -76,9 +75,6 @@ public class SpendingBreakdownAttributeAdditionDialogFragment extends DialogFrag
         });
         builder.setView(_rootLayout);
         builder.setCancelable(true);
-
-
-
         return builder.create();
     }
 

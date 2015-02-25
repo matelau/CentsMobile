@@ -308,11 +308,14 @@ public class CentsApplication extends Application{
      * @param f
      * @return
      */
-    public static Float convDollarToPercent(String f) {
+    public static Float convDollarToPercent(String f, boolean tax) {
         Float amt = 0.0f;
         try{
             amt = Float.parseFloat(f);
-            Float monthlySalary = Float.parseFloat(_occupationSalary)/12f;
+            Float monthlySalary = _disposableIncome/12f;
+            if(tax){
+                monthlySalary = Float.parseFloat(_occupationSalary)/12f;
+            }
             amt = (amt/monthlySalary);
             //only show two decimal places in values
         }
@@ -323,9 +326,12 @@ public class CentsApplication extends Application{
     }
 
 
-    public static String convPercentToDollar(Float p){
+    public static String convPercentToDollar(Float p, boolean tax){
         Float percent = p;
-        Float monthlySalary = Float.parseFloat(_occupationSalary)/12f;
+        Float monthlySalary = _disposableIncome/12f;
+        if(tax){
+            monthlySalary = Float.parseFloat(_occupationSalary);
+        }
         percent = (percent * monthlySalary);
         //only show two decimal places in values
         DecimalFormat df = new DecimalFormat("##.##");
@@ -385,7 +391,14 @@ public class CentsApplication extends Application{
 
     }
 
+    /**
+     * Deletes files associated with spending breakdown and values
+     * @param context
+     */
     public static void deleteSB(Context context){
+        _occupationSalary = "45000";
+        _disposableIncome = null;
+        _sbValues = null;
         String[] filenames = new String[]{"default.dat","custom.dat", "student.dat"};
         for(String file: filenames){
             context.deleteFile(file);

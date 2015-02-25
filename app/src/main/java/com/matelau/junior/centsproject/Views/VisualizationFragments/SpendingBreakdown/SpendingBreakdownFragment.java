@@ -102,13 +102,20 @@ public class SpendingBreakdownFragment extends Fragment {
                     s.clear();
                 }
                 else{
+                        //get previous sal
+                        Float prevDisposable = CentsApplication.get_disposableIncome();
                         CentsApplication.set_occupationSalary(s.toString());
                         SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
                         settings.edit().putString("salary", s.toString());
                         Log.d(LOG_TAG, "put salary: "+s.toString());
-
+                        //calculate new tax percentage
+                        calculateTaxes(Float.parseFloat(s.toString()));
+                        //todo get locked values and update their percentage based on new values
+                        Float currDisposable = CentsApplication.get_disposableIncome();
+                        updateLockedPercentage(prevDisposable, currDisposable);
                         //redraw viz
-                        generateData(true);
+                        generateData();
+
                 }
 
             }
@@ -149,7 +156,7 @@ public class SpendingBreakdownFragment extends Fragment {
         //modify circle text to be x percentage in size based on view height
         _height = container.getHeight();
 
-        generateData(false);
+        generateData();
 
         // Inflate the layout for this fragment
         return rootView;
@@ -192,8 +199,8 @@ public class SpendingBreakdownFragment extends Fragment {
             CentsApplication.set_sbToast(true);
 
         }
-
-//        selectButton();
+        //calculateTaxes
+        calculateTaxes(Float.parseFloat(CentsApplication.get_occupationSalary()));
     }
 
     /**
@@ -257,6 +264,23 @@ public class SpendingBreakdownFragment extends Fragment {
         showModDialog("custom");
     }
 
+    /**
+     * updates the values of locked items based on new salary - does not modify taxes
+     */
+    private void updateLockedPercentage(Float prevDisposable, Float currentDisposable){
+        List<SpendingBreakdownCategory> vals = CentsApplication.get_sbValues();
+        for(int i = 1; i < vals.size(); i++){
+            SpendingBreakdownCategory curr = vals.get(i);
+            if(curr._locked == true){
+                Float amt = curr._percent * prevDisposable;
+                Float newPercent = amt/currentDisposable;
+                curr._percent = newPercent;
+                Log.d(LOG_TAG, "updated locked val: "+newPercent);
+            }
+        }
+
+    }
+
 
     /**
      * Loads the modification list on top of current view
@@ -302,59 +326,18 @@ public class SpendingBreakdownFragment extends Fragment {
                 taxed_income += (percents[i] * (salary - brackets[i]));
             }
 
-            //store result
+            //store results
             float result = taxed_income/salary;
             CentsApplication.get_sbValues().get(0)._percent = result;
-            normalizeValues(taxed_income, salary);
+            Float disposableIncome = salary - taxed_income;
+            CentsApplication.set_disposableIncome(disposableIncome);
+            String filename = CentsApplication.get_currentBreakdown()+".dat";
+            CentsApplication.saveSB(filename, getActivity());
             Log.d(LOG_TAG, "Tax ="+result);
 
         }
     }
 
-    /**
-     * After Taxes are calculated for income the value of percents need to be normalized to add up to 100
-     */
-    private void normalizeValues(Float taxedIncome, Float income){
-        List<SpendingBreakdownCategory> values = CentsApplication.get_sbValues();
-        Float disposableIncome = income - taxedIncome;
-        CentsApplication.set_disposableIncome(disposableIncome);
-        //get what percentage of value remains after removing taxed income
-//        Float remainingPercent = disposableIncome/income;
-//        Float[] newVals = new Float[values.size()-1];
-//        Log.d(LOG_TAG, "Remaining%:  "+remainingPercent);
-//
-//
-//        //multiply each value by scalar - remainingPercent
-//        for(int i = 1; i < values.size(); i++){
-//            Float current = values.get(i)._percent;
-////            Log.d(LOG_TAG, "current Percent: "+current);
-//            Float amtOfRemaining = (current * disposableIncome);
-//            Float newPercent =  amtOfRemaining/income;
-////            Log.d(LOG_TAG, "new Percent: "+newPercent);
-////            Float newPercent = current * remainingPercent;
-//            Log.d(LOG_TAG, "current: "+ current+" new%: "+newPercent);
-//            newVals[i-1] = newPercent;
-////            values.get(i)._percent = newPercent;
-//        }
-//
-//        Float sum = 0.0f;
-//        sum += values.get(0)._percent;
-//        for(int i = 0; i < newVals.length; i++){
-//            sum += newVals[i];
-//        }
-//        Log.d(LOG_TAG, "Percents sum: "+sum);
-//        //insure values add up to ~ 1.0f
-//        if(Math.abs(sum - 1.0f ) == 0.0f){
-//            //update values
-//            for(int i = 1; i < newVals.length; i++){
-//                values.get(i)._percent = newVals[i-1];
-//            }
-//
-//            Log.d(LOG_TAG, "normalize - updates values");
-            String filename = CentsApplication.get_currentBreakdown()+".dat";
-            CentsApplication.saveSB(filename, getActivity());
-//        }
-    }
 
     /**
      * Given a list of labels and percents creates a List of SBC
@@ -371,23 +354,17 @@ public class SpendingBreakdownFragment extends Fragment {
             }
             values.add(sbc);
         }
-
         return values;
-
-
     }
-
-
 
     /**
      * Build Pie Chart
      */
-    public void generateData(boolean calculateTaxes){
-
+    public void generateData(){
         //convert salary
         float salary = 45000;
         String sSalary = ""+salary;
-        if(CentsApplication.get_disposableIncome() != null){
+        if(CentsApplication.get_occupationSalary() != null){
             sSalary = CentsApplication.get_occupationSalary();
             //insure valid int is returned if not reset vals
             try{
@@ -399,10 +376,6 @@ public class SpendingBreakdownFragment extends Fragment {
                 salary = 45000/12f;
             }
         }
-
-//        if((CentsApplication.get_sbValues().get(0)._percent == 0.0f) || calculateTaxes)
-         calculateTaxes(salary * 12f);
-
 
         //only show two decimal places in values
         DecimalFormat df = new DecimalFormat("##.##");
@@ -417,7 +390,6 @@ public class SpendingBreakdownFragment extends Fragment {
             labels[i] = sbcVals.get(i)._category;
             percents[i] = sbcVals.get(i)._percent;
         }
-
         int[] colors = new int[labels.length];
         if(CentsApplication.get_colors() != null && CentsApplication.get_colors().length == labels.length)
             colors = CentsApplication.get_colors();
@@ -442,7 +414,7 @@ public class SpendingBreakdownFragment extends Fragment {
             if (hasArcSeparated && i == 0) {
                 arcValue.setArcSpacing(10);
             }
-            float monthlyPortion = percents[i] * CentsApplication.get_disposableIncome();
+            float monthlyPortion = percents[i] * (CentsApplication.get_disposableIncome()/12f);
             String label = labels[i].toUpperCase()+" "+df.format(monthlyPortion);
             values.add(arcValue.setLabel(label.toCharArray()));
         }
@@ -471,17 +443,14 @@ public class SpendingBreakdownFragment extends Fragment {
         }
 
 
-        float completion = Math.round(percentCompletion(percents));
+        float completion = percentCompletion(percents);
         Log.d(LOG_TAG, "completion: "+completion);
 
         //check if over/under budget and modify text to show by how much
         if (hasCenterText1) {
             data.setCenterText1Color(getResources().getColor(R.color.black));
-
             if(completion > 1.0f){
                 data.setCenterText1("Over Spending By:");
-
-
             }
             else if(completion < .99f){
                 data.setCenterText1("Under Spending By:");
@@ -489,29 +458,23 @@ public class SpendingBreakdownFragment extends Fragment {
             else{
                 data.setCenterText1("At 100%");
             }
-
-
             // Get roboto-italic font.
             Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Italic.ttf");
             data.setCenterText1Typeface(tf);
-
-
-
             data.setCenterText1FontSize(Utils.px2sp(getResources().getDisplayMetrics().scaledDensity, (int)fontsize));
 
         }
 
         if (hasCenterText2) {
-
             if(completion > 1.0f){
                 Float percent = completion - 1.0f;
-                data.setCenterText2("$"+CentsApplication.convPercentToDollar(percent) + " You must spend less");
+                data.setCenterText2("$"+CentsApplication.convPercentToDollar(percent, false) + " You must spend less");
                 data.setCenterText2Color(getResources().getColor(R.color.red));
 
             }
             else if(completion < .995f){
                 Float percent = 1f- completion;
-                data.setCenterText2("$"+CentsApplication.convPercentToDollar(percent));
+                data.setCenterText2("$"+CentsApplication.convPercentToDollar(percent, false));
                 data.setCenterText2Color(getResources().getColor(R.color.blue));
             }
             else{
@@ -533,7 +496,7 @@ public class SpendingBreakdownFragment extends Fragment {
     }
 
     /**
-     * Sums percents array
+     * Sums percents array to check if we are over or under
      * @param percents
      * @return
      */
@@ -542,7 +505,7 @@ public class SpendingBreakdownFragment extends Fragment {
         for(Float f: percents){
             sum += f;
         }
-        //remove taxed
+        //remove tax percent
         sum -= CentsApplication.get_sbValues().get(0)._percent;
         return sum;
     }
@@ -584,7 +547,7 @@ public class SpendingBreakdownFragment extends Fragment {
 
     @Override
     public void onResume() {
-        generateData(false);
+        generateData();
         super.onResume();
 
     }
