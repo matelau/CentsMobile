@@ -168,7 +168,8 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
                     String value = s.toString();
                     Float percent = CentsApplication.convDollarToPercent(value);
                     _values.get(position)._percent = percent;
-
+                    String file = CentsApplication.get_currentBreakdown()+".dat";
+                    CentsApplication.saveSB(file, getActivity());
                 }
 
                 @Override

@@ -3,14 +3,24 @@ package com.matelau.junior.centsproject.Controllers;
 import android.app.Application;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.Models.Design.JobInfo;
 import com.matelau.junior.centsproject.Models.VizModels.SpendingBreakdownCategory;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownModDialogFragment;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.Collection;
 import java.util.List;
 
 import retrofit.RestAdapter;
@@ -20,6 +30,7 @@ import retrofit.RestAdapter;
  * Maintains Central state of the application
  */
 public class CentsApplication extends Application{
+    private static String LOG_TAG = CentsApplication.class.getSimpleName();
     private static Context _centsContext;
     //Api Services
     private static RestAdapter _gdRestAdapter = new RestAdapter.Builder().setEndpoint("https://api.glassdoor.com/").build();
@@ -311,6 +322,81 @@ public class CentsApplication extends Application{
         DecimalFormat df = new DecimalFormat("##.##");
         df.setRoundingMode(RoundingMode.HALF_DOWN);
         return df.format(percent);
+    }
+
+
+    /**
+     * Loads SpendingBreakdown file based on filename
+     * @param filename
+     * @param context
+     */
+    public static void loadSB(String filename, Context context){
+        try{
+            Log.d(LOG_TAG, "loading: "+filename);
+            Type tp = new TypeToken<Collection<SpendingBreakdownCategory>>(){}.getType();
+            FileInputStream fis = context.openFileInput(filename);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while((line = br.readLine()) != null){
+                sb.append(line);
+            }
+
+            String json = sb.toString();
+            Log.d("Load", json);
+            Gson gson = new Gson();
+            _sbValues = gson.fromJson(json, tp);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Saves sb values
+     * @param filename
+     * @param context
+     */
+    public static void saveSB(String filename, Context context){
+        Log.d(LOG_TAG, "saving: "+filename);
+        Type tp = new TypeToken<Collection<SpendingBreakdownCategory>>(){}.getType();
+        Gson gson = new Gson();
+        String s = gson.toJson(_sbValues, tp);
+        Log.i("Save", s);
+        FileOutputStream outputStream;
+        try{
+            outputStream = context.openFileOutput(filename, MODE_PRIVATE);
+            outputStream.write(s.getBytes());
+            outputStream.close();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void deleteSB(Context context){
+        String[] filenames = new String[]{"default.dat","custom.dat", "student.dat"};
+        for(String file: filenames){
+            context.deleteFile(file);
+            Log.d(LOG_TAG, "deleted: "+file);
+        }
+
+    }
+
+    /**
+     * Checks if FileExists
+     * @param filename
+     * @param context
+     * @return
+     */
+    public static boolean doesFileExist(String filename, Context context){
+        File file = context.getFileStreamPath(filename);
+        if(file == null || !file.exists()) {
+            return false;
+        }
+        return true;
     }
 
     //    private static OkHttpClient getTrustingClient(){

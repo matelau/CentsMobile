@@ -283,6 +283,7 @@ public class SearchActivity extends FragmentActivity {
         SharedPreferences preferences = this.getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
         preferences.edit().clear().commit();
         CentsApplication.set_loggedIN(false);
+        CentsApplication.deleteSB(this);
         Log.d(LOG_TAG, "Logged out");
         if(CentsApplication.isDebug())
             Toast.makeText(this, "Logged Out", Toast.LENGTH_SHORT).show();
@@ -291,7 +292,7 @@ public class SearchActivity extends FragmentActivity {
 
     @Override
     protected void onResume() {
-        //TODO check if user is logged in or not modify nav drawer accordingly
+        //check if user is logged in or not modify nav drawer accordingly
         loginStatus();
         configureDrawer(CentsApplication.is_loggedIN());
         super.onResume();

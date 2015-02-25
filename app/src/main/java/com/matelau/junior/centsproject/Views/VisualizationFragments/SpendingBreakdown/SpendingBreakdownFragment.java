@@ -1,5 +1,7 @@
 package com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -100,10 +102,12 @@ public class SpendingBreakdownFragment extends Fragment {
                     s.clear();
                 }
                 else{
-
-                    CentsApplication.set_occupationSalary(s.toString());
-                    //redraw viz
-                    generateData();
+                        CentsApplication.set_occupationSalary(s.toString());
+                        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+                        settings.edit().putString("salary", s.toString());
+                        Log.d(LOG_TAG, "put salary: "+s.toString());
+                        //redraw viz
+                        generateData();
                 }
 
             }
@@ -154,17 +158,31 @@ public class SpendingBreakdownFragment extends Fragment {
      * Sets Vis Options to default if not set
      */
     private void initVisVars(){
-        //TODO read file to see if user has saved values
-        if(CentsApplication.get_occupationSalary() == null || CentsApplication.get_occupationSalary() == ""){
+        // read file to see if user has saved values
+        String filename = CentsApplication.get_currentBreakdown()+".dat";
+        if(CentsApplication.doesFileExist(filename, getActivity())){
+            //loadfile
+            CentsApplication.loadSB(filename, getActivity());
+        }
+        else{
+            if(CentsApplication.get_sbValues() == null){
+                ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","HOUSING", "FOOD", "TRANSPORTATION", "UTILITIES","LOANS","OTHER DEBT", "INSURANCE","SAVINGS","HEALTH","MISC"));
+                //Percents from Wesley - Food 17, Housing 25, Utilities 6, Transportation 12, Healthcare 5, Insurance 8, Student/Credit Debt 12, Savings 10, Misc 5
+                ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f));
+                ArrayList<SpendingBreakdownCategory> sbcVals = listBuilder(labels,percents);
+                CentsApplication.set_sbValues(sbcVals);
+            }
+        }
+        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        String salary = settings.getString("salary", "");
+        if(salary == null || salary.equals("")){
             CentsApplication.set_occupationSalary("45000");
+            settings.edit().putString("salary","45000");
         }
-        if(CentsApplication.get_sbValues() == null){
-            ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","HOUSING", "FOOD", "TRANSPORTATION", "UTILITIES","LOANS","OTHER DEBT", "INSURANCE","SAVINGS","HEALTH","MISC"));
-            //Percents from Wesley - Food 17, Housing 25, Utilities 6, Transportation 12, Healthcare 5, Insurance 8, Student/Credit Debt 12, Savings 10, Misc 5
-            ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f));
-            ArrayList<SpendingBreakdownCategory> sbcVals = listBuilder(labels,percents);
-            CentsApplication.set_sbValues(sbcVals);
+        else{
+            CentsApplication.set_occupationSalary(salary);
         }
+
 
         //only show toast once
         if(CentsApplication.is_sbToast() == false){
@@ -180,22 +198,38 @@ public class SpendingBreakdownFragment extends Fragment {
      *Student Default Template
      */
     private void initStudentVars(){
-        //todo if student vars are already saved/loaded use those instead these values overwrite
-        ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","FOOD","HOUSING","UTILITIES","TRANSPORTATION","TUITION","BOOKS","SAVINGS","MISC"));
-        //"Taxes":0, "Food":14, "Housing":21, "Utilities":6, "Transportation":12, "Tuition":25, "Books":6, "Savings":8, "Misc":8
-        ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.14f,.21f,.06f,.12f,.25f,.06f,.08f,.08f));
-        ArrayList<SpendingBreakdownCategory> values = listBuilder(labels, percents);
-        CentsApplication.set_sbValues(values);
+        //if student vars are already saved/loaded use those instead these values overwrite
+        String filename = "student.dat";
+        if(CentsApplication.doesFileExist(filename, getActivity())){
+            //loadfile
+            CentsApplication.loadSB(filename, getActivity());
+        }
+        else{
+            ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","FOOD","HOUSING","UTILITIES","TRANSPORTATION","TUITION","BOOKS","SAVINGS","MISC"));
+            //"Taxes":0, "Food":14, "Housing":21, "Utilities":6, "Transportation":12, "Tuition":25, "Books":6, "Savings":8, "Misc":8
+            ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.14f,.21f,.06f,.12f,.25f,.06f,.08f,.08f));
+            ArrayList<SpendingBreakdownCategory> values = listBuilder(labels, percents);
+            CentsApplication.set_sbValues(values);
+        }
+
         showModDialog("student");
     }
 
     private void setDefaultVars(){
-        //todo if  vars are already saved/loaded use those instead these values overwrite
-        ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","HOUSING", "FOOD", "TRANSPORTATION", "UTILITIES","LOANS","OTHER DEBT", "INSURANCE","SAVINGS","HEALTH","MISC"));
-        //Percents from Wesley - Food 17, Housing 25, Utilities 6, Transportation 12, Healthcare 5, Insurance 8, Student/Credit Debt 12, Savings 10, Misc 5
-        ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f));
-        ArrayList<SpendingBreakdownCategory> values = (ArrayList<SpendingBreakdownCategory>) listBuilder(labels, percents);
-        CentsApplication.set_sbValues(values);
+        //if  vars are already saved/loaded use those instead these values overwrite
+        String filename ="default.dat";
+        if(CentsApplication.doesFileExist(filename, getActivity())){
+            //loadfile
+            CentsApplication.loadSB(filename, getActivity());
+        }
+        else{
+            ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","HOUSING", "FOOD", "TRANSPORTATION", "UTILITIES","LOANS","OTHER DEBT", "INSURANCE","SAVINGS","HEALTH","MISC"));
+            //Percents from Wesley - Food 17, Housing 25, Utilities 6, Transportation 12, Healthcare 5, Insurance 8, Student/Credit Debt 12, Savings 10, Misc 5
+            ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f));
+            ArrayList<SpendingBreakdownCategory> values = (ArrayList<SpendingBreakdownCategory>) listBuilder(labels, percents);
+            CentsApplication.set_sbValues(values);
+        }
+
         showModDialog("default");
     }
 
@@ -203,11 +237,19 @@ public class SpendingBreakdownFragment extends Fragment {
      *Student Default Template
      */
     private void initCustomVars(){
-        //todo if vars are already saved/loaded use those instead these values overwrite
-        ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","FOOD","HOUSING","UTILITIES"));
-        ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.17f,.25f,.06f));
-        ArrayList<SpendingBreakdownCategory> values = (ArrayList<SpendingBreakdownCategory>) listBuilder(labels, percents);
-        CentsApplication.set_sbValues(values);
+        // if vars are already saved/loaded use those instead these values overwrite
+        String filename = "custom.dat";
+        if(CentsApplication.doesFileExist(filename, getActivity())){
+            //loadfile
+            CentsApplication.loadSB(filename, getActivity());
+        }
+        else{
+            ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","FOOD","HOUSING","UTILITIES"));
+            ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.17f,.25f,.06f));
+            ArrayList<SpendingBreakdownCategory> values = (ArrayList<SpendingBreakdownCategory>) listBuilder(labels, percents);
+            CentsApplication.set_sbValues(values);
+        }
+
         showModDialog("custom");
     }
 
@@ -217,6 +259,14 @@ public class SpendingBreakdownFragment extends Fragment {
      */
     private void showModDialog(String selection){
         CentsApplication.set_currentBreakdown(selection);
+        try{
+            calculateTaxes(Float.parseFloat(CentsApplication.get_occupationSalary()));
+
+        }
+        catch(NumberFormatException e){
+            e.printStackTrace();
+        }
+
         FragmentManager fm = getActivity().getSupportFragmentManager();
         SpendingBreakdownModDialogFragment mod = new SpendingBreakdownModDialogFragment();
         mod.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
@@ -267,32 +317,31 @@ public class SpendingBreakdownFragment extends Fragment {
 
         for(int i = 1; i < values.size(); i++){
             Float current = values.get(i)._percent;
+//            Log.d(LOG_TAG, "current Percent: "+current);
             Float amtOfRemaining = (current * remainingIncome);
             Float newPercent =  amtOfRemaining/income;
-            Log.d(LOG_TAG, "new Percent: "+newPercent);
+//            Log.d(LOG_TAG, "new Percent: "+newPercent);
             newVals[i-1] = newPercent;
 //            values.get(i)._percent = newPercent;
         }
 
         Float sum = 0.0f;
-        for(int i = 0; i < values.size(); i++){
-            Float current = values.get(i)._percent;
-            sum += current;
-
+        sum += values.get(0)._percent;
+        for(int i = 0; i < newVals.length; i++){
+            sum += newVals[i];
         }
-        Log.d(LOG_TAG, "Percents sum:"+sum);
+        Log.d(LOG_TAG, "Percents sum: "+sum);
         //insure values add up to ~ 1.0f
-        if((sum - 1.0f ) < 0.01f || (sum - 1.0f) > 0.01f){
+        if(Math.abs(sum - 1.0f ) == 0.0f){
             //update values
             for(int i = 1; i < newVals.length; i++){
                 values.get(i)._percent = newVals[i-1];
             }
+
             Log.d(LOG_TAG, "normalize - updates values");
+            String filename = CentsApplication.get_currentBreakdown()+".dat";
+            CentsApplication.saveSB(filename, getActivity());
         }
-
-
-
-
     }
 
     /**
@@ -419,7 +468,7 @@ public class SpendingBreakdownFragment extends Fragment {
             }
 
 
-        // Get roboto-italic font.
+            // Get roboto-italic font.
             Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Italic.ttf");
             data.setCenterText1Typeface(tf);
 

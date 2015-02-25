@@ -100,7 +100,7 @@ public class WizardDialogFragment extends DialogFragment {
                 break;
             default:
                 //Examples
-                //TODO launch examples Dialog Fragment
+                //launch examples Dialog Fragment
                 switchToVisFrag("Examples");
                 break;
 
@@ -115,7 +115,7 @@ public class WizardDialogFragment extends DialogFragment {
         //close wizard
         dismiss();
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        //TODO Add Intros here as they are created
+        //Add Intros here as they are created
         getActivity().getActionBar().setTitle(selected);
         if(selected.equals("COL Comparison")){
             //Special Case title change
@@ -154,12 +154,12 @@ public class WizardDialogFragment extends DialogFragment {
         switch(pos){
             case 0:
                 //College Inquiry
-                //TODO Launch college viz view pager
+                //Launch college viz view pager
                 switchToVisFrag("College Comparison");
                 break;
             case 1:
                 //Major Inquiry
-                //TODO launch Major viz view pager
+                //launch Major viz view pager
                 switchToVisFrag("Major Comparison");
                 break;
             default:
@@ -173,12 +173,12 @@ public class WizardDialogFragment extends DialogFragment {
         switch(pos) {
             case 0:
                 //Cost of Living
-                //TODO launch cost living viz view pager
+                //launch cost living viz view pager
                 switchToVisFrag("COL Comparison");
                 break;
             case 1:
                 //Spending
-                //TODO launch spending viz view pager
+                //launch spending viz view pager
                 switchToVisFrag("Spending Breakdown");
                 break;
             default:
