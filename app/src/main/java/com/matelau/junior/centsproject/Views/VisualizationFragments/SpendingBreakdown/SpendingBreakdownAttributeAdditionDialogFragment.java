@@ -59,6 +59,9 @@ public class SpendingBreakdownAttributeAdditionDialogFragment extends DialogFrag
                 String dollarAmt = _value.getText().toString();
                 Float monthPercent = CentsApplication.convDollarToPercent(dollarAmt);
                 CentsApplication.get_sbValues().add(new SpendingBreakdownCategory(_category.getText().toString().toUpperCase(), monthPercent,false));
+                //Save Addition
+                String filename = CentsApplication.get_currentBreakdown()+".dat";
+                CentsApplication.saveSB(filename, getActivity());
                 Log.d(LOG_TAG, "amt= " + monthPercent);
                 //notify adapter of change
                 CentsApplication.get_rAdapter().add();

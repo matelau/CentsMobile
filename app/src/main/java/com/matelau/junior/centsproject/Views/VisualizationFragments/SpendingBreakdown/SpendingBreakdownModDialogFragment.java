@@ -63,6 +63,7 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
         _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_spending_breakdown_mod_dialog, null, false);
         _circle = (RelativeLayout) _rootLayout.findViewById(R.id.plus_spending_category);
         _spending_plus = (ImageButton) _circle.findViewById(R.id.circle_btn);
+
         //add more cats
         _spending_plus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,6 +139,7 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
             Log.v(LOG_TAG, "SBARRAY - getView");
             LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(R.layout.spending_breakdown_mod_element, parent, false);
+
             //get subviews
             EditText et = (EditText) rowView.findViewById(R.id.editText1);
             TextView tv = (TextView) rowView.findViewById(R.id.attr_text);
@@ -168,8 +170,7 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
                     String value = s.toString();
                     Float percent = CentsApplication.convDollarToPercent(value);
                     _values.get(position)._percent = percent;
-                    String file = CentsApplication.get_currentBreakdown()+".dat";
-                    CentsApplication.saveSB(file, getActivity());
+                    save();
                 }
 
                 @Override
@@ -191,6 +192,9 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
                         _values.get(position)._locked = true;
                         lock.setBackground(getResources().getDrawable(R.drawable.lock_color_small));
                     }
+                    //save change
+                    save();
+
                     notifyDataSetChanged();
                 }
             });
@@ -198,11 +202,14 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(_values.get(position)._locked){
-                        Toast.makeText(getActivity(),"You cannot delete locked items.", Toast.LENGTH_SHORT).show();
+                    if(position == 0){
+                        Toast.makeText(getActivity(),"Two things in life are certain death and taxes... You cannot delete Taxes.", Toast.LENGTH_SHORT).show();
+                        _values.get(position)._locked = true;
                     }
                     else{
                         _values.remove(position);
+                        //save change
+                        save();
                     }
                     notifyDataSetChanged();
 
@@ -210,6 +217,13 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
             });
 
             return rowView;
+        }
+
+
+
+        public void save(){
+            String filename = CentsApplication.get_currentBreakdown()+".dat";
+            CentsApplication.saveSB(filename,getActivity());
         }
 
 

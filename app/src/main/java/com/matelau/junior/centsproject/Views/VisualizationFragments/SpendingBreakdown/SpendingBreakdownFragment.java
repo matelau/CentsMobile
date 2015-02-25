@@ -175,12 +175,13 @@ public class SpendingBreakdownFragment extends Fragment {
         }
         SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
         String salary = settings.getString("salary", "");
-        if(salary == null || salary.equals("")){
-            CentsApplication.set_occupationSalary("45000");
-            settings.edit().putString("salary","45000");
+        if(CentsApplication.get_occupationSalary() != null){
+            settings.edit().putString("salary", CentsApplication.get_occupationSalary());
+
         }
-        else{
-            CentsApplication.set_occupationSalary(salary);
+        else {
+            CentsApplication.set_occupationSalary("45000");
+
         }
 
 
@@ -203,6 +204,8 @@ public class SpendingBreakdownFragment extends Fragment {
         if(CentsApplication.doesFileExist(filename, getActivity())){
             //loadfile
             CentsApplication.loadSB(filename, getActivity());
+            String s = CentsApplication.get_occupationSalary();
+//            if(s.equ)
         }
         else{
             ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","FOOD","HOUSING","UTILITIES","TRANSPORTATION","TUITION","BOOKS","SAVINGS","MISC"));
@@ -437,7 +440,7 @@ public class SpendingBreakdownFragment extends Fragment {
 
         //todo dynamicaly generate fontsize
         double fontsize =   _chart.getHeight() *.1;
-        Log.v("PieChart", "Chart: " + _chart.getHeight() + " font: " + fontsize);
+//        Log.v("PieChart", "Chart: " + _chart.getHeight() + " font: " + fontsize);
 
         int currentOrientation = getResources().getConfiguration().orientation;
         if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
