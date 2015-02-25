@@ -33,7 +33,7 @@ public class CentsApplication extends Application{
     private static String _searchedCity2;
     private static String _searchState2;
     private static String _searchedOccupation;
-    private static String _occupationSalary;
+
     //maintaining ui vars
     private static int _citySpinPos;
     private static int _stateSpinPos;
@@ -54,6 +54,7 @@ public class CentsApplication extends Application{
     private static boolean debug = true;
 
     //Spending Breakdown Vis
+    private static String _occupationSalary = "45000";
     private static List<String> _sbLabels;
     private static List<Float> _sbPercents;
     private static List<SpendingBreakdownCategory> _sbValues;

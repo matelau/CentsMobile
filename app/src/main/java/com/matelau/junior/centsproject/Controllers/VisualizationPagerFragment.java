@@ -27,7 +27,6 @@ import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.MajorC
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.MajorIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownIntroFragment;
-import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownModDialogFragment;
 
 import java.util.List;
 import java.util.Vector;
@@ -104,7 +103,7 @@ public class VisualizationPagerFragment extends Fragment {
                 break;
             case "Spending Breakdown":
                 fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownFragment.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownModDialogFragment.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownModDialogFragment.class.getName()));
                 break;
             default:
                 //TODO switch to examples fragments
@@ -211,7 +210,7 @@ public class VisualizationPagerFragment extends Fragment {
                     tabTitles = new String[]{"Summary", "Cost of Living", "Labor Stats","Taxes", "Weather"};
                     return tabTitles[position];
                 case "Spending Breakdown":
-                    tabTitles = new String[]{"Visualization", "Breakdown"};
+                    tabTitles = new String[]{"Visualization"};
                     return tabTitles[position];
                 default:
                     tabTitles = new String[]{"City Comparison","Spending Breakdown", "College Comparison","Career Comparison", "Major Comparison"};

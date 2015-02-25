@@ -6,7 +6,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -54,8 +53,7 @@ public class SpendingBreakdownFragment extends Fragment {
     private boolean hasCenterText2 = true;
     private boolean hasArcSeparated = false;
     private boolean hasLabelForSelected = false;
-    private int _height = 800; // default val
-
+    private int _height = 800;
 
 
     public SpendingBreakdownFragment() {
@@ -68,7 +66,7 @@ public class SpendingBreakdownFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_spending_breakdown, container, false);
-        CardView cv = (CardView) rootView.findViewById(R.id.spending_card_view);
+
         //get interaction elements
          _chart = (PieChartView) rootView.findViewById(R.id.spending_vis);
         //Income Input
@@ -142,10 +140,9 @@ public class SpendingBreakdownFragment extends Fragment {
             }
         });
 
-//        _occupation = (TextView) rootView.findViewById(R.id.spending_desc);
+
         //modify circle text to be x percentage in size based on view height
         _height = container.getHeight();
-//        _occupation.setText(CentsApplication.get_searchedOccupation());
 
         generateData();
 
@@ -158,7 +155,7 @@ public class SpendingBreakdownFragment extends Fragment {
      */
     private void initVisVars(){
         //TODO read file to see if user has saved values
-        if(CentsApplication.get_occupationSalary() == null){
+        if(CentsApplication.get_occupationSalary() == null || CentsApplication.get_occupationSalary() == ""){
             CentsApplication.set_occupationSalary("45000");
         }
         if(CentsApplication.get_sbValues() == null){
@@ -176,7 +173,7 @@ public class SpendingBreakdownFragment extends Fragment {
 
         }
 
-        selectButton();
+//        selectButton();
     }
 
     /**
@@ -188,8 +185,6 @@ public class SpendingBreakdownFragment extends Fragment {
         //"Taxes":0, "Food":14, "Housing":21, "Utilities":6, "Transportation":12, "Tuition":25, "Books":6, "Savings":8, "Misc":8
         ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.14f,.21f,.06f,.12f,.25f,.06f,.08f,.08f));
         ArrayList<SpendingBreakdownCategory> values = listBuilder(labels, percents);
-//        CentsApplication.set_sbLabels(labels);
-//        CentsApplication.set_sbPercents(percents);
         CentsApplication.set_sbValues(values);
         showModDialog("student");
     }
@@ -200,8 +195,6 @@ public class SpendingBreakdownFragment extends Fragment {
         //Percents from Wesley - Food 17, Housing 25, Utilities 6, Transportation 12, Healthcare 5, Insurance 8, Student/Credit Debt 12, Savings 10, Misc 5
         ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f));
         ArrayList<SpendingBreakdownCategory> values = (ArrayList<SpendingBreakdownCategory>) listBuilder(labels, percents);
-//        CentsApplication.set_sbLabels(labels);
-//        CentsApplication.set_sbPercents(percents);
         CentsApplication.set_sbValues(values);
         showModDialog("default");
     }
@@ -212,18 +205,15 @@ public class SpendingBreakdownFragment extends Fragment {
     private void initCustomVars(){
         //todo if vars are already saved/loaded use those instead these values overwrite
         ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","FOOD","HOUSING","UTILITIES"));
-        //"Taxes":0, "Food":14, "Housing":21, "Utilities":6, "Transportation":12, "Tuition":25, "Books":6, "Savings":8, "Misc":8
         ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.17f,.25f,.06f));
         ArrayList<SpendingBreakdownCategory> values = (ArrayList<SpendingBreakdownCategory>) listBuilder(labels, percents);
-//        CentsApplication.set_sbLabels(labels);
-//        CentsApplication.set_sbPercents(percents);
         CentsApplication.set_sbValues(values);
         showModDialog("custom");
     }
 
 
     /**
-     * Loads the Wizard ontop of current view
+     * Loads the modification list on top of current view
      */
     private void showModDialog(String selection){
         CentsApplication.set_currentBreakdown(selection);
@@ -231,8 +221,78 @@ public class SpendingBreakdownFragment extends Fragment {
         SpendingBreakdownModDialogFragment mod = new SpendingBreakdownModDialogFragment();
         mod.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
         mod.show(fm, "tag");
+    }
 
-        selectButton();
+    /**
+     * calculates monthly tax percent for input salary
+     * @param salary
+     */
+    private void calculateTaxes(Float salary){
+        if(salary < 9075){
+            CentsApplication.get_sbValues().get(0)._percent = 0.0f;
+        }
+        else{
+            int[] brackets = new int[]{0,9075,36900,89350,186350,405100,406750};
+            float[] percents = new float[]{0.0f, 0.2f, 0.25f, 0.35f, 0.38f, 0.43f, 0.45f, 0.496f};
+            float taxed_income = 0.0f;
+            int included_brackets = 0;
+            //iterate through included brackets and update indices to include
+            for(;included_brackets < 6; included_brackets++){
+                if(salary < brackets[included_brackets]){
+                    included_brackets--;
+                    break;
+                }
+            }
+            //sum up amt of tax paid per bracket
+            for(int i = 0; i < included_brackets+1; i++){
+                taxed_income += (percents[i] * (salary - brackets[i]));
+            }
+
+            //store result
+            float result = taxed_income/salary;
+            CentsApplication.get_sbValues().get(0)._percent = result;
+            normalizeValues(taxed_income, salary);
+            Log.d(LOG_TAG, "Tax ="+result);
+
+        }
+    }
+
+    /**
+     * After Taxes are calculated for income the value of percents need to be normalized to add up to 100
+     */
+    private void normalizeValues(Float taxedIncome, Float income){
+        List<SpendingBreakdownCategory> values = CentsApplication.get_sbValues();
+        Float remainingIncome = income - taxedIncome;
+        Float[] newVals = new Float[values.size()-1];
+
+        for(int i = 1; i < values.size(); i++){
+            Float current = values.get(i)._percent;
+            Float amtOfRemaining = (current * remainingIncome);
+            Float newPercent =  amtOfRemaining/income;
+            Log.d(LOG_TAG, "new Percent: "+newPercent);
+            newVals[i-1] = newPercent;
+//            values.get(i)._percent = newPercent;
+        }
+
+        Float sum = 0.0f;
+        for(int i = 0; i < values.size(); i++){
+            Float current = values.get(i)._percent;
+            sum += current;
+
+        }
+        Log.d(LOG_TAG, "Percents sum:"+sum);
+        //insure values add up to ~ 1.0f
+        if((sum - 1.0f ) < 0.01f || (sum - 1.0f) > 0.01f){
+            //update values
+            for(int i = 1; i < newVals.length; i++){
+                values.get(i)._percent = newVals[i-1];
+            }
+            Log.d(LOG_TAG, "normalize - updates values");
+        }
+
+
+
+
     }
 
     /**
@@ -257,59 +317,35 @@ public class SpendingBreakdownFragment extends Fragment {
     }
 
 
-    private void selectButton(){
-        String selection = CentsApplication.get_currentBreakdown();
-        if(selection.equals("default")){
-            _default.setBackgroundColor(getResources().getColor(R.color.compliment_primary));
-            _student.setBackgroundColor(getResources().getColor(R.color.primary));
-            _default.setBackgroundColor(getResources().getColor(R.color.primary));
-
-        }
-
-        else if(selection.equals("student")){
-            _student.setBackgroundColor(getResources().getColor(R.color.compliment_primary));
-            _custom.setBackgroundColor(getResources().getColor(R.color.primary));
-            _default.setBackgroundColor(getResources().getColor(R.color.primary));
-
-        }
-
-        else if(selection.equals("custom")){
-            _custom.setBackgroundColor(getResources().getColor(R.color.compliment_primary));
-            _student.setBackgroundColor(getResources().getColor(R.color.primary));
-            _default.setBackgroundColor(getResources().getColor(R.color.primary));
-
-        }
-
-    }
 
     /**
      * Build Pie Chart
      */
     public void generateData(){
-        selectButton();
-        //default values
+
+        //convert salary
         float salary = 45000;
         String sSalary = ""+salary;
         if(CentsApplication.get_occupationSalary() != null){
             sSalary = CentsApplication.get_occupationSalary();
             //insure valid int is returned if not reset vals
             try{
-                salary = Integer.parseInt(sSalary);
+                salary = Float.parseFloat(sSalary);
                 salary = salary/12f;
             }catch(NumberFormatException e){
                 e.printStackTrace();
                 sSalary =""+ salary;
                 salary = 45000/12f;
-//                _occupation.setText("Natl Median Wage");
             }
-
         }
+
+        calculateTaxes(salary * 12f);
+
+
         //only show two decimal places in values
         DecimalFormat df = new DecimalFormat("##.##");
         df.setRoundingMode(RoundingMode.HALF_DOWN);
         // get labels and percents
-//        List<String> labelList = CentsApplication.get_sbLabels();
-//        List<Float> percentList = CentsApplication.get_sbPercents();
         List<SpendingBreakdownCategory> sbcVals = CentsApplication.get_sbValues();
 
         int numValues = sbcVals.size();
@@ -356,22 +392,17 @@ public class SpendingBreakdownFragment extends Fragment {
 
         int currentOrientation = getResources().getConfiguration().orientation;
         if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            // Landscape
-//            fontsize =  18f     ;
-            //large device
+
             fontsize = 18f;
         }
         else {
-            // Portrait
-//             fontsize =  24f;
-            //large device
             fontsize = 30f;
         }
 
 
         float completion = percentCompletion(percents);
 
-        //TODO check if over/under budget and modify text to show by how much
+        //check if over/under budget and modify text to show by how much
         if (hasCenterText1) {
             data.setCenterText1Color(getResources().getColor(R.color.black));
 
@@ -382,12 +413,9 @@ public class SpendingBreakdownFragment extends Fragment {
             }
             else if(completion < .99f){
                 data.setCenterText1("Under Spending By:");
-//                data.setCenterText1Color(getResources().getColor(R.color.blue));
             }
             else{
                 data.setCenterText1("At 100%");
-//                data.setCenterText1Color(getResources().getColor(R.color.DarkGreen));
-
             }
 
 
@@ -432,13 +460,17 @@ public class SpendingBreakdownFragment extends Fragment {
 
     }
 
-
+    /**
+     * Sums percents array
+     * @param percents
+     * @return
+     */
     private float percentCompletion(Float[] percents){
-        Float test = 0.0f;
+        Float sum = 0.0f;
         for(Float f: percents){
-            test += f;
+            sum += f;
         }
-        return test;
+        return sum;
     }
 
 
