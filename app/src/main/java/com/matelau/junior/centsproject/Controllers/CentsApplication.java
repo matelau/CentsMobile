@@ -66,6 +66,7 @@ public class CentsApplication extends Application{
 
     //Spending Breakdown Vis
     private static String _occupationSalary = "45000";
+    private static Float _disposableIncome;
     private static List<String> _sbLabels;
     private static List<Float> _sbPercents;
     private static List<SpendingBreakdownCategory> _sbValues;
@@ -141,6 +142,14 @@ public class CentsApplication extends Application{
 
     public static void set_occupationSalary(String _occupationSalary) {
         CentsApplication._occupationSalary = _occupationSalary;
+    }
+
+    public static Float get_disposableIncome() {
+        return _disposableIncome;
+    }
+
+    public static void set_disposableIncome(Float _disposableIncome) {
+        CentsApplication._disposableIncome = _disposableIncome;
     }
 
     public static String[] get_states() {
