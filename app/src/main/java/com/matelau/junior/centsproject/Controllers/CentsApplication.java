@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.Models.Design.JobInfo;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
+import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SpendingBreakdownCategory;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownModDialogFragment;
 
@@ -39,11 +40,12 @@ public class CentsApplication extends Application{
     //Note self signed cert is still being used by the query parser
     private static RestAdapter _queryParsingRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("https://trycents.com:6001/").build();
     private static RestAdapter _centsRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("https://trycents.com").build(); //.setClient(new OkClient(getUnsafeOkHttpClient()))
+
     //Current Selections Vars
     private static String _searchedCity;
-    private static String _searchState;
     private static String _searchedCity2;
     private static String _searchState2;
+    private static String _searchState;
     private static String _searchedOccupation;
 
     //maintaining ui vars
@@ -79,6 +81,9 @@ public class CentsApplication extends Application{
 
     //Cost of Living Vis
     private static ColiResponse _colResponse;
+
+    //School Comp vars
+    private static SchoolResponse _sResponse;
 
     public static Context getAppContext() {return _centsContext;}
 
@@ -306,6 +311,26 @@ public class CentsApplication extends Application{
         CentsApplication._sbToast = _sbToast;
     }
 
+
+
+    public static ColiResponse get_colResponse() {
+        return _colResponse;
+    }
+
+    public static void set_colResponse(ColiResponse _colResponse) {
+        CentsApplication._colResponse = _colResponse;
+    }
+
+    public static SchoolResponse get_sResponse() {
+        return _sResponse;
+    }
+
+    public static void set_sResponse(SchoolResponse _sResponse) {
+        CentsApplication._sResponse = _sResponse;
+    }
+
+    /************************** Static Helper Methods ***********************************************************/
+
     /**
      * Given a string f - representing a float dollar amount of monthly expenses returns a number between 0-1 representing the amt of a monthly salary
      * f consumes
@@ -425,13 +450,6 @@ public class CentsApplication extends Application{
         return true;
     }
 
-    public static ColiResponse get_colResponse() {
-        return _colResponse;
-    }
-
-    public static void set_colResponse(ColiResponse _colResponse) {
-        CentsApplication._colResponse = _colResponse;
-    }
 
 
     //    private static OkHttpClient getTrustingClient(){

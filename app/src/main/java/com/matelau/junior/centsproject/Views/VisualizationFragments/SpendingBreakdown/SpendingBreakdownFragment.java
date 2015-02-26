@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,10 +18,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
+import com.matelau.junior.centsproject.Controllers.SearchFragment;
 import com.matelau.junior.centsproject.Models.VizModels.SpendingBreakdownCategory;
 import com.matelau.junior.centsproject.R;
 
@@ -40,9 +41,8 @@ import lecho.lib.hellocharts.view.PieChartView;
  */
 public class SpendingBreakdownFragment extends Fragment {
     private String LOG_TAG = SpendingBreakdownFragment.class.getSimpleName();
-    private ImageButton _back;
+    private ImageButton _search;
     private PieChartView _chart;
-    private TextView _occupation;
     private EditText _income;
     private PieChartData data;
     private Button _default;
@@ -121,6 +121,7 @@ public class SpendingBreakdownFragment extends Fragment {
             }
         });
         //Get buttons
+        _search = (ImageButton) rootView.findViewById(R.id.imageSearchButton);
         _default = (Button) rootView.findViewById(R.id.default_btn);
         _student = (Button) rootView.findViewById(R.id.student_btn);
         _custom = (Button) rootView.findViewById(R.id.custom_btn);
@@ -152,6 +153,16 @@ public class SpendingBreakdownFragment extends Fragment {
             }
         });
 
+
+        _search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //return search frag
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_placeholder, new SearchFragment());
+                ft.commit();
+            }
+        });
 
         //modify circle text to be x percentage in size based on view height
         _height = container.getHeight();
@@ -449,10 +460,10 @@ public class SpendingBreakdownFragment extends Fragment {
         //check if over/under budget and modify text to show by how much
         if (hasCenterText1) {
             data.setCenterText1Color(getResources().getColor(R.color.black));
-            if(completion > 1.0f){
+            if(completion > 1.001f){
                 data.setCenterText1("Over Spending By:");
             }
-            else if(completion < .99f){
+            else if(completion < .995f){
                 data.setCenterText1("Under Spending By:");
             }
             else{
@@ -466,7 +477,7 @@ public class SpendingBreakdownFragment extends Fragment {
         }
 
         if (hasCenterText2) {
-            if(completion > 1.0f){
+            if(completion > 1.001f){
                 Float percent = completion - 1.0f;
                 data.setCenterText2("$"+CentsApplication.convPercentToDollar(percent, false) + " You must spend less");
                 data.setCenterText2Color(getResources().getColor(R.color.red));

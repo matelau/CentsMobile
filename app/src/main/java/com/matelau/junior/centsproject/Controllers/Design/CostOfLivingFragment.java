@@ -1,19 +1,18 @@
 package com.matelau.junior.centsproject.Controllers.Design;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
+import com.matelau.junior.centsproject.Controllers.SearchFragment;
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.R;
@@ -52,7 +51,7 @@ public class CostOfLivingFragment extends Fragment{
     private static Col _c1;
     private static Col _c2;
     private static String _city2;
-    private ImageButton _plusBtn;
+    private ImageButton _search;
     private List<Col> _cols;
     private View rootView;
 
@@ -66,7 +65,7 @@ public class CostOfLivingFragment extends Fragment{
         // create visualizations!
         rootView = inflater.inflate(R.layout.fragment_cost_of_living, container, false);
         _cv = (CardView) rootView.findViewById(R.id.col_card_view);
-        _plusBtn = (ImageButton) rootView.findViewById(R.id.circle);
+        _search = (ImageButton) rootView.findViewById(R.id.imageSearchButton);
 
         _loc2 = (TextView) rootView.findViewById(R.id.col_location2);
         _chart = (ColumnChartView) rootView.findViewById(R.id.col_vis);
@@ -79,21 +78,18 @@ public class CostOfLivingFragment extends Fragment{
         TextView loc1 = (TextView) rootView.findViewById(R.id.col_location1);
         loc1.setText(_location);
         processLocation2();
-        if(_plusBtn != null){
-            _plusBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //start Animation
-                    _plusBtn.startAnimation((AnimationUtils.loadAnimation(getActivity(), R.anim.rotate)));
-                    //show Popup for selection
-                    showSecondCityDialog();
-                }
-          });
+        _search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //return search frag
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_placeholder, new SearchFragment());
+                ft.commit();
+               }
+        });
 
-        }
 
-        //Set to gone for now until api is developed for selection
-        _plusBtn.setVisibility(View.GONE);
+
         return rootView;
     }
 
@@ -108,11 +104,7 @@ public class CostOfLivingFragment extends Fragment{
         else{
             rootView.findViewById(R.id.second_location).setVisibility(View.VISIBLE);
             _loc2.setText(_location2);
-
-
             rootView.invalidate();
-
-
         }
 
     }
@@ -134,63 +126,48 @@ public class CostOfLivingFragment extends Fragment{
     private void updateLocation(){
         ColiResponse cResponse = CentsApplication.get_colResponse();
         _location = cResponse.getLocation1();
-//        _c1 = getCol(CentsApplication.get_searchedCity());
-//        _city2 = ;
         _location2 = cResponse.getLocation2();
-//        _c2 = getCol(_city2);
     }
 
-    /**
-     * Functions called once a user closes dialog
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        _plusBtn.clearAnimation();
-        //check if valid result is returned
-        if(CentsApplication.get_searchedCity2() != null){
-            Log.v(LOG_TAG, "Location 2: " + _location2);
-            updateLocation();
-            processLocation2();
-            //update display
-            generateData();
-        }
-    }
+//    /**
+//     * Functions called once a user closes dialog
+//     * @param requestCode
+//     * @param resultCode
+//     * @param data
+//     */
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        _search.clearAnimation();
+//        //check if valid result is returned
+//        if(CentsApplication.get_searchedCity2() != null){
+//            Log.v(LOG_TAG, "Location 2: " + _location2);
+//            updateLocation();
+//            processLocation2();
+//            //update display
+//            generateData();
+//        }
+//    }
 
     /*
         Searches the Cost of Living List and returns the cost of living for this city
      */
-    public Col getCol(String city){
-        if(_cols == null ){
-            _cols = CentsApplication.get_cols();
-        }
-        for(Col c: _cols){
-            if(c.getLocation().equals(city)){
-                return c;
-            }
-        }
-        return null;
-    }
+//    public Col getCol(String city){
+//        if(_cols == null ){
+//            _cols = CentsApplication.get_cols();
+//        }
+//        for(Col c: _cols){
+//            if(c.getLocation().equals(city)){
+//                return c;
+//            }
+//        }
+//        return null;
+//    }
 
     @Override
     public void onResume() {
         super.onResume();
         updateLocation();
         generateData();
-//        _location = CentsApplication.get_searchedCity()+", "+CentsApplication.get_searchState();
-//        if(CentsApplication.get_searchedCity2() != null) {
-//            _city2 = CentsApplication.get_searchedCity2();
-//            _location2 = _city2 + ", " + CentsApplication.get_searchState2();
-////            _c2 = getCol(_city2);
-//            processLocation2();
-//        }
-//        //check to see if selection has been updated
-//        _c1 = getCol(CentsApplication.get_searchedCity());
-//        if(_c1 != null)
-//            generateData();
-
     }
 
     /**

@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.QueryService;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
+import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.R;
 
 import java.io.BufferedReader;
@@ -165,14 +166,16 @@ public class SearchFragment extends Fragment {
                 }
                 else if(type.equals("school")){
                     //create school obj and launch viz
+                    SchoolResponse sResponse = gson.fromJson(rsp, SchoolResponse.class);
+                    CentsApplication.set_sResponse(sResponse);
                     CentsApplication.set_selectedVis("College Comparison");
                 }
                 else if(type.equals("career")){
-                    //create career obj and launch viz
+                    //todo create career obj and launch viz
                     CentsApplication.set_selectedVis("College Comparison");
                 }
                 else if(type.equals("major")){
-                    //create major obj and launch viz
+                    //todo create major obj and launch viz
                     CentsApplication.set_selectedVis("College Comparison");
                 }
                 else if(type.equals("spending")){

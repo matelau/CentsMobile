@@ -87,16 +87,24 @@
                     android:layout_marginLeft="50dp"
                     android:id="@+id/plus_icon">
                     <ImageButton
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/circle"
-                        android:id="@+id/circle"/>
-                    <View
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/ic_action_new"
-                        android:layout_above="@+id/circle"
-                        android:layout_alignParentTop="true" />
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:background="@drawable/search_orange"
+                        android:layout_marginEnd="15dp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentEnd="true"
+                        android:id="@+id/imageSearchButton" />
+                    <!--<ImageButton-->
+                        <!--android:layout_width="30dp"-->
+                        <!--android:layout_height="30dp"-->
+                        <!--android:background="@drawable/circle"-->
+                        <!--android:id="@+id/circle"/>-->
+                    <!--<View-->
+                        <!--android:layout_width="30dp"-->
+                        <!--android:layout_height="30dp"-->
+                        <!--android:background="@drawable/ic_action_new"-->
+                        <!--android:layout_above="@+id/circle"-->
+                        <!--android:layout_alignParentTop="true" />-->
 
                 </FrameLayout>
             <!--<ImageButton-->
