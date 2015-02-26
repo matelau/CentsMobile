@@ -108,7 +108,7 @@ public class SearchFragment extends Fragment {
     private void handleSubmit() {
         String searchText = _editText.getText().toString();
         Log.v(LOG_TAG, "in handleSubmit: " + searchText);
-        //TODO post to Query Parsing Service and handle response
+        //post to Query Parsing Service and handle response
         _submitBtn = (ImageButton) _rootLayout.findViewById(R.id.search_button);
         _submitBtn.startAnimation(AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.rotate));
         if(CentsApplication.isDebug())
@@ -124,7 +124,7 @@ public class SearchFragment extends Fragment {
 //                Log.v(LOG_TAG, "Query Service Response: "+rsp);
                 _query =  _editText.getText().toString();
                 _submitBtn.clearAnimation();
-                //TODO Process Response and route accordingly
+                //Process Response and route accordingly
                 //Try to get response body
                 BufferedReader reader = null;
                 StringBuilder sb = new StringBuilder();
@@ -152,8 +152,12 @@ public class SearchFragment extends Fragment {
                 map=(Map<String,String>) gson.fromJson(rsp, map.getClass());
                 //get type
                 String type = map.get("query_type");
+                if(type == null){
+                    Toast.makeText(getActivity(), "We did not understand your query... here are some examples", Toast.LENGTH_SHORT).show();
+                    CentsApplication.set_selectedVis("Examples");
+                }
                 //route properly
-                if(type.equals("city")){
+                else if(type.equals("city")){
                     //create coli obj and launch coli viz
                     ColiResponse colResponse = gson.fromJson(rsp, ColiResponse.class);
                     CentsApplication.set_colResponse(colResponse);
