@@ -129,40 +129,6 @@ public class CostOfLivingFragment extends Fragment{
         _location2 = cResponse.getLocation2();
     }
 
-//    /**
-//     * Functions called once a user closes dialog
-//     * @param requestCode
-//     * @param resultCode
-//     * @param data
-//     */
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        _search.clearAnimation();
-//        //check if valid result is returned
-//        if(CentsApplication.get_searchedCity2() != null){
-//            Log.v(LOG_TAG, "Location 2: " + _location2);
-//            updateLocation();
-//            processLocation2();
-//            //update display
-//            generateData();
-//        }
-//    }
-
-    /*
-        Searches the Cost of Living List and returns the cost of living for this city
-     */
-//    public Col getCol(String city){
-//        if(_cols == null ){
-//            _cols = CentsApplication.get_cols();
-//        }
-//        for(Col c: _cols){
-//            if(c.getLocation().equals(city)){
-//                return c;
-//            }
-//        }
-//        return null;
-//    }
-
     @Override
     public void onResume() {
         super.onResume();
