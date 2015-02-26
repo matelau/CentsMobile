@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.Models.Design.JobInfo;
+import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SpendingBreakdownCategory;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownModDialogFragment;
 
@@ -75,6 +76,9 @@ public class CentsApplication extends Application{
     private static SpendingBreakdownModDialogFragment.SBArrayAdapter _rAdapter;
     private static String _currentBreakdown = "default";
     private static boolean _sbToast = false;
+
+    //Cost of Living Vis
+    private static ColiResponse _colResponse;
 
     public static Context getAppContext() {return _centsContext;}
 
@@ -420,6 +424,15 @@ public class CentsApplication extends Application{
         }
         return true;
     }
+
+    public static ColiResponse get_colResponse() {
+        return _colResponse;
+    }
+
+    public static void set_colResponse(ColiResponse _colResponse) {
+        CentsApplication._colResponse = _colResponse;
+    }
+
 
     //    private static OkHttpClient getTrustingClient(){
 //        SelfSignedSSLSocketFactory sf;

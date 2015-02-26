@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -19,8 +20,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.QueryService;
+import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.R;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -112,10 +121,63 @@ public class SearchFragment extends Fragment {
             public void success(Response response1, Response response) {
                 if(CentsApplication.isDebug())
                     Toast.makeText(getActivity(),response.toString(), Toast.LENGTH_SHORT);
-                Log.v(LOG_TAG, "Query Service Response: "+response.toString());
+//                Log.v(LOG_TAG, "Query Service Response: "+rsp);
                 _query =  _editText.getText().toString();
-                //TODO Process Response and route accordingly
                 _submitBtn.clearAnimation();
+                //TODO Process Response and route accordingly
+                //Try to get response body
+                BufferedReader reader = null;
+                StringBuilder sb = new StringBuilder();
+                try {
+
+                    reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
+
+                    String line;
+
+                    try {
+                        while ((line = reader.readLine()) != null) {
+                            sb.append(line);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                String rsp = sb.toString();
+                //Build Map
+                Gson gson = new Gson();
+                Map<String,String> map=new HashMap<String,String>();
+                map=(Map<String,String>) gson.fromJson(rsp, map.getClass());
+                //get type
+                String type = map.get("query_type");
+                //route properly
+                if(type.equals("city")){
+                    //create coli obj and launch coli viz
+                    ColiResponse colResponse = gson.fromJson(rsp, ColiResponse.class);
+                    CentsApplication.set_colResponse(colResponse);
+                    CentsApplication.set_selectedVis("COL Comparison");
+                }
+                else if(type.equals("school")){
+                    //create school obj and launch viz
+                    CentsApplication.set_selectedVis("College Comparison");
+                }
+                else if(type.equals("career")){
+                    //create career obj and launch viz
+                    CentsApplication.set_selectedVis("College Comparison");
+                }
+                else if(type.equals("major")){
+                    //create major obj and launch viz
+                    CentsApplication.set_selectedVis("College Comparison");
+                }
+                else if(type.equals("spending")){
+                    //goto spending breakdown
+                    CentsApplication.set_selectedVis("Spending Breakdown");
+                }
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+                ft.commit();
             }
 
             @Override
