@@ -1,4 +1,4 @@
-package com.matelau.junior.centsproject.Controllers.Design;
+package com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,7 +16,6 @@ import com.matelau.junior.centsproject.Controllers.SearchFragment;
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.R;
-import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.CitySelectionDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;

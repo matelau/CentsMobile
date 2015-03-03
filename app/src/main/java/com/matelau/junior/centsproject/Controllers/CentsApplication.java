@@ -450,9 +450,7 @@ public class CentsApplication extends Application{
         return true;
     }
 
-
-
-    //    private static OkHttpClient getTrustingClient(){
+//    private static OkHttpClient getTrustingClient(){
 //        SelfSignedSSLSocketFactory sf;
 //        OkHttpClient client = new OkHttpClient();
 //        try {
