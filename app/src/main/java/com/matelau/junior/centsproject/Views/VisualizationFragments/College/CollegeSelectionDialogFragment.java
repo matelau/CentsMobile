@@ -52,9 +52,9 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
         RecordQuery query = new RecordQuery();
         query.setOperation("get");
         ArrayList<String> tables = new ArrayList<String>();
-        tables.add("cost of living");
+        tables.add("university");
         query.setTables(tables);
-        query.setWhere("utah");
+        query.setWhere("UT");
         service.getRecords(query, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {

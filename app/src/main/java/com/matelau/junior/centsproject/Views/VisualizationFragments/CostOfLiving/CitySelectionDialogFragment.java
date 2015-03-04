@@ -38,6 +38,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import static com.matelau.junior.centsproject.R.drawable.minus;
+
 /**
  * Allows Selection of Cities
  */
@@ -66,7 +68,7 @@ public class CitySelectionDialogFragment extends DialogFragment {
     private Button _cancel;
 
     private String[] _states;
-//    private String[] _supportedCities;
+    private boolean isPlus = true;
 
 
     private String _state1;
@@ -100,7 +102,7 @@ public class CitySelectionDialogFragment extends DialogFragment {
         _submit = (Button) _rootLayout.findViewById(R.id.submit_city_select);
         _cancel = (Button) _rootLayout.findViewById(R.id.cancel_city_select);
         _stateSpinner2 = (Spinner) _rootLayout.findViewById(R.id.state_spinner2);
-        hideView();
+        hideView(false);
         _stateSpinner1 = (Spinner) _rootLayout.findViewById(R.id.state_spinner1);
         _stateAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, _states);
         _stateSpinner1.setAdapter(_stateAdapter);
@@ -109,11 +111,11 @@ public class CitySelectionDialogFragment extends DialogFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 _state1 = _states[position];
                 if(!_state1.equals("Select State")){
+                    Log.d(LOG_TAG, "Selected State1: "+_state1);
                     //Get list of cities available for state
                     getCities1(_state1);
-
                 }
-                Log.d(LOG_TAG, "Selected State1: "+_state1);
+
 
             }
 
@@ -127,24 +129,42 @@ public class CitySelectionDialogFragment extends DialogFragment {
         _plusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _stateSpinner2.setVisibility(View.VISIBLE);
-                _stateTextView2.setVisibility(View.VISIBLE);
-                _vs.setVisibility(View.VISIBLE);
-                _stateSpinner2.setAdapter(_stateAdapter);
-                _stateSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        _state2 = _states[position];
-                        Log.d(LOG_TAG, "Selected States: "+_state2);
-                        getCities2(_state2);
-                    }
+                if(isPlus){
+                    _stateSpinner2.setVisibility(View.VISIBLE);
+                    _stateTextView2.setVisibility(View.VISIBLE);
+                    _vs.setVisibility(View.VISIBLE);
+                    _stateSpinner2.setAdapter(_stateAdapter);
+                    _stateSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            _state2 = _states[position];
+                            if(!_state2.equals("Select State")) {
+                                Log.d(LOG_TAG, "Selected States: "+_state2);
+                                getCities2(_state2);
+                            }
+                        }
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
 
-                    }
-                });
-                _vs.setVisibility(View.VISIBLE);
+                        }
+                    });
+                    _vs.setVisibility(View.VISIBLE);
+                    isPlus = false;
+                    _plusBtn.setBackground(getResources().getDrawable(minus));
+
+                }
+                else{
+                    //isMinus remove all views clear values
+                    hideView(true);
+                    _city2 = null;
+                    _state2 = null;
+                    isPlus = true;
+                    _plusBtn.setBackground(getResources().getDrawable(R.drawable.ic_action_new));
+
+
+                }
+
             }
         });
 
@@ -257,15 +277,31 @@ public class CitySelectionDialogFragment extends DialogFragment {
         return builder.create();
     }
 
+    /**
+     * hides views from the dialog frag
+     * @param hideSecondOnly
+     */
+    public void hideView(boolean hideSecondOnly){
+        if(hideSecondOnly){
+            _stateTextView2.setVisibility(View.GONE);
+            _cityTextView2.setVisibility(View.GONE);
+            _citySpinner2.setVisibility(View.GONE);
+            _vs.setVisibility(View.GONE);
+            _stateSpinner2.setVisibility(View.GONE);
 
-    public void hideView(){
-        _citySpinner1.setVisibility(View.GONE);
-        _cityTextView1.setVisibility(View.GONE);
-        _stateTextView2.setVisibility(View.GONE);
-        _cityTextView2.setVisibility(View.GONE);
-        _vs.setVisibility(View.GONE);
-        _stateSpinner2.setVisibility(View.GONE);
-        _citySpinner2.setVisibility(View.GONE);
+        }
+        else{
+            _stateTextView2.setVisibility(View.GONE);
+            _cityTextView2.setVisibility(View.GONE);
+            _citySpinner2.setVisibility(View.GONE);
+            _vs.setVisibility(View.GONE);
+            _stateSpinner2.setVisibility(View.GONE);
+            _citySpinner1.setVisibility(View.GONE);
+            _cityTextView1.setVisibility(View.GONE);
+        }
+
+
+
 
     }
 

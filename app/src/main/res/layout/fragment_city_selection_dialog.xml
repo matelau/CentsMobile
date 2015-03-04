@@ -103,12 +103,13 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:background="@drawable/circle"
-            android:id="@+id/circle"/>
+            android:id="@+id/circle1"/>
         <View
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:background="@drawable/ic_action_new"
-            android:layout_above="@+id/circle"
+            android:id="@+id/circle"
+            android:layout_above="@+id/circle1"
             android:layout_alignParentTop="true" />
 
     </FrameLayout>
