@@ -2,7 +2,7 @@ package com.matelau.junior.centsproject.Views.VisualizationFragments.College;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
-import com.matelau.junior.centsproject.Controllers.CentsApplication;
-import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
 import com.matelau.junior.centsproject.R;
 
 
@@ -36,10 +34,15 @@ public class CollegeIntroFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(LOG_TAG, "onClick Switch to ViewPager");
-                CentsApplication.set_selectedVis("College Comparison");
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
-                ft.commit();
+//                CentsApplication.set_selectedVis("College Comparison");
+//                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+//                ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+
+//                ft.commit();
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                CollegeSelectionDialogFragment collegeSelect = new CollegeSelectionDialogFragment();
+                collegeSelect.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
+                collegeSelect.show(fm, "tag");
             }
         });
         //TODO begin college selection Dialog

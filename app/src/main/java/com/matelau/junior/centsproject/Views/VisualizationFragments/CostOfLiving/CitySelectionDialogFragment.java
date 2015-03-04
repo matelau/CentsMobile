@@ -5,28 +5,34 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
-import com.matelau.junior.centsproject.Models.CentsAPIModels.QueryService;
+import com.matelau.junior.centsproject.Models.CentsAPIModels.CostOfLiving;
+import com.matelau.junior.centsproject.Models.CentsAPIModels.CostOfLivingLocation;
+import com.matelau.junior.centsproject.Models.CentsAPIModels.CostOfLivingService;
+import com.matelau.junior.centsproject.Models.CentsAPIModels.RecordQuery;
+import com.matelau.junior.centsproject.Models.CentsAPIModels.RecordsService;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.R;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -41,24 +47,31 @@ public class CitySelectionDialogFragment extends DialogFragment {
 
     private LinearLayout _rootLayout;
     private ArrayAdapter<String> _stateAdapter;
-    private ArrayAdapter<String> _citiesAdapter1;
+//    private ArrayAdapter<String> _citiesAdapter1;
     private Spinner _stateSpinner1;
-    private Spinner _citiesSpinner1;
-    private ArrayAdapter<String> _citiesAdapter2;
+//    private Spinner _citiesSpinner1;
+//    private ArrayAdapter<String> _citiesAdapter2;
     private Spinner _stateSpinner2;
     private Spinner _citiesSpinner2;
-    private FragmentActivity _fragAct;
+//    private FragmentActivity _fragAct;
+    private TextView _cityTextView1;
+    private TextView _cityTextView2;
+    private TextView _stateTextView2;
+    private TextView _vs;
+    private View _plusBtn;
 
-    private EditText _city1;
-    private EditText _city2;
+    private Spinner _citySpinner1;
+    private Spinner _citySpinner2;
     private Button _submit;
     private Button _cancel;
 
     private String[] _states;
-    private String[] _supportedCities;
+//    private String[] _supportedCities;
 
 
     private String _state1;
+    private String _city1;
+    private String _city2;
     private String _state2;
 
 
@@ -71,46 +84,157 @@ public class CitySelectionDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreateDialog");
+        _states = getResources().getStringArray(R.array.states_array);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_city_selection_dialog, null, false);
-        _city1 = (EditText) _rootLayout.findViewById(R.id.city_input1);
-        _city2 = (EditText) _rootLayout.findViewById(R.id.city_input2);
+        _plusBtn = _rootLayout.findViewById(R.id.circle);
+        _citySpinner1 = (Spinner) _rootLayout.findViewById(R.id.city_input1);
+        _cityTextView1 = (TextView) _rootLayout.findViewById(R.id.cityTextView);
+        _cityTextView2 = (TextView) _rootLayout.findViewById(R.id.cityTextView2);
+
+        _vs = (TextView) _rootLayout.findViewById(R.id.vs);
+        _stateTextView2 = (TextView) _rootLayout.findViewById(R.id.stateTextView2);
+
+        _citySpinner2 = (Spinner) _rootLayout.findViewById(R.id.city_input2);
         _submit = (Button) _rootLayout.findViewById(R.id.submit_city_select);
         _cancel = (Button) _rootLayout.findViewById(R.id.cancel_city_select);
+        _stateSpinner2 = (Spinner) _rootLayout.findViewById(R.id.state_spinner2);
+        hideView();
+        _stateSpinner1 = (Spinner) _rootLayout.findViewById(R.id.state_spinner1);
+        _stateAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, _states);
+        _stateSpinner1.setAdapter(_stateAdapter);
+        _stateSpinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                _state1 = _states[position];
+                if(!_state1.equals("Select State")){
+                    //Get list of cities available for state
+                    getCities1(_state1);
+
+                }
+                Log.d(LOG_TAG, "Selected State1: "+_state1);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                _state1 = null;
+            }
+        });
+
+
+        _plusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _stateSpinner2.setVisibility(View.VISIBLE);
+                _stateTextView2.setVisibility(View.VISIBLE);
+                _vs.setVisibility(View.VISIBLE);
+                _stateSpinner2.setAdapter(_stateAdapter);
+                _stateSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        _state2 = _states[position];
+                        Log.d(LOG_TAG, "Selected States: "+_state2);
+                        getCities2(_state2);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+                _vs.setVisibility(View.VISIBLE);
+            }
+        });
+
+
+
 
         _submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 //TODO add loading image to layout and show on query dismiss in callback
-                String city1 = _city1.getText().toString();
-                String city2 = _city2.getText().toString();
-                //call query parser for now
-                if (city1.length() > 0) {
-                    String searchText = city1;
-                    if (city2.length() > 0) {
-                        //compare two cities
-                        searchText += " vs " + city2;
-
+                if (_city1 != null && _state1 != null){
+                    CostOfLiving col = new CostOfLiving();
+                    CostOfLivingLocation loc1 = new CostOfLivingLocation();
+                    loc1.setCity(_city1);
+                    loc1.setState(_state1);
+                    List<CostOfLivingLocation> lCLL = new ArrayList<CostOfLivingLocation>();
+                    lCLL.add(loc1);
+                    CostOfLivingLocation loc2 = new CostOfLivingLocation();
+                    if(_city2 != null && _state2 != null){
+                        loc2.setCity(_city2);
+                        loc2.setState(_state2);
+                        lCLL.add(loc2);
                     }
-                    QueryService service = CentsApplication.get_queryParsingRestAdapter().create(QueryService.class);
-                    service.results(searchText, new Callback<Response>() {
-                            @Override
-                            public void success(Response response, Response response2) {
-                                //create coli obj and launch coli viz
-                                handleResponse(response);
-                            }
+                    col.setLocations(lCLL);
+                    col.setOperation("compare");
+                    CostOfLivingService service = CentsApplication.get_centsRestAdapter().create(CostOfLivingService.class);
+                    service.getColi(col, new Callback<ColiResponse>() {
+                        @Override
+                        public void success(ColiResponse coliResponse, Response response) {
+                            Log.d(LOG_TAG, "success");
+                            CentsApplication.set_colResponse(coliResponse);
+                            CentsApplication.set_selectedVis("COL Comparison");
+                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+                            ft.commit();
+                            dismiss();
 
-                            @Override
-                            public void failure(RetrofitError error) {
-                                Log.d(LOG_TAG, error.getMessage());
 
-                            }
-                        });
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.e(LOG_TAG, error.getMessage());
+
+                        }
+                    });
+
+
+                }
+                else{
+                    Toast.makeText(getActivity(), "Error - Try Making Another Selection", Toast.LENGTH_SHORT).show();
                 }
 
             }
+//                    loc1 = _city1+", "+_state1;
+//                String loc2 = null;
+//                if(_city2 != null && _state2 != null){
+//                     loc2 = _city2+", "+_state2;
+//
+//                }
+//
+//                //call query parser for now
+//                if (loc1 != null) {
+//                    String searchText = loc1;
+//                    if (loc2 != null) {
+//                        //compare two cities
+//                        searchText += " vs " + loc2;
+//
+//                    }
+//                    QueryService service = CentsApplication.get_queryParsingRestAdapter().create(QueryService.class);
+//                    service.results(searchText, new Callback<Response>() {
+//                            @Override
+//                            public void success(Response response, Response response2) {
+//                                //create coli obj and launch coli viz
+//                                handleResponse(response);
+//                            }
+//
+//                            @Override
+//                            public void failure(RetrofitError error) {
+//                                Log.d(LOG_TAG, error.getMessage());
+//
+//                            }
+//                        });
+//                }
+//                else{
+//                    Toast.makeText(getActivity(), "Error - Try Making Another Selection", Toast.LENGTH_SHORT).show();
+//                }
+//
+//            }
         });
 
 
@@ -122,6 +246,7 @@ public class CitySelectionDialogFragment extends DialogFragment {
                 CentsApplication.set_searchState(null);
                 CentsApplication.set_searchedCity2(null);
                 CentsApplication.set_searchState2(null);
+                dismiss();
 
             }
         });
@@ -130,6 +255,131 @@ public class CitySelectionDialogFragment extends DialogFragment {
         builder.setTitle("Enter Locations For Comparison").setView(_rootLayout);
 
         return builder.create();
+    }
+
+
+    public void hideView(){
+        _citySpinner1.setVisibility(View.GONE);
+        _cityTextView1.setVisibility(View.GONE);
+        _stateTextView2.setVisibility(View.GONE);
+        _cityTextView2.setVisibility(View.GONE);
+        _vs.setVisibility(View.GONE);
+        _stateSpinner2.setVisibility(View.GONE);
+        _citySpinner2.setVisibility(View.GONE);
+
+    }
+
+    public void getCities1(String state){
+        RecordsService service = CentsApplication.get_centsRestAdapter().create(RecordsService.class);
+        RecordQuery query = new RecordQuery();
+        query.setOperation("get");
+        ArrayList<String> tables = new ArrayList<String>();
+        tables.add("cost of living");
+        query.setTables(tables);
+        query.setWhere(state);
+        service.getRecords(query, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                String[] cities = citiesFromJson(response2);
+                Log.d(LOG_TAG, "success");
+                _citySpinner1.setVisibility(View.VISIBLE);
+                _citySpinner1.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, cities));
+                _citySpinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        TextView tv = (TextView) view;
+                        _city1 = tv.getText().toString();
+                        Log.d(LOG_TAG, "selected city1: "+_city1);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        _city1 = null;
+
+                    }
+                });
+                _cityTextView1.setVisibility(View.VISIBLE);
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(LOG_TAG, error.getMessage());
+                Toast.makeText(getActivity(), "Error - Please select again", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+
+    public void getCities2(String state){
+        RecordsService service = CentsApplication.get_centsRestAdapter().create(RecordsService.class);
+        RecordQuery query = new RecordQuery();
+        query.setOperation("get");
+        ArrayList<String> tables = new ArrayList<String>();
+        tables.add("cost of living");
+        query.setTables(tables);
+        query.setWhere(state);
+        service.getRecords(query, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                String[] cities = citiesFromJson(response2);
+                Log.d(LOG_TAG, "success");
+                _citySpinner2.setVisibility(View.VISIBLE);
+                _citySpinner2.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, cities));
+                _citySpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        TextView tv = (TextView) view;
+                        _city2 = tv.getText().toString();
+                        Log.d(LOG_TAG, "selected city2: "+_city2);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        _city2 = null;
+
+                    }
+                });
+                _cityTextView2.setVisibility(View.VISIBLE);
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(LOG_TAG, error.getMessage());
+                Toast.makeText(getActivity(), "Error - Please select again", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+
+    private String[] citiesFromJson(Response response){
+        Gson gson = new Gson();
+        BufferedReader reader = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+
+            reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
+
+            String line;
+
+            try {
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String rsp = sb.toString();
+        String[] respArr = gson.fromJson(rsp, String[].class);
+
+        return respArr;
     }
 
     private void handleResponse(Response response){
@@ -155,79 +405,20 @@ public class CitySelectionDialogFragment extends DialogFragment {
 
         String rsp = sb.toString();
         ColiResponse colResponse = gson.fromJson(rsp, ColiResponse.class);
-        CentsApplication.set_colResponse(colResponse);
-        CentsApplication.set_selectedVis("COL Comparison");
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
-        ft.commit();
-        dismiss();
-    }
-
-
-    /**
-     * loads subset of cities based on current state selection
-     */
-    private String[] citiesInState(String state) {
-        String[] cities = null;
-        //todo create API Endpoint for dynamic city selection based on what is in the db
-        //return only the cities in a selected state
-        if (_supportedCities != null) {
-            //AZ
-            if (state.equals(_states[0])) {
-                cities = Arrays.copyOfRange(_supportedCities, 0, 3);
-            }
-            //CA
-            else if (state.equals(_states[1])) {
-                cities = Arrays.copyOfRange(_supportedCities, 3, 8);
-            } else if (state.equals(_states[2])) {
-                cities = Arrays.copyOfRange(_supportedCities, 8, 11);
-            } else if (state.equals(_states[3])) {
-                cities = Arrays.copyOfRange(_supportedCities, 11, 12);
-            } else if (state.equals(_states[4])) {
-                cities = Arrays.copyOfRange(_supportedCities, 12, 16);
-            } else if (state.equals(_states[5])) {
-                cities = Arrays.copyOfRange(_supportedCities, 16, 18);
-            } else if (state.equals(_states[6])) {
-                cities = Arrays.copyOfRange(_supportedCities, 18, 19);
-            } else if (state.equals(_states[7])) {
-                cities = Arrays.copyOfRange(_supportedCities, 19, 20);
-            } else if (state.equals(_states[8])) {
-                cities = Arrays.copyOfRange(_supportedCities, 20, 21);
-            } else if (state.equals(_states[9])) {
-                cities = Arrays.copyOfRange(_supportedCities, 21, 22);
-            } else if (state.equals(_states[10])) {
-                cities = Arrays.copyOfRange(_supportedCities, 22, 23);
-            }
-            //New York
-            else if (state.equals(_states[11])) {
-                cities = Arrays.copyOfRange(_supportedCities, 23, 26);
-            } else if (state.equals(_states[12])) {
-                cities = Arrays.copyOfRange(_supportedCities, 26, 27);
-            } else if (state.equals(_states[13])) {
-                cities = Arrays.copyOfRange(_supportedCities, 27, 29);
-            } else if (state.equals(_states[14])) {
-                cities = Arrays.copyOfRange(_supportedCities, 29, 35);
-            } else if (state.equals(_states[15])) {
-                cities = Arrays.copyOfRange(_supportedCities, 35, 39);
-            } else if (state.equals(_states[16])) {
-                cities = Arrays.copyOfRange(_supportedCities, 39, 42);
-            }
-            //utah
-            else {
-                cities = Arrays.copyOfRange(_supportedCities, 42, 45);
-            }
-
-
-
-            }
-
-        return cities;
-
+        if(colResponse.getCli1().size() == 0 && colResponse.getCli2().size() == 0){
+            CentsApplication.set_colResponse(colResponse);
+            CentsApplication.set_selectedVis("COL Comparison");
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+            ft.commit();
+            dismiss();
 
         }
+        else{
+            Toast.makeText(getActivity(), "There was an error please try again",Toast.LENGTH_SHORT).show();
+            Log.e(LOG_TAG, "location returning school");
+        }
 
-
-
-
+    }
 
 }

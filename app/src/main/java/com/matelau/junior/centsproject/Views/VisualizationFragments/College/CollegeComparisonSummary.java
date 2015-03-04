@@ -98,7 +98,7 @@ public class CollegeComparisonSummary extends Fragment {
         });
         //school1
         //[in-state,out-state,grad-rate,undergrad,rank,user]
-        //rank could be null
+        //all fields could be null
         List<Double> school1Vals = _sResponse.getSchool1();
         _schoolName1.setText(_sResponse.getSchool1Name());
         if(school1Vals.get(4) != null){
