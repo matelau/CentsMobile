@@ -89,18 +89,18 @@ public class CitySelectionDialogFragment extends DialogFragment {
         _states = getResources().getStringArray(R.array.states_array);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_city_selection_dialog, null, false);
+        _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_selection_dialog, null, false);
         _plusBtn = _rootLayout.findViewById(R.id.circle);
-        _citySpinner1 = (Spinner) _rootLayout.findViewById(R.id.city_input1);
-        _cityTextView1 = (TextView) _rootLayout.findViewById(R.id.cityTextView);
-        _cityTextView2 = (TextView) _rootLayout.findViewById(R.id.cityTextView2);
+        _citySpinner1 = (Spinner) _rootLayout.findViewById(R.id.option_input1);
+        _cityTextView1 = (TextView) _rootLayout.findViewById(R.id.optionTextView1);
+        _cityTextView2 = (TextView) _rootLayout.findViewById(R.id.optionTextView2);
 
         _vs = (TextView) _rootLayout.findViewById(R.id.vs);
         _stateTextView2 = (TextView) _rootLayout.findViewById(R.id.stateTextView2);
 
-        _citySpinner2 = (Spinner) _rootLayout.findViewById(R.id.city_input2);
-        _submit = (Button) _rootLayout.findViewById(R.id.submit_city_select);
-        _cancel = (Button) _rootLayout.findViewById(R.id.cancel_city_select);
+        _citySpinner2 = (Spinner) _rootLayout.findViewById(R.id.option_input2);
+        _submit = (Button) _rootLayout.findViewById(R.id.submit_select);
+        _cancel = (Button) _rootLayout.findViewById(R.id.cancel_select);
         _stateSpinner2 = (Spinner) _rootLayout.findViewById(R.id.state_spinner2);
         hideView(false);
         _stateSpinner1 = (Spinner) _rootLayout.findViewById(R.id.state_spinner1);
@@ -220,41 +220,6 @@ public class CitySelectionDialogFragment extends DialogFragment {
                 }
 
             }
-//                    loc1 = _city1+", "+_state1;
-//                String loc2 = null;
-//                if(_city2 != null && _state2 != null){
-//                     loc2 = _city2+", "+_state2;
-//
-//                }
-//
-//                //call query parser for now
-//                if (loc1 != null) {
-//                    String searchText = loc1;
-//                    if (loc2 != null) {
-//                        //compare two cities
-//                        searchText += " vs " + loc2;
-//
-//                    }
-//                    QueryService service = CentsApplication.get_queryParsingRestAdapter().create(QueryService.class);
-//                    service.results(searchText, new Callback<Response>() {
-//                            @Override
-//                            public void success(Response response, Response response2) {
-//                                //create coli obj and launch coli viz
-//                                handleResponse(response);
-//                            }
-//
-//                            @Override
-//                            public void failure(RetrofitError error) {
-//                                Log.d(LOG_TAG, error.getMessage());
-//
-//                            }
-//                        });
-//                }
-//                else{
-//                    Toast.makeText(getActivity(), "Error - Try Making Another Selection", Toast.LENGTH_SHORT).show();
-//                }
-//
-//            }
         });
 
 
@@ -416,45 +381,6 @@ public class CitySelectionDialogFragment extends DialogFragment {
         String[] respArr = gson.fromJson(rsp, String[].class);
 
         return respArr;
-    }
-
-    private void handleResponse(Response response){
-        Gson gson = new Gson();
-        BufferedReader reader = null;
-        StringBuilder sb = new StringBuilder();
-        try {
-
-            reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
-
-            String line;
-
-            try {
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String rsp = sb.toString();
-        ColiResponse colResponse = gson.fromJson(rsp, ColiResponse.class);
-        if(colResponse.getCli1().size() == 0 && colResponse.getCli2().size() == 0){
-            CentsApplication.set_colResponse(colResponse);
-            CentsApplication.set_selectedVis("COL Comparison");
-            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
-            ft.commit();
-            dismiss();
-
-        }
-        else{
-            Toast.makeText(getActivity(), "There was an error please try again",Toast.LENGTH_SHORT).show();
-            Log.e(LOG_TAG, "location returning school");
-        }
-
     }
 
 }

@@ -94,7 +94,7 @@ public class VisualizationPagerFragment extends Fragment {
                 fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
                 break;
             case "COL Comparison":
-                getActivity().getActionBar().setTitle("Cost of Living Comparison");
+                getActivity().getActionBar().setTitle("City Comparison");
                 fragments.add(Fragment.instantiate(getActivity(), COLSummaryFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), CostOfLivingFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), COLSummaryFragment.class.getName()));

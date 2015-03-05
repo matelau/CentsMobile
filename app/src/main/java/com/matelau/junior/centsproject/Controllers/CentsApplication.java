@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.matelau.junior.centsproject.Models.CentsAPIModels.SchoolAPIResponse;
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.Models.Design.JobInfo;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
@@ -83,7 +84,12 @@ public class CentsApplication extends Application{
     private static ColiResponse _colResponse;
 
     //School Comp vars
+    //response from query parser
     private static SchoolResponse _sResponse;
+    //response from api
+    private static SchoolAPIResponse _sApiResponse;
+    private static String _university1;
+    private static String _university2;
 
     public static Context getAppContext() {return _centsContext;}
 
@@ -327,6 +333,30 @@ public class CentsApplication extends Application{
 
     public static void set_sResponse(SchoolResponse _sResponse) {
         CentsApplication._sResponse = _sResponse;
+    }
+
+    public static SchoolAPIResponse get_sApiResponse() {
+        return _sApiResponse;
+    }
+
+    public static void set_sApiResponse(SchoolAPIResponse _sApiResponse) {
+        CentsApplication._sApiResponse = _sApiResponse;
+    }
+
+    public static String get_university1() {
+        return _university1;
+    }
+
+    public static void set_university1(String _university1) {
+        CentsApplication._university1 = _university1;
+    }
+
+    public static String get_university2() {
+        return _university2;
+    }
+
+    public static void set_university2(String _university2) {
+        CentsApplication._university2 = _university2;
     }
 
     /************************** Static Helper Methods ***********************************************************/

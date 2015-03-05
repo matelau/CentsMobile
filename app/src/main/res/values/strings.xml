@@ -108,5 +108,6 @@
     <string name="natl_res">National Ranking</string>
     <string name="school">School</string>
     <string name="vs">VS</string>
+    <string name="state_instructions">Select a state to view cities.</string>
 
 </resources>

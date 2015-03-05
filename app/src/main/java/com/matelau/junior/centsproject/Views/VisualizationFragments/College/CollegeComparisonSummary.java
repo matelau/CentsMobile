@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.SearchFragment;
+import com.matelau.junior.centsproject.Models.CentsAPIModels.SchoolAPIResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.R;
 import com.squareup.picasso.Picasso;
@@ -65,6 +66,15 @@ public class CollegeComparisonSummary extends Fragment {
         Log.d(LOG_TAG, "CreateView");
         //get data
         _sResponse = CentsApplication.get_sResponse();
+        if(_sResponse == null){
+            //Convert api response to match queryparser response
+            SchoolAPIResponse sresponse = CentsApplication.get_sApiResponse();
+            _sResponse = new SchoolResponse();
+            _sResponse.setSchool1(sresponse.getSchool1());
+            _sResponse.setSchool2(sresponse.getSchool2());
+            _sResponse.setSchool1Name(CentsApplication.get_university1());
+            _sResponse.setSchool2Name(CentsApplication.get_university2());
+        }
         hasSecondSchool = (_sResponse.getSchool2Name() != null);
         //get Views
         _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_college_comparison_summary, container, false);
@@ -137,7 +147,7 @@ public class CollegeComparisonSummary extends Fragment {
         String univ = _sResponse.getSchool1Name();
         String url1 = getImgUrl(univ); // _logos.get(_sResponse.getSchool1Name())
         Log.d(LOG_TAG, "url1: "+url1);
-        Picasso.with(getActivity()).load(url1).placeholder(R.drawable.logo).into(_logo1);
+        Picasso.with(getActivity()).load(url1).placeholder(R.drawable.placeholder).into(_logo1);
 
         //school2
         if(hasSecondSchool){
@@ -181,7 +191,7 @@ public class CollegeComparisonSummary extends Fragment {
 
             String url2 = getImgUrl(univ);//"http://www.american-school-search.com/images/logo/"+tag+".gif".toLowerCase(); //_logos.get(_sResponse.getSchool2Name());
             Log.d(LOG_TAG, "url2: "+url2);
-            Picasso.with(getActivity()).load(url2).into(_logo2);
+            Picasso.with(getActivity()).load(url2).placeholder(R.drawable.placeholder).into(_logo2);
         }
         else{
             //hide all school 2 views

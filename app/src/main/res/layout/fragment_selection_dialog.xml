@@ -13,7 +13,8 @@
         android:textColor="@android:color/black"
         android:layout_marginBottom="10dp"
         android:layout_gravity="center"
-        android:text="Select a state to view cities."/>
+        android:id="@+id/selection_instructions"
+        android:text="@string/state_instructions"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,16 +40,18 @@
         android:text="City - 1"
         android:textSize="16sp"
         android:textColor="@android:color/black"
-        android:id="@+id/cityTextView"
+        android:id="@+id/optionTextView1"
+        android:visibility="gone"
         android:layout_gravity="center"/>
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:id="@+id/city_input1"
+        android:id="@+id/option_input1"
         android:elevation="10dp"
         android:textColor="@android:color/black"
         android:background="@drawable/rounded_rectangle"
+        android:visibility="gone"
         android:layout_margin="8dp" />
 
     <TextView
@@ -58,6 +61,7 @@
         android:text="@string/vs"
         android:gravity="center"
         android:textColor="@color/primary"
+        android:visibility="gone"
         android:textSize="18sp"/>
 
     <TextView
@@ -67,6 +71,7 @@
         android:textSize="16dp"
         android:textColor="@android:color/black"
         android:id="@+id/stateTextView2"
+        android:visibility="gone"
         android:layout_gravity="center"/>
     <Spinner
         android:layout_width="match_parent"
@@ -74,6 +79,7 @@
         android:id="@+id/state_spinner2"
         android:elevation="10dp"
         android:textColor="@android:color/black"
+        android:visibility="gone"
         android:background="@drawable/rounded_rectangle"
         android:layout_margin="5dp" />
 
@@ -83,16 +89,18 @@
         android:text="City - 2"
         android:textColor="@android:color/black"
         android:textSize="16sp"
-        android:id="@+id/cityTextView2"
+        android:id="@+id/optionTextView2"
+        android:visibility="gone"
         android:layout_gravity="center"/>
 
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:id="@+id/city_input2"
+        android:id="@+id/option_input2"
         android:elevation="10dp"
         android:textColor="@android:color/black"
+        android:visibility="gone"
         android:background="@drawable/rounded_rectangle" />
     <FrameLayout
         android:layout_width="wrap_content"
@@ -126,7 +134,7 @@
             android:layout_height="fill_parent"
             android:background="@drawable/nav_ripple"
             android:textColor="@color/text_primary"
-            android:id="@+id/cancel_city_select"
+            android:id="@+id/cancel_select"
             android:layout_margin="5dp"
             android:text="Cancel"
             android:layout_weight="1"/>
@@ -135,7 +143,7 @@
             android:layout_height="fill_parent"
             android:background="@drawable/nav_ripple"
             android:textColor="@color/text_primary"
-            android:id="@+id/submit_city_select"
+            android:id="@+id/submit_select"
             android:layout_margin="5dp"
             android:text="Submit"
             android:layout_weight="1"/>
