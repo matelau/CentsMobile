@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
+import com.matelau.junior.centsproject.Controllers.SearchFragment;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.RecordQuery;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.RecordsService;
@@ -73,6 +74,13 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreateDialog");
+        //if selected vis is a city comparison switch background fragment to search - to clear old viz
+        if(CentsApplication.get_selectedVis().equals("College Comparison")){
+            CentsApplication.set_selectedVis(null);
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.fragment_placeholder, new SearchFragment());
+            ft.commit();
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         _states = getResources().getStringArray(R.array.states_array);

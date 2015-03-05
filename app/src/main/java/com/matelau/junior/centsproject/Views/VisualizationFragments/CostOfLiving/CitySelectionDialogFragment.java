@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
+import com.matelau.junior.centsproject.Controllers.SearchFragment;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.CostOfLiving;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.CostOfLivingLocation;
@@ -86,6 +87,13 @@ public class CitySelectionDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreateDialog");
+        //if selected vis is a city comparison switch background fragment to search - to clear old viz
+        if(CentsApplication.get_selectedVis().equals("COL Comparison")){
+            CentsApplication.set_selectedVis(null);
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.fragment_placeholder, new SearchFragment());
+            ft.commit();
+        }
         _states = getResources().getStringArray(R.array.states_array);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -115,10 +123,7 @@ public class CitySelectionDialogFragment extends DialogFragment {
                     //Get list of cities available for state
                     getCities1(_state1);
                 }
-
-
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 _state1 = null;
