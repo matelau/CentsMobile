@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.SearchFragment;
-import com.matelau.junior.centsproject.Models.CentsAPIModels.SchoolAPIResponse;
+import com.matelau.junior.centsproject.Models.VizModels.SchoolAPIResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.R;
 import com.squareup.picasso.Picasso;
@@ -110,100 +110,108 @@ public class CollegeComparisonSummary extends Fragment {
         //[in-state,out-state,grad-rate,undergrad,rank,user]
         //all fields could be null
         List<Double> school1Vals = _sResponse.getSchool1();
-        _schoolName1.setText(_sResponse.getSchool1Name());
-        if(school1Vals.get(4) != null){
-            Integer rank = school1Vals.get(4).intValue();
-            _rank1.setText(""+rank+" out of 200");
-        }
-        else{
-            _rank1.setText("Not ranked");
-        }
-        if(school1Vals.get(0) != null){
-            _inState1.setText("$" + school1Vals.get(0).intValue());
-        }
-        else{
-            _inState1.setText("Unknown");
-        }
-        if(school1Vals.get(1) != null){
-            _outState1.setText("S"+school1Vals.get(1).intValue());
-        }
-        else{
-            _outState1.setText("Unknown");
-        }
-        if(school1Vals.get(2) != null){
-            _gradRate1.setText(school1Vals.get(2).intValue()+"%");
-        }
-        else{
-            _gradRate1.setText("Unknown");
-        }
-        if(school1Vals.get(3) != null){
-            _enrollment1.setText(school1Vals.get(3).intValue()+" students");
-        }
-        else{
-            _enrollment1.setText("Unknown");
-        }
-
-        _rating1.setText(school1Vals.get(5)+ " out of 5.0");
-        String univ = _sResponse.getSchool1Name();
-        String url1 = getImgUrl(univ); // _logos.get(_sResponse.getSchool1Name())
-        Log.d(LOG_TAG, "url1: "+url1);
-        Picasso.with(getActivity()).load(url1).placeholder(R.drawable.placeholder).into(_logo1);
-
-        //school2
-        if(hasSecondSchool){
-            //[in-state,out-state,grad-rate,undergrad,rank,user]
-            List<Double> school2Vals = _sResponse.getSchool2();
-            _schoolName2.setText(_sResponse.getSchool2Name());
-            if(school2Vals.get(4) != null){
-                Integer rank = school2Vals.get(4).intValue();
-                _rank2.setText(""+rank+" out of 200");
+        if(school1Vals != null && school1Vals.size() > 0){
+            _schoolName1.setText(_sResponse.getSchool1Name());
+            if(school1Vals.get(4) != null){
+                Integer rank = school1Vals.get(4).intValue();
+                _rank1.setText(""+rank+" out of 200");
             }
             else{
-                _rank2.setText("Not ranked");
+                _rank1.setText("Not ranked");
             }
-            if(school2Vals.get(0) != null){
-                _inState2.setText("$" + school2Vals.get(0).intValue());
-            }
-            else{
-                _inState2.setText("Unknown");
-            }
-            if(school2Vals.get(1) != null){
-                _outState2.setText("S"+school2Vals.get(1).intValue());
+            if(school1Vals.get(0) != null){
+                _inState1.setText("$" + school1Vals.get(0).intValue());
             }
             else{
-                _outState2.setText("Unknown");
+                _inState1.setText("Unknown");
             }
-            if(school2Vals.get(2) != null){
-                _gradRate2.setText(school2Vals.get(2).intValue()+"%");
-            }
-            else{
-                _gradRate2.setText("Unknown");
-            }
-            if(school2Vals.get(3) != null){
-                _enrollment2.setText(school2Vals.get(3).intValue()+" students");
+            if(school1Vals.get(1) != null){
+                _outState1.setText("S"+school1Vals.get(1).intValue());
             }
             else{
-                _enrollment2.setText("Unknown");
+                _outState1.setText("Unknown");
+            }
+            if(school1Vals.get(2) != null){
+                _gradRate1.setText(school1Vals.get(2).intValue()+"%");
+            }
+            else{
+                _gradRate1.setText("Unknown");
+            }
+            if(school1Vals.get(3) != null){
+                _enrollment1.setText(school1Vals.get(3).intValue()+" students");
+            }
+            else{
+                _enrollment1.setText("Unknown");
             }
 
-            _rating2.setText(school2Vals.get(5)+ " out of 5.0");
-            univ = _sResponse.getSchool2Name();
+            _rating1.setText(school1Vals.get(5)+ " out of 5.0");
+            String univ = _sResponse.getSchool1Name();
+            String url1 = getImgUrl(univ); // _logos.get(_sResponse.getSchool1Name())
+            Log.d(LOG_TAG, "url1: "+url1);
+            Picasso.with(getActivity()).load(url1).placeholder(R.drawable.placeholder).into(_logo1);
 
-            String url2 = getImgUrl(univ);//"http://www.american-school-search.com/images/logo/"+tag+".gif".toLowerCase(); //_logos.get(_sResponse.getSchool2Name());
-            Log.d(LOG_TAG, "url2: "+url2);
-            Picasso.with(getActivity()).load(url2).placeholder(R.drawable.placeholder).into(_logo2);
+            //school2
+            if(hasSecondSchool){
+                //[in-state,out-state,grad-rate,undergrad,rank,user]
+                List<Double> school2Vals = _sResponse.getSchool2();
+                if(school2Vals != null && school2Vals.size() > 0){
+                    _schoolName2.setText(_sResponse.getSchool2Name());
+                    if(school2Vals.get(4) != null){
+                        Integer rank = school2Vals.get(4).intValue();
+                        _rank2.setText(""+rank+" out of 200");
+                    }
+                    else{
+                        _rank2.setText("Not ranked");
+                    }
+                    if(school2Vals.get(0) != null){
+                        _inState2.setText("$" + school2Vals.get(0).intValue());
+                    }
+                    else{
+                        _inState2.setText("Unknown");
+                    }
+                    if(school2Vals.get(1) != null){
+                        _outState2.setText("S"+school2Vals.get(1).intValue());
+                    }
+                    else{
+                        _outState2.setText("Unknown");
+                    }
+                    if(school2Vals.get(2) != null){
+                        _gradRate2.setText(school2Vals.get(2).intValue()+"%");
+                    }
+                    else{
+                        _gradRate2.setText("Unknown");
+                    }
+                    if(school2Vals.get(3) != null){
+                        _enrollment2.setText(school2Vals.get(3).intValue()+" students");
+                    }
+                    else{
+                        _enrollment2.setText("Unknown");
+                    }
+
+                    _rating2.setText(school2Vals.get(5)+ " out of 5.0");
+                    univ = _sResponse.getSchool2Name();
+
+                    String url2 = getImgUrl(univ);//"http://www.american-school-search.com/images/logo/"+tag+".gif".toLowerCase(); //_logos.get(_sResponse.getSchool2Name());
+                    Log.d(LOG_TAG, "url2: "+url2);
+                    Picasso.with(getActivity()).load(url2).placeholder(R.drawable.placeholder).into(_logo2);
+
+                }
+
+            }
+            else{
+                //hide all school 2 views
+                _schoolName2.setVisibility(View.GONE);
+                _rank2.setVisibility(View.GONE);
+                _inState2.setVisibility(View.GONE);
+                _outState2.setVisibility(View.GONE);
+                _gradRate2.setVisibility(View.GONE);
+                _enrollment2.setVisibility(View.GONE);
+                _rating2.setVisibility(View.GONE);
+                _logo2.setVisibility(View.GONE);
+            }
+
         }
-        else{
-            //hide all school 2 views
-            _schoolName2.setVisibility(View.GONE);
-            _rank2.setVisibility(View.GONE);
-            _inState2.setVisibility(View.GONE);
-            _outState2.setVisibility(View.GONE);
-            _gradRate2.setVisibility(View.GONE);
-            _enrollment2.setVisibility(View.GONE);
-            _rating2.setVisibility(View.GONE);
-            _logo2.setVisibility(View.GONE);
-        }
+
         return _rootLayout;
     }
 

@@ -173,13 +173,9 @@ public class CitySelectionDialogFragment extends DialogFragment {
             }
         });
 
-
-
-
         _submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 //TODO add loading image to layout and show on query dismiss in callback
                 if (_city1 != null && _state1 != null){
                     CostOfLiving col = new CostOfLiving();
@@ -207,14 +203,11 @@ public class CitySelectionDialogFragment extends DialogFragment {
                             ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
                             ft.commit();
                             dismiss();
-
-
                         }
 
                         @Override
                         public void failure(RetrofitError error) {
                             Log.e(LOG_TAG, error.getMessage());
-
                         }
                     });
 
@@ -240,10 +233,7 @@ public class CitySelectionDialogFragment extends DialogFragment {
 
             }
         });
-
-
         builder.setTitle("Enter Locations For Comparison").setView(_rootLayout);
-
         return builder.create();
     }
 

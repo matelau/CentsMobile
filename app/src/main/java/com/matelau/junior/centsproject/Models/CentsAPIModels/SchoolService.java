@@ -1,5 +1,7 @@
 package com.matelau.junior.centsproject.Models.CentsAPIModels;
 
+import com.matelau.junior.centsproject.Models.VizModels.SchoolAPIResponse;
+
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.POST;

@@ -86,12 +86,12 @@ public class VisualizationPagerFragment extends Fragment {
                 break;
             case "Major Comparison":
                 fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
                 break;
             case "COL Comparison":
                 getActivity().getActionBar().setTitle("City Comparison");
@@ -204,7 +204,7 @@ public class VisualizationPagerFragment extends Fragment {
                     tabTitles = new String[]{"Summary"};
                     return tabTitles[position];
                 case "Major Comparison":
-                    tabTitles = new String[]{"Summary", "Salary","Job Satisfaction", "Graduation Rate", "Demand", "Unemployment", "Top Jobs"};
+                    tabTitles = new String[]{"Summary"}; //, "Salary","Job Satisfaction", "Graduation Rate", "Demand", "Unemployment", "Top Jobs"};
                     return tabTitles[position];
                 case "COL Comparison":
                     tabTitles = new String[]{"Summary", "Cost of Living", "Labor Stats","Taxes", "Weather"};

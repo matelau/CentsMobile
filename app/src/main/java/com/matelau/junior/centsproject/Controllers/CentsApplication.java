@@ -7,7 +7,8 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.matelau.junior.centsproject.Models.CentsAPIModels.SchoolAPIResponse;
+import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
+import com.matelau.junior.centsproject.Models.VizModels.SchoolAPIResponse;
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.Models.Design.JobInfo;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
@@ -90,6 +91,11 @@ public class CentsApplication extends Application{
     private static SchoolAPIResponse _sApiResponse;
     private static String _university1;
     private static String _university2;
+
+    //Major Comp Vars
+    private static MajorResponse _mResponse;
+    private static String _major1;
+    private static String _major2;
 
     public static Context getAppContext() {return _centsContext;}
 
@@ -357,6 +363,30 @@ public class CentsApplication extends Application{
 
     public static void set_university2(String _university2) {
         CentsApplication._university2 = _university2;
+    }
+
+    public static MajorResponse get_mResponse() {
+        return _mResponse;
+    }
+
+    public static void set_mResponse(MajorResponse _mResponse) {
+        CentsApplication._mResponse = _mResponse;
+    }
+
+    public static String get_major1() {
+        return _major1;
+    }
+
+    public static void set_major1(String _major1) {
+        CentsApplication._major1 = _major1;
+    }
+
+    public static String get_major2() {
+        return _major2;
+    }
+
+    public static void set_major2(String _major2) {
+        CentsApplication._major2 = _major2;
     }
 
     /************************** Static Helper Methods ***********************************************************/

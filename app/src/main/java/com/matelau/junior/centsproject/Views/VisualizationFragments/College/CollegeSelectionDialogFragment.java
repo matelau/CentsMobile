@@ -27,7 +27,7 @@ import com.matelau.junior.centsproject.Models.CentsAPIModels.RecordQuery;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.RecordsService;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.School;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.SchoolRequest;
-import com.matelau.junior.centsproject.Models.CentsAPIModels.SchoolAPIResponse;
+import com.matelau.junior.centsproject.Models.VizModels.SchoolAPIResponse;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.SchoolService;
 import com.matelau.junior.centsproject.R;
 
@@ -162,7 +162,7 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
                 }
                 else{
                     isPlus = true;
-                    _plusBtn.setBackground(getResources().getDrawable(R.drawable.minus));
+                    _plusBtn.setBackground(getResources().getDrawable(R.drawable.ic_action_new));
                     //hide secondary selection
                     _states2.setVisibility(View.GONE);
                     _stateTextView2.setVisibility(View.GONE);
