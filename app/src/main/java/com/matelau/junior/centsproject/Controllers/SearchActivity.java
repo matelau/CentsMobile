@@ -313,6 +313,7 @@ public class SearchActivity extends FragmentActivity {
         _toolbar.setTitle("Profile");
         // Replace the container with the new fragment
         ft.replace(R.id.fragment_placeholder, new ProfileFragment());
+        ft.addToBackStack("main-search");
         // Execute the changes specified
         ft.commit();
     }
@@ -334,6 +335,7 @@ public class SearchActivity extends FragmentActivity {
         //Attach Search Fragment
         // Replace the container with the new fragment
         ft.replace(R.id.fragment_placeholder, new SearchFragment());
+        ft.addToBackStack("main-search");
         // Execute the changes specified
         ft.commit();
     }
@@ -345,6 +347,7 @@ public class SearchActivity extends FragmentActivity {
         CentsApplication.set_selectedVis("Examples");
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+        ft.addToBackStack("main-search");
         ft.commit();
     }
 
@@ -358,6 +361,7 @@ public class SearchActivity extends FragmentActivity {
         // Replace the container with the new fragment
         ft.replace(R.id.fragment_placeholder, new RegistrationFragment());
         // Execute the changes specified
+        ft.addToBackStack("main-search");
         ft.commit();
     }
 
@@ -369,6 +373,7 @@ public class SearchActivity extends FragmentActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         _toolbar.setTitle("About");
         ft.replace(R.id.fragment_placeholder, new AboutFragment());
+        ft.addToBackStack("main-search");
         ft.commit();
 
     }

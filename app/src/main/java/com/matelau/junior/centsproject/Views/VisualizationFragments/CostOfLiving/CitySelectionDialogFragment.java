@@ -201,6 +201,7 @@ public class CitySelectionDialogFragment extends DialogFragment {
                             CentsApplication.set_selectedVis("COL Comparison");
                             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                             ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+                            ft.addToBackStack("city-intro");
                             ft.commit();
                             dismiss();
                         }

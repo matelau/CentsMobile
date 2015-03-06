@@ -103,6 +103,7 @@ public class CollegeComparisonSummary extends Fragment {
                 //return search frag
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_placeholder, new SearchFragment());
+                ft.addToBackStack("college-summary");
                 ft.commit();
             }
         });

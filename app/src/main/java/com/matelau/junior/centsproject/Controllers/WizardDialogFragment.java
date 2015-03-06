@@ -121,28 +121,34 @@ public class WizardDialogFragment extends DialogFragment {
             //Special Case title change
             getActivity().getActionBar().setTitle("Cost of Living Comparison");
             ft.replace(R.id.fragment_placeholder, new COLIntroFragment());
+            ft.addToBackStack("wizard");
             ft.commit();
         }
         else if(selected.equals("College Comparison")){
             ft.replace(R.id.fragment_placeholder, new CollegeIntroFragment());
+            ft.addToBackStack("wizard");
             ft.commit();
         }
         else if(selected.equals("Spending Breakdown")){
             ft.replace(R.id.fragment_placeholder, new SpendingBreakdownIntroFragment());
+            ft.addToBackStack("wizard");
             ft.commit();
         }
         else if(selected.equals("Career Comparison")){
             ft.replace(R.id.fragment_placeholder, new CareerIntroFragment());
+            ft.addToBackStack("wizard");
             ft.commit();
         }
         else if(selected.equals("Major Comparison")){
             ft.replace(R.id.fragment_placeholder, new MajorIntroFragment());
+            ft.addToBackStack("wizard");
             ft.commit();
         }
         else{
             CentsApplication.set_selectedVis(selected);
             ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.fragment_placeholder,new VisualizationPagerFragment());
+            ft.addToBackStack("wizard");
             ft.commit();
 
         }

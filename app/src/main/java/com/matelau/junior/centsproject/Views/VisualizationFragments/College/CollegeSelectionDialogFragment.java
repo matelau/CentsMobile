@@ -207,6 +207,7 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
                             CentsApplication.set_selectedVis("College Comparison");
                             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                             ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+                            ft.addToBackStack("college-intro");
                             ft.commit();
                             dismiss();
 
@@ -221,6 +222,18 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
                     });
 
                 }
+            }
+        });
+
+        _cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //clear values that could have been set
+                CentsApplication.set_university1(null);
+                CentsApplication.set_sResponse(null);
+                CentsApplication.set_university2(null);
+                CentsApplication.set_sApiResponse(null);
+                dismiss();
             }
         });
         builder.setView(_rootLayout);

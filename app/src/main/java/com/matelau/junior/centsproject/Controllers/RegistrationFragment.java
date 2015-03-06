@@ -19,10 +19,7 @@ import com.matelau.junior.centsproject.Models.CentsAPIModels.RegisterService;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.User;
 import com.matelau.junior.centsproject.R;
 
-import java.net.UnknownHostException;
 import java.util.regex.Pattern;
-
-import javax.net.ssl.SSLHandshakeException;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -129,7 +126,7 @@ public class RegistrationFragment extends Fragment {
      * Replaces registration with the searchFragment
      */
     private void showSearch(){
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_placeholder, new SearchFragment()).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_placeholder, new SearchFragment()).addToBackStack("registration").commit();
     }
 
     /**

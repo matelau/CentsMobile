@@ -83,6 +83,7 @@ public class CostOfLivingFragment extends Fragment{
                 //return search frag
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_placeholder, new SearchFragment());
+                ft.addToBackStack("cost-of-living");
                 ft.commit();
                }
         });

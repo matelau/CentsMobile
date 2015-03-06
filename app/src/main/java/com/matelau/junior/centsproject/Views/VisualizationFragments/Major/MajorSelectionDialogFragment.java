@@ -169,6 +169,7 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                             CentsApplication.set_selectedVis("Major Comparison");
                             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                             ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+                            ft.addToBackStack("major-intro");
                             ft.commit();
                             dismiss();
                         }

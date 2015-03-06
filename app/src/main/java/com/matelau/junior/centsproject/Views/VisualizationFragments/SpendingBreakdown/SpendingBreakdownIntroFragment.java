@@ -43,6 +43,7 @@ public class SpendingBreakdownIntroFragment extends Fragment {
                 CentsApplication.set_selectedVis("Spending Breakdown");
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+                ft.addToBackStack("spending-intro");
                 ft.commit();
             }
         });

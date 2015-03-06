@@ -184,6 +184,7 @@ public class SearchFragment extends Fragment {
                 }
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+                ft.addToBackStack("main-search");
                 ft.commit();
             }
 
