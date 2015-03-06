@@ -78,14 +78,16 @@ public class MajorSelectionDialogFragment extends DialogFragment{
         Log.d(LOG_TAG, "onCreateDialog");
         loadMajorsList();
         //if selected vis is a major comparison switch background fragment to search - to clear old viz
+        //clear old values
+
         if(CentsApplication.get_selectedVis().equals("Major Comparison")){
-            CentsApplication.set_selectedVis(null);
-            CentsApplication.set_major1(null);
-            CentsApplication.set_major2(null);
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.fragment_placeholder, new SearchFragment());
             ft.commit();
         }
+        CentsApplication.set_selectedVis(null);
+        CentsApplication.set_major1(null);
+        CentsApplication.set_major2(null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
