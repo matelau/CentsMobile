@@ -3,7 +3,7 @@ package com.matelau.junior.centsproject.Views.VisualizationFragments.College;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
-import com.matelau.junior.centsproject.Controllers.SearchFragment;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolAPIResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.R;
@@ -100,11 +99,7 @@ public class CollegeComparisonSummary extends Fragment {
         _search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //return search frag
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_placeholder, new SearchFragment());
-                ft.addToBackStack("college-summary");
-                ft.commit();
+                showCollegeSelectionDialog();
             }
         });
         //school1
@@ -214,6 +209,13 @@ public class CollegeComparisonSummary extends Fragment {
         }
 
         return _rootLayout;
+    }
+
+    private void showCollegeSelectionDialog(){
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        CollegeSelectionDialogFragment collegeSelect = new CollegeSelectionDialogFragment();
+        collegeSelect.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
+        collegeSelect.show(fm, "tag");
     }
 
     /**

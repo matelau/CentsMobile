@@ -82,11 +82,8 @@ public class SearchActivity extends FragmentActivity {
         }
 
         //Attach Search Fragment
-        // Begin the transaction
-       FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        // Replace the container with the new fragment
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_placeholder, new SearchFragment());
-        // Execute the changes specified
         ft.commit();
     }
 

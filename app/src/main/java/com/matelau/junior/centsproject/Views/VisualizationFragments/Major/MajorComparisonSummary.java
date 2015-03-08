@@ -3,7 +3,7 @@ package com.matelau.junior.centsproject.Views.VisualizationFragments.Major;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +15,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
-import com.matelau.junior.centsproject.Controllers.SearchFragment;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SummaryAdapter;
@@ -60,25 +59,14 @@ public class MajorComparisonSummary extends Fragment {
         else{
             _major2Title.setVisibility(View.GONE);
         }
-//        _image1 = (ImageView) _rootLayout.findViewById(R.id.logo1_image);
-//        _image2 = (ImageView) _rootLayout.findViewById(R.id.logo2_image);
-        //hide images until I find a major image source or get some developed
-//        _image1.setVisibility(View.INVISIBLE);
-//        _image1.setMaxHeight(0);
-//        _image1.setMaxWidth(0);
-//        _image2.setMaxHeight(0);
-//        _image2.setMaxWidth(0);
-//        _image2.setVisibility(View.INVISIBLE);
+
         //Setup summary list
         _search = (ImageButton) _rootLayout.findViewById(R.id.imageSearchButton);
         _search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //return search frag
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_placeholder, new SearchFragment());
-                ft.addToBackStack("major-summary");
-                ft.commit();
+                //launch selection Dialog
+                showMajorSelectionDialog();
             }
         });
         _majorSum = (ListView) _rootLayout.findViewById(R.id.major_sum_list);
@@ -87,6 +75,13 @@ public class MajorComparisonSummary extends Fragment {
         return _rootLayout;
 
 
+    }
+
+    private void showMajorSelectionDialog(){
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        MajorSelectionDialogFragment msd = new MajorSelectionDialogFragment();
+        msd.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
+        msd.show(fm, "tag");
     }
 
 

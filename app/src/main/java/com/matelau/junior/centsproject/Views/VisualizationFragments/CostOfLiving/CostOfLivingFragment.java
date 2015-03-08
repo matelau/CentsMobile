@@ -3,7 +3,6 @@ package com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLivin
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
-import com.matelau.junior.centsproject.Controllers.SearchFragment;
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.R;
@@ -80,17 +78,22 @@ public class CostOfLivingFragment extends Fragment{
         _search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //return search frag
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_placeholder, new SearchFragment());
-                ft.addToBackStack("cost-of-living");
-                ft.commit();
+                //show city selection
+                showCitySelectionDialog();
+
                }
         });
 
 
 
         return rootView;
+    }
+
+    private void showCitySelectionDialog(){
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        CitySelectionDialogFragment csd = new CitySelectionDialogFragment();
+        csd.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
+        csd.show(fm, "tag");
     }
 
     /**

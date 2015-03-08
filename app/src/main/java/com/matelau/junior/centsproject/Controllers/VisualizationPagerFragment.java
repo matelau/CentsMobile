@@ -74,6 +74,12 @@ public class VisualizationPagerFragment extends Fragment {
 //            Toast.makeText(getActivity(), "Loading Vis: " + selectedVis, Toast.LENGTH_SHORT).show();
         //TODO load fragments based on user selections
         //TODO update proper tabs once created
+        if(selectedVis == null){
+            //return to examples
+            CentsApplication.set_selectedVis("Examples");
+            selectedVis = "Examples";
+        }
+
         switch (selectedVis) {
             case "Career Comparison":
                 fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
@@ -106,7 +112,7 @@ public class VisualizationPagerFragment extends Fragment {
 //                fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownModDialogFragment.class.getName()));
                 break;
             default:
-                //TODO switch to examples fragments
+                //load examples fragments
                 fragments.add(Fragment.instantiate(getActivity(), COLIntroFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownIntroFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), CollegeIntroFragment.class.getName()));

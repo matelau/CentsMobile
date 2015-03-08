@@ -34,19 +34,18 @@ public class CollegeIntroFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(LOG_TAG, "onClick Switch to ViewPager");
-//                CentsApplication.set_selectedVis("College Comparison");
-//                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-//                ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
-
-//                ft.commit();
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                CollegeSelectionDialogFragment collegeSelect = new CollegeSelectionDialogFragment();
-                collegeSelect.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
-                collegeSelect.show(fm, "tag");
+                showCollegeSelectionDialog();
             }
         });
         //TODO begin college selection Dialog
         return _rootLayout;
+    }
+
+    private void showCollegeSelectionDialog(){
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        CollegeSelectionDialogFragment collegeSelect = new CollegeSelectionDialogFragment();
+        collegeSelect.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
+        collegeSelect.show(fm, "tag");
     }
 
 }

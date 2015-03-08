@@ -111,5 +111,6 @@
     <string name="state_instructions">Select a state to view cities.</string>
     <string name="title1">Title1</string>
     <string name="title2">Title 2</string>
+    <string name="sub_feedback">Submit Feedback</string>
 
 </resources>
