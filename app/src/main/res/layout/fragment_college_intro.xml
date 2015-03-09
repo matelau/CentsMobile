@@ -47,7 +47,7 @@
                 android:layout_margin="15dp"
                 android:layout_weight="8"
                 android:layout_gravity="center"
-                android:textAppearance="@android:style/TextAppearance.Large"
+                android:textAppearance="@android:style/TextAppearance.Material.Large"
                 android:textColor="@color/black"
                 android:background="@color/white"
                 android:id="@+id/college_begin"/>
