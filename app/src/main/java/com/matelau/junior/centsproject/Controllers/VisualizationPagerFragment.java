@@ -72,8 +72,7 @@ public class VisualizationPagerFragment extends Fragment {
 //        Log.d(LOG_TAG, "InitialisePaging - SelectedVis: " + selectedVis);
         if(CentsApplication.isDebug())
 //            Toast.makeText(getActivity(), "Loading Vis: " + selectedVis, Toast.LENGTH_SHORT).show();
-        //TODO load fragments based on user selections
-        //TODO update proper tabs once created
+        //load fragments based on user selections
         if(selectedVis == null){
             //return to examples
             CentsApplication.set_selectedVis("Examples");
@@ -125,8 +124,6 @@ public class VisualizationPagerFragment extends Fragment {
         _viewPager.setAdapter(_pageAdapter);
         CentsApplication.set_viewPager(_viewPager);
         //For Alpha I want to default to view with the viz TODO modify after alpha
-        if(selectedVis.equals("COL Comparison"))
-            _viewPager.setCurrentItem(1);
         //This line is required so the viewPager does not destroy pages when they are removed from the screen
         //if there are more tabs created this number will need to increase
         _viewPager.setOffscreenPageLimit(5);

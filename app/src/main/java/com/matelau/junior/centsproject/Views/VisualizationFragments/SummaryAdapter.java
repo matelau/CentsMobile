@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
+import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.R;
 
 import java.util.List;
@@ -23,9 +24,11 @@ public class SummaryAdapter extends BaseAdapter {
     private int _type = -1;
     private MajorResponse _mResponse;
     private ColiResponse _colResponse;
+    private SchoolResponse _sResponse;
     private Context _context;
     public SummaryAdapter(int type, Context context){
         //Set Type -  0 COL Sum, 1 Major Sum, 2 College Sum, 3 Career Sum
+        Log.d(LOG_TAG, "Type: "+type);
         _context = context;
         _type = type;
         switch(_type){
@@ -36,6 +39,10 @@ public class SummaryAdapter extends BaseAdapter {
             case 1:
                 //get MajorResponse
                 _mResponse = CentsApplication.get_mResponse();
+                break;
+            case 2:
+                //get schoolResponse could either be one of two options
+                _sResponse = CentsApplication.get_sResponse();
                 break;
             default:
                 break;
@@ -49,6 +56,8 @@ public class SummaryAdapter extends BaseAdapter {
                 return 4;
             case 1:
                 return _mResponse.getMajor1().size();
+            case 2:
+                return 6;
             default:
                 return 0;
         }
@@ -80,6 +89,9 @@ public class SummaryAdapter extends BaseAdapter {
             case 1:
                 createMajorSumView(position, leftVal, rightVal, catTitle);
                 break;
+            case 2:
+                createCollegeSumView(position, leftVal, rightVal, catTitle);
+                break;
 
             default:
                 catTitle.setText("ToDO BUILDME");
@@ -87,6 +99,150 @@ public class SummaryAdapter extends BaseAdapter {
         }
         return rowView;
     }
+
+
+    private void createCollegeSumView(int position, TextView leftVal, TextView rightVal, TextView catTitle){
+        List<Double> school1 = _sResponse.getSchool1();
+        List<Double> school2 = _sResponse.getSchool2();
+        //hide school2 if no data
+        if(school2.size() == 0){
+            rightVal.setVisibility(View.GONE);
+        }
+        //all fields could possibly be null - must check
+        //ntl ranking [4]
+        if(position == 0){
+            catTitle.setText("NATIONAL RANKING");
+            Double dRank = school1.get(4);
+            if(dRank != null){
+                int rank = dRank.intValue();
+                leftVal.setText(rank + " OUT OF 200");
+            }
+            else{
+                leftVal.setText("UNRANKED");
+            }
+
+            if(school2.size() > 0){
+                dRank = school2.get(4);
+                if(dRank != null){
+                    int rank = dRank.intValue();
+                    rightVal.setText(rank + " OUT OF 200");
+                }
+                else{
+                    rightVal.setText("UNRANKED");
+                }
+            }
+        }
+        //in-state tuition [0]
+        else if(position == 1){
+            catTitle.setText("IN STATE TUITION");
+            Double tuition = school1.get(0);
+            if(tuition != null){
+                int t = tuition.intValue();
+                leftVal.setText("$"+t);
+            }
+            else{
+                leftVal.setText("UNKNOWN");
+            }
+            if(school2.size() > 0){
+                tuition = school2.get(0);
+                if(tuition != null){
+                    int t = tuition.intValue();
+                    rightVal.setText("$"+t);
+                }
+                else{
+                    rightVal.setText("UNKNOWN");
+                }
+            }
+        }
+        //out-state tuition [1]
+        else if(position == 2){
+            catTitle.setText("OUT OF STATE TUITION");
+            Double tuition = school1.get(1);
+            if(tuition != null){
+                int t = tuition.intValue();
+                leftVal.setText("$"+t);
+            }
+            else{
+                leftVal.setText("UNKNOWN");
+            }
+            if(school2.size() > 0){
+                tuition = school2.get(1);
+                if(tuition != null){
+                    int t = tuition.intValue();
+                    rightVal.setText("$"+t);
+                }
+                else{
+                    rightVal.setText("UNKNOWN");
+                }
+            }
+        }
+        //grad rate [2]
+        else if(position == 3){
+            catTitle.setText("GRADUATION RATE");
+            Double gRate = school1.get(2);
+            if(gRate != null){
+                int t = gRate.intValue();
+                leftVal.setText(t+"%");
+            }
+            else{
+                leftVal.setText("UNKNOWN");
+            }
+            if(school2.size() > 0){
+                gRate = school2.get(2);
+                if(gRate != null){
+                    int t = gRate.intValue();
+                    rightVal.setText(t+"%");
+                }
+                else{
+                    rightVal.setText("UNKNOWN");
+                }
+            }
+        }
+        //undergrad enrollment [3]
+        else if(position == 4){
+            catTitle.setText("UNDERGRAD ENROLLMENT (# OF STUDENTS)");
+            Double enrollment = school1.get(3);
+            if(enrollment != null){
+                int t = enrollment.intValue();
+                leftVal.setText(""+t);
+            }
+            else{
+                leftVal.setText("UNKNOWN");
+            }
+            if(school2.size() > 0){
+                enrollment = school2.get(3);
+                if(enrollment != null){
+                    int t = enrollment.intValue();
+                    rightVal.setText(""+t);
+                }
+                else{
+                    rightVal.setText("UNKNOWN");
+                }
+            }
+        }
+        //cents user rating [5]
+        else{
+            catTitle.setText("CENTS USER RATING");
+            Double userRating = school1.get(5);
+            if(userRating != null){
+                leftVal.setText(userRating+" OUT OF 5.0");
+            }
+            else{
+                leftVal.setText("UNKNOWN");
+            }
+            if(school2.size() > 0){
+                userRating = school2.get(5);
+                if(userRating != null){
+                    rightVal.setText(userRating+" OUT OF 5.0");
+                }
+                else{
+                    rightVal.setText("UNKNOWN");
+                }
+            }
+
+        }
+    }
+
 
     private void createColSumView(int position, TextView leftVal, TextView rightVal, TextView catTitle){
         //get necessary data from col response
@@ -98,25 +254,27 @@ public class SummaryAdapter extends BaseAdapter {
             List<Double> cli2 = _colResponse.getCli2();
             Double overall = cli1.get(0) - 100;
             String avgCost = costString(overall);
-            leftVal.setText(overall+"%"+avgCost);
+            leftVal.setText(avgCost);
+            leftVal.setTextSize(14);
             if(cli2.size() > 0){
                 overall = cli2.get(0) - 100;
                 avgCost = costString(overall);
-                rightVal.setText(overall+"%"+avgCost);
+                rightVal.setText(avgCost);
+                rightVal.setTextSize(14);
             }
             else{
                 rightVal.setVisibility(View.GONE);
             }
         }
         //avg income - labor_i[1]
-        if(position == 1){
+        else if(position == 1){
             catTitle.setText("AVERAGE INCOME");
             List<Double> labor1 = _colResponse.getLabor1();
             List<Double> labor2 = _colResponse.getLabor2();
-            Double income = labor1.get(1);
+            int income = labor1.get(1).intValue();
             leftVal.setText("$"+income);
             if(labor2.size() > 0){
-                income = labor1.get(1);
+                income = labor1.get(1).intValue();
                 rightVal.setText("$"+income);
             }
             else{
@@ -124,7 +282,7 @@ public class SummaryAdapter extends BaseAdapter {
             }
         }
         //income tax range taxes_i[1]-taxes_i[2] if 1 != 2
-        if(position == 2){
+        else if(position == 2){
             catTitle.setText("INCOME TAX RANGE");
             List<Double> taxes1 = _colResponse.getTaxes1();
             List<Double> taxes2 = _colResponse.getTaxes2();
@@ -143,17 +301,17 @@ public class SummaryAdapter extends BaseAdapter {
             }
         }
         //avg temp range weatherlow_i[0]-weather_i[length]
-        if(position == 3){
+        else if(position == 3){
             catTitle.setText("AVERAGE TEMPERATURES");
             List<Double> weatherLow1 = _colResponse.getWeatherlow1();
             List<Double> weather1 = _colResponse.getWeather1();
             List<Double> weatherLow2 = _colResponse.getWeatherlow2();
             List<Double> weather2 = _colResponse.getWeather2();
 
-            String value = weatherLow1.get(0)+"°- "+weather1.get(13);
+            String value = weatherLow1.get(0)+"°- "+weather1.get(13)+"°";
             leftVal.setText(value);
             if(weather2.size() > 0){
-                value = weatherLow2.get(0)+"°- "+weather2.get(13);
+                value = weatherLow2.get(0)+"°- "+weather2.get(13)+"°";
                 rightVal.setText(value);
             }
             else{
@@ -167,11 +325,11 @@ public class SummaryAdapter extends BaseAdapter {
     private String costString(Double overall){
         String avgCost = "";
         if(overall > 0){
-            avgCost = " ABOVE NATIONAL AVERAGE";
+            avgCost = Math.abs(overall)+"% ABOVE NATIONAL AVERAGE";
 
         }
         else{
-            avgCost = " BELOW NATIONAL AVERAGE";
+            avgCost = Math.abs(overall)+"% BELOW NATIONAL AVERAGE";
         }
 
         return avgCost;
