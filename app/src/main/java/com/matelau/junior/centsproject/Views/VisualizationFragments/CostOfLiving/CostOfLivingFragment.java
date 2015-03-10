@@ -45,7 +45,7 @@ public class CostOfLivingFragment extends Fragment{
     private static String _location;
     private static String _location2;
     private ImageButton _search;
-    private View rootView;
+    private View _rootView;
 
     public CostOfLivingFragment() {
         // Required empty public constructor
@@ -56,19 +56,19 @@ public class CostOfLivingFragment extends Fragment{
                              Bundle savedInstanceState) {
         Log.d(LOG_TAG, "CreateView");
         // create visualizations!
-        rootView = inflater.inflate(R.layout.fragment_cost_of_living, container, false);
-        _cv = (CardView) rootView.findViewById(R.id.col_card_view);
-        _search = (ImageButton) rootView.findViewById(R.id.imageSearchButton);
+        _rootView = inflater.inflate(R.layout.fragment_cost_of_living, container, false);
+        _cv = (CardView) _rootView.findViewById(R.id.col_card_view);
+        _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
 
-        _loc2 = (TextView) rootView.findViewById(R.id.col_location2);
-        _chart = (ColumnChartView) rootView.findViewById(R.id.col_vis);
+        _loc2 = (TextView) _rootView.findViewById(R.id.col_location2);
+        _chart = (ColumnChartView) _rootView.findViewById(R.id.col_vis);
         updateLocation();
 
         if(CentsApplication.get_colResponse() != null)
             generateData();
 
         //update locations
-        TextView loc1 = (TextView) rootView.findViewById(R.id.col_location1);
+        TextView loc1 = (TextView) _rootView.findViewById(R.id.col_location1);
         loc1.setText(_location);
         processLocation2();
         _search.setOnClickListener(new View.OnClickListener() {
@@ -80,7 +80,7 @@ public class CostOfLivingFragment extends Fragment{
                }
         });
 
-        return rootView;
+        return _rootView;
     }
 
     private void showCitySelectionDialog(){
@@ -95,13 +95,13 @@ public class CostOfLivingFragment extends Fragment{
      */
     private void processLocation2() {
         if(_location2 == null){
-            rootView.findViewById(R.id.second_location).setVisibility(View.GONE);
+            _rootView.findViewById(R.id.second_location).setVisibility(View.GONE);
 
         }
         else{
-            rootView.findViewById(R.id.second_location).setVisibility(View.VISIBLE);
+            _rootView.findViewById(R.id.second_location).setVisibility(View.VISIBLE);
             _loc2.setText(_location2);
-            rootView.invalidate();
+            _rootView.invalidate();
         }
 
     }
