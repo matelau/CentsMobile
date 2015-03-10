@@ -33,14 +33,14 @@ import lecho.lib.hellocharts.view.ComboLineColumnChartView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LaborStatsFragment extends Fragment {
+public class TaxesFragment extends Fragment {
     private String LOG_TAG = LaborStatsFragment.class.getSimpleName();
     private ComboLineColumnChartView chart;
     private ComboLineColumnChartData data;
 
     private int numberOfLines = 1;
     private int maxNumberOfLines = 4;
-    private int numberOfPoints = 2;
+    private int numberOfPoints = 3;
 
     private boolean hasAxes = true;
     private boolean hasAxesNames = false;
@@ -49,16 +49,18 @@ public class LaborStatsFragment extends Fragment {
     private boolean isCubic = false;
     private boolean hasLabels = false;
     private ColiResponse _cResponse;
-    private  Double _avgUnemployment;
-    private Double _avgEGrowth;
-    private final String[] _labels = {"Unemployment Rate", "Economic Growth"};
+    private  Double _avgSales;
+    private Double _avgMin;
+    private Double _avgMax;
+    private Double _avgProperty;
+    private final String[] _labels = {"SALES TAX", "MIN - INCOME", "MAX - INCOME"};
 
     private static String _location;
     private static String _location2;
     private ImageButton _search;
     private View _rootView;
 
-    public LaborStatsFragment() {
+    public TaxesFragment() {
         // Required empty public constructor
     }
 
@@ -68,11 +70,14 @@ public class LaborStatsFragment extends Fragment {
                              Bundle savedInstanceState) {
         //Get Data
         _cResponse = CentsApplication.get_colResponse();
+        List<Double> taxes = _cResponse.getTaxes3();
         // set avgs
-        _avgUnemployment = _cResponse.getLabor3().get(0);
-        _avgEGrowth = _cResponse.getLabor3().get(2);
+        _avgSales = taxes.get(0);
+        _avgMin = taxes.get(1);
+        _avgMax = taxes.get(2);
+//        _avgProperty
 
-        Log.d(LOG_TAG, "Create View unemployment: "+_avgUnemployment+ " Economic Growth: "+ _avgEGrowth);
+        Log.d(LOG_TAG, "Create View unemployment: "+ _avgSales + " Economic Growth: "+ _avgMin);
         setHasOptionsMenu(false);
 
         _rootView = inflater.inflate(R.layout.fragment_labor_stats, container, false);
@@ -124,6 +129,7 @@ public class LaborStatsFragment extends Fragment {
         //add labels to axis
         axisValues.add(new AxisValue(0, _labels[0].toCharArray() ));
         axisValues.add(new AxisValue(1, _labels[1].toCharArray() ));
+        axisValues.add(new AxisValue(2, _labels[2].toCharArray() ));
         if (hasAxes) {
             Axis axisX = new Axis(axisValues);
             Axis axisY = new Axis().setHasLines(true);
@@ -148,11 +154,15 @@ public class LaborStatsFragment extends Fragment {
             for (int j = 0; j < numberOfPoints; ++j) {
                 PointValue pt = new PointValue();
                 if(j == 0){
-                    pt.set(j, _avgUnemployment.floatValue());
+                    pt.set(j, _avgSales.floatValue());
+                    pt.setLabel("");
+                }
+                else if( j == 1){
+                    pt.set(j, _avgMin.floatValue());
                     pt.setLabel("");
                 }
                 else{
-                    pt.set(j, _avgEGrowth.floatValue());
+                    pt.set(j, _avgMax.floatValue());
                     pt.setLabel("National Averages");
                 }
                 values.add(pt);
@@ -174,11 +184,13 @@ public class LaborStatsFragment extends Fragment {
     }
 
     private ColumnChartData generateColumnData() {
+        List<Double> taxes1 = _cResponse.getTaxes1();
+        List<Double> taxes2 = _cResponse.getTaxes2();
         int numSubcolumns = 1;
-        if(_cResponse.getLabor2().size() > 0){
+        if(taxes2.size() > 0){
             numSubcolumns = 2;
         }
-        int numColumns = 2;
+        int numColumns = 3;
         // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
         List<Column> columns = new ArrayList<Column>();
         List<SubcolumnValue> values;
@@ -186,12 +198,12 @@ public class LaborStatsFragment extends Fragment {
             values = new ArrayList<SubcolumnValue>();
             for (int j = 0; j < numSubcolumns; ++j) {
                 SubcolumnValue sc = new SubcolumnValue();
-                //i = 0 unemployment
+                //i = 0 sales tax
                 String label = "";
                 if(i == 0 && j == 0){
                     sc.setColor(getResources().getColor(R.color.compliment_primary));
-                    if(_cResponse.getLabor1().get(0) != null){
-                        float val = _cResponse.getLabor1().get(0).floatValue();
+                    if(taxes1.get(0) != null){
+                        float val = taxes1.get(0).floatValue();
                         label = val+"%";
                         sc.setValue(val);
                         sc.setLabel(label);
@@ -202,8 +214,8 @@ public class LaborStatsFragment extends Fragment {
                 }
                 else if (numSubcolumns == 2 && i == 0  && j == 1){
                     sc.setColor( getResources().getColor(R.color.gray));
-                    if(_cResponse.getLabor2().get(0) != null){
-                        float val = _cResponse.getLabor2().get(0).floatValue();
+                    if(taxes2.get(0)!= null){
+                        float val = taxes2.get(0).floatValue();
                         label = val+"%";
                         sc.setValue(val);
                         sc.setLabel(label);
@@ -211,12 +223,11 @@ public class LaborStatsFragment extends Fragment {
                     else
                         sc.setValue(0.0f);
                 }
-
-                //i = 1 economic growth
+                //i = 1 min income
                 if(i == 1 && j == 0){
                     sc.setColor(getResources().getColor(R.color.compliment_primary));
-                    if(_cResponse.getLabor1().get(2) != null){
-                        float val = _cResponse.getLabor1().get(2).floatValue();
+                    if(taxes1.get(1) != null){
+                        float val = taxes1.get(1).floatValue();
                         label = val+"%";
                         sc.setValue(val);
                         sc.setLabel(label);
@@ -227,8 +238,34 @@ public class LaborStatsFragment extends Fragment {
                 }
                 else if (numSubcolumns == 2 && i == 1  && j == 1){
                     sc.setColor( getResources().getColor(R.color.gray));
-                    if(_cResponse.getLabor2().get(2) != null){
-                        float val =_cResponse.getLabor2().get(2).floatValue();
+                    if(taxes2.get(1) != null){
+                        float val = taxes2.get(1).floatValue();
+                        label = val+"%";
+                        sc.setValue(val);
+                        sc.setLabel(label);
+                    }
+                    else{
+                        sc.setValue(0.0f);
+                    }
+                }
+
+                //i = 1 max income
+                if(i == 2 && j == 0){
+                    sc.setColor(getResources().getColor(R.color.compliment_primary));
+                    if(taxes1.get(2) != null){
+                        float val = taxes1.get(2).floatValue();
+                        label = val+"%";
+                        sc.setValue(val);
+                        sc.setLabel(label);
+                    }
+                    else{
+                        sc.setValue(0.0f);
+                    }
+                }
+                else if (numSubcolumns == 2 && i == 1  && j == 2){
+                    sc.setColor( getResources().getColor(R.color.gray));
+                    if(taxes2.get(2) != null){
+                        float val = taxes2.get(2).floatValue();
                         label = val+"%";
                         sc.setValue(val);
                         sc.setLabel(label);

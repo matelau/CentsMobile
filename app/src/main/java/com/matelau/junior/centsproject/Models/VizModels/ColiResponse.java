@@ -48,6 +48,9 @@ public class ColiResponse {
         @SerializedName("weatherlow_2")
         @Expose
         private List<Double> weatherlow2 = new ArrayList<Double>();
+        @SerializedName("taxes_3")
+        @Expose
+        private List<Double> taxes3 = new ArrayList<Double>();
 
         /**
          *
@@ -291,5 +294,11 @@ public class ColiResponse {
             this.weatherlow2 = weatherlow2;
         }
 
+        public List<Double> getTaxes3() {
+            return taxes3;
+        }
 
+        public void setTaxes3(List<Double> taxes3) {
+            this.taxes3 = taxes3;
+        }
 }

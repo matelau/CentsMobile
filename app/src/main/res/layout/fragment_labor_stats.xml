@@ -23,7 +23,7 @@
                 android:weightSum="10"
                 android:orientation="vertical">
 
-            <include layout="@layout/labor_stats_vis"
+            <include layout="@layout/line_column_combo"
                 android:layout_alignParentTop="true"
                 android:layout_height="fill_parent"
                 android:layout_width="fill_parent"
