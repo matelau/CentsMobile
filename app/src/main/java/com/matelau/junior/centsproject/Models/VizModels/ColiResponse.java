@@ -36,6 +36,9 @@ public class ColiResponse {
         @SerializedName("labor_2")
         @Expose
         private List<Double> labor2 = new ArrayList<Double>();
+        @SerializedName("labor_3")
+        @Expose
+        private List<Double> labor3 = new ArrayList<Double>();
         @SerializedName("taxes_2")
         @Expose
         private List<Double> taxes2 = new ArrayList<Double>();
@@ -45,6 +48,9 @@ public class ColiResponse {
         @SerializedName("weatherlow_2")
         @Expose
         private List<Double> weatherlow2 = new ArrayList<Double>();
+        @SerializedName("taxes_3")
+        @Expose
+        private List<Double> taxes3 = new ArrayList<Double>();
 
         /**
          *
@@ -217,7 +223,15 @@ public class ColiResponse {
             return labor2;
         }
 
-        /**
+        public List<Double> getLabor3() {
+            return labor3;
+        }
+
+        public void setLabor3(List<Double> labor3) {
+            this.labor3 = labor3;
+        }
+
+    /**
          *
          * @param labor2
          * The labor_2
@@ -280,5 +294,11 @@ public class ColiResponse {
             this.weatherlow2 = weatherlow2;
         }
 
+        public List<Double> getTaxes3() {
+            return taxes3;
+        }
 
+        public void setTaxes3(List<Double> taxes3) {
+            this.taxes3 = taxes3;
+        }
 }

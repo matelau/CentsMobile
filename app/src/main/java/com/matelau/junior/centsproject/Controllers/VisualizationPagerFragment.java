@@ -23,6 +23,10 @@ import com.matelau.junior.centsproject.Views.VisualizationFragments.College.Coll
 import com.matelau.junior.centsproject.Views.VisualizationFragments.College.CollegeIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLSummaryFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.LaborStatsFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.OtherColFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.TaxesFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.WeatherFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.MajorComparisonSummary;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.MajorIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownFragment;
@@ -72,8 +76,7 @@ public class VisualizationPagerFragment extends Fragment {
 //        Log.d(LOG_TAG, "InitialisePaging - SelectedVis: " + selectedVis);
         if(CentsApplication.isDebug())
 //            Toast.makeText(getActivity(), "Loading Vis: " + selectedVis, Toast.LENGTH_SHORT).show();
-        //TODO load fragments based on user selections
-        //TODO update proper tabs once created
+        //load fragments based on user selections
         if(selectedVis == null){
             //return to examples
             CentsApplication.set_selectedVis("Examples");
@@ -103,9 +106,10 @@ public class VisualizationPagerFragment extends Fragment {
                 getActivity().getActionBar().setTitle("City Comparison");
                 fragments.add(Fragment.instantiate(getActivity(), COLSummaryFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), CostOfLivingFragment.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), COLSummaryFragment.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), COLSummaryFragment.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), COLSummaryFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), LaborStatsFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), TaxesFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), OtherColFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), WeatherFragment.class.getName()));
                 break;
             case "Spending Breakdown":
                 fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownFragment.class.getName()));
@@ -125,8 +129,6 @@ public class VisualizationPagerFragment extends Fragment {
         _viewPager.setAdapter(_pageAdapter);
         CentsApplication.set_viewPager(_viewPager);
         //For Alpha I want to default to view with the viz TODO modify after alpha
-        if(selectedVis.equals("COL Comparison"))
-            _viewPager.setCurrentItem(1);
         //This line is required so the viewPager does not destroy pages when they are removed from the screen
         //if there are more tabs created this number will need to increase
         _viewPager.setOffscreenPageLimit(5);
@@ -213,7 +215,7 @@ public class VisualizationPagerFragment extends Fragment {
                     tabTitles = new String[]{"Summary"}; //, "Salary","Job Satisfaction", "Graduation Rate", "Demand", "Unemployment", "Top Jobs"};
                     return tabTitles[position];
                 case "COL Comparison":
-                    tabTitles = new String[]{"Summary", "Cost of Living", "Labor Stats","Taxes", "Weather"};
+                    tabTitles = new String[]{"Summary", "Cost of Living", "Labor Stats","Taxes","Other", "Weather"};
                     return tabTitles[position];
                 case "Spending Breakdown":
                     tabTitles = new String[]{"Visualization"};

@@ -32,9 +32,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import lecho.lib.hellocharts.model.ArcValue;
 import lecho.lib.hellocharts.model.PieChartData;
-import lecho.lib.hellocharts.util.Utils;
+import lecho.lib.hellocharts.model.SliceValue;
+import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.PieChartView;
 
 /**
@@ -411,24 +411,29 @@ public class SpendingBreakdownFragment extends Fragment {
             CentsApplication.set_colors(colors);
 
         }
-        List<ArcValue> values = new ArrayList<ArcValue>();
+//        List<ArcValue> values = new ArrayList<ArcValue>();
+        List<SliceValue> values = new ArrayList<SliceValue>();
+
         //---------Taxed value-------------
-        ArcValue taxArcValue = new ArcValue(percents[0], colors[0]);
+//        ArcValue taxArcValue = new ArcValue(percents[0], colors[0]);
+        SliceValue taxArcValue = new SliceValue(percents[0], colors[0]);
         if (hasArcSeparated && 0 == 0) {
-            taxArcValue.setArcSpacing(10);
+//            taxArcValue.setArcSpacing(10);
         }
         float taxMonthlyPortion = percents[0] * salary;
         String taxLabel = labels[0].toUpperCase()+" "+df.format(taxMonthlyPortion);
-        values.add(taxArcValue.setLabel(taxLabel.toCharArray()));
+        values.add(taxArcValue.setLabel(taxLabel));
         //---------All Other Values -------------
         for (int i = 1; i < numValues; ++i) {
-            ArcValue arcValue = new ArcValue(percents[i], colors[i]);
+//            ArcValue arcValue = new ArcValue(percents[i], colors[i]);
+            SliceValue arcValue = new SliceValue(percents[i], colors[i]);
+//            SliceValue sValue = new SliceValue(percents[i], colors[i]);
             if (hasArcSeparated && i == 0) {
-                arcValue.setArcSpacing(10);
+//                arcValue.setArcSpacing(10);
             }
             float monthlyPortion = percents[i] * (CentsApplication.get_disposableIncome()/12f);
             String label = labels[i].toUpperCase()+" "+df.format(monthlyPortion);
-            values.add(arcValue.setLabel(label.toCharArray()));
+            values.add(arcValue.setLabel(label));
         }
 
         data = new PieChartData(values);
@@ -442,16 +447,16 @@ public class SpendingBreakdownFragment extends Fragment {
 
 
         //todo dynamicaly generate fontsize
-        double fontsize =   _chart.getHeight() *.1;
+        int fontsize =  0; // _chart.getHeight() *.1;
 //        Log.v("PieChart", "Chart: " + _chart.getHeight() + " font: " + fontsize);
 
         int currentOrientation = getResources().getConfiguration().orientation;
         if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
 
-            fontsize = 18f;
+            fontsize = 20;
         }
         else {
-            fontsize = 30f;
+            fontsize = 30;
         }
 
 
@@ -473,7 +478,7 @@ public class SpendingBreakdownFragment extends Fragment {
             // Get roboto-italic font.
             Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Italic.ttf");
             data.setCenterText1Typeface(tf);
-            data.setCenterText1FontSize(Utils.px2sp(getResources().getDisplayMetrics().scaledDensity, (int)fontsize));
+            data.setCenterText1FontSize(ChartUtils.px2sp(getResources().getDisplayMetrics().scaledDensity, fontsize));
 
         }
 
@@ -498,8 +503,7 @@ public class SpendingBreakdownFragment extends Fragment {
             Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Italic.ttf");
 
             data.setCenterText2Typeface(tf);
-            data.setCenterText2FontSize(Utils.px2sp(getResources().getDisplayMetrics().scaledDensity,
-                    (int)fontsize - 8));
+            data.setCenterText2FontSize(ChartUtils.px2sp(getResources().getDisplayMetrics().scaledDensity, (fontsize - 8)));
         }
 
         _chart.setPieChartData(data);

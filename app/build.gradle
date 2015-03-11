@@ -39,5 +39,5 @@ dependencies {
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile 'com.squareup.picasso:picasso:2.4.0'
     compile 'com.googlecode.android-query:android-query:0.25.9'
-    compile project(':hellocharts-library')
+    compile 'com.github.lecho:hellocharts-library:1.5.2@aar'
 }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
-import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.R;
 
@@ -22,12 +22,11 @@ import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
 import lecho.lib.hellocharts.model.ColumnChartData;
-import lecho.lib.hellocharts.model.ColumnValue;
-import lecho.lib.hellocharts.model.Line;
-import lecho.lib.hellocharts.model.LineChartData;
-import lecho.lib.hellocharts.model.PointValue;
-import lecho.lib.hellocharts.util.Utils;
+import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.view.ColumnChartView;
+
+//import lecho.lib.hellocharts.util.Utils;
+
 
 /**
  * create an instance of this fragment.
@@ -45,12 +44,8 @@ public class CostOfLivingFragment extends Fragment{
     private TextView _loc2;
     private static String _location;
     private static String _location2;
-    private static Col _c1;
-    private static Col _c2;
-    private static String _city2;
     private ImageButton _search;
-    private List<Col> _cols;
-    private View rootView;
+    private View _rootView;
 
     public CostOfLivingFragment() {
         // Required empty public constructor
@@ -59,20 +54,21 @@ public class CostOfLivingFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(LOG_TAG, "CreateView");
         // create visualizations!
-        rootView = inflater.inflate(R.layout.fragment_cost_of_living, container, false);
-        _cv = (CardView) rootView.findViewById(R.id.col_card_view);
-        _search = (ImageButton) rootView.findViewById(R.id.imageSearchButton);
+        _rootView = inflater.inflate(R.layout.fragment_cost_of_living, container, false);
+        _cv = (CardView) _rootView.findViewById(R.id.col_card_view);
+        _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
 
-        _loc2 = (TextView) rootView.findViewById(R.id.col_location2);
-        _chart = (ColumnChartView) rootView.findViewById(R.id.col_vis);
+        _loc2 = (TextView) _rootView.findViewById(R.id.col_location2);
+        _chart = (ColumnChartView) _rootView.findViewById(R.id.col_vis);
         updateLocation();
 
         if(CentsApplication.get_colResponse() != null)
             generateData();
 
         //update locations
-        TextView loc1 = (TextView) rootView.findViewById(R.id.col_location1);
+        TextView loc1 = (TextView) _rootView.findViewById(R.id.col_location1);
         loc1.setText(_location);
         processLocation2();
         _search.setOnClickListener(new View.OnClickListener() {
@@ -84,9 +80,7 @@ public class CostOfLivingFragment extends Fragment{
                }
         });
 
-
-
-        return rootView;
+        return _rootView;
     }
 
     private void showCitySelectionDialog(){
@@ -101,13 +95,13 @@ public class CostOfLivingFragment extends Fragment{
      */
     private void processLocation2() {
         if(_location2 == null){
-            rootView.findViewById(R.id.second_location).setVisibility(View.GONE);
+            _rootView.findViewById(R.id.second_location).setVisibility(View.GONE);
 
         }
         else{
-            rootView.findViewById(R.id.second_location).setVisibility(View.VISIBLE);
+            _rootView.findViewById(R.id.second_location).setVisibility(View.VISIBLE);
             _loc2.setText(_location2);
-            rootView.invalidate();
+            _rootView.invalidate();
         }
 
     }
@@ -146,7 +140,7 @@ public class CostOfLivingFragment extends Fragment{
         int numColumns = 7;
 
         // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
-        List<Column> columns = new ArrayList<Column>();
+//        List<Column> columns = new ArrayList<Column>();
         String[] labels_short = {"gen", "housing", "trans", "groc", "util","health","goods"};
 
         double[] col_vals = listToDblArr(CentsApplication.get_colResponse().getCli1());
@@ -154,8 +148,11 @@ public class CostOfLivingFragment extends Fragment{
 
 
         List<AxisValue> axisVals = new ArrayList<AxisValue>();
+        List<Column> columns = new ArrayList<Column>();
+        List<SubcolumnValue> values;
         for(int i = 0; i < numColumns; i++){
-            List<ColumnValue> values = new ArrayList<ColumnValue>();
+//            List<ColumnValue> values = new ArrayList<ColumnValue>();
+            values = new ArrayList<SubcolumnValue>();
             //normalize col_vals National avg = 0
             float column_value = (float) (col_vals[i] - 100f);
             int c;
@@ -169,8 +166,9 @@ public class CostOfLivingFragment extends Fragment{
             //if column_value = 0 add a negligible value to display
             if(Math.round(column_value) == 0)
                 column_value = 0.1f;
-            ColumnValue cv = new ColumnValue(column_value, getResources().getColor(R.color.compliment_primary) );
-            cv.setLabel(label.toCharArray());
+
+            SubcolumnValue cv = new SubcolumnValue(column_value, getResources().getColor(R.color.compliment_primary));
+            cv.setLabel(label);
             values.add(cv);
             //if user adds a comparison city add it to view
             if(col_vals2.length > 0){
@@ -185,8 +183,8 @@ public class CostOfLivingFragment extends Fragment{
                 //if column_value = 0 add a negligible value to display
                 if(Math.round(column_value2) == 0)
                     column_value2 = 0.1f;
-                ColumnValue cv2 = new ColumnValue(column_value2, getResources().getColor(R.color.primary_gray) );
-                cv2.setLabel(label2.toCharArray());
+                SubcolumnValue cv2 = new SubcolumnValue(column_value2, getResources().getColor(R.color.primary_gray));
+                cv2.setLabel(label2);
                 values.add(cv2);
             }
 
@@ -218,32 +216,6 @@ public class CostOfLivingFragment extends Fragment{
         _chartdata.setFillRatio(.7f);
         _chart.setColumnChartData(_chartdata);
     }
-
-    private LineChartData generateLineData() {
-
-        List<Line> lines = new ArrayList<Line>();
-        for (int i = 0; i < 1; ++i) {
-
-            List<PointValue> values = new ArrayList<PointValue>();
-            for (int j = 0; j < 7; ++j) {
-                values.add(new PointValue(j, 100f));
-            }
-
-            Line line = new Line(values);
-            line.setColor(Utils.COLORS[i]);
-            line.setCubic(false);
-            line.setHasLabels(hasLabels);
-            line.setHasLines(true);
-            line.setHasPoints(false);
-            lines.add(line);
-        }
-
-        LineChartData lineChartData = new LineChartData(lines);
-
-        return lineChartData;
-
-    }
-
 
     private double[] listToDblArr(List<Double> doubles){
         final double[] result = new double[doubles.size()];
