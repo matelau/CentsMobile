@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
@@ -132,7 +131,7 @@ public class TaxesFragment extends Fragment {
         axisValues.add(new AxisValue(2, _labels[2].toCharArray() ));
         if (hasAxes) {
             Axis axisX = new Axis(axisValues);
-            Axis axisY = new Axis().setHasLines(true);
+            Axis axisY = new Axis().setHasLines(true).setName("Tax Rates");
             if (hasAxesNames) {
 //                axisX.setName("Percent");
 //                axisY.setName("Percent");
@@ -204,7 +203,14 @@ public class TaxesFragment extends Fragment {
                     sc.setColor(getResources().getColor(R.color.compliment_primary));
                     if(taxes1.get(0) != null){
                         float val = taxes1.get(0).floatValue();
-                        label = val+"%";
+                        if(val == 0.0f){
+                            val = 0.1f;
+                            label = "0%";
+                        }
+                        else{
+                            label = val+"%";
+
+                        }
                         sc.setValue(val);
                         sc.setLabel(label);
                     }
@@ -216,10 +222,17 @@ public class TaxesFragment extends Fragment {
                     sc.setColor( getResources().getColor(R.color.gray));
                     if(taxes2.get(0)!= null){
                         float val = taxes2.get(0).floatValue();
-                        label = val+"%";
+                        if(val == 0.0f){
+                            val = 0.1f;
+                            label = "0%";
+                        }
+                        else{
+                            label = val+"%";
+
+                        }
                         sc.setValue(val);
                         sc.setLabel(label);
-                    }
+                     }
                     else
                         sc.setValue(0.0f);
                 }
@@ -228,7 +241,14 @@ public class TaxesFragment extends Fragment {
                     sc.setColor(getResources().getColor(R.color.compliment_primary));
                     if(taxes1.get(1) != null){
                         float val = taxes1.get(1).floatValue();
-                        label = val+"%";
+                        if(val == 0.0f){
+                            val = 0.1f;
+                            label = "0%";
+                        }
+                        else{
+                            label = val+"%";
+
+                        }
                         sc.setValue(val);
                         sc.setLabel(label);
                     }
@@ -240,7 +260,14 @@ public class TaxesFragment extends Fragment {
                     sc.setColor( getResources().getColor(R.color.gray));
                     if(taxes2.get(1) != null){
                         float val = taxes2.get(1).floatValue();
-                        label = val+"%";
+                        if(val == 0.0f){
+                            val = 0.1f;
+                            label = "0%";
+                        }
+                        else{
+                            label = val+"%";
+
+                        }
                         sc.setValue(val);
                         sc.setLabel(label);
                     }
@@ -254,7 +281,14 @@ public class TaxesFragment extends Fragment {
                     sc.setColor(getResources().getColor(R.color.compliment_primary));
                     if(taxes1.get(2) != null){
                         float val = taxes1.get(2).floatValue();
-                        label = val+"%";
+                        if(val == 0.0f){
+                            val = 0.1f;
+                            label = "0%";
+                        }
+                        else{
+                            label = val+"%";
+
+                        }
                         sc.setValue(val);
                         sc.setLabel(label);
                     }
@@ -262,11 +296,18 @@ public class TaxesFragment extends Fragment {
                         sc.setValue(0.0f);
                     }
                 }
-                else if (numSubcolumns == 2 && i == 1  && j == 2){
+                else if (numSubcolumns == 2 && i == 2  && j == 1){
                     sc.setColor( getResources().getColor(R.color.gray));
                     if(taxes2.get(2) != null){
                         float val = taxes2.get(2).floatValue();
-                        label = val+"%";
+                        if(val == 0.0f){
+                            val = 0.1f;
+                            label = "0%";
+                        }
+                        else{
+                            label = val+"%";
+
+                        }
                         sc.setValue(val);
                         sc.setLabel(label);
                     }
@@ -284,18 +325,8 @@ public class TaxesFragment extends Fragment {
         }
 
         ColumnChartData columnChartData = new ColumnChartData(columns);
+        columnChartData.setFillRatio(.5f);
         return columnChartData;
-    }
-
-    private void addLineToData() {
-        if (data.getLineChartData().getLines().size() >= maxNumberOfLines) {
-            Toast.makeText(getActivity(), "Samples app uses max 4 lines!", Toast.LENGTH_SHORT).show();
-            return;
-        } else {
-            ++numberOfLines;
-        }
-
-        generateData();
     }
 
     private class ValueTouchListener implements ComboLineColumnChartOnValueSelectListener {

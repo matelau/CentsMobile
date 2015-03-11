@@ -25,6 +25,7 @@ import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLSummaryFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.LaborStatsFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.TaxesFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.WeatherFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.MajorComparisonSummary;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.MajorIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownFragment;
@@ -106,7 +107,7 @@ public class VisualizationPagerFragment extends Fragment {
                 fragments.add(Fragment.instantiate(getActivity(), CostOfLivingFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), LaborStatsFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), TaxesFragment.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), COLSummaryFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), WeatherFragment.class.getName()));
                 break;
             case "Spending Breakdown":
                 fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownFragment.class.getName()));

@@ -192,7 +192,14 @@ public class LaborStatsFragment extends Fragment {
                     sc.setColor(getResources().getColor(R.color.compliment_primary));
                     if(_cResponse.getLabor1().get(0) != null){
                         float val = _cResponse.getLabor1().get(0).floatValue();
-                        label = val+"%";
+                        if(val == 0.0f){
+                            val = 0.1f;
+                            label = "0%";
+                        }
+                        else{
+                            label = val+"%";
+
+                        }
                         sc.setValue(val);
                         sc.setLabel(label);
                     }
@@ -204,7 +211,14 @@ public class LaborStatsFragment extends Fragment {
                     sc.setColor( getResources().getColor(R.color.gray));
                     if(_cResponse.getLabor2().get(0) != null){
                         float val = _cResponse.getLabor2().get(0).floatValue();
-                        label = val+"%";
+                        if(val == 0.0f){
+                            val = 0.1f;
+                            label = "0%";
+                        }
+                        else{
+                            label = val+"%";
+
+                        }
                         sc.setValue(val);
                         sc.setLabel(label);
                     }
@@ -217,7 +231,13 @@ public class LaborStatsFragment extends Fragment {
                     sc.setColor(getResources().getColor(R.color.compliment_primary));
                     if(_cResponse.getLabor1().get(2) != null){
                         float val = _cResponse.getLabor1().get(2).floatValue();
-                        label = val+"%";
+                        if(val == 0.0f){
+                            val = 0.1f;
+                            label = "0%";
+                        }
+                        else{
+                            label = val+"%";
+                        }
                         sc.setValue(val);
                         sc.setLabel(label);
                     }
@@ -229,7 +249,15 @@ public class LaborStatsFragment extends Fragment {
                     sc.setColor( getResources().getColor(R.color.gray));
                     if(_cResponse.getLabor2().get(2) != null){
                         float val =_cResponse.getLabor2().get(2).floatValue();
-                        label = val+"%";
+                        if(val == 0.0f){
+                            val = 0.1f;
+                            label = "0%";
+                        }
+                        else{
+                            label = val+"%";
+
+                        }
+
                         sc.setValue(val);
                         sc.setLabel(label);
                     }
@@ -247,6 +275,7 @@ public class LaborStatsFragment extends Fragment {
         }
 
         ColumnChartData columnChartData = new ColumnChartData(columns);
+        columnChartData.setFillRatio(.3f);
         return columnChartData;
     }
 
