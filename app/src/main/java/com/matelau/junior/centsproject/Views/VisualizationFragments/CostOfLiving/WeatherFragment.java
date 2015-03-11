@@ -145,34 +145,36 @@ public class WeatherFragment extends Fragment {
             lines.add(line);
         }
         //add city 2
-        //offset bounds so values are not in same columns
-        for (int i = 1; i < numberOfLines*2; i+=2) {
-            List<PointValue> values = new ArrayList<PointValue>();
-            for (int j = 0; j < numberOfPoints; ++j) {
-                int index = (i - 1)/2;
-                float value = 0.0f;
-                if(j == 0){
-                    value = weather2.get(index).floatValue();
+        if(weather2.size() > 0){
+            //offset bounds so values are not in same columns
+            for (int i = 1; i < numberOfLines*2; i+=2) {
+                List<PointValue> values = new ArrayList<PointValue>();
+                for (int j = 0; j < numberOfPoints; ++j) {
+                    int index = (i - 1)/2;
+                    float value = 0.0f;
+                    if(j == 0){
+                        value = weather2.get(index).floatValue();
+                    }
+
+                    else{
+                        value = weather2_low.get(index).floatValue();
+                    }
+                    PointValue pv = new PointValue(i , value);
+                    pv.setLabel(value+"°F");
+                    values.add(pv);
                 }
 
-                else{
-                    value = weather2_low.get(index).floatValue();
-                }
-                PointValue pv = new PointValue(i , value);
-                pv.setLabel(value+"°F");
-                values.add(pv);
+                Line line = new Line(values);
+                line.setColor(getResources().getColor(R.color.gray));
+                line.setShape(shape);
+                line.setCubic(isCubic);
+                line.setFilled(isFilled);
+                line.setHasLabels(hasLabels);
+                line.setHasLabelsOnlyForSelected(hasLabelForSelected);
+                line.setHasLines(hasLines);
+                line.setHasPoints(hasPoints);
+                lines.add(line);
             }
-
-            Line line = new Line(values);
-            line.setColor(getResources().getColor(R.color.gray));
-            line.setShape(shape);
-            line.setCubic(isCubic);
-            line.setFilled(isFilled);
-            line.setHasLabels(hasLabels);
-            line.setHasLabelsOnlyForSelected(hasLabelForSelected);
-            line.setHasLines(hasLines);
-            line.setHasPoints(hasPoints);
-            lines.add(line);
         }
 
         data = new LineChartData(lines);

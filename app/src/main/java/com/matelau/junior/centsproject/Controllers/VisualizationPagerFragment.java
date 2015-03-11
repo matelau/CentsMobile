@@ -24,6 +24,7 @@ import com.matelau.junior.centsproject.Views.VisualizationFragments.College.Coll
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLSummaryFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.LaborStatsFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.OtherColFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.TaxesFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.WeatherFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.MajorComparisonSummary;
@@ -107,6 +108,7 @@ public class VisualizationPagerFragment extends Fragment {
                 fragments.add(Fragment.instantiate(getActivity(), CostOfLivingFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), LaborStatsFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), TaxesFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), OtherColFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), WeatherFragment.class.getName()));
                 break;
             case "Spending Breakdown":
@@ -213,7 +215,7 @@ public class VisualizationPagerFragment extends Fragment {
                     tabTitles = new String[]{"Summary"}; //, "Salary","Job Satisfaction", "Graduation Rate", "Demand", "Unemployment", "Top Jobs"};
                     return tabTitles[position];
                 case "COL Comparison":
-                    tabTitles = new String[]{"Summary", "Cost of Living", "Labor Stats","Taxes", "Weather"};
+                    tabTitles = new String[]{"Summary", "Cost of Living", "Labor Stats","Taxes","Other", "Weather"};
                     return tabTitles[position];
                 case "Spending Breakdown":
                     tabTitles = new String[]{"Visualization"};
