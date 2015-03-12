@@ -77,6 +77,7 @@ public class SpendingBreakdownFragment extends Fragment {
         _income.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //Get All Locked values
 
             }
 
@@ -323,7 +324,7 @@ public class SpendingBreakdownFragment extends Fragment {
         }
         else{
             int[] brackets = new int[]{0,9075,36900,89350,186350,405100,406750};
-            float[] percents = new float[]{0.0f, 0.2f, 0.25f, 0.35f, 0.38f, 0.43f, 0.45f, 0.496f};
+            float[] percents = new float[]{0.0f, 0.1f, 0.15f, 0.25f, 0.28f, 0.33f, 0.35f, 0.396f};
             float taxed_income = 0.0f;
             int included_brackets = 0;
             //iterate through included brackets and update indices to include
@@ -411,26 +412,19 @@ public class SpendingBreakdownFragment extends Fragment {
             CentsApplication.set_colors(colors);
 
         }
-//        List<ArcValue> values = new ArrayList<ArcValue>();
         List<SliceValue> values = new ArrayList<SliceValue>();
 
         //---------Taxed value-------------
-//        ArcValue taxArcValue = new ArcValue(percents[0], colors[0]);
+
         SliceValue taxArcValue = new SliceValue(percents[0], colors[0]);
-        if (hasArcSeparated && 0 == 0) {
-//            taxArcValue.setArcSpacing(10);
-        }
+
         float taxMonthlyPortion = percents[0] * salary;
         String taxLabel = labels[0].toUpperCase()+" "+df.format(taxMonthlyPortion);
         values.add(taxArcValue.setLabel(taxLabel));
         //---------All Other Values -------------
         for (int i = 1; i < numValues; ++i) {
-//            ArcValue arcValue = new ArcValue(percents[i], colors[i]);
             SliceValue arcValue = new SliceValue(percents[i], colors[i]);
-//            SliceValue sValue = new SliceValue(percents[i], colors[i]);
-            if (hasArcSeparated && i == 0) {
-//                arcValue.setArcSpacing(10);
-            }
+
             float monthlyPortion = percents[i] * (CentsApplication.get_disposableIncome()/12f);
             String label = labels[i].toUpperCase()+" "+df.format(monthlyPortion);
             values.add(arcValue.setLabel(label));
@@ -448,7 +442,6 @@ public class SpendingBreakdownFragment extends Fragment {
 
         //todo dynamicaly generate fontsize
         int fontsize =  0; // _chart.getHeight() *.1;
-//        Log.v("PieChart", "Chart: " + _chart.getHeight() + " font: " + fontsize);
 
         int currentOrientation = getResources().getConfiguration().orientation;
         if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {

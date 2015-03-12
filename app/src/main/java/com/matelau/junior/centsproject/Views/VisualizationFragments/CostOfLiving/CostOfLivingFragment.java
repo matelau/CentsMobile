@@ -141,7 +141,7 @@ public class CostOfLivingFragment extends Fragment{
 
         // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
 //        List<Column> columns = new ArrayList<Column>();
-        String[] labels_short = {"gen", "housing", "trans", "groc", "util","health","goods"};
+        String[] labels_short = {"Over", "goods", "groc", "health", "housing","trans","util"};
 
         double[] col_vals = listToDblArr(CentsApplication.get_colResponse().getCli1());
         double[] col_vals2 = listToDblArr(CentsApplication.get_colResponse().getCli2());

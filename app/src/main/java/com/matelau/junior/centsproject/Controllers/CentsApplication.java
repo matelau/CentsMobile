@@ -67,7 +67,7 @@ public class CentsApplication extends Application{
     private static List<Col> _cols;
 
     //debug true = show toast, set login credentials
-    private static boolean debug = true;
+    private static boolean debug = false;
 
     //Spending Breakdown Vis
     private static String _occupationSalary = "45000";
@@ -420,8 +420,12 @@ public class CentsApplication extends Application{
         Float monthlySalary = _disposableIncome/12f;
         if(tax){
             monthlySalary = Float.parseFloat(_occupationSalary);
+            percent = (percent * monthlySalary)/12f;
         }
-        percent = (percent * monthlySalary);
+        else{
+            percent = (percent * monthlySalary);
+        }
+
         //only show two decimal places in values
         DecimalFormat df = new DecimalFormat("##.##");
         df.setRoundingMode(RoundingMode.HALF_DOWN);

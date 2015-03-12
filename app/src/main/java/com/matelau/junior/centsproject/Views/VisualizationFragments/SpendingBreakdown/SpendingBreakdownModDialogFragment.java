@@ -48,6 +48,7 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
     private SBArrayAdapter _rAdapter;
     private List<String> _sbAttr;
     private List<Float> _sbAttrVals;
+    private int _sizeBeforeMod;
 
 
     public SpendingBreakdownModDialogFragment() {
@@ -82,12 +83,14 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
         //get Attr
         _sbAttr = CentsApplication.get_sbLabels();
         _sbAttrVals = CentsApplication.get_sbPercents();
+        _sizeBeforeMod = CentsApplication.get_sbValues().size();
 
         //setup dynamic listview
         _sbAttributes = (ListView) _rootLayout.findViewById(R.id.sb_attr_list);
         _rAdapter = new SBArrayAdapter();
         CentsApplication.set_rAdapter(_rAdapter);
         _sbAttributes.setAdapter(_rAdapter);
+
 
 
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
@@ -103,7 +106,15 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-//                _category.setHint("Category");
+               //remove values added before cancel
+                if(CentsApplication.get_sbValues().size() != _sizeBeforeMod ){
+                    for(int i = _sizeBeforeMod - 1; i < CentsApplication.get_sbValues().size(); i++ ){
+                        List<SpendingBreakdownCategory> vals = CentsApplication.get_sbValues();
+                        vals.remove(i);
+                        CentsApplication.set_sbValues(vals);
+                    }
+
+                }
             }
         });
 
