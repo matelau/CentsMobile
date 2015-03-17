@@ -316,33 +316,36 @@ public class SpendingBreakdownFragment extends Fragment {
 
     /**
      * calculates monthly tax percent for input salary
-     * @param salary
+     * @param spending_income
      */
-    private void calculateTaxes(Float salary){
-        if(salary < 9075){
+    private void calculateTaxes(Float spending_income){
+        if(spending_income < 9075){
             CentsApplication.get_sbValues().get(0)._percent = 0.0f;
         }
         else{
             int[] brackets = new int[]{0,9075,36900,89350,186350,405100,406750};
-            float[] percents = new float[]{0.0f, 0.1f, 0.15f, 0.25f, 0.28f, 0.33f, 0.35f, 0.396f};
+            float[] percents = new float[]{0.0f, 0.2f, 0.25f, 0.35f, 0.38f, 0.43f, 0.45f, 0.496f};
             float taxed_income = 0.0f;
-            int included_brackets = 0;
+            int max_index = 0;
             //iterate through included brackets and update indices to include
-            for(;included_brackets < 6; included_brackets++){
-                if(salary < brackets[included_brackets]){
-                    included_brackets--;
+            for(;max_index < 6; max_index++){
+                if(spending_income < brackets[max_index]){
+                    max_index--;
                     break;
                 }
             }
             //sum up amt of tax paid per bracket
-            for(int i = 0; i < included_brackets+1; i++){
-                taxed_income += (percents[i] * (salary - brackets[i]));
+            int i = 1;
+            for(; i < max_index+1; i++){
+                taxed_income += (percents[i] * (brackets[i] - brackets[i-1]));
             }
-
+            taxed_income += (percents[i]*(spending_income-brackets[i-1]));
             //store results
-            float result = taxed_income/salary;
+            Log.d(LOG_TAG, "TaxedIncome ="+taxed_income);
+            float result = taxed_income/spending_income;
             CentsApplication.get_sbValues().get(0)._percent = result;
-            Float disposableIncome = salary - taxed_income;
+            Float disposableIncome = spending_income - taxed_income;
+            Log.d(LOG_TAG, "DisposableIncome ="+disposableIncome);
             CentsApplication.set_disposableIncome(disposableIncome);
             String filename = CentsApplication.get_currentBreakdown()+".dat";
             CentsApplication.saveSB(filename, getActivity());
