@@ -27,7 +27,7 @@ import com.matelau.junior.centsproject.Models.CentsAPIModels.RecordQuery;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.RecordsService;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.School;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.SchoolRequest;
-import com.matelau.junior.centsproject.Models.VizModels.SchoolAPIResponse;
+import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.SchoolService;
 import com.matelau.junior.centsproject.R;
 
@@ -186,7 +186,7 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
                     school1.setName(_university1);
                     schools.add(school1);
                     CentsApplication.set_university1(_university1);
-                    CentsApplication.set_sResponse(null);
+                    CentsApplication.set_sApiResponse(null);
                     if(_university2 != null){
                         School school2 = new School();
                         school2.setName(_university2);
@@ -197,12 +197,15 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
                     sr.setOperation("compare");
                     sr.setSchools(schools);
                     SchoolService service = CentsApplication.get_centsRestAdapter().create(SchoolService.class);
-                    service.getSchools(sr, new Callback<SchoolAPIResponse>() {
+                    service.getSchools(sr, new Callback<SchoolResponse>() {
                         @Override
-                        public void success(SchoolAPIResponse schoolResponse, Response response) {
+                        public void success(SchoolResponse schoolResponse, Response response) {
                             Log.d(LOG_TAG, "Success");
 //                            CentsApplication.set_sResponse(schoolResponse);
+                            schoolResponse.setSchool1Name(_university1);
+                            schoolResponse.setSchool2Name(_university2);
                             CentsApplication.set_sApiResponse(schoolResponse);
+
                             //get college sum frag
                             CentsApplication.set_selectedVis("College Comparison");
                             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -230,7 +233,6 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
             public void onClick(View v) {
                 //clear values that could have been set
                 CentsApplication.set_university1(null);
-                CentsApplication.set_sResponse(null);
                 CentsApplication.set_university2(null);
                 CentsApplication.set_sApiResponse(null);
                 dismiss();

@@ -41,8 +41,8 @@ public class SummaryAdapter extends BaseAdapter {
                 _mResponse = CentsApplication.get_mResponse();
                 break;
             case 2:
-                //get schoolResponse could either be one of two options
-                _sResponse = CentsApplication.get_sResponse();
+                //get schoolResponse
+                _sResponse = CentsApplication.get_sApiResponse();
                 break;
             default:
                 break;

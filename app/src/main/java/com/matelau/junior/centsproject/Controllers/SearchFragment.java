@@ -116,7 +116,6 @@ public class SearchFragment extends Fragment {
         if(CentsApplication.isDebug())
             Toast.makeText(getActivity(), "Search for:" + searchText, Toast.LENGTH_SHORT).show();
         //Todo if valid response and user is logged in from query service store searchText to _query
-        //http://54.183.8.236:6001/query/
         QueryService service = CentsApplication.get_queryParsingRestAdapter().create(QueryService.class);
         service.results(searchText, new Callback<Response>() {
             @Override
@@ -168,7 +167,7 @@ public class SearchFragment extends Fragment {
                 else if(type.equals("school")){
                     //create school obj and launch viz
                     SchoolResponse sResponse = gson.fromJson(rsp, SchoolResponse.class);
-                    CentsApplication.set_sResponse(sResponse);
+                    CentsApplication.set_sApiResponse(sResponse);
                     CentsApplication.set_selectedVis("College Comparison");
                 }
                 else if(type.equals("career")){

@@ -7,11 +7,10 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
-import com.matelau.junior.centsproject.Models.VizModels.SchoolAPIResponse;
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.Models.Design.JobInfo;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
+import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SpendingBreakdownCategory;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownModDialogFragment;
@@ -85,10 +84,8 @@ public class CentsApplication extends Application{
     private static ColiResponse _colResponse;
 
     //School Comp vars
-    //response from query parser
-    private static SchoolResponse _sResponse;
     //response from api
-    private static SchoolAPIResponse _sApiResponse;
+    private static SchoolResponse _sApiResponse;
     private static String _university1;
     private static String _university2;
 
@@ -333,19 +330,11 @@ public class CentsApplication extends Application{
         CentsApplication._colResponse = _colResponse;
     }
 
-    public static SchoolResponse get_sResponse() {
-        return _sResponse;
-    }
-
-    public static void set_sResponse(SchoolResponse _sResponse) {
-        CentsApplication._sResponse = _sResponse;
-    }
-
-    public static SchoolAPIResponse get_sApiResponse() {
+    public static SchoolResponse get_sApiResponse() {
         return _sApiResponse;
     }
 
-    public static void set_sApiResponse(SchoolAPIResponse _sApiResponse) {
+    public static void set_sApiResponse(SchoolResponse _sApiResponse) {
         CentsApplication._sApiResponse = _sApiResponse;
     }
 

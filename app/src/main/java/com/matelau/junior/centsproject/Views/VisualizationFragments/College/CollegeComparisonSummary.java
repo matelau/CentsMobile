@@ -15,7 +15,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
-import com.matelau.junior.centsproject.Models.VizModels.SchoolAPIResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SummaryAdapter;
@@ -55,17 +54,7 @@ public class CollegeComparisonSummary extends Fragment {
         // Inflate the layout for this fragment
         Log.d(LOG_TAG, "CreateView");
         //get data
-        _sResponse = CentsApplication.get_sResponse();
-        if(_sResponse == null){
-            //Convert api response to match queryparser response
-            SchoolAPIResponse sresponse = CentsApplication.get_sApiResponse();
-            _sResponse = new SchoolResponse();
-            _sResponse.setSchool1(sresponse.getSchool1());
-            _sResponse.setSchool2(sresponse.getSchool2());
-            _sResponse.setSchool1Name(CentsApplication.get_university1());
-            _sResponse.setSchool2Name(CentsApplication.get_university2());
-            CentsApplication.set_sResponse(_sResponse);
-        }
+        _sResponse = CentsApplication.get_sApiResponse();
         hasSecondSchool = (_sResponse.getSchool2().size() > 0);
         //get Views
         _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_college_summary, container, false);
