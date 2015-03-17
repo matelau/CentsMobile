@@ -129,7 +129,6 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
         List<SpendingBreakdownCategory> _values;
 
         public SBArrayAdapter(){
-            Log.v(LOG_TAG, "SBARRAY - create");
             _values = CentsApplication.get_sbValues();
 
         }
@@ -143,7 +142,8 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            Log.v(LOG_TAG, "SBARRAY - getView");
+//            Log.v(LOG_TAG, "SBARRAY - getView");
+            SpendingBreakdownCategory sbc = _values.get(position);
             LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(R.layout.spending_breakdown_mod_element, parent, false);
 
@@ -152,19 +152,25 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
             TextView tv = (TextView) rowView.findViewById(R.id.attr_text);
             ImageButton lock = (ImageButton) rowView.findViewById(R.id.lock);
             ImageButton delete = (ImageButton) rowView.findViewById(R.id.delete);
+            if(sbc._locked){
+                Log.d(LOG_TAG, "Locked position: "+position+" percent: "+sbc._percent+" category: "+sbc._category);
+            }
 
             //modify subviews
             if(position == 0){
                 //taxed value is different
-                et.setText(CentsApplication.convPercentToDollar(_values.get(position)._percent, true));
+                et.setText(CentsApplication.convPercentToDollar(sbc._percent, true));
             }
             else{
-                et.setText(CentsApplication.convPercentToDollar(_values.get(position)._percent, false));
+                et.setText(CentsApplication.convPercentToDollar(sbc._percent, false));
+                if(_values.get(position)._locked){
+                    Log.d(LOG_TAG, "Locked cat: "+sbc._category+" percent: "+sbc._percent);
+                }
 
             }
 
             tv.setText(_values.get(position)._category);
-            if(_values.get(position)._locked) {
+            if(sbc._locked) {
                 lock.setBackground(getResources().getDrawable(R.drawable.lock_color_small));
                 delete.setVisibility(View.GONE);
                 et.setEnabled(false);

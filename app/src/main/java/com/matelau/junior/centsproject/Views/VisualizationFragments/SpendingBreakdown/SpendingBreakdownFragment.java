@@ -186,6 +186,7 @@ public class SpendingBreakdownFragment extends Fragment {
             CentsApplication.loadSB(filename, getActivity());
         }
         else{
+            //load defaults
             if(CentsApplication.get_sbValues() == null){
                 ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","HOUSING", "FOOD", "TRANSPORTATION", "UTILITIES","LOANS","OTHER DEBT", "INSURANCE","SAVINGS","HEALTH","MISC"));
                 //Percents from Wesley - Food 17, Housing 25, Utilities 6, Transportation 12, Healthcare 5, Insurance 8, Student/Credit Debt 12, Savings 10, Misc 5
@@ -225,8 +226,6 @@ public class SpendingBreakdownFragment extends Fragment {
         if(CentsApplication.doesFileExist(filename, getActivity())){
             //loadfile
             CentsApplication.loadSB(filename, getActivity());
-            String s = CentsApplication.get_occupationSalary();
-//            if(s.equ)
         }
         else{
             ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","FOOD","HOUSING","UTILITIES","TRANSPORTATION","TUITION","BOOKS","SAVINGS","MISC"));
@@ -245,8 +244,10 @@ public class SpendingBreakdownFragment extends Fragment {
         if(CentsApplication.doesFileExist(filename, getActivity())){
             //loadfile
             CentsApplication.loadSB(filename, getActivity());
+            Log.d(LOG_TAG, "Loaded default vars from file");
         }
         else{
+            Log.d(LOG_TAG, "Set default vars");
             ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","HOUSING", "FOOD", "TRANSPORTATION", "UTILITIES","LOANS","OTHER DEBT", "INSURANCE","SAVINGS","HEALTH","MISC"));
             //Percents from Wesley - Food 17, Housing 25, Utilities 6, Transportation 12, Healthcare 5, Insurance 8, Student/Credit Debt 12, Savings 10, Misc 5
             ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f));
@@ -286,12 +287,26 @@ public class SpendingBreakdownFragment extends Fragment {
             SpendingBreakdownCategory curr = vals.get(i);
             if(curr._locked == true){
                 Float amt = curr._percent * prevDisposable;
+                Log.d(LOG_TAG, "previous val: "+amt);
                 Float newPercent = amt/currentDisposable;
                 curr._percent = newPercent;
-                Log.d(LOG_TAG, "updated locked val: "+newPercent);
+                //previous val and current value should be equal
+                Log.d(LOG_TAG, "updated locked percent: "+newPercent +" new value: "+ (newPercent * currentDisposable));
             }
         }
 
+        //save updated vals
+        saveVals(vals);
+    }
+
+    /**
+     * sets app sb context to vals and writes file
+      * @param vals
+     */
+    private void saveVals(List<SpendingBreakdownCategory> vals){
+        CentsApplication.set_sbValues(vals);
+        String filename = CentsApplication.get_currentBreakdown()+".dat";
+        CentsApplication.saveSB(filename, getActivity());
     }
 
 
@@ -347,8 +362,7 @@ public class SpendingBreakdownFragment extends Fragment {
             Float disposableIncome = spending_income - taxed_income;
             Log.d(LOG_TAG, "DisposableIncome ="+disposableIncome);
             CentsApplication.set_disposableIncome(disposableIncome);
-            String filename = CentsApplication.get_currentBreakdown()+".dat";
-            CentsApplication.saveSB(filename, getActivity());
+            saveVals(CentsApplication.get_sbValues());
             Log.d(LOG_TAG, "Tax ="+result);
 
         }
@@ -545,7 +559,7 @@ public class SpendingBreakdownFragment extends Fragment {
                     int lastcol = colors[i - 1];
                     // greater than causes more brights less than more darks
                     while((lastcol - colors[i] <= 77)){
-                        Log.d(LOG_TAG, "color collision");
+//                        Log.d(LOG_TAG, "color collision");
                         colors[i] = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
                     }
 
