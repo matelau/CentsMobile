@@ -46,6 +46,7 @@ public class CostOfLivingFragment extends Fragment{
     private static String _location2;
     private ImageButton _search;
     private View _rootView;
+    private final String[] _labels_short = {"Over", "goods", "groc", "health", "housing","trans","util"};
 
     public CostOfLivingFragment() {
         // Required empty public constructor
@@ -141,7 +142,7 @@ public class CostOfLivingFragment extends Fragment{
 
         // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
 //        List<Column> columns = new ArrayList<Column>();
-        String[] labels_short = {"Over", "goods", "groc", "health", "housing","trans","util"};
+
 
         double[] col_vals = listToDblArr(CentsApplication.get_colResponse().getCli1());
         double[] col_vals2 = listToDblArr(CentsApplication.get_colResponse().getCli2());
@@ -192,7 +193,7 @@ public class CostOfLivingFragment extends Fragment{
             column.setHasLabels(hasLabels);
             column.setHasLabelsOnlyForSelected(hasLabelForSelected);
             columns.add(column);
-            axisVals.add(new AxisValue(i,labels_short[i].toUpperCase().toCharArray()));
+            axisVals.add(new AxisValue(i, _labels_short[i].toUpperCase().toCharArray()));
         }
 
         _chartdata = new ColumnChartData(columns);

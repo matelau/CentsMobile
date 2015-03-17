@@ -11,6 +11,13 @@ import java.util.List;
  */
 public class MajorResponse {
 
+    @SerializedName("major_2_name")
+    @Expose
+    private String major2Name;
+    @SerializedName("major_1_name")
+    @Expose
+    private String major1Name;
+
     @SerializedName("jobs_1")
     @Expose
     private List<Object> jobs1 = new ArrayList<Object>();
@@ -25,6 +32,44 @@ public class MajorResponse {
     private List<Float> major2 = new ArrayList<Float>();
     @Expose
     private String operation;
+
+
+    /**
+     *
+     * @return
+     * The major2Name
+     */
+    public String getMajor2Name() {
+        return major2Name;
+    }
+
+    /**
+     *
+     * @param major2Name
+     * The major_2_name
+     */
+    public void setMajor2Name(String major2Name) {
+        this.major2Name = major2Name;
+    }
+
+    /**
+     *
+     * @return
+     * The major1Name
+     */
+    public String getMajor1Name() {
+        return major1Name;
+    }
+
+    /**
+     *
+     * @param major1Name
+     * The major_1_name
+     */
+    public void setMajor1Name(String major1Name) {
+        this.major1Name = major1Name;
+    }
+
 
     /**
      *

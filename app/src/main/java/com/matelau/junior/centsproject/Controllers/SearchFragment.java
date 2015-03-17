@@ -176,12 +176,20 @@ public class SearchFragment extends Fragment {
                     CentsApplication.set_selectedVis("College Comparison");
                 }
                 else if(type.equals("major")){
-                    //todo create major obj and launch viz
+                    //create major obj and launch viz
                     MajorResponse mResponse = gson.fromJson(rsp, MajorResponse.class);
-                    CentsApplication.set_major1("Zoology");
-                    CentsApplication.set_major2("");
-                    CentsApplication.set_mResponse(mResponse);
+                    //update names
+                    if(mResponse.getMajor1Name() != null)
+                        CentsApplication.set_major1(mResponse.getMajor1Name());
+                    else
+                        CentsApplication.set_major1(null);
+                    if(mResponse.getMajor2Name() != null)
+                        CentsApplication.set_major2(mResponse.getMajor2Name());
+                    else
+                        CentsApplication.set_major2(null);
 
+
+                    CentsApplication.set_mResponse(mResponse);
                     CentsApplication.set_selectedVis("Major Comparison");
                 }
                 else if(type.equals("spending")){
