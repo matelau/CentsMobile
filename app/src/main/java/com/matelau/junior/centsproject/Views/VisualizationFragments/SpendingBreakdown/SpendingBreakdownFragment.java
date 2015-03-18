@@ -356,13 +356,14 @@ public class SpendingBreakdownFragment extends Fragment {
             }
             taxed_income += (percents[i]*(spending_income-brackets[i-1]));
             //store results
-            Log.d(LOG_TAG, "TaxedIncome ="+taxed_income);
+
             float result = taxed_income/spending_income;
             CentsApplication.get_sbValues().get(0)._percent = result;
             Float disposableIncome = spending_income - taxed_income;
-            Log.d(LOG_TAG, "DisposableIncome ="+disposableIncome);
             CentsApplication.set_disposableIncome(disposableIncome);
             saveVals(CentsApplication.get_sbValues());
+            Log.d(LOG_TAG, "TaxedIncome ="+taxed_income);
+            Log.d(LOG_TAG, "DisposableIncome ="+disposableIncome);
             Log.d(LOG_TAG, "Tax ="+result);
 
         }
