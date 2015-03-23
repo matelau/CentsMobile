@@ -18,7 +18,7 @@
         <View
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@drawable/ic_action_new"
+            android:background="@drawable/old_plus"
             android:layout_above="@+id/circle"
             android:layout_alignParentTop="true" />
     </FrameLayout>

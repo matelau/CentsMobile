@@ -102,7 +102,7 @@
                     <!--<View-->
                         <!--android:layout_width="30dp"-->
                         <!--android:layout_height="30dp"-->
-                        <!--android:background="@drawable/ic_action_new"-->
+                        <!--android:background="@drawable/old_plus"-->
                         <!--android:layout_above="@+id/circle"-->
                         <!--android:layout_alignParentTop="true" />-->
 
@@ -112,7 +112,7 @@
                 <!--android:layout_height="30dp"-->
                 <!--android:padding="5dp"-->
                 <!--android:id="@+id/plus_icon"-->
-                <!--android:src="@drawable/ic_action_new"-->
+                <!--android:src="@drawable/old_plus"-->
                 <!--android:background="@drawable/circle"-->
                 <!--android:layout_marginLeft="20dp"-->
                 <!--android:layout_centerVertical="true" />-->
