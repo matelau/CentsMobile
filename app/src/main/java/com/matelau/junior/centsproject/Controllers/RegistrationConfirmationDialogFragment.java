@@ -1,4 +1,4 @@
-package com.matelau.junior.centsproject.Controllers.Design;
+package com.matelau.junior.centsproject.Controllers;
 
 
 import android.app.AlertDialog;

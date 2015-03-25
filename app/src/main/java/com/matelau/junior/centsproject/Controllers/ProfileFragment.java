@@ -54,26 +54,26 @@ public class ProfileFragment extends Fragment {
         // Adding child data
         listDataHeader.add("Account Information");
         listDataHeader.add("Recent Searches");
-        listDataHeader.add("Coming Soon..");
+        listDataHeader.add("Preferences");
 
         // Adding child data
         List<String> accountInfo = new ArrayList<String>();
         //TODO pull info from api
-        accountInfo.add("comingSoon");
-        accountInfo.add("Name");
-        accountInfo.add("Email");
-        accountInfo.add("Location");
+        accountInfo.add("User Details");
+//        accountInfo.add("Name");
+//        accountInfo.add("Email");
+//        accountInfo.add("Location");
 
 
         List<String> recentSearches= new ArrayList<String>();
         //TODO pull recent from api
-        recentSearches.add("comingSoon");
-        recentSearches.add("u of u vs byu");
-        recentSearches.add("West Valley City vs Oakland");
+        recentSearches.add("List of recent searches.");
+//        recentSearches.add("u of u vs byu");
+//        recentSearches.add("West Valley City vs Oakland");
 
 
         List<String> comingSoon = new ArrayList<String>();
-        comingSoon.add("comingSoon");
+        comingSoon.add("coming soon");
 
 
         listDataChild.put(listDataHeader.get(0), accountInfo); // Header, Child data

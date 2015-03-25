@@ -264,6 +264,9 @@ public class SearchActivity extends FragmentActivity {
             case 5:
                 showAbout();
                 break;
+            case 6:
+                showHelp();
+                break;
             default:
                 if(CentsApplication.isDebug())
                     Toast.makeText(this, "Selected item:" + pos, Toast.LENGTH_SHORT).show();
@@ -310,6 +313,14 @@ public class SearchActivity extends FragmentActivity {
         ft.replace(R.id.fragment_placeholder, new ProfileFragment());
         ft.addToBackStack("main-search");
         // Execute the changes specified
+        ft.commit();
+    }
+
+    private void showHelp(){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        _toolbar.setTitle("Help");
+        ft.replace(R.id.fragment_placeholder, new HelpFragment());
+        ft.addToBackStack("main-search");
         ft.commit();
     }
 
