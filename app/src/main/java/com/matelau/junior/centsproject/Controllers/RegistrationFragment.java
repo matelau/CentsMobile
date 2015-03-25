@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.matelau.junior.centsproject.Controllers.Design.RegistrationConfirmationDialogFragment;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.RegisterService;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.User;
 import com.matelau.junior.centsproject.R;
@@ -67,6 +69,7 @@ public class RegistrationFragment extends Fragment {
         _confirmPassword = (EditText) _rootLayout.findViewById(R.id.confirm_password);
         _submit = (Button) _rootLayout.findViewById(R.id.register_submit);
         _messages = (TextView) _rootLayout.findViewById(R.id.registration_msg);
+        _messages.setVisibility(View.VISIBLE);
         //TODO add email type to registration
         //on Submit
         _submit.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +79,7 @@ public class RegistrationFragment extends Fragment {
                 String message = validateSubmision();
                 _messages.setText("Registering..");
                 _messages.setTextColor(getResources().getColor(R.color.green));
+                _messages.invalidate();
                 if(message.equals("")){
                     if(CentsApplication.isDebug())
                         Toast.makeText(getActivity(), "Registering - "+_email.getText().toString(), Toast.LENGTH_SHORT).show();
@@ -106,7 +110,7 @@ public class RegistrationFragment extends Fragment {
                         @Override
                         public void failure(RetrofitError error) {
                             Log.e(LOG_TAG, error.getMessage());
-                            //TODO improve registration error message by parsing response body
+                            //set error message by parsing response body
                             BufferedReader reader = null;
                             StringBuilder sb = new StringBuilder();
                             try {
@@ -135,6 +139,7 @@ public class RegistrationFragment extends Fragment {
                 else{
                     _messages.setText(message);
                     _messages.setTextColor(getResources().getColor(R.color.red));
+                    _messages.invalidate();
                 }
             }
         });
@@ -148,7 +153,19 @@ public class RegistrationFragment extends Fragment {
         //update title
         getActivity().getActionBar().setTitle("Cents");
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_placeholder, new SearchFragment()).addToBackStack("registration").commit();
+        showRegistrationEmailNotice();
 
+
+    }
+
+    /**
+     * Loads the Wizard ontop of current view
+     */
+    private void showRegistrationEmailNotice(){
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        RegistrationConfirmationDialogFragment confirmation = new RegistrationConfirmationDialogFragment();
+        confirmation.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
+        confirmation.show(fm, "tag");
     }
 
     /**
