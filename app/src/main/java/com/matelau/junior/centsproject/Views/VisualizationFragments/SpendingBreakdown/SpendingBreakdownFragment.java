@@ -98,24 +98,16 @@ public class SpendingBreakdownFragment extends Fragment {
                         number = false;
 
                 }
-                if(!number){
+                if(!number || value.length() == 0){
+                    //not a debug notice
                     Toast.makeText(getActivity(), "Invalid Number - No special characters", Toast.LENGTH_SHORT).show();
                     s.clear();
+                    //on error set value to zero
+                    s.append("0");
+                    updateIncome(s);
                 }
                 else{
-                        //get previous sal
-                        Float prevDisposable = CentsApplication.get_disposableIncome();
-                        CentsApplication.set_occupationSalary(s.toString());
-                        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
-                        settings.edit().putString("salary", s.toString());
-                        Log.d(LOG_TAG, "put salary: "+s.toString());
-                        //calculate new tax percentage
-                        calculateTaxes(Float.parseFloat(s.toString()));
-                        //todo get locked values and update their percentage based on new values
-                        Float currDisposable = CentsApplication.get_disposableIncome();
-                        updateLockedPercentage(prevDisposable, currDisposable);
-                        //redraw viz
-                        generateData();
+                     updateIncome(s);
 
                 }
 
@@ -173,6 +165,24 @@ public class SpendingBreakdownFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return rootView;
+    }
+
+
+
+    private void updateIncome(Editable s){
+        //get previous sal
+        Float prevDisposable = CentsApplication.get_disposableIncome();
+        CentsApplication.set_occupationSalary(s.toString());
+        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        settings.edit().putString("salary", s.toString());
+        Log.d(LOG_TAG, "put salary: "+s.toString());
+        //calculate new tax percentage
+        calculateTaxes(Float.parseFloat(s.toString()));
+        //get locked values and update their percentage based on new values
+        Float currDisposable = CentsApplication.get_disposableIncome();
+        updateLockedPercentage(prevDisposable, currDisposable);
+        //redraw viz
+        generateData();
     }
 
     /**
