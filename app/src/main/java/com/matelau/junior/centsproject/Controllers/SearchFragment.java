@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -195,18 +196,38 @@ public class SearchFragment extends Fragment {
                     //goto spending breakdown
                     CentsApplication.set_selectedVis("Spending Breakdown");
                 }
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
-                ft.addToBackStack("main-search");
-                ft.commit();
+                switchToVizPager();
+
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Log.e(LOG_TAG, "Query Service Error: "+error.getMessage());
+                showServiceDownNotification();
+                CentsApplication.set_selectedVis("Examples");
+                switchToVizPager();
                 _submitBtn.clearAnimation();
             }
         });
+    }
+
+
+    private void switchToVizPager(){
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+        ft.addToBackStack("main-search");
+        ft.commit();
+    }
+
+
+    /**
+     * Loads the Wizard ontop of current view
+     */
+    private void showServiceDownNotification(){
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        ServiceDownDialogFragment confirmation = new ServiceDownDialogFragment();
+        confirmation.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
+        confirmation.show(fm, "tag");
     }
 
 
