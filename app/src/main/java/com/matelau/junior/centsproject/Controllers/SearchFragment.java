@@ -21,6 +21,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.QueryService;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
@@ -46,7 +48,7 @@ public class SearchFragment extends Fragment {
     private EditText _editText;
     private String _query;
     private RelativeLayout _rootLayout;
-    private   ImageButton _submitBtn;
+    private ImageButton _submitBtn;
     private TextView _feedback;
 
 
@@ -60,6 +62,12 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_search, container, false);
+        AdView mAdView = (AdView) _rootLayout.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        if(CentsApplication.isDebug())
+            adRequest = new AdRequest.Builder().addTestDevice("84B46C4862CAF80187170C1A7901502C").build();
+
+        mAdView.loadAd(adRequest);
 
         ImageButton search_submit = (ImageButton) _rootLayout.findViewById(R.id.search_button);
         _editText = (EditText) _rootLayout.findViewById(R.id.editText1);

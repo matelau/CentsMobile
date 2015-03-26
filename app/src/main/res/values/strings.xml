@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--Ads-->
+    <string name="banner_ad_unit_id">ca-app-pub-2250499064219155/2494653025</string>
+    <string name="listing_ad_unit_id">ca-app-pub-2250499064219155/8761512629</string>
+    <string name="col_banner_ad_unit_id">ca-app-pub-2250499064219155/5668445424</string>
+
     <string name="app_name">Cents</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Search</string>

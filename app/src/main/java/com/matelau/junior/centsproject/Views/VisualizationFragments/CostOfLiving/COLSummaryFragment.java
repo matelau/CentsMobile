@@ -9,11 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.R;
@@ -29,8 +30,6 @@ public class COLSummaryFragment extends Fragment {
     private TextView _city2Title;
     private ListView _citiesSum;
     private SummaryAdapter _citiesAdapter;
-    private ImageView _image1;
-    private ImageView _image2;
     private ImageButton _search;
     private String LOG_TAG = COLSummaryFragment.class.getSimpleName();
 
@@ -50,6 +49,12 @@ public class COLSummaryFragment extends Fragment {
         _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_col_summary, container, false);
         //get MajorResponse
         ColiResponse colResponse = CentsApplication.get_colResponse();
+
+        AdView mAdView = (AdView) _rootLayout.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        if(CentsApplication.isDebug())
+            adRequest = new AdRequest.Builder().addTestDevice("84B46C4862CAF80187170C1A7901502C").build();
+        mAdView.loadAd(adRequest);
 
 
         _city1Title = (TextView) _rootLayout.findViewById(R.id.title1);

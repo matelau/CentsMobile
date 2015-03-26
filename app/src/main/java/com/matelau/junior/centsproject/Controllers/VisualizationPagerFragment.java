@@ -86,9 +86,9 @@ public class VisualizationPagerFragment extends Fragment {
         switch (selectedVis) {
             case "Career Comparison":
                 fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
                 break;
             case "College Comparison":
                 fragments.add(Fragment.instantiate(getActivity(), CollegeComparisonSummary.class.getName()));
@@ -206,7 +206,7 @@ public class VisualizationPagerFragment extends Fragment {
             String[] tabTitles;
             switch (selectedVis) {
                 case "Career Comparison":
-                    tabTitles = new String[]{"Summary", "Salary", "Demand", "Unemployment"};
+                    tabTitles = new String[]{"Summary"};  //, "Salary", "Demand", "Unemployment"};
                     return tabTitles[position];
                 case "College Comparison":
                     tabTitles = new String[]{"Summary"};
