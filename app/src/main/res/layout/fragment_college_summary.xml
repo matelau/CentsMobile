@@ -74,7 +74,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:scrollbars="vertical"
-                    android:id="@+id/college_sum_list"></ListView>
+                    android:id="@+id/college_sum_list"/>
             </android.support.v7.widget.CardView>
         </LinearLayout>
         <RelativeLayout

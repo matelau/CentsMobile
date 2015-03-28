@@ -2,6 +2,7 @@ package com.matelau.junior.centsproject.Views.VisualizationFragments;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -190,10 +191,6 @@ public class SummaryAdapter extends BaseAdapter {
     private void createCollegeSumView(int position, TextView leftVal, TextView rightVal, TextView catTitle){
         List<Double> school1 = _sResponse.getSchool1();
         List<Double> school2 = _sResponse.getSchool2();
-        //hide school2 if no data
-        if(school2.size() == 0){
-            rightVal.setVisibility(View.GONE);
-        }
         //all fields could possibly be null - must check
         //ntl ranking [4]
         if(position == 0){
@@ -325,14 +322,20 @@ public class SummaryAdapter extends BaseAdapter {
                     rightVal.setText("UNKNOWN");
                 }
             }
-
         }
+
+
+        //hide school2 if no data
+        if(school2.size() == 0){
+            rightVal.setVisibility(View.GONE);
+            leftVal.setGravity(Gravity.CENTER_HORIZONTAL);
+        }
+
     }
 
 
     private void createColSumView(int position, TextView leftVal, TextView rightVal, AdView ad, TextView catTitle){
         //get necessary data from col response
-
         //avg cost of living cli_i[0]-100
         if(position == 0){
             ad.setVisibility(View.GONE);
@@ -474,9 +477,6 @@ public class SummaryAdapter extends BaseAdapter {
                     rightVal.setText("Unknown");
 
             }
-            else{
-                rightVal.setVisibility(View.GONE);
-            }
         }
         else if(position == 1){
             catTitle.setText("MAJOR RECOMMENDATION");
@@ -492,9 +492,6 @@ public class SummaryAdapter extends BaseAdapter {
                 else
                     rightVal.setText("Unknown");
             }
-            else{
-                rightVal.setVisibility(View.GONE);
-            }
         }
         else if(position == 2){
             catTitle.setText("MAJOR SATISFACTION");
@@ -509,9 +506,6 @@ public class SummaryAdapter extends BaseAdapter {
                     rightVal.setText(vals2.get(position).intValue()+ " OUT OF 100");
                 else
                     rightVal.setText("Unknown");
-            }
-            else{
-                rightVal.setVisibility(View.GONE);
             }
         }
         else if(position == 3){
@@ -529,9 +523,11 @@ public class SummaryAdapter extends BaseAdapter {
                     rightVal.setText("Unknown");
 
             }
-            else{
-                rightVal.setVisibility(View.GONE);
-            }
+        }
+
+        if(vals2 == null){
+            rightVal.setVisibility(View.GONE);
+            leftVal.setGravity(Gravity.CENTER_HORIZONTAL);
         }
     }
 }

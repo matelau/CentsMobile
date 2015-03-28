@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
 import com.matelau.junior.centsproject.R;
@@ -49,11 +51,17 @@ public class MajorComparisonSummary extends Fragment {
         //get MajorResponse
         MajorResponse mResponse = CentsApplication.get_mResponse();
 
+        AdView mAdView = (AdView) _rootLayout.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        if(CentsApplication.isDebug())
+            adRequest = new AdRequest.Builder().addTestDevice("84B46C4862CAF80187170C1A7901502C").build();
+        mAdView.loadAd(adRequest);
+
         _major1Title = (TextView) _rootLayout.findViewById(R.id.title1);
-        _major1Title.setText(CentsApplication.get_major1());
+        _major1Title.setText(CentsApplication.get_major1().getName());
         _major2Title = (TextView) _rootLayout.findViewById(R.id.title2);
-        String title2 = CentsApplication.get_major2();
-        if(title2 != null){
+        if(CentsApplication.get_major2() != null){
+            String title2 = CentsApplication.get_major2().getName();
             _major2Title.setText(title2);
         }
         else{

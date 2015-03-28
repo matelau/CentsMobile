@@ -26,6 +26,7 @@ import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.MajorService;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.RecordQuery;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.RecordsService;
+import com.matelau.junior.centsproject.Models.VizModels.Major;
 import com.matelau.junior.centsproject.Models.VizModels.MajorQuery;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
 import com.matelau.junior.centsproject.R;
@@ -63,8 +64,8 @@ public class MajorSelectionDialogFragment extends DialogFragment{
     private TextView _instructions;
 
     private boolean isPlus;
-    private String _major1;
-    private String _major2;
+    private Major _major1;
+    private Major _major2;
 
 
     public MajorSelectionDialogFragment() {
@@ -122,7 +123,14 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                     _majorSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            _major2 = _majors[position];
+                            String full_selection = _majors[position];
+                            int first_paren = full_selection.indexOf('(');
+                            _major2 = new Major();
+                            _major2.setName(full_selection.substring(0,first_paren));
+                            //get lvl
+                            String level  = full_selection.substring(first_paren+1, full_selection.length()-1);
+                            _major2.setLevel(level);
+//                            _major2.setOrder(2);
                             Log.d(LOG_TAG, "Selected Major2: "+_major2);
                         }
 
@@ -152,7 +160,7 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                     //create query
                     MajorQuery mQuery = new MajorQuery();
                     mQuery.setOperation("compare");
-                    List<String> majors = new ArrayList<String>();
+                    List<Major> majors = new ArrayList<Major>();
                     majors.add(_major1);
                     CentsApplication.set_major1(_major1);
                     if(_major2 != null){
@@ -225,7 +233,14 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                 _majorSpinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        _major1 = _majors[position];
+                        String full_selection = _majors[position];
+                        int first_paren = full_selection.indexOf('(');
+                        _major1 = new Major();
+                        _major1.setName(full_selection.substring(0,first_paren));
+                        //get lvl
+                        String level  = full_selection.substring(first_paren+1, full_selection.length()-1);
+                        _major1.setLevel(level);
+//                        _major1.setOrder(1);
                         Log.d(LOG_TAG, "Selected major1: "+_major1);
                     }
 

@@ -26,6 +26,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.QueryService;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
+import com.matelau.junior.centsproject.Models.VizModels.Major;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.R;
@@ -187,12 +188,20 @@ public class SearchFragment extends Fragment {
                     //create major obj and launch viz
                     MajorResponse mResponse = gson.fromJson(rsp, MajorResponse.class);
                     //update names
-                    if(mResponse.getMajor1Name() != null)
-                        CentsApplication.set_major1(mResponse.getMajor1Name());
+                    if(mResponse.getMajor1Name() != null){
+                        Major major1 = new Major();
+                        major1.setName( mResponse.getMajor1Name());
+                        CentsApplication.set_major1(major1);
+                    }
+
                     else
                         CentsApplication.set_major1(null);
-                    if(mResponse.getMajor2Name() != null)
-                        CentsApplication.set_major2(mResponse.getMajor2Name());
+                    if(mResponse.getMajor2Name() != null){
+                        Major major2 = new Major();
+                        major2.setName( mResponse.getMajor2Name());
+                        CentsApplication.set_major2(major2);
+                    }
+
                     else
                         CentsApplication.set_major2(null);
 

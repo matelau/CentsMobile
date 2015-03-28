@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.Models.Design.JobInfo;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
+import com.matelau.junior.centsproject.Models.VizModels.Major;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SpendingBreakdownCategory;
@@ -66,7 +67,7 @@ public class CentsApplication extends Application{
     private static List<Col> _cols;
 
     //debug true = show toast, set login credentials
-    private static boolean debug = true;
+    private static boolean debug = false;
 
     //Spending Breakdown Vis
     private static String _occupationSalary = "45000";
@@ -91,8 +92,8 @@ public class CentsApplication extends Application{
 
     //Major Comp Vars
     private static MajorResponse _mResponse;
-    private static String _major1;
-    private static String _major2;
+    private static Major _major1;
+    private static Major _major2;
 
     public static Context getAppContext() {return _centsContext;}
 
@@ -362,19 +363,19 @@ public class CentsApplication extends Application{
         CentsApplication._mResponse = _mResponse;
     }
 
-    public static String get_major1() {
+    public static Major get_major1() {
         return _major1;
     }
 
-    public static void set_major1(String _major1) {
+    public static void set_major1(Major _major1) {
         CentsApplication._major1 = _major1;
     }
 
-    public static String get_major2() {
+    public static Major get_major2() {
         return _major2;
     }
 
-    public static void set_major2(String _major2) {
+    public static void set_major2(Major _major2) {
         CentsApplication._major2 = _major2;
     }
 
