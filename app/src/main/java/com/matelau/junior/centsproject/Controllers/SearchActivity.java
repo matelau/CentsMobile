@@ -82,11 +82,8 @@ public class SearchActivity extends FragmentActivity {
         }
 
         //Attach Search Fragment
-        // Begin the transaction
-       FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        // Replace the container with the new fragment
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_placeholder, new SearchFragment());
-        // Execute the changes specified
         ft.commit();
     }
 
@@ -172,8 +169,6 @@ public class SearchActivity extends FragmentActivity {
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -269,6 +264,9 @@ public class SearchActivity extends FragmentActivity {
             case 5:
                 showAbout();
                 break;
+            case 6:
+                showHelp();
+                break;
             default:
                 if(CentsApplication.isDebug())
                     Toast.makeText(this, "Selected item:" + pos, Toast.LENGTH_SHORT).show();
@@ -283,6 +281,7 @@ public class SearchActivity extends FragmentActivity {
         SharedPreferences preferences = this.getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
         preferences.edit().clear().commit();
         CentsApplication.set_loggedIN(false);
+        CentsApplication.deleteSB(this);
         Log.d(LOG_TAG, "Logged out");
         if(CentsApplication.isDebug())
             Toast.makeText(this, "Logged Out", Toast.LENGTH_SHORT).show();
@@ -291,7 +290,7 @@ public class SearchActivity extends FragmentActivity {
 
     @Override
     protected void onResume() {
-        //TODO check if user is logged in or not modify nav drawer accordingly
+        //check if user is logged in or not modify nav drawer accordingly
         loginStatus();
         configureDrawer(CentsApplication.is_loggedIN());
         super.onResume();
@@ -312,7 +311,16 @@ public class SearchActivity extends FragmentActivity {
         _toolbar.setTitle("Profile");
         // Replace the container with the new fragment
         ft.replace(R.id.fragment_placeholder, new ProfileFragment());
+        ft.addToBackStack("main-search");
         // Execute the changes specified
+        ft.commit();
+    }
+
+    private void showHelp(){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        _toolbar.setTitle("Help");
+        ft.replace(R.id.fragment_placeholder, new HelpFragment());
+        ft.addToBackStack("main-search");
         ft.commit();
     }
 
@@ -333,6 +341,7 @@ public class SearchActivity extends FragmentActivity {
         //Attach Search Fragment
         // Replace the container with the new fragment
         ft.replace(R.id.fragment_placeholder, new SearchFragment());
+        ft.addToBackStack("main-search");
         // Execute the changes specified
         ft.commit();
     }
@@ -344,6 +353,7 @@ public class SearchActivity extends FragmentActivity {
         CentsApplication.set_selectedVis("Examples");
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+        ft.addToBackStack("main-search");
         ft.commit();
     }
 
@@ -357,6 +367,7 @@ public class SearchActivity extends FragmentActivity {
         // Replace the container with the new fragment
         ft.replace(R.id.fragment_placeholder, new RegistrationFragment());
         // Execute the changes specified
+        ft.addToBackStack("main-search");
         ft.commit();
     }
 
@@ -368,6 +379,7 @@ public class SearchActivity extends FragmentActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         _toolbar.setTitle("About");
         ft.replace(R.id.fragment_placeholder, new AboutFragment());
+        ft.addToBackStack("main-search");
         ft.commit();
 
     }

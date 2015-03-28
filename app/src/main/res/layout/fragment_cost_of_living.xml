@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.matelau.junior.centsproject.Controllers.Design.CostOfLivingFragment">
+    tools:context="com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.CostOfLivingFragment">
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -48,7 +48,7 @@
                 android:layout_centerHorizontal="true"/>
             <ImageView
                 android:layout_width="150dp"
-                android:layout_height="4dp"
+                android:layout_height="6dp"
                 android:background="@drawable/compliment_rectangle"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true" />
@@ -70,7 +70,7 @@
                     android:layout_centerHorizontal="true"/>
                 <ImageView
                     android:layout_width="150dp"
-                    android:layout_height="4dp"
+                    android:layout_height="6dp"
                     android:background="@drawable/grey_rectangle"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true" />
@@ -87,16 +87,24 @@
                     android:layout_marginLeft="50dp"
                     android:id="@+id/plus_icon">
                     <ImageButton
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/circle"
-                        android:id="@+id/circle"/>
-                    <View
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/ic_action_new"
-                        android:layout_above="@+id/circle"
-                        android:layout_alignParentTop="true" />
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:background="@drawable/search_orange"
+                        android:layout_marginEnd="15dp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentEnd="true"
+                        android:id="@+id/imageSearchButton" />
+                    <!--<ImageButton-->
+                        <!--android:layout_width="30dp"-->
+                        <!--android:layout_height="30dp"-->
+                        <!--android:background="@drawable/circle"-->
+                        <!--android:id="@+id/circle"/>-->
+                    <!--<View-->
+                        <!--android:layout_width="30dp"-->
+                        <!--android:layout_height="30dp"-->
+                        <!--android:background="@drawable/old_plus"-->
+                        <!--android:layout_above="@+id/circle"-->
+                        <!--android:layout_alignParentTop="true" />-->
 
                 </FrameLayout>
             <!--<ImageButton-->
@@ -104,7 +112,7 @@
                 <!--android:layout_height="30dp"-->
                 <!--android:padding="5dp"-->
                 <!--android:id="@+id/plus_icon"-->
-                <!--android:src="@drawable/ic_action_new"-->
+                <!--android:src="@drawable/old_plus"-->
                 <!--android:background="@drawable/circle"-->
                 <!--android:layout_marginLeft="20dp"-->
                 <!--android:layout_centerVertical="true" />-->

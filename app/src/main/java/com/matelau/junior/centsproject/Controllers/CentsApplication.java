@@ -2,10 +2,29 @@ package com.matelau.junior.centsproject.Controllers;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.Models.Design.JobInfo;
+import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
+import com.matelau.junior.centsproject.Models.VizModels.Major;
+import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
+import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
+import com.matelau.junior.centsproject.Models.VizModels.SpendingBreakdownCategory;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownModDialogFragment;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.Collection;
 import java.util.List;
 
 import retrofit.RestAdapter;
@@ -15,20 +34,22 @@ import retrofit.RestAdapter;
  * Maintains Central state of the application
  */
 public class CentsApplication extends Application{
+    private static String LOG_TAG = CentsApplication.class.getSimpleName();
     private static Context _centsContext;
     //Api Services
     private static RestAdapter _gdRestAdapter = new RestAdapter.Builder().setEndpoint("https://api.glassdoor.com/").build();
     private static RestAdapter _indeedRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("http://api.indeed.com").build();
     //Note self signed cert is still being used by the query parser
-    private static RestAdapter _queryParsingRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("http://trycents.com:6001/").build();
+    private static RestAdapter _queryParsingRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("https://trycents.com:6001/").build();
     private static RestAdapter _centsRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("https://trycents.com").build(); //.setClient(new OkClient(getUnsafeOkHttpClient()))
+
     //Current Selections Vars
     private static String _searchedCity;
-    private static String _searchState;
     private static String _searchedCity2;
     private static String _searchState2;
+    private static String _searchState;
     private static String _searchedOccupation;
-    private static String _occupationSalary;
+
     //maintaining ui vars
     private static int _citySpinPos;
     private static int _stateSpinPos;
@@ -46,8 +67,33 @@ public class CentsApplication extends Application{
     private static List<Col> _cols;
 
     //debug true = show toast, set login credentials
-    private static boolean debug = true;
+    private static boolean debug = false;
 
+    //Spending Breakdown Vis
+    private static String _occupationSalary = "45000";
+    private static Float _disposableIncome;
+    private static List<String> _sbLabels;
+    private static List<Float> _sbPercents;
+    private static List<SpendingBreakdownCategory> _sbValues;
+    private static int[] _colors;
+    private static ViewPager _viewPager;
+    private static SpendingBreakdownModDialogFragment.SBArrayAdapter _rAdapter;
+    private static String _currentBreakdown = "default";
+    private static boolean _sbToast = false;
+
+    //Cost of Living Vis
+    private static ColiResponse _colResponse;
+
+    //School Comp vars
+    //response from api
+    private static SchoolResponse _sApiResponse;
+    private static String _university1;
+    private static String _university2;
+
+    //Major Comp Vars
+    private static MajorResponse _mResponse;
+    private static Major _major1;
+    private static Major _major2;
 
     public static Context getAppContext() {return _centsContext;}
 
@@ -115,6 +161,14 @@ public class CentsApplication extends Application{
 
     public static void set_occupationSalary(String _occupationSalary) {
         CentsApplication._occupationSalary = _occupationSalary;
+    }
+
+    public static Float get_disposableIncome() {
+        return _disposableIncome;
+    }
+
+    public static void set_disposableIncome(Float _disposableIncome) {
+        CentsApplication._disposableIncome = _disposableIncome;
     }
 
     public static String[] get_states() {
@@ -202,7 +256,255 @@ public class CentsApplication extends Application{
         CentsApplication._user = _user;
     }
 
-    //    private static OkHttpClient getTrustingClient(){
+    public static List<String> get_sbLabels() {
+        return _sbLabels;
+    }
+
+    public static void set_sbLabels(List<String> labels) {
+        _sbLabels = labels;
+    }
+
+    public static List<Float> get_sbPercents() {
+        return _sbPercents;
+    }
+
+    public static void set_sbPercents(List<Float> percents) {
+        _sbPercents = percents;
+    }
+
+    public static List<SpendingBreakdownCategory> get_sbValues() {
+        return _sbValues;
+    }
+
+    public static void set_sbValues(List<SpendingBreakdownCategory> _sbValues) {
+        CentsApplication._sbValues = _sbValues;
+    }
+
+    public static int[] get_colors() {
+        return _colors;
+    }
+
+    public static void set_colors(int[] _colors) {
+        CentsApplication._colors = _colors;
+    }
+
+    public static ViewPager get_viewPager() {
+        return _viewPager;
+    }
+
+    public static void set_viewPager(ViewPager _viewPager) {
+        CentsApplication._viewPager = _viewPager;
+    }
+
+
+    public static SpendingBreakdownModDialogFragment.SBArrayAdapter get_rAdapter() {
+        return _rAdapter;
+    }
+
+    public static void set_rAdapter(SpendingBreakdownModDialogFragment.SBArrayAdapter _rAdapter) {
+        CentsApplication._rAdapter = _rAdapter;
+    }
+
+    public static String get_currentBreakdown() {
+        return _currentBreakdown;
+    }
+
+    public static void set_currentBreakdown(String _currentBreakdown) {
+        CentsApplication._currentBreakdown = _currentBreakdown;
+    }
+
+    public static boolean is_sbToast() {
+        return _sbToast;
+    }
+
+    public static void set_sbToast(boolean _sbToast) {
+        CentsApplication._sbToast = _sbToast;
+    }
+
+
+
+    public static ColiResponse get_colResponse() {
+        return _colResponse;
+    }
+
+    public static void set_colResponse(ColiResponse _colResponse) {
+        CentsApplication._colResponse = _colResponse;
+    }
+
+    public static SchoolResponse get_sApiResponse() {
+        return _sApiResponse;
+    }
+
+    public static void set_sApiResponse(SchoolResponse _sApiResponse) {
+        CentsApplication._sApiResponse = _sApiResponse;
+    }
+
+    public static String get_university1() {
+        return _university1;
+    }
+
+    public static void set_university1(String _university1) {
+        CentsApplication._university1 = _university1;
+    }
+
+    public static String get_university2() {
+        return _university2;
+    }
+
+    public static void set_university2(String _university2) {
+        CentsApplication._university2 = _university2;
+    }
+
+    public static MajorResponse get_mResponse() {
+        return _mResponse;
+    }
+
+    public static void set_mResponse(MajorResponse _mResponse) {
+        CentsApplication._mResponse = _mResponse;
+    }
+
+    public static Major get_major1() {
+        return _major1;
+    }
+
+    public static void set_major1(Major _major1) {
+        CentsApplication._major1 = _major1;
+    }
+
+    public static Major get_major2() {
+        return _major2;
+    }
+
+    public static void set_major2(Major _major2) {
+        CentsApplication._major2 = _major2;
+    }
+
+    /************************** Static Helper Methods ***********************************************************/
+
+    /**
+     * Given a string f - representing a float dollar amount of monthly expenses returns a number between 0-1 representing the amt of a monthly salary
+     * f consumes
+     * @param f
+     * @return
+     */
+    public static Float convDollarToPercent(String f, boolean tax) {
+        Float amt = 0.0f;
+        try{
+            amt = Float.parseFloat(f);
+            Float monthlySalary = _disposableIncome/12f;
+            if(tax){
+                monthlySalary = Float.parseFloat(_occupationSalary)/12f;
+            }
+            amt = (amt/monthlySalary);
+            //only show two decimal places in values
+        }
+        catch(NumberFormatException e){
+            e.printStackTrace();
+        }
+        return amt;
+    }
+
+
+    public static String convPercentToDollar(Float p, boolean tax){
+        Float percent = p;
+        Float monthlySalary = _disposableIncome/12f;
+        if(tax){
+            monthlySalary = Float.parseFloat(_occupationSalary);
+            percent = (percent * monthlySalary)/12f;
+        }
+        else{
+            percent = (percent * monthlySalary);
+        }
+
+        //only show two decimal places in values
+        DecimalFormat df = new DecimalFormat("##.##");
+        df.setRoundingMode(RoundingMode.HALF_DOWN);
+        return df.format(percent);
+    }
+
+
+    /**
+     * Loads SpendingBreakdown file based on filename
+     * @param filename
+     * @param context
+     */
+    public static void loadSB(String filename, Context context){
+        try{
+            Log.d(LOG_TAG, "loading: "+filename);
+            Type tp = new TypeToken<Collection<SpendingBreakdownCategory>>(){}.getType();
+            FileInputStream fis = context.openFileInput(filename);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while((line = br.readLine()) != null){
+                sb.append(line);
+            }
+
+            String json = sb.toString();
+            Log.d("Load", json);
+            Gson gson = new Gson();
+            _sbValues = gson.fromJson(json, tp);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Saves sb values
+     * @param filename
+     * @param context
+     */
+    public static void saveSB(String filename, Context context){
+        Log.d(LOG_TAG, "saving: "+filename);
+        Type tp = new TypeToken<Collection<SpendingBreakdownCategory>>(){}.getType();
+        Gson gson = new Gson();
+        String s = gson.toJson(_sbValues, tp);
+        Log.i("Save", s);
+        FileOutputStream outputStream;
+        try{
+            outputStream = context.openFileOutput(filename, MODE_PRIVATE);
+            outputStream.write(s.getBytes());
+            outputStream.close();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Deletes files associated with spending breakdown and values
+     * @param context
+     */
+    public static void deleteSB(Context context){
+        _occupationSalary = "45000";
+        _disposableIncome = null;
+        _sbValues = null;
+        String[] filenames = new String[]{"default.dat","custom.dat", "student.dat"};
+        for(String file: filenames){
+            context.deleteFile(file);
+            Log.d(LOG_TAG, "deleted: "+file);
+        }
+
+    }
+
+    /**
+     * Checks if FileExists
+     * @param filename
+     * @param context
+     * @return
+     */
+    public static boolean doesFileExist(String filename, Context context){
+        File file = context.getFileStreamPath(filename);
+        if(file == null || !file.exists()) {
+            return false;
+        }
+        return true;
+    }
+
+//    private static OkHttpClient getTrustingClient(){
 //        SelfSignedSSLSocketFactory sf;
 //        OkHttpClient client = new OkHttpClient();
 //        try {

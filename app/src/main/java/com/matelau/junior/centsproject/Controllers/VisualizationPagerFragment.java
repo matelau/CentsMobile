@@ -13,11 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.matelau.junior.centsproject.Controllers.Design.CostOfLivingFragment;
-import com.matelau.junior.centsproject.Controllers.Design.SpendingBreakdownFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.CostOfLivingFragment;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.CareerComparisonSummaryFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.CareerIntroFragment;
@@ -25,10 +23,14 @@ import com.matelau.junior.centsproject.Views.VisualizationFragments.College.Coll
 import com.matelau.junior.centsproject.Views.VisualizationFragments.College.CollegeIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLSummaryFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.LaborStatsFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.OtherColFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.TaxesFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.WeatherFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.MajorComparisonSummary;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.MajorIntroFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownIntroFragment;
-import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdownSummaryFragment;
 
 import java.util.List;
 import java.util.Vector;
@@ -53,6 +55,7 @@ public class VisualizationPagerFragment extends Fragment {
         _rootlayout = (RelativeLayout) inflater.inflate(R.layout.fragment_visualization_pager2, container, false);
         _viewPager = new ViewPager(getActivity());
         _viewPager = (ViewPager) _rootlayout.findViewById(R.id.viewPager);
+        CentsApplication.set_viewPager(_viewPager);
         //set adapter
         initialisePaging();
         //bind sliding tabs
@@ -70,45 +73,50 @@ public class VisualizationPagerFragment extends Fragment {
         String selectedVis = CentsApplication.get_selectedVis();
 //        String title = selectedVis.replace("Comparison", " Comparison");
         getActivity().getActionBar().setTitle(selectedVis);
-        Log.d(LOG_TAG, "InitialisePaging - SelectedVis: " + selectedVis);
+//        Log.d(LOG_TAG, "InitialisePaging - SelectedVis: " + selectedVis);
         if(CentsApplication.isDebug())
-            Toast.makeText(getActivity(), "Loading Vis: " + selectedVis, Toast.LENGTH_SHORT).show();
-        //TODO load fragments based on user selections
-        //TODO update proper tabs once created
+//            Toast.makeText(getActivity(), "Loading Vis: " + selectedVis, Toast.LENGTH_SHORT).show();
+        //load fragments based on user selections
+        if(selectedVis == null){
+            //return to examples
+            CentsApplication.set_selectedVis("Examples");
+            selectedVis = "Examples";
+        }
+
         switch (selectedVis) {
             case "Career Comparison":
                 fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
                 break;
             case "College Comparison":
                 fragments.add(Fragment.instantiate(getActivity(), CollegeComparisonSummary.class.getName()));
                 break;
             case "Major Comparison":
                 fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
                 break;
             case "COL Comparison":
-                getActivity().getActionBar().setTitle("Cost of Living Comparison");
+                getActivity().getActionBar().setTitle("City Comparison");
                 fragments.add(Fragment.instantiate(getActivity(), COLSummaryFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), CostOfLivingFragment.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), COLSummaryFragment.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), COLSummaryFragment.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), COLSummaryFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), LaborStatsFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), TaxesFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), OtherColFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), WeatherFragment.class.getName()));
                 break;
             case "Spending Breakdown":
                 fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownFragment.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownSummaryFragment.class.getName()));
+//                fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownModDialogFragment.class.getName()));
                 break;
             default:
-                //TODO switch to examples fragments
-//                getActivity().getActionBar().setTitle("Examples");
+                //load examples fragments
                 fragments.add(Fragment.instantiate(getActivity(), COLIntroFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownIntroFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), CollegeIntroFragment.class.getName()));
@@ -119,9 +127,8 @@ public class VisualizationPagerFragment extends Fragment {
         //set fragments
         _pageAdapter = new PageAdapter(getActivity().getSupportFragmentManager(), fragments);
         _viewPager.setAdapter(_pageAdapter);
+        CentsApplication.set_viewPager(_viewPager);
         //For Alpha I want to default to view with the viz TODO modify after alpha
-        if(selectedVis.equals("COL Comparison"))
-            _viewPager.setCurrentItem(1);
         //This line is required so the viewPager does not destroy pages when they are removed from the screen
         //if there are more tabs created this number will need to increase
         _viewPager.setOffscreenPageLimit(5);
@@ -199,19 +206,19 @@ public class VisualizationPagerFragment extends Fragment {
             String[] tabTitles;
             switch (selectedVis) {
                 case "Career Comparison":
-                    tabTitles = new String[]{"Summary", "Salary", "Demand", "Unemployment"};
+                    tabTitles = new String[]{"Summary"};  //, "Salary", "Demand", "Unemployment"};
                     return tabTitles[position];
                 case "College Comparison":
                     tabTitles = new String[]{"Summary"};
                     return tabTitles[position];
                 case "Major Comparison":
-                    tabTitles = new String[]{"Summary", "Salary","Job Satisfaction", "Graduation Rate", "Demand", "Unemployment", "Top Jobs"};
+                    tabTitles = new String[]{"Summary"}; //, "Salary","Job Satisfaction", "Graduation Rate", "Demand", "Unemployment", "Top Jobs"};
                     return tabTitles[position];
                 case "COL Comparison":
-                    tabTitles = new String[]{"Summary", "Cost of Living", "Labor Stats","Taxes", "Weather"};
+                    tabTitles = new String[]{"Summary", "Cost of Living", "Labor Stats","Taxes","Other", "Weather"};
                     return tabTitles[position];
                 case "Spending Breakdown":
-                    tabTitles = new String[]{"Breakdown", "Summary"};
+                    tabTitles = new String[]{"Visualization"};
                     return tabTitles[position];
                 default:
                     tabTitles = new String[]{"City Comparison","Spending Breakdown", "College Comparison","Career Comparison", "Major Comparison"};

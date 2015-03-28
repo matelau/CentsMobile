@@ -3,16 +3,13 @@ package com.matelau.junior.centsproject.Views.VisualizationFragments.Major;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
-import com.matelau.junior.centsproject.Controllers.CentsApplication;
-import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
 import com.matelau.junior.centsproject.R;
 
 /**
@@ -39,16 +36,19 @@ public class MajorIntroFragment extends Fragment {
         _begin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(LOG_TAG, "onClick Switch to ViewPager");
-                CentsApplication.set_selectedVis("Major Comparison");
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
-                ft.commit();
+                showMajorSelectionDialog();
             }
         });
         //TODO begin major selection Dialog
 
         return _rootLayout;
+    }
+
+    private void showMajorSelectionDialog(){
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        MajorSelectionDialogFragment msd = new MajorSelectionDialogFragment();
+        msd.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
+        msd.show(fm, "tag");
     }
 
 

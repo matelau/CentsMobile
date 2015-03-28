@@ -42,7 +42,7 @@ public class CareerIntroFragment extends Fragment {
                 Log.d(LOG_TAG, "onClick Switch to ViewPager");
                 CentsApplication.set_selectedVis("Career Comparison");
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+                ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment()).addToBackStack(null);
                 ft.commit();
             }
         });

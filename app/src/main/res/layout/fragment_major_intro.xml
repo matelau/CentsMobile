@@ -23,12 +23,18 @@
                         android:layout_height="fill_parent"
                         android:orientation="vertical"
                         android:weightSum="4">
+                        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            card_view:cardBackgroundColor="@color/white"
+                            android:elevation="20dp"
+                            android:layout_margin="5dp"
+                            android:layout_weight="2">
                         <ImageView
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:layout_margin="10dp"
-                            android:background="@drawable/major_example"
-                            android:layout_weight="1.5" />
+                            android:background="@drawable/major_compare" />
+                        </android.support.v7.widget.CardView>
                         <TextView android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
                             android:gravity="center"
@@ -37,7 +43,8 @@
                             android:text="@string/major_explanation"
                             android:padding="5dp"
                             android:layout_weight="2"
-                            android:layout_marginBottom="45dp" />
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="15dp" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
                 <Button

@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.matelau.junior.centsproject.Controllers.Design.CostOfLivingFragment">
+    tools:context="com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.CostOfLivingFragment">
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -9,6 +9,7 @@
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/primary"
         card_view:cardCornerRadius="4dp"
         android:layout_margin="5dp"
         android:elevation="30dp"
@@ -24,57 +25,79 @@
             android:layout_alignParentTop="true"
             android:layout_height="fill_parent"
             android:layout_width="fill_parent"
-            android:layout_weight="1"></include>
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/spending_desc"
-            android:text="Loading"
-            android:textColor="@android:color/black"
-            android:textSize="18dp"
-            android:gravity="center"
-            android:layout_centerHorizontal="true"
-            android:layout_weight="9"/>
-            <ImageView
-                android:layout_width="150dp"
-                android:layout_height="4dp"
-                android:background="@drawable/primary_rectangle"
-                android:layout_gravity="center_horizontal" />
-
+            android:layout_weight="2"></include>
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="8">
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:id="@+id/button_row"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/nav_ripple"
+                        android:textColor="@color/text_primary"
+                        android:id="@+id/default_btn"
+                        android:layout_margin="5dp"
+                        android:text="Default"
+                        android:layout_weight="1"/>
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/nav_ripple"
+                        android:textColor="@color/text_primary"
+                        android:id="@+id/student_btn"
+                        android:layout_margin="5dp"
+                        android:text="Student"
+                        android:layout_weight="1"/>
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/nav_ripple"
+                        android:textColor="@color/text_primary"
+                        android:id="@+id/custom_btn"
+                        android:layout_margin="5dp"
+                        android:text="Custom"
+                        android:layout_weight="1"/>
+                </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_below="@+id/button_row">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:id="@+id/income_txt"
+                    android:text="Annual Income: $"
+                    android:textColor="@color/primary"
+                    android:layout_marginTop="15dp"
+                    android:textSize="18sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_gravity="center_vertical"/>
+                <include
+                    android:layout_height="50dp"
+                    android:layout_width="110dp"
+                    android:id="@+id/income"
+                    layout="@layout/numeric_field"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toEndOf="@+id/income_txt">
+                </include>
+                <ImageButton
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/search_orange"
+                    android:layout_marginEnd="15dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/imageSearchButton" />
+                </RelativeLayout>
+             </RelativeLayout>
         </LinearLayout>
-
-
     </android.support.v7.widget.CardView>
-
-
-
-
-    <!--<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"-->
-        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-        <!--android:id="@+id/occ_card"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:layout_width="200dp"-->
-        <!--android:layout_height="120dp"-->
-        <!--android:layout_marginRight="10dp"-->
-        <!--android:layout_marginLeft="10dp"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_below="@+id/spending_card_view"-->
-        <!--card_view:cardCornerRadius="4dp"-->
-        <!--android:layout_margin="5dp"-->
-        <!--android:elevation="50dp">-->
-    <!--<TextView-->
-        <!--android:id="@+id/sd_occ"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:textColor="@android:color/black"-->
-        <!--android:text="test"-->
-        <!--android:textSize="18dp"-->
-        <!--android:gravity="center"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_centerHorizontal="true">-->
-
-    <!--</TextView> </android.support.v7.widget.CardView>-->
 
 </RelativeLayout>

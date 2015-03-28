@@ -9,6 +9,8 @@ import android.view.MenuItem;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.R;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.CostOfLivingFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownFragment;
 
 public class TabHostActivity extends FragmentActivity {
     private FragmentTabHost _tabHost;

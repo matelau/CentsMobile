@@ -82,7 +82,7 @@ public class LoginDialogFragment extends DialogFragment {
         _errorMsg = (TextView) _rootLayout.findViewById(R.id.login_error);
 
         builder.setView(_rootLayout);
-//        builder.setCancelable(true);
+        builder.setCancelable(true);
         return builder.create();
     }
 

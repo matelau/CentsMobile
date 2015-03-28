@@ -28,7 +28,7 @@
         android:text="@string/city_text_view"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@android:color/black"
-        android:id="@+id/cityTextView"
+        android:id="@+id/optionTextView1"
         android:layout_gravity="center"/>
 
 

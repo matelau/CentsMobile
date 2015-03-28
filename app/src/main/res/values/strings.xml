@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--Ads-->
+    <string name="banner_ad_unit_id">ca-app-pub-2250499064219155/2494653025</string>
+    <string name="listing_ad_unit_id">ca-app-pub-2250499064219155/8761512629</string>
+    <string name="col_banner_ad_unit_id">ca-app-pub-2250499064219155/5668445424</string>
+
     <string name="app_name">Cents</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Search</string>
@@ -21,10 +26,10 @@
     <string name="col_explanation">Considering moving to a different location or do you want to know how your current city compares? Get cost of living information, tax information, average weather breakdown by month, and labor statistics for a specific city or compare two. </string>
     <string name="about">Cents is a financial decision engine; a way to help potential and current college students realize the impact of their educational and vocational choices. Cents has been built by acquiring information from prospective users, current academic advisors, and the best data sources on the Internet, which come together in a complete package to make it an easy-to-navigate and always accessible career guidance counselor.  Cents provides information, in a very intuitive way, that will allow users to prepare for their education, understand their career options, and visualize their future expenses.</string>
     <string name="spending_explanation">Want to compare your spending to the spending trends of others or do you want to setup a monthly budget? Create a spending breakdown that matches your needs here. </string>
-    <!--<string name="college_explanation">Researching potential schools? or do you want to see how your school stacks up? Compare tuition rates, undergrad enrollment rates and the school's graduation rate. </string>-->
     <string name="college_explanation">Researching potential schools, or do you want to see how your school stacks up? Compare tuition rates, undergrad enrollment rates and the school\'s graduation rate.</string>
     <string name="career_explanation">Want to see the job outlook for a career you are considering? Check in to see what your prospective careers have to offer in terms of salary, demand, and unemployment.</string>
-    <string name="major_explanation">Compare potential majors based on potential salaries, recommendations and satisfaction</string>
+    <string name="major_explanation">Curious to see what the top jobs are for what you are studying? or want to compare potential majors based on potential salaries, recommendations and satisfaction?</string>
+    <string name="cents_user_rating">Cents User Rating</string>
     <string-array name="nav_array_logged_out">
         <item>Home</item>
         <item>Login</item>
@@ -32,6 +37,7 @@
         <item>Example</item>
         <item>Wizard</item>
         <item>About</item>
+        <item>Help</item>
     </string-array>
 
     <string-array name="nav_array_logged_in">
@@ -41,8 +47,92 @@
         <item>Example</item>
         <item>Wizard</item>
         <item>About</item>
+        <item>Help</item>
+    </string-array>
+    <string-array name="help_elements">
+        <item>Cents is focused around finding and comparing statistics for majors, universities, careers and cities. Our database contains over #### cities, #### majors, #### universities and #### careers. We also provide a tool to analyze how an annual income will be divided each month between certain standard categories. Each search category can be seen with a brief explantion on the examples page.</item>
+        <item>Cents is built around getting results quickly. To best achieve this please the limit the complexity of your searches. If you want to compare two school, enter something along these lines: "Stanford vs. MIT". All other searches are structured the same way (City 1 vs City 2). One term may also be entered for each search if a comparison is not needed. All searches can be made easily from the examples page, where auto complete can assist with search terms.</item>
+        <item>Cents will automatically redirect to the examples page if the search is not recognized successfully. There all categories displayed with auto fill capabilites to allow a more guided search for the user. If you still feel like we are missing something big, feel free to contact us.</item>
+        <item>We pull our data from the Bureau of Labor Statistics to satisfy our data reliability requirements. Not all careers are available, but many times, a broader career can be found. Our examples page has auto complete functionality that we hope will help guide you towards successful results.</item>
+        <item>Right now our database contains over #### cities, so there are some smaller cities that are not available. We suggest searching for a larger nearby city that can give some insight into the smaller surrounding cities. To check out all cities that we have right now, go to the examples page.</item>
+        <item>Right now our database contains over #### universities, so there are some smaller universities that are not available. We are always seeking out reliable data for the smaller universities, so come back and check soon. To check out all universities that we have right now, go to the examples page.</item>
+        <item>Each school seems to name a major differently, so we have gone through and decided upon a standard to make data storage and retrieval much faster. We realize that our name may differ from many schools and so we have implemented an auto complete feature on the examples page to help.</item>
     </string-array>
 
+    <string-array name="about_elements">
+        <item>The Cents idea is to help prepare potential and current college students face the realities of their educational choices. There are a lot of graduates that have entered the workforce with a large amount of debt and without the prospect of jobs to allow them to pay off that debt. Cents will provide users information, in a very intuitive way, that will allow students to see the impact of their educational choices and what the future statistically holds.</item>
+        <item>We have strict requirements for our data. To meet these standards we rely heavily on data released publicly by reputable organizations. Thus, most data comes from government sources. We also have some crowd sourced data, the cents user ratings, which rely upon you, the user.</item>
+        <item>Our cents job rating is a derived statistic based off of current and projected values provided by the Bureau of Labor Statistics. Each value is given a weight and scaled to reflect a rating from 0 to 5. User ratings are crowd sourced, meaning our users are able to give their input. Users can vote only vote once, and all votes are weighted equally.</item>
+        <item>We are four students finishing our bachelors degree in computer science and the University of Utah. We saw a need for a tool like this and have been working hard ever since. We love feedback, tell us what we are doing good, need to improve, or anything else you can think of. Thanks for visiting!</item>
+    </string-array>
+
+    <string-array name="states_array">
+        <item>Select State</item>
+        <item>Alabama</item>
+        <item>Alaska</item>
+        <item>Arizona</item>
+        <item>Arkansas</item>
+        <item>California</item>
+        <item>Colorado</item>
+        <item>Connecticut</item>
+        <item>Delaware</item>
+        <item>Florida</item>
+        <item>Georgia</item>
+        <item>Hawaii</item>
+        <item>Idaho</item>
+        <item>Illinois</item>
+        <item>Indiana</item>
+        <item>Iowa</item>
+        <item>Kansas</item>
+        <item>Kentucky</item>
+        <item>Louisiana</item>
+        <item>Maine</item>
+        <item>Maryland</item>
+        <item>Massachusetts</item>
+        <item>Michigan</item>
+        <item>Minnesota</item>
+        <item>Mississippi</item>
+        <item>Missouri</item>
+        <item>Montana</item>
+        <item>Nebraska</item>
+        <item>Nevada</item>
+        <item>New Hampshire</item>
+        <item>New Jersey</item>
+        <item>New Mexico</item>
+        <item>New York</item>
+        <item>North Carolina</item>
+        <item>North Dakota</item>
+        <item>Ohio</item>
+        <item>Oklahoma</item>
+        <item>Oregon</item>
+        <item>Pennsylvania</item>
+        <item>Rhode Island</item>
+        <item>South Carolina</item>
+        <item>South Dakota</item>
+        <item>Tennessee</item>
+       <item>Texas</item>
+        <item>Utah</item>
+        <item>Vermont</item>
+        <item>Virginia</item>
+        <item>Washington</item>
+        <item>West Virginia</item>
+        <item>Wisconsin</item>
+        <item>Wyoming</item>
+        </string-array>
+
+
+
     <string name="title_activity_visualization_pager">VisualizationPagerActivity</string>
+    <string name="undergrad_enrollment">Undergrad Enrollment</string>
+    <string name="graduation_rate">Graduation Rate</string>
+    <string name="out_of_state">Out of State Tuition</string>
+    <string name="in_state">In State Tuition</string>
+    <string name="natl_res">National Ranking</string>
+    <string name="school">School</string>
+    <string name="vs">VS</string>
+    <string name="state_instructions">Select a state to view cities.</string>
+    <string name="title1">Title1</string>
+    <string name="title2">Title 2</string>
+    <string name="sub_feedback">Submit Feedback</string>
 
 </resources>

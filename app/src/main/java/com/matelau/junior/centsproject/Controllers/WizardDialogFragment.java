@@ -33,7 +33,7 @@ public class WizardDialogFragment extends DialogFragment {
     ListView _answers;
     ArrayAdapter<String> _answersAdapter;
     String[] _college_answers = new String[] {"I'm not sure where I want to study", "I'm not sure what I want to study","I'm not sure about either"};
-    String[] _cost_answers = new String[] {"I'm curious about the cost of living in a city", "I'm curious about my spending breakdown"};
+    String[] _cost_answers = new String[] {"I'm curious about the cost of living in a city", "I'm curious about how I should be spending my money"};
 
 
     public WizardDialogFragment() {
@@ -100,7 +100,7 @@ public class WizardDialogFragment extends DialogFragment {
                 break;
             default:
                 //Examples
-                //TODO launch examples Dialog Fragment
+                //launch examples Dialog Fragment
                 switchToVisFrag("Examples");
                 break;
 
@@ -115,34 +115,40 @@ public class WizardDialogFragment extends DialogFragment {
         //close wizard
         dismiss();
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        //TODO Add Intros here as they are created
+        //Add Intros here as they are created
         getActivity().getActionBar().setTitle(selected);
         if(selected.equals("COL Comparison")){
             //Special Case title change
             getActivity().getActionBar().setTitle("Cost of Living Comparison");
             ft.replace(R.id.fragment_placeholder, new COLIntroFragment());
+            ft.addToBackStack("wizard");
             ft.commit();
         }
         else if(selected.equals("College Comparison")){
             ft.replace(R.id.fragment_placeholder, new CollegeIntroFragment());
+            ft.addToBackStack("wizard");
             ft.commit();
         }
         else if(selected.equals("Spending Breakdown")){
             ft.replace(R.id.fragment_placeholder, new SpendingBreakdownIntroFragment());
+            ft.addToBackStack("wizard");
             ft.commit();
         }
         else if(selected.equals("Career Comparison")){
             ft.replace(R.id.fragment_placeholder, new CareerIntroFragment());
+            ft.addToBackStack("wizard");
             ft.commit();
         }
         else if(selected.equals("Major Comparison")){
             ft.replace(R.id.fragment_placeholder, new MajorIntroFragment());
+            ft.addToBackStack("wizard");
             ft.commit();
         }
         else{
             CentsApplication.set_selectedVis(selected);
             ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+            ft.replace(R.id.fragment_placeholder,new VisualizationPagerFragment());
+            ft.addToBackStack("wizard");
             ft.commit();
 
         }
@@ -154,12 +160,12 @@ public class WizardDialogFragment extends DialogFragment {
         switch(pos){
             case 0:
                 //College Inquiry
-                //TODO Launch college viz view pager
+                //Launch college viz view pager
                 switchToVisFrag("College Comparison");
                 break;
             case 1:
                 //Major Inquiry
-                //TODO launch Major viz view pager
+                //launch Major viz view pager
                 switchToVisFrag("Major Comparison");
                 break;
             default:
@@ -173,12 +179,12 @@ public class WizardDialogFragment extends DialogFragment {
         switch(pos) {
             case 0:
                 //Cost of Living
-                //TODO launch cost living viz view pager
+                //launch cost living viz view pager
                 switchToVisFrag("COL Comparison");
                 break;
             case 1:
                 //Spending
-                //TODO launch spending viz view pager
+                //launch spending viz view pager
                 switchToVisFrag("Spending Breakdown");
                 break;
             default:
