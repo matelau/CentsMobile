@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
-import com.matelau.junior.centsproject.Controllers.SearchFragment;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.MajorService;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.RecordQuery;
@@ -81,14 +80,11 @@ public class MajorSelectionDialogFragment extends DialogFragment{
         //if selected vis is a major comparison switch background fragment to search - to clear old viz
         //clear old values
 
-        if(CentsApplication.get_selectedVis().equals("Major Comparison")){
-            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.fragment_placeholder, new SearchFragment());
-            ft.commit();
+        if(!CentsApplication.get_selectedVis().equals("Major Comparison")){
+            CentsApplication.set_selectedVis(null);
+            CentsApplication.set_major1(null);
+            CentsApplication.set_major2(null);
         }
-        CentsApplication.set_selectedVis(null);
-        CentsApplication.set_major1(null);
-        CentsApplication.set_major2(null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -202,10 +198,6 @@ public class MajorSelectionDialogFragment extends DialogFragment{
             @Override
             public void onClick(View v) {
                 Log.d(LOG_TAG, "cancel");
-                CentsApplication.set_major1(null);
-                CentsApplication.set_major2(null);
-                CentsApplication.set_mResponse(null);
-                CentsApplication.set_selectedVis(null);
                 dismiss();
             }
         });

@@ -67,7 +67,7 @@ public class CentsApplication extends Application{
     private static List<Col> _cols;
 
     //debug true = show toast, set login credentials
-    private static boolean debug = false;
+    private static boolean debug = true;
 
     //Spending Breakdown Vis
     private static String _occupationSalary = "45000";

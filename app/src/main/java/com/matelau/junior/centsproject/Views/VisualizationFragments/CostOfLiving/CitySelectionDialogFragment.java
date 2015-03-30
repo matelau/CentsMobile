@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
-import com.matelau.junior.centsproject.Controllers.SearchFragment;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.CostOfLiving;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.CostOfLivingLocation;
@@ -88,11 +87,8 @@ public class CitySelectionDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreateDialog");
         //if selected vis is a city comparison switch background fragment to search - to clear old viz
-        if(CentsApplication.get_selectedVis().equals("COL Comparison")){
+        if(!CentsApplication.get_selectedVis().equals("COL Comparison")){
             CentsApplication.set_selectedVis(null);
-            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.fragment_placeholder, new SearchFragment());
-            ft.commit();
         }
         _states = getResources().getStringArray(R.array.states_array);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -130,34 +126,11 @@ public class CitySelectionDialogFragment extends DialogFragment {
             }
         });
 
-
         _plusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(isPlus){
-                    _stateSpinner2.setVisibility(View.VISIBLE);
-                    _stateTextView2.setVisibility(View.VISIBLE);
-                    _vs.setVisibility(View.VISIBLE);
-                    _stateSpinner2.setAdapter(_stateAdapter);
-                    _stateSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            _state2 = _states[position];
-                            if(!_state2.equals("Select State")) {
-                                Log.d(LOG_TAG, "Selected States: "+_state2);
-                                getCities2(_state2);
-                            }
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
-
-                        }
-                    });
-                    _vs.setVisibility(View.VISIBLE);
-                    isPlus = false;
-                    _plusBtn.setBackground(getResources().getDrawable(minus));
-
+                    addPlusViews();
                 }
                 else{
                     //isMinus remove all views clear values
@@ -226,16 +199,72 @@ public class CitySelectionDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 //reset options
-                CentsApplication.set_searchedCity(null);
-                CentsApplication.set_searchState(null);
-                CentsApplication.set_searchedCity2(null);
-                CentsApplication.set_searchState2(null);
+                Log.d(LOG_TAG, "cancel");
                 dismiss();
 
             }
         });
+
+        //check for previous searches
+        ColiResponse  c = CentsApplication.get_colResponse();
+        if(c != null){
+            //state 1
+            String location =  c.getLocation1();
+            String state = location.substring(location.indexOf(',')+1, location.length()).trim();
+            Log.d(LOG_TAG, "Loc1 = "+ state);
+            int statePos = getStatePosition(state);
+            Log.d(LOG_TAG, "Position = "+ statePos);
+            _stateSpinner1.setSelection(statePos, true);
+            //state 2
+            if(c.getLocation2() != null){
+                addPlusViews();
+                location = c.getLocation2();
+                state = location.substring(location.indexOf(',')+1, location.length()).trim();
+                Log.d(LOG_TAG, "Loc2 = "+ state);
+                statePos = getStatePosition(state);
+                Log.d(LOG_TAG, "Position = "+ statePos);
+                _stateSpinner2.setSelection(statePos, true);
+            }
+        }
+
+
         builder.setTitle("Enter Locations For Comparison").setView(_rootLayout);
         return builder.create();
+    }
+
+    public void addPlusViews(){
+        _stateSpinner2.setVisibility(View.VISIBLE);
+        _stateTextView2.setVisibility(View.VISIBLE);
+        _vs.setVisibility(View.VISIBLE);
+        _stateSpinner2.setAdapter(_stateAdapter);
+        _stateSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                _state2 = _states[position];
+                if(!_state2.equals("Select State")) {
+                    Log.d(LOG_TAG, "Selected States: "+_state2);
+                    getCities2(_state2);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        _vs.setVisibility(View.VISIBLE);
+        isPlus = false;
+        _plusBtn.setBackground(getResources().getDrawable(minus));
+
+    }
+    public int getStatePosition(String state){
+        int pos = -1;
+        for(int i = 0; i < _states.length; i++){
+            if(state.equals(_states[i])){
+                return i;
+            }
+        }
+        return pos;
     }
 
     /**
