@@ -110,8 +110,9 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
                     Log.d(LOG_TAG, "Selected State1: "+_states[position]);
                     _universityTextView1.setText("University - 1");
                     _universityTextView1.setVisibility(View.VISIBLE);
+                    //store positions in case user searches again
+                    CentsApplication.setPos1(position);
                     loadCollegeList1(position);
-
                 }
 
             }
@@ -125,36 +126,9 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
         _plusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 //flip button
                 if(isPlus){
-                    isPlus = false;
-                    _plusBtn.setBackground(getResources().getDrawable(R.drawable.minus));
-                    //show secondary selections
-                    _vs.setVisibility(View.VISIBLE);
-                    _stateTextView2.setVisibility(View.VISIBLE);
-                    _states2.setVisibility(View.VISIBLE);
-                    _states2.setAdapter(_stateAdapter);
-                    _states2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            //load universities
-                            if(!_states[position].equals("Select State")) {
-                                Log.d(LOG_TAG, "Selected State2: " + _states[position]);
-                                _universityTextView2.setText("University - 2");
-                                _universityTextView2.setVisibility(View.VISIBLE);
-                                loadCollegeList2(position);
-                            }
-
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
-
-                        }
-                    });
-
-
+                   addPlusViews();
                 }
                 else{
                     isPlus = true;
@@ -165,6 +139,7 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
                     _universitySpinner2.setVisibility(View.GONE);
                     _universityTextView2.setVisibility(View.GONE);
                     _vs.setVisibility(View.GONE);
+                    CentsApplication.setPos2(-1);
                     //null values
                     _university2 = null;
                 }
@@ -231,8 +206,53 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
+
+        //check for already performed searches
+        SchoolResponse s= CentsApplication.get_sApiResponse();
+        int pos1 = CentsApplication.getPos1();
+        //TODO need to figure out a way to locate the state given a university
+        if(s != null && pos1 != -1){
+            _states1.setSelection(pos1, true);
+            loadCollegeList1(pos1);
+            int pos2 = CentsApplication.getPos2();
+            if(pos2 != -1){
+                addPlusViews();
+                _states2.setSelection(pos2, true);
+                loadCollegeList2(pos2);
+            }
+        }
         builder.setView(_rootLayout);
         return builder.create();
+
+    }
+
+    private void addPlusViews(){
+        isPlus = false;
+        _plusBtn.setBackground(getResources().getDrawable(R.drawable.minus));
+        //show secondary selections
+        _vs.setVisibility(View.VISIBLE);
+        _stateTextView2.setVisibility(View.VISIBLE);
+        _states2.setVisibility(View.VISIBLE);
+        _states2.setAdapter(_stateAdapter);
+        _states2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //load universities
+                if(!_states[position].equals("Select State")) {
+                    Log.d(LOG_TAG, "Selected State2: " + _states[position]);
+                    _universityTextView2.setText("University - 2");
+                    _universityTextView2.setVisibility(View.VISIBLE);
+                    CentsApplication.setPos2(position);
+                    loadCollegeList2(position);
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
     }
 
@@ -362,10 +382,11 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         TextView tv = (TextView) view;
-                        _university2 = tv.getText().toString();
+                        if(tv != null){
+                            _university2 = tv.getText().toString();
+                        }
                         Log.d(LOG_TAG, "Selected Uni1: "+_university2);
                     }
-
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {
 

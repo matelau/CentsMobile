@@ -89,12 +89,14 @@ public class CentsApplication extends Application{
     private static SchoolResponse _sApiResponse;
     private static String _university1;
     private static String _university2;
+    private static int pos1 = -1;
+    private static int pos2 = -1;
 
     //Major Comp Vars
     private static MajorResponse _mResponse;
     private static Major _major1;
     private static Major _major2;
-
+    private static String[] _majors;
     public static Context getAppContext() {return _centsContext;}
 
     public static RestAdapter get_gdRestAdapter() {return _gdRestAdapter;}
@@ -377,6 +379,30 @@ public class CentsApplication extends Application{
 
     public static void set_major2(Major _major2) {
         CentsApplication._major2 = _major2;
+    }
+
+    public static int getPos2() {
+        return pos2;
+    }
+
+    public static void setPos2(int pos2) {
+        CentsApplication.pos2 = pos2;
+    }
+
+    public static int getPos1() {
+        return pos1;
+    }
+
+    public static void setPos1(int pos1) {
+        CentsApplication.pos1 = pos1;
+    }
+
+    public static String[] get_majors() {
+        return _majors;
+    }
+
+    public static void set_majors(String[] _majors) {
+        CentsApplication._majors = _majors;
     }
 
     /************************** Static Helper Methods ***********************************************************/

@@ -11,12 +11,13 @@ import java.util.List;
  */
 public class MajorResponse {
 
-    @SerializedName("major_2_name")
+    @SerializedName("name_1")
     @Expose
-    private String major2Name;
-    @SerializedName("major_1_name")
+    private String name_1;
+
+    @SerializedName("name_2")
     @Expose
-    private String major1Name;
+    private String name_2;
 
     @SerializedName("jobs_1")
     @Expose
@@ -37,37 +38,37 @@ public class MajorResponse {
     /**
      *
      * @return
-     * The major2Name
+     * The name_1
      */
-    public String getMajor2Name() {
-        return major2Name;
+    public String getName_1() {
+        return name_1;
     }
 
     /**
      *
-     * @param major2Name
+     * @param name_1
      * The major_2_name
      */
-    public void setMajor2Name(String major2Name) {
-        this.major2Name = major2Name;
+    public void setName_1(String name_1) {
+        this.name_1 = name_1;
     }
 
     /**
      *
      * @return
-     * The major1Name
+     * The name_2
      */
-    public String getMajor1Name() {
-        return major1Name;
+    public String getName_2() {
+        return name_2;
     }
 
     /**
      *
-     * @param major1Name
+     * @param name_2
      * The major_1_name
      */
-    public void setMajor1Name(String major1Name) {
-        this.major1Name = major1Name;
+    public void setName_2(String name_2) {
+        this.name_2 = name_2;
     }
 
 

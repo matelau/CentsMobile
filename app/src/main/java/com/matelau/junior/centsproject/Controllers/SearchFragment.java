@@ -188,17 +188,17 @@ public class SearchFragment extends Fragment {
                     //create major obj and launch viz
                     MajorResponse mResponse = gson.fromJson(rsp, MajorResponse.class);
                     //update names
-                    if(mResponse.getMajor1Name() != null){
+                    if(mResponse.getName_2() != null){
                         Major major1 = new Major();
-                        major1.setName( mResponse.getMajor1Name());
+                        major1.setName( mResponse.getName_2());
                         CentsApplication.set_major1(major1);
                     }
 
                     else
                         CentsApplication.set_major1(null);
-                    if(mResponse.getMajor2Name() != null){
+                    if(mResponse.getName_1() != null){
                         Major major2 = new Major();
-                        major2.setName( mResponse.getMajor2Name());
+                        major2.setName( mResponse.getName_1());
                         CentsApplication.set_major2(major2);
                     }
 

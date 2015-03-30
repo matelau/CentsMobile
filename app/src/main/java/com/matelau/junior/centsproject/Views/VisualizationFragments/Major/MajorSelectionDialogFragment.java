@@ -76,10 +76,8 @@ public class MajorSelectionDialogFragment extends DialogFragment{
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreateDialog");
-        loadMajorsList();
-        //if selected vis is a major comparison switch background fragment to search - to clear old viz
-        //clear old values
 
+        //clear old values
         if(!CentsApplication.get_selectedVis().equals("Major Comparison")){
             CentsApplication.set_selectedVis(null);
             CentsApplication.set_major1(null);
@@ -103,39 +101,14 @@ public class MajorSelectionDialogFragment extends DialogFragment{
         _majorSpinner1 = (Spinner) _rootLayout.findViewById(R.id.state_spinner1);
         _majorSpinner2 = (Spinner) _rootLayout.findViewById(R.id.state_spinner2);
 
+        loadMajorsList();
+
         _plusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //flip button
                 if(isPlus) {
-                    isPlus = false;
-                    _plusBtn.setBackground(getResources().getDrawable(R.drawable.minus));
-                    //show secondary selections
-                    _vs.setVisibility(View.VISIBLE);
-                    _majorTextView2.setVisibility(View.VISIBLE);
-                    _majorSpinner2.setVisibility(View.VISIBLE);
-                    _majorTextView2.setText("Major - 2");
-                    _majorSpinner2.setAdapter(_majorAdapter);
-                    _majorSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            String full_selection = _majors[position];
-                            int first_paren = full_selection.indexOf('(');
-                            _major2 = new Major();
-                            _major2.setName(full_selection.substring(0,first_paren));
-                            //get lvl
-                            String level  = full_selection.substring(first_paren+1, full_selection.length()-1);
-                            _major2.setLevel(level);
-//                            _major2.setOrder(2);
-                            Log.d(LOG_TAG, "Selected Major2: "+_major2);
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
-
-                        }
-                    });
-
+                    addPlusViews();
                 }
                 else{
                     isPlus = true;
@@ -207,46 +180,122 @@ public class MajorSelectionDialogFragment extends DialogFragment{
 
     }
 
-    private void loadMajorsList(){
-        RecordsService service = CentsApplication.get_centsRestAdapter().create(RecordsService.class);
-        RecordQuery query = new RecordQuery();
-        query.setOperation("get");
-        ArrayList<String> tables = new ArrayList<String>();
-        tables.add("majors");
-        query.setTables(tables);
-        service.getRecords(query, new Callback<Response>() {
+
+    private int getMajorPosition(String major){
+        major = major.trim();
+        int pos = -1;
+        for(int i = 0; i < _majors.length; i++){
+            if(major.equals(_majors[i])){
+                return i;
+            }
+        }
+        return pos;
+    }
+
+    private void addPlusViews(){
+        isPlus = false;
+        _plusBtn.setBackground(getResources().getDrawable(R.drawable.minus));
+        //show secondary selections
+        _vs.setVisibility(View.VISIBLE);
+        _majorTextView2.setVisibility(View.VISIBLE);
+        _majorSpinner2.setVisibility(View.VISIBLE);
+        _majorTextView2.setText("Major - 2");
+        _majorSpinner2.setAdapter(_majorAdapter);
+        _majorSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void success(Response response, Response response2) {
-                //get list
-                Log.d(LOG_TAG, "Received Majors List");
-                _majors = majorsFromJson(response2);
-                _majorAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, _majors);
-                _majorSpinner1.setAdapter(_majorAdapter);
-                _majorSpinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        String full_selection = _majors[position];
-                        int first_paren = full_selection.indexOf('(');
-                        _major1 = new Major();
-                        _major1.setName(full_selection.substring(0,first_paren));
-                        //get lvl
-                        String level  = full_selection.substring(first_paren+1, full_selection.length()-1);
-                        _major1.setLevel(level);
-//                        _major1.setOrder(1);
-                        Log.d(LOG_TAG, "Selected major1: "+_major1);
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String full_selection = _majors[position];
+                int first_paren = full_selection.indexOf('(');
+                _major2 = new Major();
+                _major2.setName(full_selection.substring(0,first_paren));
+                //get lvl
+                String level  = full_selection.substring(first_paren+1, full_selection.length()-1);
+                _major2.setLevel(level);
+//                            _major2.setOrder(2);
+                Log.d(LOG_TAG, "Selected Major2: "+_major2);
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                Log.e(LOG_TAG, error.getMessage());
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+    }
+
+    private void loadPreviousSearch(){
+        //load values of previous search if one exists
+        MajorResponse m = CentsApplication.get_mResponse();
+        if(m != null){
+            String major = m.getName_1();
+            Log.d(LOG_TAG, "major1: "+major);
+            int pos1 = getMajorPosition(major);
+            Log.d(LOG_TAG, "pos1:"+pos1);
+            initSpinner1();
+            _majorSpinner1.setSelection(pos1, true);
+            if(m.getName_2() != null){
+                addPlusViews();
+                major = m.getName_2().trim();
+                Log.d(LOG_TAG, "major2: "+major);
+                int pos2 = getMajorPosition(major);
+                Log.d(LOG_TAG, "pos2:"+pos2);
+                _majorSpinner2.setSelection(pos2, true);
+            }
+        }
+    }
+
+    private void loadMajorsList(){
+        if (CentsApplication.get_majors() != null){
+            _majors = CentsApplication.get_majors();
+            loadPreviousSearch();
+        }
+        else{
+            RecordsService service = CentsApplication.get_centsRestAdapter().create(RecordsService.class);
+            RecordQuery query = new RecordQuery();
+            query.setOperation("get");
+            ArrayList<String> tables = new ArrayList<String>();
+            tables.add("majors");
+            query.setTables(tables);
+            service.getRecords(query, new Callback<Response>() {
+                @Override
+                public void success(Response response, Response response2) {
+                    //get list
+                    Log.d(LOG_TAG, "Received Majors List");
+                    _majors = majorsFromJson(response2);
+                    //cache majors list
+                    CentsApplication.set_majors(_majors);
+                    initSpinner1();
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(LOG_TAG, error.getMessage());
+                    Toast.makeText(getActivity(), "Error loading list please try again later", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+
+    }
+
+    private void initSpinner1(){
+        _majorAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, _majors);
+        _majorSpinner1.setAdapter(_majorAdapter);
+        _majorSpinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String full_selection = _majors[position];
+                int first_paren = full_selection.indexOf('(');
+                _major1 = new Major();
+                _major1.setName(full_selection.substring(0,first_paren));
+                //get lvl
+                String level  = full_selection.substring(first_paren+1, full_selection.length()-1);
+                _major1.setLevel(level);
+                Log.d(LOG_TAG, "Selected major1: "+_major1);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }

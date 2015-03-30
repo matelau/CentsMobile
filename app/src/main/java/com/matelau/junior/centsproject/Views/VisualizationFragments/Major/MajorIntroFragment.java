@@ -39,8 +39,6 @@ public class MajorIntroFragment extends Fragment {
                 showMajorSelectionDialog();
             }
         });
-        //TODO begin major selection Dialog
-
         return _rootLayout;
     }
 
