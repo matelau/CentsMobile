@@ -45,7 +45,7 @@ import retrofit.client.Response;
  */
 public class CollegeSelectionDialogFragment extends DialogFragment {
     private String LOG_TAG = CollegeSelectionDialogFragment.class.getSimpleName();
-    private String[] _state_abbrv = {"AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"};
+    private final String[] _state_abbrv = {"AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"};
     private String[] _states;
     private HashMap<String, String> _stateMap;
     private LinearLayout _rootLayout;
@@ -318,7 +318,9 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         TextView tv = (TextView) view;
-                        _university1 = tv.getText().toString();
+                        if(tv != null){
+                            _university1 = tv.getText().toString();
+                        }
                         Log.d(LOG_TAG, "Selected Uni1: "+_university1);
                     }
 

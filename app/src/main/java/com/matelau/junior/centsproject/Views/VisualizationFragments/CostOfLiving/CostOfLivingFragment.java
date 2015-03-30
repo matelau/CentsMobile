@@ -46,7 +46,7 @@ public class CostOfLivingFragment extends Fragment{
     private static String _location2;
     private ImageButton _search;
     private View _rootView;
-    private final String[] _labels_short = {"Over", "goods", "groc", "health", "housing","trans","util"};
+    private final String[] _labels_short = {"Overall", "Goods", "grocery", "health", "housing","trans","util"};
 
     public CostOfLivingFragment() {
         // Required empty public constructor
@@ -193,26 +193,22 @@ public class CostOfLivingFragment extends Fragment{
             column.setHasLabels(hasLabels);
             column.setHasLabelsOnlyForSelected(hasLabelForSelected);
             columns.add(column);
-            axisVals.add(new AxisValue(i, _labels_short[i].toUpperCase().toCharArray()));
+            AxisValue currentAxis = new AxisValue(i);
+            currentAxis.setLabel(_labels_short[i].toUpperCase());
+            axisVals.add(currentAxis);
         }
 
         _chartdata = new ColumnChartData(columns);
 
-        if (hasAxes) {
-            Axis axisX = new Axis();
-            Axis axisY = new Axis().setHasLines(true);
-            if (hasAxesNames) {
-                axisX.setName(CentsApplication.get_colResponse().getLocation1());
-                axisY.setName("");
-            }
-            _chartdata.setAxisXBottom(new Axis(axisVals));
-            _chartdata.setAxisYLeft(axisY);
-        } else {
-            _chartdata.setAxisXBottom(null);
-            _chartdata.setAxisYLeft(null);
-        }
+        Axis axisX = new Axis(axisVals);
+        axisX.setTextSize(8);
+        Axis axisY = new Axis().setHasLines(true);
+        axisX.setName(CentsApplication.get_colResponse().getLocation1());
+        axisY.setName("");
+        _chartdata.setAxisXBottom(axisX);
+        _chartdata.setAxisYLeft(axisY);
 
-        _chartdata.setValueLabelTextSize(8);
+        _chartdata.setValueLabelTextSize(6);
         //make the bars smaller so they don't overfill chart
         _chartdata.setFillRatio(.7f);
         _chart.setColumnChartData(_chartdata);

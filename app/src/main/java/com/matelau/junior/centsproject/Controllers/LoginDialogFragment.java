@@ -138,7 +138,7 @@ public class LoginDialogFragment extends DialogFragment {
                     settings.edit().
                             putString("EMAIL", _email.getText().toString()).
                             putString("PASSWORD", _password.getText().toString()).
-                            commit();
+                            apply();
                     dismiss();
                 }
 
@@ -148,7 +148,7 @@ public class LoginDialogFragment extends DialogFragment {
                     //Remove Login information and update app state
                     CentsApplication.set_loggedIN(false);
                     SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
-                    settings.edit().remove("EMAIL").remove("Password").commit();
+                    settings.edit().remove("EMAIL").remove("Password").apply();
                     _errorMsg.setTextColor(getResources().getColor(R.color.red));
                     _errorMsg.setText("Authentication Failed");
                     _errorMsg.setVisibility(View.VISIBLE);

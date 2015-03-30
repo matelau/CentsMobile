@@ -57,9 +57,7 @@
                             android:inputType="textPersonName"
                             android:layout_width="fill_parent"
                             android:layout_height="30dp"
-                            android:padding="4dp"
                             android:textColor="@color/black"
-                            android:background="@drawable/border_rectangle"
                             android:id="@+id/first_name"/>
 
                         <TextView android:layout_width="wrap_content"
@@ -73,9 +71,7 @@
                             android:inputType="textPersonName"
                             android:layout_width="fill_parent"
                             android:layout_height="30dp"
-                            android:padding="4dp"
                             android:textColor="@color/black"
-                            android:background="@drawable/border_rectangle"
                             android:id="@+id/last_name"/>
 
                         <TextView android:layout_width="wrap_content"
@@ -88,11 +84,13 @@
                             android:layout_gravity="center"
                             android:inputType="textEmailAddress"
                             android:layout_height="30dp"
-                            android:padding="4dp"
+
                             android:textColor="@color/black"
-                            android:background="@drawable/border_rectangle"
+
                             android:layout_width="fill_parent"
                             android:id="@+id/user_email"/>
+                    <!--android:padding="4dp"-->
+                    <!--android:background="@drawable/border_rectangle"-->
 
                         <TextView android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -105,9 +103,7 @@
                             android:inputType="textPassword"
                             android:layout_width="fill_parent"
                             android:layout_height="30dp"
-                            android:padding="4dp"
                             android:textColor="@color/black"
-                            android:background="@drawable/border_rectangle"
                             android:id="@+id/user_password"/>
 
                         <TextView android:layout_width="wrap_content"
@@ -122,9 +118,7 @@
                             android:inputType="textPassword"
                             android:layout_width="fill_parent"
                             android:layout_height="30dp"
-                            android:padding="4dp"
                             android:textColor="@color/black"
-                            android:background="@drawable/border_rectangle"
                             android:id="@+id/confirm_password"/>
                     <TextView
                         android:layout_width="wrap_content"

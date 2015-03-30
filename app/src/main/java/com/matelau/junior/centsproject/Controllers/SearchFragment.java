@@ -65,9 +65,9 @@ public class SearchFragment extends Fragment {
         _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_search, container, false);
         AdView mAdView = (AdView) _rootLayout.findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
-        if(CentsApplication.isDebug())
+        if(CentsApplication.isDebug()){
             adRequest = new AdRequest.Builder().addTestDevice("84B46C4862CAF80187170C1A7901502C").build();
-
+        }
         mAdView.loadAd(adRequest);
 
         ImageButton search_submit = (ImageButton) _rootLayout.findViewById(R.id.search_button);
@@ -79,9 +79,6 @@ public class SearchFragment extends Fragment {
                         actionId == EditorInfo.IME_ACTION_DONE ||
                         event.getAction() == KeyEvent.ACTION_DOWN &&
                                 event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    //hide keyboard after submit
-                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(_editText.getWindowToken(), 0);
                     handleSubmit();
 
                     return true;
@@ -120,112 +117,122 @@ public class SearchFragment extends Fragment {
     private void handleSubmit() {
         String searchText = _editText.getText().toString();
         Log.v(LOG_TAG, "in handleSubmit: " + searchText);
-        //post to Query Parsing Service and handle response
-        _submitBtn = (ImageButton) _rootLayout.findViewById(R.id.search_button);
-        _submitBtn.startAnimation(AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.rotate));
-        if(CentsApplication.isDebug())
-            Toast.makeText(getActivity(), "Search for:" + searchText, Toast.LENGTH_SHORT).show();
-        //Todo if valid response and user is logged in from query service store searchText to _query
-        QueryService service = CentsApplication.get_queryParsingRestAdapter().create(QueryService.class);
-        service.results(searchText, new Callback<Response>() {
-            @Override
-            public void success(Response response1, Response response) {
-                if(CentsApplication.isDebug())
-                    Toast.makeText(getActivity(),response.toString(), Toast.LENGTH_SHORT);
+        //hide keyboard after submit
+        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(_editText.getWindowToken(), 0);
+        if(searchText.trim().equals("")){
+            Toast.makeText(getActivity(), "You must enter a search.", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            //post to Query Parsing Service and handle response
+            _submitBtn = (ImageButton) _rootLayout.findViewById(R.id.search_button);
+            _submitBtn.startAnimation(AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.rotate));
+            if(CentsApplication.isDebug())
+                Toast.makeText(getActivity(), "Search for:" + searchText, Toast.LENGTH_SHORT).show();
+            //Todo if valid response and user is logged in from query service store searchText to _query
+            QueryService service = CentsApplication.get_queryParsingRestAdapter().create(QueryService.class);
+            service.results(searchText, new Callback<Response>() {
+                @Override
+                public void success(Response response1, Response response) {
+                    if(CentsApplication.isDebug())
+                        Toast.makeText(getActivity(),response.toString(), Toast.LENGTH_SHORT);
 //                Log.v(LOG_TAG, "Query Service Response: "+rsp);
-                _query =  _editText.getText().toString();
-                _submitBtn.clearAnimation();
-                //Process Response and route accordingly
-                //Try to get response body
-                BufferedReader reader = null;
-                StringBuilder sb = new StringBuilder();
-                try {
-
-                    reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
-
-                    String line;
-
+                    _query =  _editText.getText().toString();
+                    _submitBtn.clearAnimation();
+                    //Process Response and route accordingly
+                    //Try to get response body
+                    BufferedReader reader = null;
+                    StringBuilder sb = new StringBuilder();
                     try {
-                        while ((line = reader.readLine()) != null) {
-                            sb.append(line);
+
+                        reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
+
+                        String line;
+
+                        try {
+                            while ((line = reader.readLine()) != null) {
+                                sb.append(line);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
+
+                    String rsp = sb.toString();
+                    //Build Map
+                    Gson gson = new Gson();
+                    Map<String,String> map=new HashMap<String,String>();
+                    map=(Map<String,String>) gson.fromJson(rsp, map.getClass());
+                    //get type
+                    String type = map.get("query_type");
+                    if(type == null){
+                        Toast.makeText(getActivity(), "We did not understand your query... here are some examples", Toast.LENGTH_SHORT).show();
+                        CentsApplication.set_selectedVis("Examples");
+                    }
+                    //route properly
+                    else if(type.equals("city")){
+                        //create coli obj and launch coli viz
+                        ColiResponse colResponse = gson.fromJson(rsp, ColiResponse.class);
+                        CentsApplication.set_colResponse(colResponse);
+                        CentsApplication.set_selectedVis("COL Comparison");
+                    }
+                    else if(type.equals("school")){
+                        //create school obj and launch viz
+                        SchoolResponse sResponse = gson.fromJson(rsp, SchoolResponse.class);
+                        CentsApplication.set_sApiResponse(sResponse);
+                        CentsApplication.set_selectedVis("College Comparison");
+                    }
+                    else if(type.equals("career")){
+                        //todo create career obj and launch viz
+                        CentsApplication.set_selectedVis("College Comparison");
+                    }
+                    else if(type.equals("major")){
+                        //create major obj and launch viz
+                        MajorResponse mResponse = gson.fromJson(rsp, MajorResponse.class);
+                        //update names
+                        if(mResponse.getName_2() != null){
+                            Major major1 = new Major();
+                            major1.setName( mResponse.getName_2());
+                            CentsApplication.set_major1(major1);
+                        }
+                        else
+                            CentsApplication.set_major1(null);
+                        if(mResponse.getName_1() != null){
+                            Major major2 = new Major();
+                            major2.setName( mResponse.getName_1());
+                            CentsApplication.set_major2(major2);
+                        }
+                        else
+                            CentsApplication.set_major2(null);
+
+
+                        CentsApplication.set_mResponse(mResponse);
+                        CentsApplication.set_selectedVis("Major Comparison");
+                    }
+                    else if(type.equals("spending")){
+                        //goto spending breakdown
+                        CentsApplication.set_selectedVis("Spending Breakdown");
+                    }
+                    switchToVizPager();
+
+
                 }
 
-                String rsp = sb.toString();
-                //Build Map
-                Gson gson = new Gson();
-                Map<String,String> map=new HashMap<String,String>();
-                map=(Map<String,String>) gson.fromJson(rsp, map.getClass());
-                //get type
-                String type = map.get("query_type");
-                if(type == null){
-                    Toast.makeText(getActivity(), "We did not understand your query... here are some examples", Toast.LENGTH_SHORT).show();
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(LOG_TAG, "Query Service Error: "+error.getMessage());
+                    showServiceDownNotification();
                     CentsApplication.set_selectedVis("Examples");
+                    switchToVizPager();
+                    _submitBtn.clearAnimation();
                 }
-                //route properly
-                else if(type.equals("city")){
-                    //create coli obj and launch coli viz
-                    ColiResponse colResponse = gson.fromJson(rsp, ColiResponse.class);
-                    CentsApplication.set_colResponse(colResponse);
-                    CentsApplication.set_selectedVis("COL Comparison");
-                }
-                else if(type.equals("school")){
-                    //create school obj and launch viz
-                    SchoolResponse sResponse = gson.fromJson(rsp, SchoolResponse.class);
-                    CentsApplication.set_sApiResponse(sResponse);
-                    CentsApplication.set_selectedVis("College Comparison");
-                }
-                else if(type.equals("career")){
-                    //todo create career obj and launch viz
-                    CentsApplication.set_selectedVis("College Comparison");
-                }
-                else if(type.equals("major")){
-                    //create major obj and launch viz
-                    MajorResponse mResponse = gson.fromJson(rsp, MajorResponse.class);
-                    //update names
-                    if(mResponse.getName_2() != null){
-                        Major major1 = new Major();
-                        major1.setName( mResponse.getName_2());
-                        CentsApplication.set_major1(major1);
-                    }
-
-                    else
-                        CentsApplication.set_major1(null);
-                    if(mResponse.getName_1() != null){
-                        Major major2 = new Major();
-                        major2.setName( mResponse.getName_1());
-                        CentsApplication.set_major2(major2);
-                    }
-
-                    else
-                        CentsApplication.set_major2(null);
+            });
 
 
-                    CentsApplication.set_mResponse(mResponse);
-                    CentsApplication.set_selectedVis("Major Comparison");
-                }
-                else if(type.equals("spending")){
-                    //goto spending breakdown
-                    CentsApplication.set_selectedVis("Spending Breakdown");
-                }
-                switchToVizPager();
+        }
 
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e(LOG_TAG, "Query Service Error: "+error.getMessage());
-                showServiceDownNotification();
-                CentsApplication.set_selectedVis("Examples");
-                switchToVizPager();
-                _submitBtn.clearAnimation();
-            }
-        });
     }
 
 

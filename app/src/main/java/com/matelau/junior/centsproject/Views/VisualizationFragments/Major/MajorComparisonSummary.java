@@ -53,8 +53,10 @@ public class MajorComparisonSummary extends Fragment {
 
         AdView mAdView = (AdView) _rootLayout.findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
-        if(CentsApplication.isDebug())
+        if(CentsApplication.isDebug()){
             adRequest = new AdRequest.Builder().addTestDevice("84B46C4862CAF80187170C1A7901502C").build();
+        }
+
         mAdView.loadAd(adRequest);
 
         _major1Title = (TextView) _rootLayout.findViewById(R.id.title1);
