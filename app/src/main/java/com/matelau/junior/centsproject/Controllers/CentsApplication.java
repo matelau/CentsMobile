@@ -97,6 +97,11 @@ public class CentsApplication extends Application{
     private static Major _major1;
     private static Major _major2;
     private static String[] _majors;
+
+    //Career comp vars
+//    private static CareerResponse _cResponse;
+    private static String[] _careers;
+
     public static Context getAppContext() {return _centsContext;}
 
     public static RestAdapter get_gdRestAdapter() {return _gdRestAdapter;}
@@ -403,6 +408,14 @@ public class CentsApplication extends Application{
 
     public static void set_majors(String[] _majors) {
         CentsApplication._majors = _majors;
+    }
+
+    public static String[] get_careers() {
+        return _careers;
+    }
+
+    public static void set_careers(String[] _careers) {
+        CentsApplication._careers = _careers;
     }
 
     /************************** Static Helper Methods ***********************************************************/

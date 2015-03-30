@@ -49,13 +49,8 @@ public class CitySelectionDialogFragment extends DialogFragment {
 
     private LinearLayout _rootLayout;
     private ArrayAdapter<String> _stateAdapter;
-//    private ArrayAdapter<String> _citiesAdapter1;
     private Spinner _stateSpinner1;
-//    private Spinner _citiesSpinner1;
-//    private ArrayAdapter<String> _citiesAdapter2;
     private Spinner _stateSpinner2;
-    private Spinner _citiesSpinner2;
-//    private FragmentActivity _fragAct;
     private TextView _cityTextView1;
     private TextView _cityTextView2;
     private TextView _stateTextView2;
