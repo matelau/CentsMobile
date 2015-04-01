@@ -7,11 +7,13 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -20,9 +22,13 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
+import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
+import com.matelau.junior.centsproject.Models.CentsAPIModels.Career;
+import com.matelau.junior.centsproject.Models.CentsAPIModels.CareerQuery;
+import com.matelau.junior.centsproject.Models.CentsAPIModels.CareerResponse;
+import com.matelau.junior.centsproject.Models.CentsAPIModels.CareerService;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.RecordQuery;
 import com.matelau.junior.centsproject.Models.CentsAPIModels.RecordsService;
-import com.matelau.junior.centsproject.Models.VizModels.Career;
 import com.matelau.junior.centsproject.R;
 
 import java.io.BufferedReader;
@@ -46,7 +52,8 @@ public class CareerSelectionDialogFragment extends DialogFragment{
     private Spinner _careerSpinner2;
     private TextView _careerTextView1;
     private TextView _careerTextView2;
-//    private TextView __careerTextView2;
+    private AutoCompleteTextView _autoComp1;
+    private AutoCompleteTextView _autoComp2;
     private TextView _vs;
     private View _plusBtn;
     private Button _submit;
@@ -57,6 +64,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
     private String[] _careers;
     private Career _career1;
     private Career _career2;
+    private boolean _useSpinners;
 
 
     public CareerSelectionDialogFragment() {
@@ -69,8 +77,10 @@ public class CareerSelectionDialogFragment extends DialogFragment{
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreateDialog");
 
+        _useSpinners = false;
+
         //clear old values
-        if(!CentsApplication.get_selectedVis().equals("Major Comparison")){
+        if(CentsApplication.get_selectedVis()!= null && !CentsApplication.get_selectedVis().equals("Major Comparison")){
             CentsApplication.set_selectedVis(null);
             CentsApplication.set_major1(null);
             CentsApplication.set_major2(null);
@@ -92,6 +102,8 @@ public class CareerSelectionDialogFragment extends DialogFragment{
         _plusBtn = _rootLayout.findViewById(R.id.circle);
         _careerSpinner1 = (Spinner) _rootLayout.findViewById(R.id.state_spinner1);
         _careerSpinner2 = (Spinner) _rootLayout.findViewById(R.id.state_spinner2);
+        _autoComp1 = (AutoCompleteTextView) _rootLayout.findViewById(R.id.ac_view1);
+        _autoComp2 = (AutoCompleteTextView) _rootLayout.findViewById(R.id.ac_view2);
 
         loadCareersList();
 
@@ -118,40 +130,36 @@ public class CareerSelectionDialogFragment extends DialogFragment{
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "Careers Coming Soon.", Toast.LENGTH_SHORT).show();
-                if(_career1 != null || _career2 !=null ){
+                if(_career1 != null ){
 //                    //create query
-//                    MajorQuery mQuery = new MajorQuery();
-//                    mQuery.setOperation("compare");
-//                    List<Career> careers = new ArrayList<Career>();
-//                    careers.add((_career1);
-////                    CentsApplication.set_major1((_career1);
-//                    if(_career2 != null){
-//                        careers.add(_career2);
-////                        CentsApplication.set_major2(_career2);
-//                    }
-//                    mQuery.setMajors(careers);
-//                    MajorService service = CentsApplication.get_centsRestAdapter().create(CareerSe.class);
-//                    service.getMajorInfo(mQuery, new Callback<MajorResponse>() {
-//                        @Override
-//                        public void success(MajorResponse majorResponse, Response response) {
-//                            //Set MajorResponse
-//                            CentsApplication.set_mResponse(majorResponse);
-//                            //launch summary vis
-//                            Log.d(LOG_TAG, "success");
-//                            CentsApplication.set_selectedVis("Major Comparison");
-//                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-//                            ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
-//                            ft.addToBackStack("major-intro");
-//                            ft.commit();
-//                            dismiss();
-//                        }
-//
-//                        @Override
-//                        public void failure(RetrofitError error) {
-//                            Toast.makeText(getActivity(), "Error - please try again", Toast.LENGTH_SHORT).show();
-//
-//                        }
-//                    });
+                    CareerQuery query = new CareerQuery();
+                    ArrayList<Career> careerList = new ArrayList<Career>();
+                    careerList.add(_career1);
+                    if(_career2!= null){
+                        careerList.add(_career2);
+                    }
+                    query.setCareers(careerList);
+                    query.setOperation("compare");
+                    CareerService service = CentsApplication.get_centsRestAdapter().create(CareerService.class);
+                    service.getCareerInfo(query, new Callback<CareerResponse>() {
+                        @Override
+                        public void success(CareerResponse careerResponse, Response response) {
+                            Log.d(LOG_TAG, "successful response: ");
+                            //set response
+                            CentsApplication.set_cResponse(careerResponse);
+                            //switch fragments
+                            //get career view pager frag
+                            switchToViewPager();
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.e(LOG_TAG, error.getMessage());
+                            Toast.makeText(getActivity(), "There was an error - Please try again", Toast.LENGTH_SHORT).show();
+                            //todo remove this switch after michael fixes the api issues
+                            switchToViewPager();
+                        }
+                    });
                 }
                 else{
                     Toast.makeText(getActivity(), "You Must Make a Selection", Toast.LENGTH_SHORT).show();
@@ -175,6 +183,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
     private void loadCareersList(){
         if (CentsApplication.get_majors() != null){
             _careers = CentsApplication.get_majors();
+            initSpinner1();
 //            loadPreviousSearch();
         }
         else{
@@ -207,53 +216,105 @@ public class CareerSelectionDialogFragment extends DialogFragment{
 
     }
 
+    /**
+     * Switch to vis
+     */
+    private void switchToViewPager(){
+        CentsApplication.set_selectedVis("Career Comparison");
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+        ft.addToBackStack("career-intro");
+        ft.commit();
+        dismiss();
+    }
+
     private void addPlusViews(){
         isPlus = false;
         _plusBtn.setBackground(getResources().getDrawable(R.drawable.minus));
         //show secondary selections
         _vs.setVisibility(View.VISIBLE);
         _careerTextView2.setVisibility(View.VISIBLE);
-        _careerSpinner2.setVisibility(View.VISIBLE);
         _careerTextView2.setText("Major - 2");
-        _careerSpinner2.setAdapter(_careerAdapter);
-        _careerSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String career = _careers[position];
-                _career2 = new Career();
-                _career2.setName(career);
-                Log.d(LOG_TAG, "Selected Career2: " + career);
-            }
+        if(_useSpinners){
+            _careerSpinner2.setVisibility(View.VISIBLE);
+            _careerSpinner2.setAdapter(_careerAdapter);
+            _careerSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String career = _careers[position];
+                    _career2 = new Career();
+                    _career2.setName(career);
+                    Log.d(LOG_TAG, "Selected Career2: " + career);
+                }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    //do nothing
+                }
+            });
+        }
+        else{
+            //hide spinner show autoComp
+            Log.d(LOG_TAG, "Loading AutoText2");
+            _autoComp2.setVisibility(View.VISIBLE);
+            _autoComp2.requestFocus();
+            _autoComp2.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.ac_dropdown_element, _careers));
+            _autoComp2.setThreshold(1);
+            _autoComp2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    TextView tv = (TextView) view;
+                    String career = tv.getText().toString();
+                    _career2 = new Career();
+                    _career2.setName(career);
+//                    _career2.setOrder(2);
+                    Log.d(LOG_TAG, "Selected2: "+ tv.getText().toString());
+                }
+            });
+        }
 
-            }
-        });
 
     }
 
     private void initSpinner1(){
-        _careerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, _careers);
-        _careerSpinner1.setAdapter(_careerAdapter);
-        _careerSpinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String career = _careers[position];
+        if(_useSpinners){
+            _careerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, _careers);
+            _careerSpinner1.setAdapter(_careerAdapter);
+            _careerSpinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String career = _careers[position];
+                    _career1 = new Career();
+                    _career1.setName(career);
+                    Log.d(LOG_TAG, "Selected career: "+ career);
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
 
-                _career1 = new Career();
-                _career1.setName(career);
-//                _major1.setName(full_selection.substring(0,first_paren));
-                //get lvl
-//                String level  = full_selection.substring(first_paren+1, full_selection.length()-1);
-//                _major1.setLevel(level);
-                Log.d(LOG_TAG, "Selected career: "+ career);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }
+        else{
+            //hide spinner show autoComp
+            Log.d(LOG_TAG, "Loading AutoText");
+            _careerSpinner1.setVisibility(View.GONE);
+            _autoComp1.setVisibility(View.VISIBLE);
+            _autoComp1.requestFocus();
+            _autoComp1.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.ac_dropdown_element, _careers));
+            _autoComp1.setThreshold(1);
+            _autoComp1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    TextView tv = (TextView) view;
+                    String career = tv.getText().toString();
+                    _career1 = new Career();
+                    _career1.setName(career);
+//                    _career1.setOrder(1);
+                    Log.d(LOG_TAG, "Selected1: "+ career);
+                }
+            });
+        }
 
-            }
-        });
     }
 
     private String[] careersFromJson(Response response){

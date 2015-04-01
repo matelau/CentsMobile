@@ -134,5 +134,6 @@
     <string name="title1">Title1</string>
     <string name="title2">Title 2</string>
     <string name="sub_feedback">Submit Feedback</string>
+    <string name="career_hint">Begin typing to see options</string>
 
 </resources>

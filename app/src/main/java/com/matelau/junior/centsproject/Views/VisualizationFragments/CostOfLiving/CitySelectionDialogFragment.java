@@ -82,7 +82,7 @@ public class CitySelectionDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreateDialog");
         //if selected vis is a city comparison switch background fragment to search - to clear old viz
-        if(!CentsApplication.get_selectedVis().equals("COL Comparison")){
+        if(CentsApplication.get_selectedVis()!= null && !CentsApplication.get_selectedVis().equals("COL Comparison")){
             CentsApplication.set_selectedVis(null);
         }
         _states = getResources().getStringArray(R.array.states_array);

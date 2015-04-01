@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -52,6 +53,8 @@ public class MajorSelectionDialogFragment extends DialogFragment{
     private Spinner _majorSpinner1;
     private Spinner _majorSpinner2;
     private ArrayAdapter<String> _majorAdapter;
+    private AutoCompleteTextView _autoComp1;
+    private AutoCompleteTextView _autoComp2;
 
 
     private String[] _majors;
@@ -66,6 +69,8 @@ public class MajorSelectionDialogFragment extends DialogFragment{
     private Major _major1;
     private Major _major2;
 
+    private boolean _useSpinners;
+
 
     public MajorSelectionDialogFragment() {
         // Required empty public constructor
@@ -76,9 +81,11 @@ public class MajorSelectionDialogFragment extends DialogFragment{
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreateDialog");
+        //todo read in from preference
+        _useSpinners = false;
 
         //clear old values
-        if(!CentsApplication.get_selectedVis().equals("Major Comparison")){
+        if(CentsApplication.get_selectedVis()!= null && !CentsApplication.get_selectedVis().equals("Major Comparison")){
             CentsApplication.set_selectedVis(null);
             CentsApplication.set_major1(null);
             CentsApplication.set_major2(null);
@@ -91,6 +98,8 @@ public class MajorSelectionDialogFragment extends DialogFragment{
         instructions.setText("Select a state to view Universities");
         _submit = (Button) _rootLayout.findViewById(R.id.submit_select);
         _cancel = (Button) _rootLayout.findViewById(R.id.cancel_select);
+        _autoComp1 = (AutoCompleteTextView) _rootLayout.findViewById(R.id.ac_view1);
+        _autoComp2 = (AutoCompleteTextView) _rootLayout.findViewById(R.id.ac_view2);
         _vs = (TextView) _rootLayout.findViewById(R.id.vs);
         _instructions = (TextView) _rootLayout.findViewById(R.id.selection_instructions);
         _instructions.setText("Select one or two Majors");
@@ -198,28 +207,55 @@ public class MajorSelectionDialogFragment extends DialogFragment{
         //show secondary selections
         _vs.setVisibility(View.VISIBLE);
         _majorTextView2.setVisibility(View.VISIBLE);
-        _majorSpinner2.setVisibility(View.VISIBLE);
         _majorTextView2.setText("Major - 2");
-        _majorSpinner2.setAdapter(_majorAdapter);
-        _majorSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String full_selection = _majors[position];
-                int first_paren = full_selection.indexOf('(');
-                _major2 = new Major();
-                _major2.setName(full_selection.substring(0,first_paren));
-                //get lvl
-                String level  = full_selection.substring(first_paren+1, full_selection.length()-1);
-                _major2.setLevel(level);
+        if(_useSpinners){
+            _majorSpinner2.setVisibility(View.VISIBLE);
+            _majorSpinner2.setAdapter(_majorAdapter);
+            _majorSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String full_selection = _majors[position];
+                    int first_paren = full_selection.indexOf('(');
+                    _major2 = new Major();
+                    _major2.setName(full_selection.substring(0,first_paren));
+                    //get lvl
+                    String level  = full_selection.substring(first_paren+1, full_selection.length()-1);
+                    _major2.setLevel(level);
 //                            _major2.setOrder(2);
-                Log.d(LOG_TAG, "Selected Major2: "+_major2);
-            }
+                    Log.d(LOG_TAG, "Selected Major2: "+_major2);
+                }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
 
-            }
-        });
+                }
+            });
+
+
+        }
+        else{
+            //hide spinner show autoComp
+            Log.d(LOG_TAG, "Loading AutoText2");
+            _autoComp2.setVisibility(View.VISIBLE);
+            _autoComp2.requestFocus();
+            _autoComp2.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.ac_dropdown_element, _majors));
+            _autoComp2.setThreshold(1);
+            _autoComp2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    TextView tv = (TextView) view;
+                    String full_selection = tv.getText().toString();
+                    int first_paren = full_selection.indexOf('(');
+                    _major2 = new Major();
+                    _major2.setName(full_selection.substring(0,first_paren));
+                    //get lvl
+                    String level  = full_selection.substring(first_paren+1, full_selection.length()-1);
+                    _major2.setLevel(level);
+//                            _major2.setOrder(2);
+                    Log.d(LOG_TAG, "Selected Major2: "+_major2);
+                }
+            });
+        }
 
     }
 
@@ -279,25 +315,50 @@ public class MajorSelectionDialogFragment extends DialogFragment{
     }
 
     private void initSpinner1(){
-        _majorAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, _majors);
-        _majorSpinner1.setAdapter(_majorAdapter);
-        _majorSpinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String full_selection = _majors[position];
-                int first_paren = full_selection.indexOf('(');
-                _major1 = new Major();
-                _major1.setName(full_selection.substring(0,first_paren));
-                //get lvl
-                String level  = full_selection.substring(first_paren+1, full_selection.length()-1);
-                _major1.setLevel(level);
-                Log.d(LOG_TAG, "Selected major1: "+_major1);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+        if(_useSpinners){
+            _majorAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, _majors);
+            _majorSpinner1.setAdapter(_majorAdapter);
+            _majorSpinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String full_selection = _majors[position];
+                    int first_paren = full_selection.indexOf('(');
+                    _major1 = new Major();
+                    _major1.setName(full_selection.substring(0,first_paren));
+                    //get lvl
+                    String level  = full_selection.substring(first_paren+1, full_selection.length()-1);
+                    _major1.setLevel(level);
+                    Log.d(LOG_TAG, "Selected major1: "+_major1);
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
 
-            }
-        });
+                }
+            });
+        }
+        else{
+            //hide spinner show autoComp
+            Log.d(LOG_TAG, "Loading AutoText");
+            _majorSpinner1.setVisibility(View.GONE);
+            _autoComp1.setVisibility(View.VISIBLE);
+            _autoComp1.requestFocus();
+            _autoComp1.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.ac_dropdown_element, _majors));
+            _autoComp1.setThreshold(1);
+            _autoComp1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    TextView tv = (TextView) view;
+                    String full_selection = tv.getText().toString();
+                    int first_paren = full_selection.indexOf('(');
+                    _major1 = new Major();
+                    _major1.setName(full_selection.substring(0,first_paren));
+                    //get lvl
+                    String level  = full_selection.substring(first_paren+1, full_selection.length()-1);
+                    _major1.setLevel(level);
+                    Log.d(LOG_TAG, "Selected major1: "+_major1);
+                }
+            });
+        }
     }
 
     private String[] majorsFromJson(Response response){

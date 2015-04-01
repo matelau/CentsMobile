@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.matelau.junior.centsproject.Models.CentsAPIModels.CareerResponse;
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.Models.Design.JobInfo;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
@@ -67,7 +68,7 @@ public class CentsApplication extends Application{
     private static List<Col> _cols;
 
     //debug true = show toast, set login credentials
-    private static boolean debug = false;
+    private static boolean debug = true;
 
     //Spending Breakdown Vis
     private static String _occupationSalary = "45000";
@@ -99,7 +100,7 @@ public class CentsApplication extends Application{
     private static String[] _majors;
 
     //Career comp vars
-//    private static CareerResponse _cResponse;
+    private static CareerResponse _cResponse;
     private static String[] _careers;
 
     public static Context getAppContext() {return _centsContext;}
@@ -410,12 +411,20 @@ public class CentsApplication extends Application{
         CentsApplication._majors = _majors;
     }
 
-    public static String[] get_careers() {
+    public static String[] get_careers(){
         return _careers;
     }
 
     public static void set_careers(String[] _careers) {
         CentsApplication._careers = _careers;
+    }
+
+    public static CareerResponse get_cResponse() {
+        return _cResponse;
+    }
+
+    public static void set_cResponse(CareerResponse _cResponse) {
+        CentsApplication._cResponse = _cResponse;
     }
 
     /************************** Static Helper Methods ***********************************************************/

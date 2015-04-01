@@ -74,7 +74,7 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreateDialog");
         //if selected vis is a city comparison switch background fragment to search - to clear old viz
-        if(!CentsApplication.get_selectedVis().equals("College Comparison")){
+        if(CentsApplication.get_selectedVis()!= null &&  !CentsApplication.get_selectedVis().equals("College Comparison")){
             CentsApplication.set_selectedVis(null);
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
