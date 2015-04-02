@@ -157,6 +157,36 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                             Log.e(LOG_TAG, error.getMessage());
                             Toast.makeText(getActivity(), "There was an error - Please try again", Toast.LENGTH_SHORT).show();
                             //todo remove this switch after michael fixes the api issues
+                            //todo remove setting careerResponse - doing this for testing
+                            CareerResponse testResponse = new CareerResponse();
+                            testResponse.setCareer1("Software Engineer");
+                            testResponse.setCareer2("Music Teacher");
+                            ArrayList<Integer> vals = new ArrayList<Integer>();
+                            vals.add(88000);
+                            testResponse.setCareerSalary1(vals);
+                            ArrayList<Integer> vals2 = new ArrayList<Integer>();
+                            vals2.add(27250);
+                            testResponse.setCareerSalary2(vals2);
+                            ArrayList<Integer> vals3 = new ArrayList<Integer>();
+                            vals3.add(353200);
+                            testResponse.setCareerDemand1(vals3);
+                            ArrayList<Integer> vals4 = new ArrayList<Integer>();
+                            vals4.add(35000);
+                            testResponse.setCareerDemand2(vals4);
+                            ArrayList<Double> vals5 = new ArrayList<Double>();
+                            vals5.add(3.8);
+                            vals5.add(3.2);
+                            testResponse.setCareerUnemploy1(vals5);
+                            ArrayList<Double> vals6 = new ArrayList<Double>();
+                            vals6.add(8.1);
+                            vals6.add(8.5);
+                            testResponse.setCareerUnemploy2(vals6);
+                            ArrayList<Double> vals7 = new ArrayList<Double>();
+                            vals7.add(6.0);
+                            vals7.add(6.8);
+                            testResponse.setCareerUnemploy3(vals7);
+                            CentsApplication.set_cResponse(testResponse);
+
                             switchToViewPager();
                         }
                     });

@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
+import com.matelau.junior.centsproject.Models.CentsAPIModels.CareerResponse;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
@@ -25,6 +26,7 @@ public class SummaryAdapter extends BaseAdapter {
     private MajorResponse _mResponse;
     private ColiResponse _colResponse;
     private SchoolResponse _sResponse;
+    private CareerResponse _cResponse;
     private Context _context;
     public SummaryAdapter(int type, Context context){
         //Set Type -  0 COL Sum, 1 Major Sum, 2 College Sum, 3 Career Sum
@@ -46,6 +48,7 @@ public class SummaryAdapter extends BaseAdapter {
                 break;
             default:
                 //get careerResponse
+                _cResponse = CentsApplication.get_cResponse();
                 break;
         }
     }
@@ -107,75 +110,52 @@ public class SummaryAdapter extends BaseAdapter {
         //get necessary data from col response
         if(position == 0){
             catTitle.setText("2013 AVERAGE SALARY");
-            leftVal.setText("$88000");
+            leftVal.setText("" + _cResponse.getCareerSalary1().get(0));
             leftVal.setTextSize(14);
-            rightVal.setText("$88000");
-            rightVal.setTextSize(14);
-//            if(cli2.size() > 0){
-//                overall = cli2.get(0) - 100;
-//                avgCost = costString(overall);
-//                rightVal.setText(avgCost);
-//                rightVal.setTextSize(14);
-//            }
-//            else{
-//                rightVal.setVisibility(View.GONE);
-//            }
+
+            if(_cResponse.getCareer2() != null){
+                rightVal.setText("" + _cResponse.getCareerSalary2().get(0));
+                rightVal.setTextSize(14);
+
+            }
+            else{
+                rightVal.setVisibility(View.GONE);
+            }
         }
         else if(position == 1){
             catTitle.setText("CENTS JOB RATING");
             leftVal.setText("4.8 OUT OF 5.0");
             leftVal.setTextSize(14);
-            rightVal.setText("2.9 OUT OF 5.0");
-            rightVal.setTextSize(14);
-//            if(labor2.size() > 0){
-//                income = labor1.get(1).intValue();
-//                rightVal.setText("$"+income);
-//            }
-//            else{
-//                rightVal.setVisibility(View.GONE);
-//            }
+            if(_cResponse.getCareer2() != null){
+                rightVal.setText("2.9 OUT OF 5.0");
+                rightVal.setTextSize(14);
+            }
         }
         else if(position == 2){
             catTitle.setText("PROJECTED JOB DEMAND");
-            leftVal.setText("353,200 JOBS");
+            leftVal.setText(_cResponse.getCareerDemand1().get(0)+" JOBS");
             leftVal.setTextSize(14);
-            rightVal.setText("35,000 JOBS");
-            rightVal.setTextSize(14);
-//            if(taxes2.size() > 0){
-//                tax1 = taxes2.get(1);
-//                tax2 = taxes2.get(2);
-//                value = taxValues(tax1, tax2);
-//                rightVal.setText(value);
-//            }
-//            else{
-//                rightVal.setVisibility(View.GONE);
-//            }
+            if(_cResponse.getCareer2() != null){
+                rightVal.setText(_cResponse.getCareerDemand2().get(0)+" JOBS");
+                rightVal.setTextSize(14);
+            }
+            else{
+                rightVal.setVisibility(View.GONE);
+            }
         }
         else if(position == 3){
             catTitle.setText("2012 UNEMPLOYMENT");
-            leftVal.setText("3.8%");
+            leftVal.setText(_cResponse.getCareerUnemploy1().get(0)+"%");
             leftVal.setTextSize(14);
-            rightVal.setText("8.1%");
-            rightVal.setTextSize(14);
-//            if(weather2.size() > 0){
-//                value = weatherLow2.get(0)+"°- "+weather2.get(13)+"°";
-//                rightVal.setText(value);
-//            }
-//            else{
-//                rightVal.setVisibility(View.GONE);
-//            }
-        }
-//        else if(position == 4){
-//            //show ad hide other views
-//            catTitle.setText("SPONSORS");
-//            AdRequest adRequest = new AdRequest.Builder().build();
-//            if(CentsApplication.isDebug())
-//                adRequest = new AdRequest.Builder().addTestDevice("84B46C4862CAF80187170C1A7901502C").build();
-//            ad.loadAd(adRequest);
-//            rightVal.setVisibility(View.GONE);
-//            leftVal.setVisibility(View.GONE);
-//        }
+            if(_cResponse.getCareer2() != null){
+                rightVal.setText(_cResponse.getCareerUnemploy2().get(0)+"%");
+                rightVal.setTextSize(14);
 
+            }
+            else{
+                rightVal.setVisibility(View.GONE);
+            }
+        }
     }
 
 

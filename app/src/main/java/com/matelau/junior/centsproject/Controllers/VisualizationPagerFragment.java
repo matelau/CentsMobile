@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.UnemploymentFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.CostOfLivingFragment;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.CareerComparisonSummaryFragment;
@@ -86,7 +87,7 @@ public class VisualizationPagerFragment extends Fragment {
         switch (selectedVis) {
             case "Career Comparison":
                 fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
-//                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), UnemploymentFragment.class.getName()));
 //                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
 //                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
                 break;
@@ -128,7 +129,6 @@ public class VisualizationPagerFragment extends Fragment {
         _pageAdapter = new PageAdapter(getActivity().getSupportFragmentManager(), fragments);
         _viewPager.setAdapter(_pageAdapter);
         CentsApplication.set_viewPager(_viewPager);
-        //For Alpha I want to default to view with the viz TODO modify after alpha
         //This line is required so the viewPager does not destroy pages when they are removed from the screen
         //if there are more tabs created this number will need to increase
         _viewPager.setOffscreenPageLimit(5);
@@ -206,7 +206,7 @@ public class VisualizationPagerFragment extends Fragment {
             String[] tabTitles;
             switch (selectedVis) {
                 case "Career Comparison":
-                    tabTitles = new String[]{"Summary"};  //, "Salary", "Demand", "Unemployment"};
+                    tabTitles = new String[]{"Summary", "Unemployment"};  //, "Salary", "Demand", "Unemployment"};
                     return tabTitles[position];
                 case "College Comparison":
                     tabTitles = new String[]{"Summary"};
