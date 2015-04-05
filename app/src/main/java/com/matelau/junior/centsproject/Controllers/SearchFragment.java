@@ -1,8 +1,6 @@
 package com.matelau.junior.centsproject.Controllers;
 
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,6 +19,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
@@ -51,7 +53,8 @@ public class SearchFragment extends Fragment {
     private RelativeLayout _rootLayout;
     private ImageButton _submitBtn;
     private TextView _feedback;
-
+    private SliderLayout _slider;
+    private final String[] _popQueries = {"Dallas, TX vs Madison, WI","Computer Science vs Civil Engineering", "Can I afford college?","Stanford vs MIT", "Career options coming soon"};
 
     public SearchFragment() {
         // Required empty public constructor
@@ -63,6 +66,7 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_search, container, false);
+        _slider = (SliderLayout) _rootLayout.findViewById(R.id.slider);
         AdView mAdView = (AdView) _rootLayout.findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         if(CentsApplication.isDebug()){
@@ -95,18 +99,69 @@ public class SearchFragment extends Fragment {
                 handleSubmit();
             }
         });
+        //Setup Slider
+        HashMap<String,Integer> file_maps = new HashMap<String, Integer>();
+        file_maps.put("City Comparison",R.drawable.city);
+        file_maps.put("Plan Spending",R.drawable.spend);
+        file_maps.put("College Comparison", R.drawable.school);
+        file_maps.put("Career Comparison", R.drawable.career);
+        file_maps.put("Major Comparison", R.drawable.major);
 
-        _feedback = (TextView) _rootLayout.findViewById(R.id.feedback);
-        _feedback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //allow user to select email client and send feedback
-                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto", "admin@trycents.com", null));
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "FEEDBACK");
-                startActivity(Intent.createChooser(emailIntent, "Send email..."));
-            }
-        });
+        for(String name : file_maps.keySet()){
+            TextSliderView textSliderView = new TextSliderView(getActivity());
+            // initialize a SliderLayout
+            textSliderView
+                    .description(name)
+                    .image(file_maps.get(name))
+                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                    .setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
+                        @Override
+                        public void onSliderClick(BaseSliderView baseSliderView) {
+                            String type = baseSliderView.getDescription();
+                            switch(type){
+                                case "City Comparison":
+                                    _editText.setText(_popQueries[0]);
+                                    break;
+                                case "Plan Spending":
+                                    _editText.setText(_popQueries[2]);
+                                    break;
+                                case "College Comparison":
+                                    _editText.setText(_popQueries[3]);
+                                    break;
+                                case "Career Comparison":
+                                    _editText.setText(_popQueries[4]);
+                                    break;
+                                default:
+                                    //major comp
+                                    _editText.setText(_popQueries[1]);
+                                    break;
+
+                            }
+                        }
+                    });
+
+            //add your extra information
+            textSliderView.getBundle()
+                    .putString("extra",name);
+
+            _slider.addSlider(textSliderView);
+        }
+        _slider.setPresetTransformer(SliderLayout.Transformer.Accordion);
+        _slider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+        _slider.setCustomAnimation(new DescriptionAnimation());
+        _slider.setDuration(4000);
+
+//        _feedback = (TextView) _rootLayout.findViewById(R.id.feedback);
+//        _feedback.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //allow user to select email client and send feedback
+//                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+//                        "mailto", "admin@trycents.com", null));
+//                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "FEEDBACK");
+//                startActivity(Intent.createChooser(emailIntent, "Send email..."));
+//            }
+//        });
 
         return _rootLayout;
     }
