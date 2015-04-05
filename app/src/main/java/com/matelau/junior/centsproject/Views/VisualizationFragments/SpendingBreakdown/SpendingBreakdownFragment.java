@@ -73,6 +73,14 @@ public class SpendingBreakdownFragment extends Fragment {
          _chart = (PieChartView) rootView.findViewById(R.id.spending_vis);
         //Income Input
         _income = (EditText) rootView.findViewById(R.id.editText1);
+
+        //Get buttons
+        _search = (ImageButton) rootView.findViewById(R.id.imageSearchButton);
+        _default = (Button) rootView.findViewById(R.id.default_btn);
+        _student = (Button) rootView.findViewById(R.id.student_btn);
+        _custom = (Button) rootView.findViewById(R.id.custom_btn);
+        initVisVars();
+
         _income.setText(CentsApplication.get_occupationSalary());
         _income.addTextChangedListener(new TextWatcher() {
             @Override
@@ -91,34 +99,27 @@ public class SpendingBreakdownFragment extends Fragment {
                 String value = s.toString();
                 //verify numeric value
                 boolean number = true;
-                for(int i = 0; i < value.length(); i++){
+                for (int i = 0; i < value.length(); i++) {
                     char c = value.charAt(i);
 
-                    if(!Character.isDigit(c))
+                    if (!Character.isDigit(c))
                         number = false;
 
                 }
-                if(!number || value.length() == 0){
+                if (!number || value.length() == 0) {
                     //not a debug notice
                     Toast.makeText(getActivity(), "Invalid Number - No special characters", Toast.LENGTH_SHORT).show();
                     s.clear();
                     //on error set value to zero
                     s.append("0");
                     updateIncome(s);
-                }
-                else{
-                     updateIncome(s);
+                } else {
+                    updateIncome(s);
 
                 }
 
             }
         });
-        //Get buttons
-        _search = (ImageButton) rootView.findViewById(R.id.imageSearchButton);
-        _default = (Button) rootView.findViewById(R.id.default_btn);
-        _student = (Button) rootView.findViewById(R.id.student_btn);
-        _custom = (Button) rootView.findViewById(R.id.custom_btn);
-        initVisVars();
 
         _default.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,8 +175,8 @@ public class SpendingBreakdownFragment extends Fragment {
         Float prevDisposable = CentsApplication.get_disposableIncome();
         CentsApplication.set_occupationSalary(s.toString());
         SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
-        settings.edit().putString("salary", s.toString());
-        Log.d(LOG_TAG, "put salary: "+s.toString());
+        settings.edit().putString("salary", s.toString()).apply();
+        Log.d(LOG_TAG, "put salary: " + s.toString());
         //calculate new tax percentage
         calculateTaxes(Float.parseFloat(s.toString()));
         //get locked values and update their percentage based on new values
@@ -205,16 +206,7 @@ public class SpendingBreakdownFragment extends Fragment {
                 CentsApplication.set_sbValues(sbcVals);
             }
         }
-        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
-        String salary = settings.getString("salary", "");
-        if(CentsApplication.get_occupationSalary() != null){
-            settings.edit().putString("salary", CentsApplication.get_occupationSalary());
-
-        }
-        else {
-            CentsApplication.set_occupationSalary("45000");
-
-        }
+        loadSalaryFromPref();
 
 
         //only show toast once
@@ -225,6 +217,21 @@ public class SpendingBreakdownFragment extends Fragment {
         }
         //calculateTaxes
         calculateTaxes(Float.parseFloat(CentsApplication.get_occupationSalary()));
+    }
+
+    private void loadSalaryFromPref(){
+        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        String salary = settings.getString("salary", "");
+        Log.d(LOG_TAG, "Loaded Salary from pref: "+salary);
+        if(salary != ""){
+            //set var
+            CentsApplication.set_occupationSalary(salary);
+            //set View
+        }
+        else {
+            CentsApplication.set_occupationSalary("45000");
+
+        }
     }
 
     /**

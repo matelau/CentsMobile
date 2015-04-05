@@ -108,52 +108,53 @@ public class SummaryAdapter extends BaseAdapter {
 
     private void createCareerSumView(int position, TextView leftVal, TextView rightVal, TextView catTitle) {
         //get necessary data from col response
+        //if the user searched for only one career hide second view
+        boolean secondCareer = false;
+        if(_cResponse.getCareer2() == null){
+            rightVal.setVisibility(View.GONE);
+        }
+        else{
+            secondCareer = true;
+        }
+
+        //todo add null checks
         if(position == 0){
             catTitle.setText("2013 AVERAGE SALARY");
             leftVal.setText("" + _cResponse.getCareerSalary1().get(0));
             leftVal.setTextSize(14);
-
-            if(_cResponse.getCareer2() != null){
+            if(secondCareer){
                 rightVal.setText("" + _cResponse.getCareerSalary2().get(0));
                 rightVal.setTextSize(14);
 
-            }
-            else{
-                rightVal.setVisibility(View.GONE);
             }
         }
         else if(position == 1){
             catTitle.setText("CENTS JOB RATING");
             leftVal.setText("4.8 OUT OF 5.0");
             leftVal.setTextSize(14);
-            if(_cResponse.getCareer2() != null){
+            if(secondCareer){
                 rightVal.setText("2.9 OUT OF 5.0");
                 rightVal.setTextSize(14);
             }
         }
         else if(position == 2){
             catTitle.setText("PROJECTED JOB DEMAND");
-            leftVal.setText(_cResponse.getCareerDemand1().get(0)+" JOBS");
+            int jDemand =_cResponse.getCareerDemand1().get(0);
+            leftVal.setText(jDemand +" JOBS");
             leftVal.setTextSize(14);
-            if(_cResponse.getCareer2() != null){
+            if(secondCareer){
                 rightVal.setText(_cResponse.getCareerDemand2().get(0)+" JOBS");
                 rightVal.setTextSize(14);
-            }
-            else{
-                rightVal.setVisibility(View.GONE);
             }
         }
         else if(position == 3){
             catTitle.setText("2012 UNEMPLOYMENT");
-            leftVal.setText(_cResponse.getCareerUnemploy1().get(0)+"%");
+            leftVal.setText(_cResponse.getCareerUnemploy1().get(1)+"%");
             leftVal.setTextSize(14);
-            if(_cResponse.getCareer2() != null){
-                rightVal.setText(_cResponse.getCareerUnemploy2().get(0)+"%");
+            if(secondCareer){
+                rightVal.setText(_cResponse.getCareerUnemploy2().get(1)+"%");
                 rightVal.setTextSize(14);
 
-            }
-            else{
-                rightVal.setVisibility(View.GONE);
             }
         }
     }
@@ -165,9 +166,7 @@ public class SummaryAdapter extends BaseAdapter {
         //hide school2 if no data
         Log.d(LOG_TAG, "School2 size: "+ school2.size());
         if(school2.size() == 0){
-
             rightVal.setVisibility(View.GONE);
-//            leftVal.setGravity(Gravity.CENTER_HORIZONTAL);
         }
 
         //all fields could possibly be null - must check

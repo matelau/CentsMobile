@@ -104,7 +104,6 @@ public class CareerSelectionDialogFragment extends DialogFragment{
         _careerSpinner2 = (Spinner) _rootLayout.findViewById(R.id.state_spinner2);
         _autoComp1 = (AutoCompleteTextView) _rootLayout.findViewById(R.id.ac_view1);
         _autoComp2 = (AutoCompleteTextView) _rootLayout.findViewById(R.id.ac_view2);
-
         loadCareersList();
 
         _plusBtn.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +118,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                     _plusBtn.setBackground(getResources().getDrawable(R.drawable.ic_action_new));
                     _vs.setVisibility(View.GONE);
                     _vs.setVisibility(View.GONE);
+                    _autoComp2.setVisibility(View.GONE);
                     _careerTextView2.setVisibility(View.GONE);
                     _careerSpinner2.setVisibility(View.GONE);
 
@@ -129,7 +129,6 @@ public class CareerSelectionDialogFragment extends DialogFragment{
         _submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Careers Coming Soon.", Toast.LENGTH_SHORT).show();
                 if(_career1 != null ){
 //                    //create query
                     CareerQuery query = new CareerQuery();
@@ -145,8 +144,15 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                         @Override
                         public void success(CareerResponse careerResponse, Response response) {
                             Log.d(LOG_TAG, "successful response: ");
+
+                            //set names until api returns career name
+                            careerResponse.setCareer1(_career1.getName());
+                            if(_career2 != null){
+                                careerResponse.setCareer2(_career2.getName());
+                            }
                             //set response
                             CentsApplication.set_cResponse(careerResponse);
+
                             //switch fragments
                             //get career view pager frag
                             switchToViewPager();
@@ -158,36 +164,36 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                             Toast.makeText(getActivity(), "There was an error - Please try again", Toast.LENGTH_SHORT).show();
                             //todo remove this switch after michael fixes the api issues
                             //todo remove setting careerResponse - doing this for testing
-                            CareerResponse testResponse = new CareerResponse();
-                            testResponse.setCareer1("Software Engineer");
-                            testResponse.setCareer2("Music Teacher");
-                            ArrayList<Integer> vals = new ArrayList<Integer>();
-                            vals.add(88000);
-                            testResponse.setCareerSalary1(vals);
-                            ArrayList<Integer> vals2 = new ArrayList<Integer>();
-                            vals2.add(27250);
-                            testResponse.setCareerSalary2(vals2);
-                            ArrayList<Integer> vals3 = new ArrayList<Integer>();
-                            vals3.add(353200);
-                            testResponse.setCareerDemand1(vals3);
-                            ArrayList<Integer> vals4 = new ArrayList<Integer>();
-                            vals4.add(35000);
-                            testResponse.setCareerDemand2(vals4);
-                            ArrayList<Double> vals5 = new ArrayList<Double>();
-                            vals5.add(3.8);
-                            vals5.add(3.2);
-                            testResponse.setCareerUnemploy1(vals5);
-                            ArrayList<Double> vals6 = new ArrayList<Double>();
-                            vals6.add(8.1);
-                            vals6.add(8.5);
-                            testResponse.setCareerUnemploy2(vals6);
-                            ArrayList<Double> vals7 = new ArrayList<Double>();
-                            vals7.add(6.0);
-                            vals7.add(6.8);
-                            testResponse.setCareerUnemploy3(vals7);
-                            CentsApplication.set_cResponse(testResponse);
+//                            CareerResponse testResponse = new CareerResponse();
+//                            testResponse.setCareer1("Software Engineer");
+//                            testResponse.setCareer2("Music Teacher");
+//                            ArrayList<Integer> vals = new ArrayList<Integer>();
+//                            vals.add(88000);
+//                            testResponse.setCareerSalary1(vals);
+//                            ArrayList<Integer> vals2 = new ArrayList<Integer>();
+//                            vals2.add(27250);
+//                            testResponse.setCareerSalary2(vals2);
+//                            ArrayList<Integer> vals3 = new ArrayList<Integer>();
+//                            vals3.add(353200);
+//                            testResponse.setCareerDemand1(vals3);
+//                            ArrayList<Integer> vals4 = new ArrayList<Integer>();
+//                            vals4.add(35000);
+//                            testResponse.setCareerDemand2(vals4);
+//                            ArrayList<Double> vals5 = new ArrayList<Double>();
+//                            vals5.add(3.8);
+//                            vals5.add(3.2);
+//                            testResponse.setCareerUnemploy1(vals5);
+//                            ArrayList<Double> vals6 = new ArrayList<Double>();
+//                            vals6.add(8.1);
+//                            vals6.add(8.5);
+//                            testResponse.setCareerUnemploy2(vals6);
+//                            ArrayList<Double> vals7 = new ArrayList<Double>();
+//                            vals7.add(6.0);
+//                            vals7.add(6.8);
+//                            testResponse.setCareerUnemploy3(vals7);
+//                            CentsApplication.set_cResponse(testResponse);
 
-                            switchToViewPager();
+//                            switchToViewPager();
                         }
                     });
                 }
@@ -264,7 +270,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
         //show secondary selections
         _vs.setVisibility(View.VISIBLE);
         _careerTextView2.setVisibility(View.VISIBLE);
-        _careerTextView2.setText("Major - 2");
+        _careerTextView2.setText("Career- 2");
         if(_useSpinners){
             _careerSpinner2.setVisibility(View.VISIBLE);
             _careerSpinner2.setAdapter(_careerAdapter);
@@ -340,13 +346,34 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                     _career1 = new Career();
                     _career1.setName(career);
 //                    _career1.setOrder(1);
-                    Log.d(LOG_TAG, "Selected1: "+ career);
+                    Log.d(LOG_TAG, "Selected1: " + career);
                 }
             });
+            setPreviousSearchedAutoComp();
         }
 
     }
 
+
+    private void setPreviousSearchedAutoComp(){
+        //load last searched items
+        CareerResponse cResponse = CentsApplication.get_cResponse();
+        if(cResponse != null){
+            String career1 = cResponse.getCareer1();
+            String career2 = cResponse.getCareer2();
+            _career1 = new Career();
+            _career1.setName(career1);
+            _autoComp1.setText(career1);
+            if(career2 != null){
+                //add secondary search elements
+                addPlusViews();
+                _career2 = new Career();
+                _career2.setName(career2);
+                _autoComp2.setText(career2);
+            }
+
+        }
+    }
     private String[] careersFromJson(Response response){
         Gson gson = new Gson();
         BufferedReader reader = null;
