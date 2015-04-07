@@ -19,4 +19,7 @@ public interface UserService {
     @GET("/api/v2/users/{id}/query")
     void getQueries(@Path("id") int id, Callback<Response> cb);
 
+    @GET("/api/v2/users/{id}")
+    void getProfileData(@Path("id") int id, Callback<Response> cb);
+
 }

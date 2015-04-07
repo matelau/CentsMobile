@@ -4,6 +4,8 @@ package com.matelau.junior.centsproject.Views.VisualizationFragments.Career;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -64,7 +66,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
     private String[] _careers;
     private Career _career1;
     private Career _career2;
-    private boolean _useSpinners;
+    private boolean _useAutocomplete;
 
 
     public CareerSelectionDialogFragment() {
@@ -77,7 +79,9 @@ public class CareerSelectionDialogFragment extends DialogFragment{
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreateDialog");
 
-        _useSpinners = false;
+        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        _useAutocomplete = settings.getBoolean("Autocomplete", true);
+        Log.d(LOG_TAG, "Autocomplete value: "+_useAutocomplete);
 
         //clear old values
         if(CentsApplication.get_selectedVis()!= null && !CentsApplication.get_selectedVis().equals("Major Comparison")){
@@ -271,7 +275,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
         _vs.setVisibility(View.VISIBLE);
         _careerTextView2.setVisibility(View.VISIBLE);
         _careerTextView2.setText("Career- 2");
-        if(_useSpinners){
+        if(!_useAutocomplete){
             _careerSpinner2.setVisibility(View.VISIBLE);
             _careerSpinner2.setAdapter(_careerAdapter);
             _careerSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -313,7 +317,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
     }
 
     private void initSpinner1(){
-        if(_useSpinners){
+        if(!_useAutocomplete){
             _careerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, _careers);
             _careerSpinner1.setAdapter(_careerAdapter);
             _careerSpinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
