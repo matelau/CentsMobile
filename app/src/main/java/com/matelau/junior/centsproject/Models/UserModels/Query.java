@@ -5,26 +5,25 @@ import com.google.gson.annotations.Expose;
 /**
  * Created by matelau on 4/6/15.
  */
-public class Id {
+public class Query {
     @Expose
-    private int id;
+    private String url;
 
     /**
      *
      * @return
-     * The id
+     * The url
      */
-    public int getId() {
-        return id;
+    public String getUrl() {
+        return url;
     }
 
     /**
      *
-     * @param id
-     * The id
+     * @param url
+     * The url
      */
-    public void setId(int id) {
-        this.id = id;
+    public void setUrl(String url) {
+        this.url = url;
     }
-
 }

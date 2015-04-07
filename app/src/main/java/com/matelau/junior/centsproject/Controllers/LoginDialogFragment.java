@@ -141,7 +141,7 @@ public class LoginDialogFragment extends DialogFragment {
                     settings.edit().
                             putString("EMAIL", _email.getText().toString()).
                             putString("PASSWORD", _password.getText().toString()).
-                            putString("ID", ""+id.getId()).
+                            putInt("ID", id.getId()).
                             apply();
                     dismiss();
 

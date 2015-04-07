@@ -1,6 +1,8 @@
 package com.matelau.junior.centsproject.Controllers;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -27,6 +29,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.QueryService;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
+import com.matelau.junior.centsproject.Models.UserModels.Query;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.Models.VizModels.Major;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
@@ -185,6 +189,9 @@ public class SearchFragment extends Fragment {
             if(CentsApplication.isDebug())
                 Toast.makeText(getActivity(), "Search for:" + searchText, Toast.LENGTH_SHORT).show();
             //Todo if valid response and user is logged in from query service store searchText to _query
+            if(CentsApplication.is_loggedIN()){
+                storeQuery(searchText);
+            }
             QueryService service = CentsApplication.get_queryParsingRestAdapter().create(QueryService.class);
             service.results(searchText, new Callback<Response>() {
                 @Override
@@ -288,6 +295,29 @@ public class SearchFragment extends Fragment {
 
         }
 
+    }
+
+    private void storeQuery(String searchText){
+        //create query model
+        Query q = new Query();
+        q.setUrl(searchText);
+        //load user id
+        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        int ID = settings.getInt("ID", 0);
+        Log.d(LOG_TAG, "Loaded ID from Prefs: "+ID);
+        UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+        service.storeQuery(q, ID, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Log.d(LOG_TAG, "Stored Query");
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(LOG_TAG, error.getMessage());
+
+            }
+        });
     }
 
 
