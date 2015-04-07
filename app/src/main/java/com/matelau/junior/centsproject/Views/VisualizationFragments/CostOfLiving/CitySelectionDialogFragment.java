@@ -20,11 +20,11 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
-import com.matelau.junior.centsproject.Models.CentsAPIModels.CostOfLiving;
-import com.matelau.junior.centsproject.Models.CentsAPIModels.CostOfLivingLocation;
-import com.matelau.junior.centsproject.Models.CentsAPIModels.CostOfLivingService;
-import com.matelau.junior.centsproject.Models.CentsAPIModels.RecordQuery;
-import com.matelau.junior.centsproject.Models.CentsAPIModels.RecordsService;
+import com.matelau.junior.centsproject.Models.VizModels.CostOfLiving;
+import com.matelau.junior.centsproject.Models.VizModels.CostOfLivingLocation;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.CostOfLivingService;
+import com.matelau.junior.centsproject.Models.VizModels.RecordQuery;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.RecordsService;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.R;
 

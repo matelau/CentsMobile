@@ -11,14 +11,16 @@ import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.matelau.junior.centsproject.Models.CentsAPIModels.Login;
-import com.matelau.junior.centsproject.Models.CentsAPIModels.LoginService;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.LoginService;
+import com.matelau.junior.centsproject.Models.UserModels.Id;
+import com.matelau.junior.centsproject.Models.UserModels.Login;
 import com.matelau.junior.centsproject.R;
 
 import java.util.regex.Pattern;
@@ -51,7 +53,7 @@ public class LoginDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.d(LOG_TAG, "onCreateDialog" );
+        Log.d(LOG_TAG, "onCreateDialog");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_login_dialog, null, false);
@@ -124,34 +126,39 @@ public class LoginDialogFragment extends DialogFragment {
 
             //call api
             LoginService service = CentsApplication.get_centsRestAdapter().create(LoginService.class);
-            service.login(new Login(email, pass), new Callback<Response>() {
+            service.login(new Login(email, pass), new Callback<Id>() {
                 @Override
-                public void success(Response response, Response response2) {
-                    Log.d(LOG_TAG, "Login Success ");
+                public void success(Id id, Response response) {
+                    Log.d(LOG_TAG, "Login Success id: "+id.getId());
                     _errorMsg.setVisibility(View.GONE);
-//                    String sResponse = response.().toString();
-                    if(CentsApplication.isDebug())
-                        Toast.makeText(getActivity(), "Login Success", Toast.LENGTH_SHORT).show();
+                    //hide keyboard after submit
+                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(_password.getWindowToken(), 0);
+                    Toast.makeText(getActivity(), "Login Success", Toast.LENGTH_SHORT).show();
                     //Store Login information and update app state
                     CentsApplication.set_loggedIN(true);
                     SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
                     settings.edit().
                             putString("EMAIL", _email.getText().toString()).
                             putString("PASSWORD", _password.getText().toString()).
+                            putString("ID", ""+id.getId()).
                             apply();
                     dismiss();
+
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
                     Log.e(LOG_TAG, error.getMessage());
+                    Toast.makeText(getActivity(), "Error Please Try Again", Toast.LENGTH_SHORT).show();
                     //Remove Login information and update app state
                     CentsApplication.set_loggedIN(false);
                     SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
-                    settings.edit().remove("EMAIL").remove("Password").apply();
+                    settings.edit().remove("EMAIL").remove("PASSWORD").remove("ID").apply();
                     _errorMsg.setTextColor(getResources().getColor(R.color.red));
                     _errorMsg.setText("Authentication Failed");
                     _errorMsg.setVisibility(View.VISIBLE);
+
                 }
             });
         }

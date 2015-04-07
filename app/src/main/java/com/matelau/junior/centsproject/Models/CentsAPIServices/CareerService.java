@@ -1,4 +1,7 @@
-package com.matelau.junior.centsproject.Models.CentsAPIModels;
+package com.matelau.junior.centsproject.Models.CentsAPIServices;
+
+import com.matelau.junior.centsproject.Models.VizModels.CareerQuery;
+import com.matelau.junior.centsproject.Models.VizModels.CareerResponse;
 
 import retrofit.Callback;
 import retrofit.http.Body;

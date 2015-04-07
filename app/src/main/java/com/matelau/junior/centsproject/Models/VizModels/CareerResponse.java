@@ -1,4 +1,4 @@
-package com.matelau.junior.centsproject.Models.CentsAPIModels;
+package com.matelau.junior.centsproject.Models.VizModels;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

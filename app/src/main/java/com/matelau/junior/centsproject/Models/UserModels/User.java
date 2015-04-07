@@ -1,4 +1,4 @@
-package com.matelau.junior.centsproject.Models.CentsAPIModels;
+package com.matelau.junior.centsproject.Models.UserModels;
 
 /**
  * POJO for registering a User

@@ -1,4 +1,6 @@
-package com.matelau.junior.centsproject.Models.CentsAPIModels;
+package com.matelau.junior.centsproject.Models.CentsAPIServices;
+
+import com.matelau.junior.centsproject.Models.VizModels.RecordQuery;
 
 import retrofit.Callback;
 import retrofit.client.Response;

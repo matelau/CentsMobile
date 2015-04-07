@@ -1,4 +1,4 @@
-package com.matelau.junior.centsproject.Models.CentsAPIModels;
+package com.matelau.junior.centsproject.Models.CentsAPIServices;
 
 import retrofit.Callback;
 import retrofit.client.Response;

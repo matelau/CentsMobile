@@ -1,4 +1,4 @@
-package com.matelau.junior.centsproject.Models.CentsAPIModels;
+package com.matelau.junior.centsproject.Models.UserModels;
 
 /**
  * Created by matelau on 2/3/15.

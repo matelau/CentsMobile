@@ -16,8 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.matelau.junior.centsproject.Models.CentsAPIModels.RegisterService;
-import com.matelau.junior.centsproject.Models.CentsAPIModels.User;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.RegisterService;
+import com.matelau.junior.centsproject.Models.UserModels.User;
 import com.matelau.junior.centsproject.R;
 
 import java.io.BufferedReader;

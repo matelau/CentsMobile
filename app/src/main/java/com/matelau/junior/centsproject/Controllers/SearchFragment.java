@@ -26,7 +26,7 @@ import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
-import com.matelau.junior.centsproject.Models.CentsAPIModels.QueryService;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.QueryService;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.Models.VizModels.Major;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;

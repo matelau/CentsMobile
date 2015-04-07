@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.matelau.junior.centsproject.Models.CentsAPIModels.CareerResponse;
+import com.matelau.junior.centsproject.Models.VizModels.CareerResponse;
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.Models.Design.JobInfo;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
@@ -68,7 +68,7 @@ public class CentsApplication extends Application{
     private static List<Col> _cols;
 
     //debug true = show toast, set login credentials
-    private static boolean debug = false;
+    private static boolean debug = true;
 
     //Spending Breakdown Vis
     private static String _occupationSalary = "45000";

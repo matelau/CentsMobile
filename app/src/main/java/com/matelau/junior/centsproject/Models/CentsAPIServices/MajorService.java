@@ -1,4 +1,4 @@
-package com.matelau.junior.centsproject.Models.CentsAPIModels;
+package com.matelau.junior.centsproject.Models.CentsAPIServices;
 
 import com.matelau.junior.centsproject.Models.VizModels.MajorQuery;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;

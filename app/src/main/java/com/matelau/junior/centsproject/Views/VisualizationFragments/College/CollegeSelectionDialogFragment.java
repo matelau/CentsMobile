@@ -22,11 +22,11 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
-import com.matelau.junior.centsproject.Models.CentsAPIModels.RecordQuery;
-import com.matelau.junior.centsproject.Models.CentsAPIModels.RecordsService;
-import com.matelau.junior.centsproject.Models.CentsAPIModels.School;
-import com.matelau.junior.centsproject.Models.CentsAPIModels.SchoolRequest;
-import com.matelau.junior.centsproject.Models.CentsAPIModels.SchoolService;
+import com.matelau.junior.centsproject.Models.VizModels.RecordQuery;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.RecordsService;
+import com.matelau.junior.centsproject.Models.VizModels.School;
+import com.matelau.junior.centsproject.Models.VizModels.SchoolRequest;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.SchoolService;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.R;
 
