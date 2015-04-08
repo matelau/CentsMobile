@@ -9,13 +9,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ExpandableListView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 
 import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
+import com.matelau.junior.centsproject.Models.UserModels.CareerRating;
+import com.matelau.junior.centsproject.Models.UserModels.DegreeRating;
+import com.matelau.junior.centsproject.Models.UserModels.SchoolRating;
+import com.matelau.junior.centsproject.Models.UserModels.UserResponse;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.Profile.ExpandableListAdapter;
 
@@ -41,6 +44,7 @@ public class ProfileFragment extends Fragment {
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
     private Switch _switch;
+    private int _id;
 
 
     public ProfileFragment() {
@@ -53,23 +57,15 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_profile, null, false);
+        //load user id
+        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        _id = settings.getInt("ID", 0);
+        Log.d(LOG_TAG, "Loaded ID from Prefs: " + _id);
+        boolean checked = settings.getBoolean("Autocomplete", true);
+        Log.d(LOG_TAG, "Checked value: " + checked);
+
         //setup profile card list
         _profileCats = (ExpandableListView) _rootLayout.findViewById(R.id.profile_categories_list);
-        _switch = (Switch) _rootLayout.findViewById(R.id.auto_complete_switch);
-        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
-        boolean checked = settings.getBoolean("Autocomplete", true);
-        Log.d(LOG_TAG, "Checked value: "+checked);
-        _switch.setChecked(checked);
-        _switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
-                settings.edit().
-                        putBoolean("Autocomplete", isChecked).
-                        apply();
-
-            }
-        });
 
         prepareListData();
         listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
@@ -86,134 +82,37 @@ public class ProfileFragment extends Fragment {
         // Adding child data
         listDataHeader.add("Account Information");
         listDataHeader.add("Recent Searches");
-//        listDataHeader.add("Preferences");
+        listDataHeader.add("Major Ratings");
+        listDataHeader.add("University Ratings");
+        listDataHeader.add("Career Ratings");
+        listDataHeader.add("Preferences");
 
-        // Adding child data
-        List<String> accountInfo = new ArrayList<String>();
         loadProfileData();
-        //TODO pull info from api
-        accountInfo.add("User Details");
-//        accountInfo.add("Name");
-//        accountInfo.add("Email");
-//        accountInfo.add("Location");
+        loadQueryData();
+        loadRatingData();
+        listDataChild.put(listDataHeader.get(0), new ArrayList<String>()); // Header, Child data
+        listDataChild.put(listDataHeader.get(1), new ArrayList<String>());
+        listDataChild.put(listDataHeader.get(2), new ArrayList<String>());
+        listDataChild.put(listDataHeader.get(3), new ArrayList<String>());
+        listDataChild.put(listDataHeader.get(4), new ArrayList<String>());
+        ArrayList<String> dmbVal = new ArrayList<String>();
+        dmbVal.add("null");
+        listDataChild.put(listDataHeader.get(5), dmbVal);
 
-
-        List<String> recentSearches=  new ArrayList<String>();
-        loadUserSearches();
-        //TODO pull recent from api
-//        recentSearches.add("List of recent searches.");
-//        recentSearches.add("u of u vs byu");
-//        recentSearches.add("West Valley City vs Oakland");
-
-
-//        List<String> comingSoon = new ArrayList<String>();
-//        comingSoon.add("coming soon");
-
-
-        listDataChild.put(listDataHeader.get(0), accountInfo); // Header, Child data
-        listDataChild.put(listDataHeader.get(1), recentSearches);
-//        listDataChild.put(listDataHeader.get(2), comingSoon);
 
     }
 
-    private void loadProfileData(){
-        final ArrayList<String> searchHistory = new ArrayList<String>();
-        //get UserID
-        //load user id
-        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
-        int ID = settings.getInt("ID", 0);
-        Log.d(LOG_TAG, "Loaded ID from Prefs: " + ID);
+    private void loadQueryData(){
         UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
-        service.getProfileData(ID, new Callback<Response>() {
+        service.getQueries(_id, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
-                BufferedReader reader = null;
-                StringBuilder sb = new StringBuilder();
-                try {
-
-                    reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
-
-                    String line;
-
-                    try {
-                        while ((line = reader.readLine()) != null) {
-                            sb.append(line);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                String[] queries = translateResponseToArray(response);
+                ArrayList<String> qs = new ArrayList<String>();
+                for (String s : queries) {
+                    qs.add(s);
                 }
-
-                String rsp = sb.toString();
-                Gson gson = new Gson();
-//                String[] results = gson.fromJson(rsp, String[].class);
-//                //add upto last 10 results to list
-//                for(int i = results.length -1; i >= 0; i--){
-//                    if(searchHistory.size() < 10)
-//                        searchHistory.add(results[i]);
-//                    else{
-//                        break;
-//                    }
-//                }
-//                //update the list
-//                listDataChild.put(listDataHeader.get(1), searchHistory);
-
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e(LOG_TAG, "Profile data: "+error.getMessage());
-
-            }
-        });
-
-    }
-
-    private void loadUserSearches(){
-        final ArrayList<String> searchHistory = new ArrayList<String>();
-        //get UserID
-        //load user id
-        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
-        int ID = settings.getInt("ID", 0);
-        Log.d(LOG_TAG, "Loaded ID from Prefs: " + ID);
-        UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
-        service.getQueries(ID, new Callback<Response>() {
-            @Override
-            public void success(Response response, Response response2) {
-                BufferedReader reader = null;
-                StringBuilder sb = new StringBuilder();
-                try {
-
-                    reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
-
-                    String line;
-
-                    try {
-                        while ((line = reader.readLine()) != null) {
-                            sb.append(line);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                String rsp = sb.toString();
-                Gson gson = new Gson();
-                String[] results = gson.fromJson(rsp, String[].class);
-                //add upto last 10 results to list
-                for(int i = results.length -1; i >= 0; i--){
-                    if(searchHistory.size() < 10)
-                        searchHistory.add(results[i]);
-                    else{
-                        break;
-                    }
-                }
-                //update the list
-                listDataChild.put(listDataHeader.get(1), searchHistory);
+                listDataChild.put(listDataHeader.get(1), qs);
 
             }
 
@@ -223,7 +122,115 @@ public class ProfileFragment extends Fragment {
 
             }
         });
+
     }
 
+    private void loadRatingData(){
+        UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+        service.getRatingsData(_id, new Callback<UserResponse>() {
+            @Override
+            public void success(UserResponse userResponse, Response response) {
 
+                //ratings
+                List<CareerRating> cRatings = userResponse.getCareerRatings();
+                List<String> cRat = new ArrayList<String>();
+                for(CareerRating c: cRatings){
+                    String val = c.getName()+": "+c.getRating();
+                    cRat.add(val);
+                }
+
+                List<DegreeRating> dRatings = userResponse.getDegreeRatings();
+                ArrayList<String> dRat = new ArrayList<String>();
+                for(DegreeRating d : dRatings){
+                    String val = d.getName()+" "+d.getLevel()+": "+d.getRating();
+                    dRat.add(val);
+                }
+
+                List<SchoolRating> sRatings = userResponse.getSchoolRatings();
+                List<String> sRat = new ArrayList<String>();
+                for(SchoolRating s : sRatings){
+                    String val = s.getName()+": "+s.getRating();
+                    sRat.add(val);
+                }
+                //major
+                listDataChild.put(listDataHeader.get(2), dRat);
+                //university
+                listDataChild.put(listDataHeader.get(3), sRat);
+                //Career
+                listDataChild.put(listDataHeader.get(4), cRat);
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(LOG_TAG, error.getMessage());
+
+            }
+        });
+
+
+    }
+
+    private void loadProfileData(){
+        UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+        service.getProfileData(_id, new Callback<UserResponse>() {
+            @Override
+            public void success(UserResponse userResponse, Response response) {
+                //account info
+                List<String> accountInfo = new ArrayList<String>();
+                accountInfo.add(0, "Email: " + userResponse.getEmail());
+                accountInfo.add(1, "First Name: " + userResponse.getFirstName());
+                accountInfo.add(2, "Last Name: " + userResponse.getLastName());
+                accountInfo.add(3, "Email Type: " + userResponse.getEmailType());
+                listDataChild.put(listDataHeader.get(0), accountInfo);
+                //set switch according to stored value
+                if(userResponse.getPrefersAutocomplete() != null)
+                {
+                    //update switch
+//                    _switch.setChecked(userResponse.getPrefersAutocomplete());
+                    //update stored value
+                    SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+                    settings.edit().putBoolean("Autocomplete", userResponse.getPrefersAutocomplete()).apply();
+                }
+
+
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(LOG_TAG, error.getMessage());
+
+            }
+        });
+
+    }
+
+    private String[] translateResponseToArray(Response response){
+        Gson gson = new Gson();
+        BufferedReader reader = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+
+            reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
+
+            String line;
+
+            try {
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String rsp = sb.toString();
+        String[] respArr = gson.fromJson(rsp, String[].class);
+
+        return respArr;
+
+    }
 }

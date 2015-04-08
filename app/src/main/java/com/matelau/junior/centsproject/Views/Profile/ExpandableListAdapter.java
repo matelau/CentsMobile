@@ -1,22 +1,36 @@
 package com.matelau.junior.centsproject.Views.Profile;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
+import com.matelau.junior.centsproject.Controllers.CentsApplication;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
+import com.matelau.junior.centsproject.Models.UserModels.Field;
 import com.matelau.junior.centsproject.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by matelau on 3/25/15.
  */
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
+    private String LOG_TAG = ExpandableListAdapter.class.getSimpleName();
     private Context _context;
     private List<String> _listDataHeader; // header titles
     // child data in format of header title, child title
@@ -43,8 +57,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
+        EditText rating = (EditText) convertView.findViewById(R.id.edit_rating);
+        rating.setVisibility(View.GONE);
 
-        final String childText = (String) getChild(groupPosition, childPosition);
+        String childText = (String) getChild(groupPosition, childPosition);
 
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
@@ -57,13 +73,74 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         } else
             convertView.setPadding(0, 0, 0, 0);
 
-        TextView txtListChild = (TextView) convertView
-                .findViewById(R.id.lblListItem);
-        //hide sub elements temporarily
-        convertView.findViewById(R.id.element1).setVisibility(View.GONE);
-        convertView.findViewById(R.id.element2).setVisibility(View.GONE);
+        if(groupPosition > 2 && groupPosition != 5){
+            String ratingVal = childText.substring(childText.indexOf(':'), childText.length()).trim();
+            rating.setText(ratingVal);
+            childText = childText.substring(0,childText.indexOf(':')).trim();
+            rating.setVisibility(View.VISIBLE);
+            if(groupPosition == 2){
+                //major
 
-        txtListChild.setText(childText);
+            }
+            else if(groupPosition == 3){
+                //university
+
+            }
+            else{
+                //career
+
+            }
+        }
+        //preferences
+        if(groupPosition == 5){
+            //hide default layout
+            convertView.findViewById(R.id.profile_data).setVisibility(View.GONE);
+            convertView.findViewById(R.id.profile_preferences).setVisibility(View.VISIBLE);
+            Switch acSwitch = (Switch) convertView.findViewById(R.id.auto_complete_switch);
+            SharedPreferences settings = _context.getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+            final int id = settings.getInt("ID", 0);
+            boolean checked = settings.getBoolean("Autocomplete", true);
+            acSwitch.setChecked(checked);
+            acSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    SharedPreferences settings = _context.getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+                    settings.edit().
+                        putBoolean("Autocomplete", isChecked).
+                        apply();
+                    //update db
+                    UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+                    Field f = new Field();
+                    f.setName("prefers_autocomplete");
+                    f.setValue("" + isChecked);
+                    List<Field> fs = new ArrayList<Field>();
+                    fs.add(f);
+                    HashMap<String, List<Field>> fields = new HashMap<String, List<Field>>();
+                    fields.put("fields", fs);
+                    service.updateFields(id, fields, new Callback<Response>() {
+                        @Override
+                        public void success(Response response, Response response2) {
+                            Log.d(LOG_TAG, "update prefers autocomplete success");
+
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.e(LOG_TAG, error.getMessage());
+                        }
+                    });
+                }
+            });
+
+        }
+        else{
+            convertView.findViewById(R.id.profile_data).setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.profile_preferences).setVisibility(View.GONE);
+            TextView txtListChild = (TextView) convertView
+                    .findViewById(R.id.lblListItem);
+            txtListChild.setText(childText);
+        }
+
         return convertView;
     }
 

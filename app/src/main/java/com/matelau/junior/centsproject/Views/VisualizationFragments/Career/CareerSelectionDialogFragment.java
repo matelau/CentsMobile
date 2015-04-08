@@ -25,12 +25,12 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.CareerService;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.RecordsService;
 import com.matelau.junior.centsproject.Models.VizModels.Career;
 import com.matelau.junior.centsproject.Models.VizModels.CareerQuery;
 import com.matelau.junior.centsproject.Models.VizModels.CareerResponse;
-import com.matelau.junior.centsproject.Models.CentsAPIServices.CareerService;
 import com.matelau.junior.centsproject.Models.VizModels.RecordQuery;
-import com.matelau.junior.centsproject.Models.CentsAPIServices.RecordsService;
 import com.matelau.junior.centsproject.R;
 
 import java.io.BufferedReader;
@@ -84,10 +84,9 @@ public class CareerSelectionDialogFragment extends DialogFragment{
         Log.d(LOG_TAG, "Autocomplete value: "+_useAutocomplete);
 
         //clear old values
-        if(CentsApplication.get_selectedVis()!= null && !CentsApplication.get_selectedVis().equals("Major Comparison")){
+        if(CentsApplication.get_selectedVis()!= null && !CentsApplication.get_selectedVis().equals("Career Comparison")){
             CentsApplication.set_selectedVis(null);
-            CentsApplication.set_major1(null);
-            CentsApplication.set_major2(null);
+            CentsApplication.set_cResponse(null);
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -99,7 +98,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
         _cancel = (Button) _rootLayout.findViewById(R.id.cancel_select);
         _vs = (TextView) _rootLayout.findViewById(R.id.vs);
         _instructions = (TextView) _rootLayout.findViewById(R.id.selection_instructions);
-        _instructions.setText("Select one or two Majors");
+        _instructions.setText("Select one or two Careers");
         _careerTextView1 = (TextView) _rootLayout.findViewById(R.id.stateTextView);
         _careerTextView1.setText("Career - 1");
         _careerTextView2 = (TextView) _rootLayout.findViewById(R.id.stateTextView2);
@@ -221,8 +220,8 @@ public class CareerSelectionDialogFragment extends DialogFragment{
     }
 
     private void loadCareersList(){
-        if (CentsApplication.get_majors() != null){
-            _careers = CentsApplication.get_majors();
+        if (CentsApplication.get_careers() != null){
+            _careers = CentsApplication.get_careers();
             initSpinner1();
 //            loadPreviousSearch();
         }
@@ -237,9 +236,9 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                 @Override
                 public void success(Response response, Response response2) {
                     //get list
-                    Log.d(LOG_TAG, "Received Majors List");
+                    Log.d(LOG_TAG, "Received Careers List");
                     _careers = careersFromJson(response2);
-                    //cache majors list
+                    //cache careers list
                     CentsApplication.set_careers(_careers);
                     initSpinner1();
 
