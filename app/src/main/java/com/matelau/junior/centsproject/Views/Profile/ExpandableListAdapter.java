@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CompoundButton;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -77,13 +78,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         Spinner spinnerRating = (Spinner) convertView.findViewById(R.id.spinner_rating);
         spinnerRating.setVisibility(View.GONE);
+        ProgressBar pb = (ProgressBar) convertView.findViewById(R.id.user_progress);
+        pb.setVisibility(View.GONE);
 
         if (childPosition == getChildrenCount(groupPosition) - 1) {
             convertView.setPadding(0, 0, 0, 10);
         } else
             convertView.setPadding(0, 0, 0, 0);
 
-        if(groupPosition >= 2 && groupPosition != 5){
+        //ratings section 2,3,4
+        if(groupPosition >= 2 && groupPosition < 5){
             final int ratingVal = Integer.parseInt(childText.substring(childText.indexOf(':') + 1, childText.length()).trim());
             final String element = childText.substring(0, childText.indexOf(':')).trim();
             final HashMap<String, Integer> user = new HashMap<String, Integer>();
@@ -190,6 +194,20 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
             }
         }
+        //completed sections
+        if(groupPosition == 6){
+            //show progressbar
+            if(childText.contains("Progress :")){
+                int numberOfComps = Integer.parseInt(childText.substring(childText.indexOf(":")+1,childText.indexOf("/")).trim());
+                float progress = (numberOfComps /13f)*100f;
+                pb.setProgress((int) progress);
+                pb.setVisibility(View.VISIBLE);
+                childText = numberOfComps+"/13";
+            }
+
+
+        }
+
         //preferences
         if(groupPosition == 5){
             //hide default layout
@@ -275,7 +293,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         if (isExpanded)
             convertView.setPadding(0, 0, 0, 0);
         else
-            convertView.setPadding(0, 0, 0, 20);
+            convertView.setPadding(0, 0, 0, 10);
 
         TextView lblListHeader = (TextView) convertView
                 .findViewById(R.id.lblListHeader);

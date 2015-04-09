@@ -181,7 +181,7 @@ public class WeatherFragment extends Fragment {
 
         if (hasAxes) {
             Axis axisX = new Axis(axisValues);
-            Axis axisY = new Axis().setHasLines(true).setName("Average High and Low Temperatures");
+            Axis axisY = new Axis().setHasLines(true).setName("High and Low Temperature Range");
             data.setAxisXBottom(axisX);
             data.setAxisYLeft(axisY);
         } else {

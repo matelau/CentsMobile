@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 
 import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
@@ -26,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,7 +43,6 @@ public class ProfileFragment extends Fragment {
     private ExpandableListAdapter listAdapter;
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
-    private Switch _switch;
     private int _id;
 
 
@@ -86,21 +85,57 @@ public class ProfileFragment extends Fragment {
         listDataHeader.add("University Ratings");
         listDataHeader.add("Career Ratings");
         listDataHeader.add("Preferences");
-        listDataHeader.add("Completed");
+        listDataHeader.add("Progress");
+        listDataHeader.add("To-do");
         loadProfileData();
         loadQueryData();
         loadRatingData();
+        loadCompletedData();
         listDataChild.put(listDataHeader.get(0), new ArrayList<String>()); // Header, Child data
         listDataChild.put(listDataHeader.get(1), new ArrayList<String>());
         listDataChild.put(listDataHeader.get(2), new ArrayList<String>());
         listDataChild.put(listDataHeader.get(3), new ArrayList<String>());
         listDataChild.put(listDataHeader.get(4), new ArrayList<String>());
-        listDataChild.put(listDataHeader.get(5), new ArrayList<String>());
+        //need to add a dummy value to list in order for list to have a childview
         ArrayList<String> dmbVal = new ArrayList<String>();
         dmbVal.add("null");
         listDataChild.put(listDataHeader.get(5), dmbVal);
+        String[] sections = getActivity().getResources().getStringArray(R.array.sections);
+        final ArrayList<String> allSections =  new ArrayList<String>(Arrays.asList(sections));
+        //add dummy value to show progress bar
+        ArrayList<String> lSections =  new ArrayList<String>(); //
+        lSections.add("Completed : 0/13");
+        listDataChild.put(listDataHeader.get(6), lSections);
+        listDataChild.put(listDataHeader.get(7),allSections);
+
+    }
+
+    private void loadCompletedData(){
+        UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+        service.getCompletedData(_id, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                String[] completed = translateResponseToArray(response);
+                int comps = completed.length;
+                ArrayList<String> lSections =  new ArrayList<String>(); //new ArrayList<String>(Arrays.asList(sections));
+                lSections.add("Progress : " + comps + "/13");
+                listDataChild.put(listDataHeader.get(6),lSections);
+                ArrayList<String> notCompleted = new ArrayList<String>(Arrays.asList(getActivity().getResources().getStringArray(R.array.sections)));
+                for(String s: completed){
+                    notCompleted.remove(s);
+                }
+                listDataChild.put(listDataHeader.get(7),notCompleted);
 
 
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+//        service.
     }
 
     private void loadQueryData(){

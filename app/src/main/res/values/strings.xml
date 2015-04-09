@@ -129,6 +129,23 @@
         <item>5</item>
     </string-array>
 
+    <string-array name="sections">
+        <item>View Major Comparison</item>
+        <item>View College Comparison</item>
+        <item>View Career Comparison</item>
+        <item>View Spending Breakdown</item>
+        <item>View About</item>
+        <item>View City Comparison</item>
+        <item>Create Custom Spending</item>
+        <item>Create Custom Color</item>
+        <item>Use Mobile</item>
+        <item>Use Wizard</item>
+        <item>Use Main Search</item>
+        <item>Use Examples</item>
+        <item>Submit Feedback</item>
+    </string-array>
+
+
 
 
     <string name="title_activity_visualization_pager">VisualizationPagerActivity</string>
