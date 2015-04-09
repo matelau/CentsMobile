@@ -86,7 +86,7 @@ public class ProfileFragment extends Fragment {
         listDataHeader.add("University Ratings");
         listDataHeader.add("Career Ratings");
         listDataHeader.add("Preferences");
-
+        listDataHeader.add("Completed");
         loadProfileData();
         loadQueryData();
         loadRatingData();
@@ -95,6 +95,7 @@ public class ProfileFragment extends Fragment {
         listDataChild.put(listDataHeader.get(2), new ArrayList<String>());
         listDataChild.put(listDataHeader.get(3), new ArrayList<String>());
         listDataChild.put(listDataHeader.get(4), new ArrayList<String>());
+        listDataChild.put(listDataHeader.get(5), new ArrayList<String>());
         ArrayList<String> dmbVal = new ArrayList<String>();
         dmbVal.add("null");
         listDataChild.put(listDataHeader.get(5), dmbVal);
@@ -142,7 +143,7 @@ public class ProfileFragment extends Fragment {
                 List<DegreeRating> dRatings = userResponse.getDegreeRatings();
                 ArrayList<String> dRat = new ArrayList<String>();
                 for(DegreeRating d : dRatings){
-                    String val = d.getName()+" "+d.getLevel()+": "+d.getRating();
+                    String val = d.getName()+", "+d.getLevel()+": "+d.getRating();
                     dRat.add(val);
                 }
 

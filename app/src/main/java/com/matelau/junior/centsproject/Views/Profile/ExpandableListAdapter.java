@@ -7,13 +7,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CompoundButton;
-import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.CareerService;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.MajorService;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.SchoolService;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
 import com.matelau.junior.centsproject.Models.UserModels.Field;
 import com.matelau.junior.centsproject.R;
@@ -35,6 +41,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private List<String> _listDataHeader; // header titles
     // child data in format of header title, child title
     private HashMap<String, List<String>> _listDataChild;
+    private String[] _ratings;
 
     public ExpandableListAdapter(Context context, List<String> listDataHeader,
                                  HashMap<String, List<String>> listChildData) {
@@ -57,10 +64,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
-        EditText rating = (EditText) convertView.findViewById(R.id.edit_rating);
-        rating.setVisibility(View.GONE);
 
         String childText = (String) getChild(groupPosition, childPosition);
+        SharedPreferences settings = _context.getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        final int userId = settings.getInt("ID", 0);
 
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
@@ -68,26 +75,118 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = infalInflater.inflate(R.layout.expandable_list_cat_child, null);
         }
 
+        Spinner spinnerRating = (Spinner) convertView.findViewById(R.id.spinner_rating);
+        spinnerRating.setVisibility(View.GONE);
+
         if (childPosition == getChildrenCount(groupPosition) - 1) {
-            convertView.setPadding(0, 0, 0, 20);
+            convertView.setPadding(0, 0, 0, 10);
         } else
             convertView.setPadding(0, 0, 0, 0);
 
-        if(groupPosition > 2 && groupPosition != 5){
-            String ratingVal = childText.substring(childText.indexOf(':'), childText.length()).trim();
-            rating.setText(ratingVal);
-            childText = childText.substring(0,childText.indexOf(':')).trim();
-            rating.setVisibility(View.VISIBLE);
+        if(groupPosition >= 2 && groupPosition != 5){
+            final int ratingVal = Integer.parseInt(childText.substring(childText.indexOf(':') + 1, childText.length()).trim());
+            final String element = childText.substring(0, childText.indexOf(':')).trim();
+            final HashMap<String, Integer> user = new HashMap<String, Integer>();
+            user.put("user", userId);
+            childText = element;
+            _ratings = _context.getResources().getStringArray(R.array.rating_values);
+            ArrayAdapter<String> ratingAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_dropdown_item, _ratings);
+            spinnerRating.setAdapter(ratingAdapter);
+            spinnerRating.setSelection(ratingVal);
+            spinnerRating.setVisibility(View.VISIBLE);
             if(groupPosition == 2){
                 //major
+                final String level = childText.substring(childText.indexOf(",")+1, childText.length()).trim();
+                final String major = childText.substring(0, childText.indexOf(",")).trim();
+                Log.d(LOG_TAG, "level: "+level+", Major: "+ major);
+                spinnerRating.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
+                        MajorService service = CentsApplication.get_centsRestAdapter().create(MajorService.class);
+                        service.rateMajor(level, major, position, user, new Callback<Response>() {
+                            @Override
+                            public void success(Response response, Response response2) {
+                                Log.d(LOG_TAG, "Success");
+                                //update list
+                                //_listDataChild.get(_listDataChild.get(_listDataHeader.get(2)).set(childPosition, ""+position));
+
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+                                Log.e(LOG_TAG, error.getMessage());
+                                Toast.makeText(_context, "Error - Please try again later", Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
 
             }
             else if(groupPosition == 3){
-                //university
+                //update university ratings
+                spinnerRating.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
+                        SchoolService service = CentsApplication.get_centsRestAdapter().create(SchoolService.class);
+                        service.rateSchool(element, position, user, new Callback<Response>() {
+                            @Override
+                            public void success(Response response, Response response2) {
+                                Log.d(LOG_TAG, "Success");
+                                 //update list
+                                //_listDataChild.get(_listDataChild.get(_listDataHeader.get(3)).set(childPosition, ""+position));
+                            }
 
+                            @Override
+                            public void failure(RetrofitError error) {
+                                Log.e(LOG_TAG, error.getMessage());
+                                Toast.makeText(_context, "Error - Please try again later", Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        //do nothing
+                    }
+                });
             }
             else{
-                //career
+                //update career rating
+                spinnerRating.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view,final int position, long id) {
+
+                        CareerService service = CentsApplication.get_centsRestAdapter().create(CareerService.class);
+                        service.rateCareer(element, position, user, new Callback<Response>() {
+                            @Override
+                            public void success(Response response, Response response2) {
+                                Log.d(LOG_TAG, "Success");
+                                //update list
+                                //_listDataChild.get(_listDataChild.get(_listDataHeader.get(4)).set(childPosition, ""+position));
+
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+                                Log.e(LOG_TAG, error.getMessage());
+                                Toast.makeText(_context, "Error - Please try again later", Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
 
             }
         }
@@ -97,8 +196,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             convertView.findViewById(R.id.profile_data).setVisibility(View.GONE);
             convertView.findViewById(R.id.profile_preferences).setVisibility(View.VISIBLE);
             Switch acSwitch = (Switch) convertView.findViewById(R.id.auto_complete_switch);
-            SharedPreferences settings = _context.getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
-            final int id = settings.getInt("ID", 0);
             boolean checked = settings.getBoolean("Autocomplete", true);
             acSwitch.setChecked(checked);
             acSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -117,7 +214,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     fs.add(f);
                     HashMap<String, List<Field>> fields = new HashMap<String, List<Field>>();
                     fields.put("fields", fs);
-                    service.updateFields(id, fields, new Callback<Response>() {
+                    service.updateFields(userId, fields, new Callback<Response>() {
                         @Override
                         public void success(Response response, Response response2) {
                             Log.d(LOG_TAG, "update prefers autocomplete success");
@@ -134,6 +231,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         }
         else{
+            //profile info
             convertView.findViewById(R.id.profile_data).setVisibility(View.VISIBLE);
             convertView.findViewById(R.id.profile_preferences).setVisibility(View.GONE);
             TextView txtListChild = (TextView) convertView

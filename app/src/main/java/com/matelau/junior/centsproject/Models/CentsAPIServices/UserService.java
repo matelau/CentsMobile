@@ -13,6 +13,7 @@ import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.PATCH;
 import retrofit.http.POST;
+import retrofit.http.PUT;
 import retrofit.http.Path;
 
 /**
@@ -33,5 +34,8 @@ public interface UserService {
 
     @PATCH("/api/v2/users/{id}")
     void updateFields(@Path("id") int id, @Body HashMap<String, List<Field>> fields, Callback<Response> cb);
+
+    @PUT("/api/v2/schools/{name}/{rating}")
+    void updateSchoolRating(@Path("name") String name, @Path("rating") int updateRating, @Body HashMap<String, Integer> rating);
 
 }

@@ -17,16 +17,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
-                    android:paddingTop="5dp"
+                    android:paddingTop="2dp"
                     android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft" />
-               <EditText
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="test"
-                   android:textColor="@color/gray"
-                   android:id="@+id/edit_rating"
-                   android:layout_margin="5dp"
-                   android:visibility="gone"/>
+                <Spinner
+                    android:id="@+id/spinner_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginEnd="1dp"
+                    android:visibility="gone"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="fill_parent"
