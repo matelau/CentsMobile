@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -29,10 +30,16 @@ import android.widget.Toast;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
 import com.matelau.junior.centsproject.Models.VizModels.SpendingBreakdownCategory;
 import com.matelau.junior.centsproject.R;
 
+import java.util.HashMap;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -249,7 +256,34 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
 
         public void save(){
             String filename = CentsApplication.get_currentBreakdown()+".dat";
-            CentsApplication.saveSB(filename,getActivity());
+            CentsApplication.saveSB(filename, getActivity());
+            if(CentsApplication.is_loggedIN()){
+                updateCompleted("Create Custom Spending");
+            }
+
+        }
+
+        /**
+         * update the users completed section
+         */
+        private void updateCompleted(String completed){
+            SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+            int id = settings.getInt("ID", 0);
+            UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+            HashMap<String,String> completedTask = new HashMap<String, String>();
+            completedTask.put("section", completed);
+            service.updateCompletedData(id, completedTask, new Callback<Response>() {
+                @Override
+                public void success(Response response, Response response2) {
+
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+//                Log.e(LOG_TAG, error.getMessage());
+
+                }
+            });
         }
 
 

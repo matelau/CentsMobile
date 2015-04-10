@@ -1,5 +1,7 @@
 package com.matelau.junior.centsproject.Controllers;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -15,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.UnemploymentFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.CostOfLivingFragment;
 import com.matelau.junior.centsproject.R;
@@ -33,8 +36,13 @@ import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.MajorI
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownIntroFragment;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * PagerFragment used to show visualizations and summaries
@@ -83,18 +91,22 @@ public class VisualizationPagerFragment extends Fragment {
             CentsApplication.set_selectedVis("Examples");
             selectedVis = "Examples";
         }
+        String completed = "";
 
         switch (selectedVis) {
             case "Career Comparison":
+                completed = "View Career Comparison";
                 fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), UnemploymentFragment.class.getName()));
 //                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
 //                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
                 break;
             case "College Comparison":
+                completed = "View College Comparison";
                 fragments.add(Fragment.instantiate(getActivity(), CollegeComparisonSummary.class.getName()));
                 break;
             case "Major Comparison":
+                completed = "View Major Comparison";
                 fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
 //                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
 //                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
@@ -104,6 +116,7 @@ public class VisualizationPagerFragment extends Fragment {
 //                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
                 break;
             case "COL Comparison":
+                completed = "View City Comparison";
                 getActivity().getActionBar().setTitle("City Comparison");
                 fragments.add(Fragment.instantiate(getActivity(), COLSummaryFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), CostOfLivingFragment.class.getName()));
@@ -113,17 +126,23 @@ public class VisualizationPagerFragment extends Fragment {
                 fragments.add(Fragment.instantiate(getActivity(), WeatherFragment.class.getName()));
                 break;
             case "Spending Breakdown":
+                completed = "View Spending Breakdown";
                 fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownFragment.class.getName()));
 //                fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownModDialogFragment.class.getName()));
                 break;
             default:
                 //load examples fragments
+                completed = "Use Examples";
                 fragments.add(Fragment.instantiate(getActivity(), COLIntroFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownIntroFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), CollegeIntroFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), CareerIntroFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), MajorIntroFragment.class.getName()));
                 break;
+        }
+
+        if(CentsApplication.is_loggedIN()){
+            updateCompleted(completed);
         }
         //set fragments
         _pageAdapter = new PageAdapter(getActivity().getSupportFragmentManager(), fragments);
@@ -134,6 +153,30 @@ public class VisualizationPagerFragment extends Fragment {
         _viewPager.setOffscreenPageLimit(5);
 
     }
+
+    /**
+     * update the users completed section
+     */
+    private void updateCompleted(String completed){
+        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        int id = settings.getInt("ID", 0);
+        UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+        HashMap<String,String> completedTask = new HashMap<String, String>();
+        completedTask.put("section", completed);
+        service.updateCompletedData(id, completedTask, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(LOG_TAG, error.getMessage());
+
+            }
+        });
+    }
+
 
 
     /**

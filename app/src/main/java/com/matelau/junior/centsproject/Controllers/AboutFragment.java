@@ -1,6 +1,8 @@
 package com.matelau.junior.centsproject.Controllers;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,12 +11,17 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.RelativeLayout;
 
+import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.Profile.ExpandableListAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,11 +50,39 @@ public class AboutFragment extends Fragment {
         _aboutCats = (ExpandableListView) _rootLayout.findViewById(R.id.about_categories_list);
         prepareListData();
         listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
+        if(CentsApplication.is_loggedIN()){
+            updateCompleted("View About");
+        }
 
         // setting list adapter
         _aboutCats.setAdapter(listAdapter);
         return _rootLayout;
     }
+
+    /**
+     * update the users completed section
+     */
+    private void updateCompleted(String completed){
+        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        int id = settings.getInt("ID", 0);
+        UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+        HashMap<String,String> completedTask = new HashMap<String, String>();
+        completedTask.put("section", completed);
+        service.updateCompletedData(id, completedTask, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+//                Log.e(LOG_TAG, error.getMessage());
+
+            }
+        });
+    }
+
+
 
     private void prepareListData(){
         //get help strings

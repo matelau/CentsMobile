@@ -90,6 +90,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         if(groupPosition >= 2 && groupPosition < 5){
             final int ratingVal = Integer.parseInt(childText.substring(childText.indexOf(':') + 1, childText.length()).trim());
             final String element = childText.substring(0, childText.indexOf(':')).trim();
+
             final HashMap<String, Integer> user = new HashMap<String, Integer>();
             user.put("user", userId);
             childText = element;
@@ -112,7 +113,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             public void success(Response response, Response response2) {
                                 Log.d(LOG_TAG, "Success");
                                 //update list
-                                //_listDataChild.get(_listDataChild.get(_listDataHeader.get(2)).set(childPosition, ""+position));
+                                updateRatings( 2,  element, position);
 
                             }
 
@@ -143,7 +144,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             public void success(Response response, Response response2) {
                                 Log.d(LOG_TAG, "Success");
                                  //update list
-                                //_listDataChild.get(_listDataChild.get(_listDataHeader.get(3)).set(childPosition, ""+position));
+                                updateRatings( 3,  element, position);
+
                             }
 
                             @Override
@@ -173,7 +175,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             public void success(Response response, Response response2) {
                                 Log.d(LOG_TAG, "Success");
                                 //update list
-                                //_listDataChild.get(_listDataChild.get(_listDataHeader.get(4)).set(childPosition, ""+position));
+                                updateRatings( 4,  element, position);
 
                             }
 
@@ -197,7 +199,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         //completed sections
         if(groupPosition == 6){
             //show progressbar
-            if(childText.contains("Progress :")){
+            if(childText.contains("Completed :")){
                 int numberOfComps = Integer.parseInt(childText.substring(childText.indexOf(":")+1,childText.indexOf("/")).trim());
                 float progress = (numberOfComps /13f)*100f;
                 pb.setProgress((int) progress);
@@ -301,6 +303,31 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         lblListHeader.setText(headerTitle);
 
         return convertView;
+    }
+
+
+    /**
+     * Updates local rating model
+     * @param groupPosition
+     * @param element
+     * @param rating
+     */
+    private void updateRatings(int groupPosition, String element, int rating){
+        String header = _listDataHeader.get(groupPosition);
+        List<String> ratingsList = _listDataChild.get(header);
+        String newRating = "";
+        int index = -1;
+        for(int i = 0; i < ratingsList.size(); i++){
+            if(ratingsList.get(i).contains(element)){
+                newRating = element+" :"+rating;
+                index = i;
+                break;
+            }
+        }
+        if(!newRating.equals("")){
+            ratingsList.remove(index);
+            ratingsList.add(index, newRating);
+        }
     }
 
     @Override

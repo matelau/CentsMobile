@@ -59,6 +59,7 @@ public class ProfileFragment extends Fragment {
         //load user id
         SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
         _id = settings.getInt("ID", 0);
+        updateCompleted("Use Mobile");
         Log.d(LOG_TAG, "Loaded ID from Prefs: " + _id);
         boolean checked = settings.getBoolean("Autocomplete", true);
         Log.d(LOG_TAG, "Checked value: " + checked);
@@ -72,6 +73,27 @@ public class ProfileFragment extends Fragment {
         // setting list adapter
         _profileCats.setAdapter(listAdapter);
         return _rootLayout;
+    }
+
+    /**
+     * update the users completed section
+     */
+    private void updateCompleted(String completed){
+        UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+        HashMap<String,String> useMobile = new HashMap<String, String>();
+        useMobile.put("section", completed);
+        service.updateCompletedData(_id, useMobile, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(LOG_TAG, error.getMessage());
+
+            }
+        });
     }
 
     private void prepareListData(){
@@ -118,7 +140,7 @@ public class ProfileFragment extends Fragment {
                 String[] completed = translateResponseToArray(response);
                 int comps = completed.length;
                 ArrayList<String> lSections =  new ArrayList<String>(); //new ArrayList<String>(Arrays.asList(sections));
-                lSections.add("Progress : " + comps + "/13");
+                lSections.add("Completed : " + comps + "/13");
                 listDataChild.put(listDataHeader.get(6),lSections);
                 ArrayList<String> notCompleted = new ArrayList<String>(Arrays.asList(getActivity().getResources().getStringArray(R.array.sections)));
                 for(String s: completed){
@@ -132,6 +154,7 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void failure(RetrofitError error) {
+                Log.e(LOG_TAG, error.getMessage());
 
             }
         });

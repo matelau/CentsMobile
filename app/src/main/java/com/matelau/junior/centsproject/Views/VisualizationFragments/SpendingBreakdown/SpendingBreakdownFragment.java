@@ -426,7 +426,7 @@ public class SpendingBreakdownFragment extends Fragment {
         }
 
         //only show two decimal places in values
-        DecimalFormat df = new DecimalFormat("##.##");
+        DecimalFormat df = new DecimalFormat("##");
         df.setRoundingMode(RoundingMode.HALF_DOWN);
         // get labels and percents
         List<SpendingBreakdownCategory> sbcVals = CentsApplication.get_sbValues();

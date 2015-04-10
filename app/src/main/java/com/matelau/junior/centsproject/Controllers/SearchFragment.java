@@ -179,6 +179,9 @@ public class SearchFragment extends Fragment {
         //hide keyboard after submit
         InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(_editText.getWindowToken(), 0);
+        if(CentsApplication.is_loggedIN()){
+            updateCompleted("Use Main Search");
+        }
         if(searchText.trim().equals("")){
             Toast.makeText(getActivity(), "You must enter a search.", Toast.LENGTH_SHORT).show();
         }
@@ -296,6 +299,30 @@ public class SearchFragment extends Fragment {
         }
 
     }
+
+    /**
+     * update the users completed section
+     */
+    private void updateCompleted(String completed){
+        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        int id = settings.getInt("ID", 0);
+        UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+        HashMap<String,String> completedTask = new HashMap<String, String>();
+        completedTask.put("section", completed);
+        service.updateCompletedData(id, completedTask, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(LOG_TAG, error.getMessage());
+
+            }
+        });
+    }
+
 
     private void storeQuery(String searchText){
         //create query model
