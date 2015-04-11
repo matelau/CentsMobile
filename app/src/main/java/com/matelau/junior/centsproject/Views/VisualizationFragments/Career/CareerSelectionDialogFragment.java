@@ -27,6 +27,8 @@ import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.CareerService;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.RecordsService;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
+import com.matelau.junior.centsproject.Models.UserModels.Query;
 import com.matelau.junior.centsproject.Models.VizModels.Career;
 import com.matelau.junior.centsproject.Models.VizModels.CareerQuery;
 import com.matelau.junior.centsproject.Models.VizModels.CareerResponse;
@@ -137,8 +139,13 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                     CareerQuery query = new CareerQuery();
                     ArrayList<Career> careerList = new ArrayList<Career>();
                     careerList.add(_career1);
+                    String queryText = _career1.getName();
                     if(_career2!= null){
                         careerList.add(_career2);
+                        queryText = queryText + " vs. "+ _career2.getName();
+                    }
+                    if(CentsApplication.is_loggedIN()){
+                        storeQuery(queryText);
                     }
                     query.setCareers(careerList);
                     query.setOperation("compare");
@@ -165,38 +172,6 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                         public void failure(RetrofitError error) {
                             Log.e(LOG_TAG, error.getMessage());
                             Toast.makeText(getActivity(), "There was an error - Please try again", Toast.LENGTH_SHORT).show();
-                            //todo remove this switch after michael fixes the api issues
-                            //todo remove setting careerResponse - doing this for testing
-//                            CareerResponse testResponse = new CareerResponse();
-//                            testResponse.setCareer1("Software Engineer");
-//                            testResponse.setCareer2("Music Teacher");
-//                            ArrayList<Integer> vals = new ArrayList<Integer>();
-//                            vals.add(88000);
-//                            testResponse.setCareerSalary1(vals);
-//                            ArrayList<Integer> vals2 = new ArrayList<Integer>();
-//                            vals2.add(27250);
-//                            testResponse.setCareerSalary2(vals2);
-//                            ArrayList<Integer> vals3 = new ArrayList<Integer>();
-//                            vals3.add(353200);
-//                            testResponse.setCareerDemand1(vals3);
-//                            ArrayList<Integer> vals4 = new ArrayList<Integer>();
-//                            vals4.add(35000);
-//                            testResponse.setCareerDemand2(vals4);
-//                            ArrayList<Double> vals5 = new ArrayList<Double>();
-//                            vals5.add(3.8);
-//                            vals5.add(3.2);
-//                            testResponse.setCareerUnemploy1(vals5);
-//                            ArrayList<Double> vals6 = new ArrayList<Double>();
-//                            vals6.add(8.1);
-//                            vals6.add(8.5);
-//                            testResponse.setCareerUnemploy2(vals6);
-//                            ArrayList<Double> vals7 = new ArrayList<Double>();
-//                            vals7.add(6.0);
-//                            vals7.add(6.8);
-//                            testResponse.setCareerUnemploy3(vals7);
-//                            CentsApplication.set_cResponse(testResponse);
-
-//                            switchToViewPager();
                         }
                     });
                 }
@@ -403,5 +378,28 @@ public class CareerSelectionDialogFragment extends DialogFragment{
 
         return respArr;
 
+    }
+
+    private void storeQuery(String searchText){
+        //create query model
+        Query q = new Query();
+        q.setUrl(searchText);
+        //load user id
+        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        int ID = settings.getInt("ID", 0);
+        Log.d(LOG_TAG, "Loaded ID from Prefs: "+ID);
+        UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+        service.storeQuery(q, ID, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Log.d(LOG_TAG, "Stored Query");
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(LOG_TAG, error.getMessage());
+
+            }
+        });
     }
 }

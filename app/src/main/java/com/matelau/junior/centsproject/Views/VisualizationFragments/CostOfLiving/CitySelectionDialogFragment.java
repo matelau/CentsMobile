@@ -3,6 +3,8 @@ package com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLivin
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +22,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
+import com.matelau.junior.centsproject.Models.UserModels.Query;
 import com.matelau.junior.centsproject.Models.VizModels.CostOfLiving;
 import com.matelau.junior.centsproject.Models.VizModels.CostOfLivingLocation;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.CostOfLivingService;
@@ -153,10 +157,15 @@ public class CitySelectionDialogFragment extends DialogFragment {
                     List<CostOfLivingLocation> lCLL = new ArrayList<CostOfLivingLocation>();
                     lCLL.add(loc1);
                     CostOfLivingLocation loc2 = new CostOfLivingLocation();
+                    String query = _city1+", "+_state1;
                     if(_city2 != null && _state2 != null){
                         loc2.setCity(_city2);
                         loc2.setState(_state2);
                         lCLL.add(loc2);
+                        query = query + " vs. "+_city2+", "+_state2;
+                    }
+                    if(CentsApplication.is_loggedIN()){
+                        storeQuery(query);
                     }
                     col.setLocations(lCLL);
                     col.setOperation("compare");
@@ -225,6 +234,29 @@ public class CitySelectionDialogFragment extends DialogFragment {
 
         builder.setTitle("Enter Locations For Comparison").setView(_rootLayout);
         return builder.create();
+    }
+
+    private void storeQuery(String searchText){
+        //create query model
+        Query q = new Query();
+        q.setUrl(searchText);
+        //load user id
+        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        int ID = settings.getInt("ID", 0);
+        Log.d(LOG_TAG, "Loaded ID from Prefs: "+ID);
+        UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+        service.storeQuery(q, ID, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Log.d(LOG_TAG, "Stored Query");
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(LOG_TAG, error.getMessage());
+
+            }
+        });
     }
 
     public void addPlusViews(){

@@ -99,7 +99,6 @@ public class ProfileFragment extends Fragment {
     private void prepareListData(){
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();
-
         // Adding child data
         listDataHeader.add("Account Information");
         listDataHeader.add("Recent Searches");
@@ -147,9 +146,6 @@ public class ProfileFragment extends Fragment {
                     notCompleted.remove(s);
                 }
                 listDataChild.put(listDataHeader.get(7),notCompleted);
-
-
-
             }
 
             @Override
@@ -158,7 +154,6 @@ public class ProfileFragment extends Fragment {
 
             }
         });
-//        service.
     }
 
     private void loadQueryData(){
@@ -169,7 +164,10 @@ public class ProfileFragment extends Fragment {
                 String[] queries = translateResponseToArray(response);
                 ArrayList<String> qs = new ArrayList<String>();
                 for (String s : queries) {
-                    qs.add(s);
+                    if(qs.size() < 11)
+                        qs.add(s);
+                    else
+                        break;
                 }
                 listDataChild.put(listDataHeader.get(1), qs);
 
@@ -217,7 +215,6 @@ public class ProfileFragment extends Fragment {
                 listDataChild.put(listDataHeader.get(3), sRat);
                 //Career
                 listDataChild.put(listDataHeader.get(4), cRat);
-
             }
 
             @Override
@@ -245,15 +242,10 @@ public class ProfileFragment extends Fragment {
                 //set switch according to stored value
                 if(userResponse.getPrefersAutocomplete() != null)
                 {
-                    //update switch
-//                    _switch.setChecked(userResponse.getPrefersAutocomplete());
                     //update stored value
                     SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
                     settings.edit().putBoolean("Autocomplete", userResponse.getPrefersAutocomplete()).apply();
                 }
-
-
-
             }
 
             @Override

@@ -67,9 +67,8 @@ public class SearchActivity extends FragmentActivity {
         //Setup Toolbar
         _toolbar = (Toolbar) findViewById(R.id.toolbar);
         _toolbar.setTitle("Cents");
-        //Todo add logo etc - after gathering view feedback
         setActionBar(_toolbar);
-        loadLocations();
+//        loadLocations();
 
         //check if user is logged in or not
         loginStatus();

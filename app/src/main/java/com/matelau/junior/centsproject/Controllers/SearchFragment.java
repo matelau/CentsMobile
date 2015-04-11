@@ -323,7 +323,10 @@ public class SearchFragment extends Fragment {
         });
     }
 
-
+    /**
+     * stores the last query to the db
+     * @param searchText
+     */
     private void storeQuery(String searchText){
         //create query model
         Query q = new Query();
@@ -357,7 +360,7 @@ public class SearchFragment extends Fragment {
 
 
     /**
-     * Loads the Wizard ontop of current view
+     * Loads the dialog ontop of current view
      */
     private void showServiceDownNotification(){
         FragmentManager fm = getActivity().getSupportFragmentManager();

@@ -26,6 +26,8 @@ import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.MajorService;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
+import com.matelau.junior.centsproject.Models.UserModels.Query;
 import com.matelau.junior.centsproject.Models.VizModels.RecordQuery;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.RecordsService;
 import com.matelau.junior.centsproject.Models.VizModels.Major;
@@ -149,9 +151,14 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                     List<Major> majors = new ArrayList<Major>();
                     majors.add(_major1);
                     CentsApplication.set_major1(_major1);
+                    String query = _major1.getName()+", "+_major1.getLevel();
                     if(_major2 != null){
                         majors.add(_major2);
                         CentsApplication.set_major2(_major2);
+                        query = query+" vs. "+_major2.getName()+", "+_major2.getLevel();
+                    }
+                    if(CentsApplication.is_loggedIN()){
+                        storeQuery(query);
                     }
                     mQuery.setMajors(majors);
                     MajorService service = CentsApplication.get_centsRestAdapter().create(MajorService.class);
@@ -373,6 +380,29 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                 }
             });
         }
+    }
+
+    private void storeQuery(String searchText){
+        //create query model
+        Query q = new Query();
+        q.setUrl(searchText);
+        //load user id
+        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        int ID = settings.getInt("ID", 0);
+        Log.d(LOG_TAG, "Loaded ID from Prefs: "+ID);
+        UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+        service.storeQuery(q, ID, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Log.d(LOG_TAG, "Stored Query");
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(LOG_TAG, error.getMessage());
+
+            }
+        });
     }
 
     private String[] majorsFromJson(Response response){

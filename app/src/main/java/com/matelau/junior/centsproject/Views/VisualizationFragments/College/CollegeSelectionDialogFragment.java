@@ -4,6 +4,8 @@ package com.matelau.junior.centsproject.Views.VisualizationFragments.College;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -22,6 +24,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
+import com.matelau.junior.centsproject.Models.UserModels.Query;
 import com.matelau.junior.centsproject.Models.VizModels.RecordQuery;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.RecordsService;
 import com.matelau.junior.centsproject.Models.VizModels.School;
@@ -158,11 +162,16 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
                     schools.add(school1);
                     CentsApplication.set_university1(_university1);
                     CentsApplication.set_sApiResponse(null);
+                    String query = _university1;
                     if(_university2 != null){
                         School school2 = new School();
                         school2.setName(_university2);
                         CentsApplication.set_university2(_university2);
                         schools.add(school2);
+                        query = query + " vs. "+_university2;
+                    }
+                    if(CentsApplication.is_loggedIN()){
+                        storeQuery(query);
                     }
                     SchoolRequest sr = new SchoolRequest();
                     sr.setOperation("compare");
@@ -224,6 +233,29 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
         builder.setView(_rootLayout);
         return builder.create();
 
+    }
+
+    private void storeQuery(String searchText){
+        //create query model
+        Query q = new Query();
+        q.setUrl(searchText);
+        //load user id
+        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        int ID = settings.getInt("ID", 0);
+        Log.d(LOG_TAG, "Loaded ID from Prefs: "+ID);
+        UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+        service.storeQuery(q, ID, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Log.d(LOG_TAG, "Stored Query");
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(LOG_TAG, error.getMessage());
+
+            }
+        });
     }
 
     private void addPlusViews(){

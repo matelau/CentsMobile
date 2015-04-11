@@ -3,6 +3,9 @@ package com.matelau.junior.centsproject.Views.Profile;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,17 +20,30 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
+import com.matelau.junior.centsproject.Controllers.ServiceDownDialogFragment;
+import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.CareerService;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.MajorService;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.QueryService;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.SchoolService;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
 import com.matelau.junior.centsproject.Models.UserModels.Field;
+import com.matelau.junior.centsproject.Models.UserModels.Query;
+import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
+import com.matelau.junior.centsproject.Models.VizModels.Major;
+import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
+import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.R;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -57,6 +73,121 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 .get(childPosititon);
     }
 
+
+    private void handleSubmit(String searchText){
+        QueryService service = CentsApplication.get_queryParsingRestAdapter().create(QueryService.class);
+        service.results(searchText, new Callback<Response>() {
+            @Override
+            public void success(Response response1, Response response) {
+                if(CentsApplication.isDebug())
+                    Toast.makeText(_context,response.toString(), Toast.LENGTH_SHORT);
+
+                //Process Response and route accordingly
+                //Try to get response body
+                BufferedReader reader = null;
+                StringBuilder sb = new StringBuilder();
+                try {
+
+                    reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
+
+                    String line;
+
+                    try {
+                        while ((line = reader.readLine()) != null) {
+                            sb.append(line);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                String rsp = sb.toString();
+                //Build Map
+                Gson gson = new Gson();
+                Map<String,String> map=new HashMap<String,String>();
+                map=(Map<String,String>) gson.fromJson(rsp, map.getClass());
+                //get type
+                String type = map.get("query_type");
+                if(type == null){
+                    Toast.makeText(_context, "We did not understand your query... here are some examples", Toast.LENGTH_SHORT).show();
+                    CentsApplication.set_selectedVis("Examples");
+                }
+                //route properly
+                else if(type.equals("city")){
+                    //create coli obj and launch coli viz
+                    ColiResponse colResponse = gson.fromJson(rsp, ColiResponse.class);
+                    CentsApplication.set_colResponse(colResponse);
+                    CentsApplication.set_selectedVis("COL Comparison");
+                }
+                else if(type.equals("school")){
+                    //create school obj and launch viz
+                    SchoolResponse sResponse = gson.fromJson(rsp, SchoolResponse.class);
+                    CentsApplication.set_sApiResponse(sResponse);
+                    CentsApplication.set_selectedVis("College Comparison");
+                }
+                else if(type.equals("career")){
+                    //todo create career obj and launch viz
+                    CentsApplication.set_selectedVis("College Comparison");
+                }
+                else if(type.equals("major")){
+                    //create major obj and launch viz
+                    MajorResponse mResponse = gson.fromJson(rsp, MajorResponse.class);
+                    //update names
+                    if(mResponse.getName_2() != null){
+                        Major major1 = new Major();
+                        major1.setName( mResponse.getName_2());
+                        CentsApplication.set_major1(major1);
+                    }
+                    else
+                        CentsApplication.set_major1(null);
+                    if(mResponse.getName_1() != null){
+                        Major major2 = new Major();
+                        major2.setName( mResponse.getName_1());
+                        CentsApplication.set_major2(major2);
+                    }
+                    else
+                        CentsApplication.set_major2(null);
+
+
+                    CentsApplication.set_mResponse(mResponse);
+                    CentsApplication.set_selectedVis("Major Comparison");
+                }
+                else if(type.equals("spending")){
+                    //goto spending breakdown
+                    CentsApplication.set_selectedVis("Spending Breakdown");
+                }
+                switchToVizPager();
+
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(LOG_TAG, "Query Service Error: " + error.getMessage());
+                showServiceDownNotification();
+                CentsApplication.set_selectedVis("Examples");
+                switchToVizPager();
+            }
+        });
+
+
+    }
+
+    private void switchToVizPager(){
+        FragmentTransaction ft = ((FragmentActivity) _context).getSupportFragmentManager().beginTransaction();   //_context.getApplicationContext().get.getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+        ft.addToBackStack("main-search");
+        ft.commit();
+    }
+
+    private void showServiceDownNotification(){
+        FragmentManager fm = ((FragmentActivity) _context).getSupportFragmentManager();
+        ServiceDownDialogFragment confirmation = new ServiceDownDialogFragment();
+        confirmation.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
+        confirmation.show(fm, "tag");
+    }
     @Override
     public long getChildId(int groupPosition, int childPosition) {
         return childPosition;
@@ -65,32 +196,36 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
-
+        //Get Text
         String childText = (String) getChild(groupPosition, childPosition);
+        //Get User ID
         SharedPreferences settings = _context.getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
         final int userId = settings.getInt("ID", 0);
-
+        //Recycle Views
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.expandable_list_cat_child, null);
         }
-
+        //By default hide spinner and progress bar
         Spinner spinnerRating = (Spinner) convertView.findViewById(R.id.spinner_rating);
         spinnerRating.setVisibility(View.GONE);
         ProgressBar pb = (ProgressBar) convertView.findViewById(R.id.user_progress);
         pb.setVisibility(View.GONE);
 
-        if (childPosition == getChildrenCount(groupPosition) - 1) {
-            convertView.setPadding(0, 0, 0, 10);
-        } else
-            convertView.setPadding(0, 0, 0, 0);
+//        if (childPosition == getChildrenCount(groupPosition) - 1) {
+//            convertView.setPadding(0, 0, 0, 10);
+//        } else
+//            convertView.setPadding(0, 0, 0, 0);
 
-        //ratings section 2,3,4
+        //Display ratings section 2,3,4
         if(groupPosition >= 2 && groupPosition < 5){
+            //extract rating from string
             final int ratingVal = Integer.parseInt(childText.substring(childText.indexOf(':') + 1, childText.length()).trim());
+            //extract rating element
             final String element = childText.substring(0, childText.indexOf(':')).trim();
 
+            //Setup elements used for updating ratings
             final HashMap<String, Integer> user = new HashMap<String, Integer>();
             user.put("user", userId);
             childText = element;
@@ -100,7 +235,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             spinnerRating.setSelection(ratingVal);
             spinnerRating.setVisibility(View.VISIBLE);
             if(groupPosition == 2){
-                //major
+                //major rating
                 final String level = childText.substring(childText.indexOf(",")+1, childText.length()).trim();
                 final String major = childText.substring(0, childText.indexOf(",")).trim();
                 Log.d(LOG_TAG, "level: "+level+", Major: "+ major);
@@ -251,15 +386,55 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         }
         else{
-            //profile info
+            //set text elements
             convertView.findViewById(R.id.profile_data).setVisibility(View.VISIBLE);
             convertView.findViewById(R.id.profile_preferences).setVisibility(View.GONE);
             TextView txtListChild = (TextView) convertView
                     .findViewById(R.id.lblListItem);
             txtListChild.setText(childText);
+            //conduct search if user clicks previous query
+            if(groupPosition == 1){
+                txtListChild.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TextView tv = (TextView) v;
+                        String query = tv.getText().toString();
+                        handleSubmit(query);
+                        storeQuery(query);
+                        Toast.makeText(_context, "Searching for: "+query, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            else{
+                txtListChild.setOnClickListener(null);
+            }
         }
 
+
+
         return convertView;
+    }
+
+    private void storeQuery(String searchText){
+        //create query model
+        Query q = new Query();
+        q.setUrl(searchText);
+        //load user id
+        SharedPreferences settings = _context.getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        int ID = settings.getInt("ID", 0);
+        Log.d(LOG_TAG, "Loaded ID from Prefs: "+ID);
+        UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+        service.storeQuery(q, ID, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Log.d(LOG_TAG, "Stored Query");
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(LOG_TAG, error.getMessage());
+            }
+        });
     }
 
     @Override
