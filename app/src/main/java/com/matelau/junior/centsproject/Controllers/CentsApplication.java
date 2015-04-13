@@ -35,6 +35,9 @@ import retrofit.RestAdapter;
  * Maintains Central state of the application
  */
 public class CentsApplication extends Application{
+
+    //debug true = show toast, set login credentials
+    private static boolean debug = false;
     private static String LOG_TAG = CentsApplication.class.getSimpleName();
     private static Context _centsContext;
     //Api Services
@@ -67,8 +70,6 @@ public class CentsApplication extends Application{
     private static String[] _cities;
     private static List<Col> _cols;
 
-    //debug true = show toast, set login credentials
-    private static boolean debug = true;
 
     //Spending Breakdown Vis
     private static String _occupationSalary = "45000";
