@@ -31,6 +31,7 @@ import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.QueryService;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
 import com.matelau.junior.centsproject.Models.UserModels.Query;
+import com.matelau.junior.centsproject.Models.VizModels.CareerResponse;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.Models.VizModels.Major;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
@@ -250,8 +251,10 @@ public class SearchFragment extends Fragment {
                         CentsApplication.set_selectedVis("College Comparison");
                     }
                     else if(type.equals("career")){
-                        //todo create career obj and launch viz
-                        CentsApplication.set_selectedVis("College Comparison");
+                        //create career obj and launch viz
+                        CareerResponse cResponse = gson.fromJson(rsp, CareerResponse.class);
+                        CentsApplication.set_cResponse(cResponse);
+                        CentsApplication.set_selectedVis("Career Comparison");
                     }
                     else if(type.equals("major")){
                         //create major obj and launch viz
@@ -334,7 +337,7 @@ public class SearchFragment extends Fragment {
         //load user id
         SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
         int ID = settings.getInt("ID", 0);
-        Log.d(LOG_TAG, "Loaded ID from Prefs: "+ID);
+        Log.d(LOG_TAG, "Loaded ID from Prefs: " + ID);
         UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
         service.storeQuery(q, ID, new Callback<Response>() {
             @Override
