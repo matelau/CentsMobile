@@ -136,6 +136,7 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                     _vs.setVisibility(View.GONE);
                     _majorTextView2.setVisibility(View.GONE);
                     _majorSpinner2.setVisibility(View.GONE);
+                    _autoComp2.setVisibility(View.GONE);
 
                 }
             }
@@ -151,11 +152,11 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                     List<Major> majors = new ArrayList<Major>();
                     majors.add(_major1);
                     CentsApplication.set_major1(_major1);
-                    String query = _major1.getName()+", "+_major1.getLevel();
+                    String query = _major1.getName()+" ("+_major1.getLevel()+" )";
                     if(_major2 != null){
                         majors.add(_major2);
                         CentsApplication.set_major2(_major2);
-                        query = query+" vs. "+_major2.getName()+", "+_major2.getLevel();
+                        query = query+" vs. "+_major2.getName()+" ("+_major2.getLevel()+" )";
                     }
                     if(CentsApplication.is_loggedIN()){
                         storeQuery(query);

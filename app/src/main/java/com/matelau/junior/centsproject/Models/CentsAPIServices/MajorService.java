@@ -17,7 +17,11 @@ import retrofit.http.Path;
  */
 public interface MajorService {
     @POST("/api/v1/majors")
+    void getMajorInfoV1(@Body MajorQuery majs, Callback<MajorResponse> response);
+
+    @POST("/api/v2/degrees/compare")
     void getMajorInfo(@Body MajorQuery majs, Callback<MajorResponse> response);
+
 
     @PUT("/api/v2/degrees/{level}/{name}/{rating}")
     void rateMajor(@Path("level") String lvl, @Path("name") String majorName, @Path("rating") int rating, @Body HashMap<String, Integer> id, Callback<Response> cb);

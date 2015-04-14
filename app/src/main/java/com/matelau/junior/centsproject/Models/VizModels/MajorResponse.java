@@ -22,13 +22,13 @@ public class MajorResponse {
     @SerializedName("jobs_1")
     @Expose
     private List<Object> jobs1 = new ArrayList<Object>();
-    @SerializedName("major_1")
+    @SerializedName("degree_1")
     @Expose
     private List<Float> major1 = new ArrayList<Float>();
     @SerializedName("jobs_2")
     @Expose
     private List<Object> jobs2 = new ArrayList<Object>();
-    @SerializedName("major_2")
+    @SerializedName("degree_2")
     @Expose
     private List<Float> major2 = new ArrayList<Float>();
     @Expose

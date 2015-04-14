@@ -55,7 +55,7 @@ public class CollegeComparisonSummary extends Fragment {
         Log.d(LOG_TAG, "CreateView");
         //get data
         _sResponse = CentsApplication.get_sApiResponse();
-        hasSecondSchool = (_sResponse.getSchool2().size() > 0);
+        hasSecondSchool = (!(_sResponse.getSchool2() == null) && _sResponse.getSchool2().size() > 0);
         //get Views
         _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_college_summary, container, false);
         _search = (ImageButton) _rootLayout.findViewById(R.id.imageSearchButton);

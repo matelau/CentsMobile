@@ -33,6 +33,7 @@ import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.WeatherFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.MajorComparisonSummary;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.MajorIntroFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.TopJobsFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownIntroFragment;
 
@@ -108,7 +109,7 @@ public class VisualizationPagerFragment extends Fragment {
             case "Major Comparison":
                 completed = "View Major Comparison";
                 fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), TopJobsFragment.class.getName()));
 //                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
 //                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
 //                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
@@ -255,7 +256,7 @@ public class VisualizationPagerFragment extends Fragment {
                     tabTitles = new String[]{"Summary"};
                     return tabTitles[position];
                 case "Major Comparison":
-                    tabTitles = new String[]{"Summary"}; //, "Salary","Job Satisfaction", "Graduation Rate", "Demand", "Unemployment", "Top Jobs"};
+                    tabTitles = new String[]{"Summary", "Top Jobs"}; //, "Salary","Job Satisfaction", "Graduation Rate", "Demand", "Unemployment", "Top Jobs"};
                     return tabTitles[position];
                 case "COL Comparison":
                     tabTitles = new String[]{"Summary", "Cost of Living", "Labor Stats","Taxes","Other", "Weather"};
