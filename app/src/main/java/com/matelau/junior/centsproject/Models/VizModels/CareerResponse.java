@@ -10,281 +10,14 @@ import java.util.List;
  * Created by matelau on 3/31/15.
  */
 public class CareerResponse {
-    @SerializedName("career_1")
+
     @Expose
-    private String career1;
-    @SerializedName("career_salary_1")
+    private String operation;
     @Expose
-    private List<Integer> careerSalary1 = new ArrayList<Integer>();
-    @SerializedName("career_satisfaction_1")
-    @Expose
-    private Integer careerSatisfaction1;
-    @SerializedName("career_demand_1")
-    @Expose
-    private List<Integer> careerDemand1 = new ArrayList<Integer>();
-    @SerializedName("jobs_1")
-    @Expose
-    private List<Object> jobs1 = new ArrayList<Object>();
-    @SerializedName("career_2")
-    @Expose
-    private String career2;
-    @SerializedName("career_salary_2")
-    @Expose
-    private List<Integer> careerSalary2 = new ArrayList<Integer>();
-    @SerializedName("career_satisfaction_2")
-    @Expose
-    private Integer careerSatisfaction2;
-    @SerializedName("career_demand_2")
-    @Expose
-    private List<Integer> careerDemand2 = new ArrayList<Integer>();
-    @SerializedName("jobs_2")
-    @Expose
-    private List<Object> jobs2 = new ArrayList<Object>();
-    @SerializedName("career_unemploy_1")
-    @Expose
-    private List<Double> careerUnemploy1 = new ArrayList<Double>();
-    @SerializedName("career_unemploy_2")
-    @Expose
-    private List<Double> careerUnemploy2 = new ArrayList<Double>();
+    private List<Element> elements = new ArrayList<Element>();
     @SerializedName("career_unemploy_3")
     @Expose
     private List<Double> careerUnemploy3 = new ArrayList<Double>();
-    @Expose
-    private String operation;
-
-    /**
-     *
-     * @return
-     * The career1
-     */
-    public String getCareer1() {
-        return career1;
-    }
-
-    /**
-     *
-     * @param career1
-     * The career_1
-     */
-    public void setCareer1(String career1) {
-        this.career1 = career1;
-    }
-
-    /**
-     *
-     * @return
-     * The careerSalary1
-     */
-    public List<Integer> getCareerSalary1() {
-        return careerSalary1;
-    }
-
-    /**
-     *
-     * @param careerSalary1
-     * The career_salary_1
-     */
-    public void setCareerSalary1(List<Integer> careerSalary1) {
-        this.careerSalary1 = careerSalary1;
-    }
-
-    /**
-     *
-     * @return
-     * The careerSatisfaction1
-     */
-    public Integer getCareerSatisfaction1() {
-        return careerSatisfaction1;
-    }
-
-    /**
-     *
-     * @param careerSatisfaction1
-     * The career_satisfaction_1
-     */
-    public void setCareerSatisfaction1(Integer careerSatisfaction1) {
-        this.careerSatisfaction1 = careerSatisfaction1;
-    }
-
-    /**
-     *
-     * @return
-     * The careerDemand1
-     */
-    public List<Integer> getCareerDemand1() {
-        return careerDemand1;
-    }
-
-    /**
-     *
-     * @param careerDemand1
-     * The career_demand_1
-     */
-    public void setCareerDemand1(List<Integer> careerDemand1) {
-        this.careerDemand1 = careerDemand1;
-    }
-
-    /**
-     *
-     * @return
-     * The jobs1
-     */
-    public List<Object> getJobs1() {
-        return jobs1;
-    }
-
-    /**
-     *
-     * @param jobs1
-     * The jobs_1
-     */
-    public void setJobs1(List<Object> jobs1) {
-        this.jobs1 = jobs1;
-    }
-
-    /**
-     *
-     * @return
-     * The career2
-     */
-    public String getCareer2() {
-        return career2;
-    }
-
-    /**
-     *
-     * @param career2
-     * The career_2
-     */
-    public void setCareer2(String career2) {
-        this.career2 = career2;
-    }
-
-    /**
-     *
-     * @return
-     * The careerSalary2
-     */
-    public List<Integer> getCareerSalary2() {
-        return careerSalary2;
-    }
-
-    /**
-     *
-     * @param careerSalary2
-     * The career_salary_2
-     */
-    public void setCareerSalary2(List<Integer> careerSalary2) {
-        this.careerSalary2 = careerSalary2;
-    }
-
-    /**
-     *
-     * @return
-     * The careerSatisfaction2
-     */
-    public Integer getCareerSatisfaction2() {
-        return careerSatisfaction2;
-    }
-
-    /**
-     *
-     * @param careerSatisfaction2
-     * The career_satisfaction_2
-     */
-    public void setCareerSatisfaction2(Integer careerSatisfaction2) {
-        this.careerSatisfaction2 = careerSatisfaction2;
-    }
-
-    /**
-     *
-     * @return
-     * The careerDemand2
-     */
-    public List<Integer> getCareerDemand2() {
-        return careerDemand2;
-    }
-
-    /**
-     *
-     * @param careerDemand2
-     * The career_demand_2
-     */
-    public void setCareerDemand2(List<Integer> careerDemand2) {
-        this.careerDemand2 = careerDemand2;
-    }
-
-    /**
-     *
-     * @return
-     * The jobs2
-     */
-    public List<Object> getJobs2() {
-        return jobs2;
-    }
-
-    /**
-     *
-     * @param jobs2
-     * The jobs_2
-     */
-    public void setJobs2(List<Object> jobs2) {
-        this.jobs2 = jobs2;
-    }
-
-    /**
-     *
-     * @return
-     * The careerUnemploy1
-     */
-    public List<Double> getCareerUnemploy1() {
-        return careerUnemploy1;
-    }
-
-    /**
-     *
-     * @param careerUnemploy1
-     * The career_unemploy_1
-     */
-    public void setCareerUnemploy1(List<Double> careerUnemploy1) {
-        this.careerUnemploy1 = careerUnemploy1;
-    }
-
-    /**
-     *
-     * @return
-     * The careerUnemploy2
-     */
-    public List<Double> getCareerUnemploy2() {
-        return careerUnemploy2;
-    }
-
-    /**
-     *
-     * @param careerUnemploy2
-     * The career_unemploy_2
-     */
-    public void setCareerUnemploy2(List<Double> careerUnemploy2) {
-        this.careerUnemploy2 = careerUnemploy2;
-    }
-
-    /**
-     *
-     * @return
-     * The careerUnemploy3
-     */
-    public List<Double> getCareerUnemploy3() {
-        return careerUnemploy3;
-    }
-
-    /**
-     *
-     * @param careerUnemploy3
-     * The career_unemploy_3
-     */
-    public void setCareerUnemploy3(List<Double> careerUnemploy3) {
-        this.careerUnemploy3 = careerUnemploy3;
-    }
 
     /**
      *
@@ -304,4 +37,145 @@ public class CareerResponse {
         this.operation = operation;
     }
 
+    /**
+     *
+     * @return
+     * The elements
+     */
+    public List<Element> getElements() {
+        return elements;
+    }
+
+    /**
+     *
+     * @param elements
+     * The elements
+     */
+    public void setElements(List<Element> elements) {
+        this.elements = elements;
+    }
+
+    /**
+     *
+     * @return
+     * The careerUnemploy3
+     */
+    public List<Double> getCareerUnemploy3() {
+        return careerUnemploy3;
+    }
+
+    /**
+     *
+     * @param careerUnemploy3
+     * The career_unemploy_3
+     */
+    public void setCareerUnemploy3(List<Double> careerUnemploy3) {
+        this.careerUnemploy3 = careerUnemploy3;
+    }
+    public class Element{
+        @Expose
+        private String name;
+        @SerializedName("career_salary")
+        @Expose
+        private List<Integer> careerSalary = new ArrayList<Integer>();
+        @SerializedName("career_demand")
+        @Expose
+        private List<Integer> careerDemand = new ArrayList<Integer>();
+        @SerializedName("career_unemploy")
+        @Expose
+        private List<Double> careerUnemploy = new ArrayList<Double>();
+        @SerializedName("career_rating")
+        @Expose
+        private Integer careerRating;
+
+        /**
+         *
+         * @return
+         * The name
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         *
+         * @param name
+         * The name
+         */
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        /**
+         *
+         * @return
+         * The careerSalary
+         */
+        public List<Integer> getCareerSalary() {
+            return careerSalary;
+        }
+
+        /**
+         *
+         * @param careerSalary
+         * The career_salary
+         */
+        public void setCareerSalary(List<Integer> careerSalary) {
+            this.careerSalary = careerSalary;
+        }
+
+        /**
+         *
+         * @return
+         * The careerDemand
+         */
+        public List<Integer> getCareerDemand() {
+            return careerDemand;
+        }
+
+        /**
+         *
+         * @param careerDemand
+         * The career_demand
+         */
+        public void setCareerDemand(List<Integer> careerDemand) {
+            this.careerDemand = careerDemand;
+        }
+
+        /**
+         *
+         * @return
+         * The careerUnemploy
+         */
+        public List<Double> getCareerUnemploy() {
+            return careerUnemploy;
+        }
+
+        /**
+         *
+         * @param careerUnemploy
+         * The career_unemploy
+         */
+        public void setCareerUnemploy(List<Double> careerUnemploy) {
+            this.careerUnemploy = careerUnemploy;
+        }
+
+        /**
+         *
+         * @return
+         * The careerRating
+         */
+        public Integer getCareerRating() {
+            return careerRating;
+        }
+
+        /**
+         *
+         * @param careerRating
+         * The career_rating
+         */
+        public void setCareerRating(Integer careerRating) {
+            this.careerRating = careerRating;
+        }
+    }
 }

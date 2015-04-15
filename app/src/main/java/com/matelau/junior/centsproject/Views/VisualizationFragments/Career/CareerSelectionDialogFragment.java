@@ -39,6 +39,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -154,12 +155,6 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                         @Override
                         public void success(CareerResponse careerResponse, Response response) {
                             Log.d(LOG_TAG, "successful response: ");
-
-                            //set names until api returns career name
-                            careerResponse.setCareer1(_career1.getName());
-                            if(_career2 != null){
-                                careerResponse.setCareer2(_career2.getName());
-                            }
                             //set response
                             CentsApplication.set_cResponse(careerResponse);
 
@@ -337,14 +332,15 @@ public class CareerSelectionDialogFragment extends DialogFragment{
         //load last searched items
         CareerResponse cResponse = CentsApplication.get_cResponse();
         if(cResponse != null){
-            String career1 = cResponse.getCareer1();
-            String career2 = cResponse.getCareer2();
+            List<CareerResponse.Element> elements = cResponse.getElements();
+            String career1 = elements.get(0).getName();
             _career1 = new Career();
             _career1.setName(career1);
             _autoComp1.setText(career1);
-            if(career2 != null){
+            if(elements.size() > 1){
                 //add secondary search elements
                 addPlusViews();
+                String career2 = elements.get(1).getName();
                 _career2 = new Career();
                 _career2.setName(career2);
                 _autoComp2.setText(career2);

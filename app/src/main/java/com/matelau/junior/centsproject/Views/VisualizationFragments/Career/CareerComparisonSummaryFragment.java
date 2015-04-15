@@ -20,6 +20,8 @@ import com.matelau.junior.centsproject.Models.VizModels.CareerResponse;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SummaryAdapter;
 
+import java.util.List;
+
 /**
  * Hosts Career comparison Summary view
  */
@@ -51,12 +53,12 @@ public class CareerComparisonSummaryFragment extends Fragment {
             adRequest = new AdRequest.Builder().addTestDevice("84B46C4862CAF80187170C1A7901502C").build();
         mAdView.loadAd(adRequest);
         CareerResponse cResponse = CentsApplication.get_cResponse();
+        List<CareerResponse.Element> elements = cResponse.getElements();
         _career1Title = (TextView) _rootLayout.findViewById(R.id.title1);
-        _career1Title.setText(cResponse.getCareer1());
+        _career1Title.setText(elements.get(0).getName());
         _career2Title = (TextView) _rootLayout.findViewById(R.id.title2);
-        String title2 = cResponse.getCareer2();
-        if(title2 != null){
-            _career2Title.setText(title2);
+        if(elements.size() > 1){
+            _career2Title.setText(elements.get(1).getName());
         }
         else{
             _career2Title.setVisibility(View.GONE);

@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Models.VizModels.CareerResponse;
@@ -19,7 +18,6 @@ import com.matelau.junior.centsproject.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import lecho.lib.hellocharts.listener.ComboLineColumnChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
@@ -80,8 +78,12 @@ public class UnemploymentFragment extends Fragment {
         _rootView = inflater.inflate(R.layout.fragment_labor_stats, container, false);
         _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
         //update locations
-        _career1 = _cResponse.getCareer1();
-        _career2 = _cResponse.getCareer2();
+        List<CareerResponse.Element> elements = _cResponse.getElements();
+        _career1 = elements.get(0).getName();
+        _career2 = null;
+        if(elements.size() != 1){
+            _career2 = elements.get(1).getName();
+        }
 
         TextView loc1 = (TextView) _rootView.findViewById(R.id.col_location1);
         TextView loc2 = (TextView) _rootView.findViewById(R.id.col_location2);
@@ -106,9 +108,7 @@ public class UnemploymentFragment extends Fragment {
         });
 
         chart = (ComboLineColumnChartView) _rootView.findViewById(R.id.chart);
-        chart.setOnValueTouchListener(new ValueTouchListener());
-
-        generateData();
+        generateData(elements);
 
         return _rootView;
     }
@@ -120,9 +120,9 @@ public class UnemploymentFragment extends Fragment {
         csd.show(fm, "tag");
     }
 
-    private void generateData() {
+    private void generateData(List<CareerResponse.Element> elements) {
         // Chart looks the best when line data and column data have similar maximum viewports.
-        data = new ComboLineColumnChartData(generateColumnData(), generateLineData());
+        data = new ComboLineColumnChartData(generateColumnData(elements), generateLineData());
         List<AxisValue> axisValues = new ArrayList<AxisValue>();
         //add labels to axis
         axisValues.add(new AxisValue(0, _labels[0].toCharArray() ));
@@ -176,11 +176,15 @@ public class UnemploymentFragment extends Fragment {
 
     }
 
-    private ColumnChartData generateColumnData() {
+    private ColumnChartData generateColumnData(List<CareerResponse.Element> elements) {
         int numSubcolumns = 1;
-        if(_cResponse.getCareerUnemploy2().size() > 0){
+        List<Double> unemploy1 = elements.get(0).getCareerUnemploy();
+        List<Double> unemploy2 = null;
+        if(elements.size() > 1){
             numSubcolumns = 2;
+            unemploy2 = elements.get(1).getCareerUnemploy();
         }
+
         int numColumns = 2;
         // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
         List<Column> columns = new ArrayList<Column>();
@@ -193,8 +197,8 @@ public class UnemploymentFragment extends Fragment {
                 String label = "";
                 if(i == 0 && j == 0){
                     sc.setColor(getResources().getColor(R.color.compliment_primary));
-                    if(_cResponse.getCareerUnemploy1().get(0) != null){
-                        float val = _cResponse.getCareerUnemploy1().get(0).floatValue();
+                    if(unemploy1.get(0) != null){
+                        float val = unemploy1.get(0).floatValue();
                         if(val == 0.0f){
                             val = 0.1f;
                             label = "0%";
@@ -212,8 +216,8 @@ public class UnemploymentFragment extends Fragment {
                 }
                 else if (numSubcolumns == 2 && i == 0  && j == 1){
                     sc.setColor( getResources().getColor(R.color.gray));
-                    if(_cResponse.getCareerUnemploy2().get(0) != null){
-                        float val = _cResponse.getCareerUnemploy2().get(0).floatValue();
+                    if(unemploy2.get(0) != null){
+                        float val = unemploy2.get(0).floatValue();
                         if(val == 0.0f){
                             val = 0.1f;
                             label = "0%";
@@ -232,8 +236,8 @@ public class UnemploymentFragment extends Fragment {
                 //i = 1 unemployment 2012
                 if(i == 1 && j == 0){
                     sc.setColor(getResources().getColor(R.color.compliment_primary));
-                    if(_cResponse.getCareerUnemploy1().get(1) != null){
-                        float val = _cResponse.getCareerUnemploy1().get(1).floatValue();
+                    if(unemploy1.get(1) != null){
+                        float val = unemploy1.get(1).floatValue();
                         if(val == 0.0f){
                             val = 0.1f;
                             label = "0%";
@@ -250,8 +254,8 @@ public class UnemploymentFragment extends Fragment {
                 }
                 else if (numSubcolumns == 2 && i == 1  && j == 1){
                     sc.setColor( getResources().getColor(R.color.gray));
-                    if(_cResponse.getCareerUnemploy2().get(1)  != null){
-                        float val =_cResponse.getCareerUnemploy2().get(1).floatValue();
+                    if(unemploy2.get(1)  != null){
+                        float val = unemploy2.get(1).floatValue();
                         if(val == 0.0f){
                             val = 0.1f;
                             label = "0%";
@@ -279,40 +283,6 @@ public class UnemploymentFragment extends Fragment {
         columnChartData.setFillRatio(.3f);
         return columnChartData;
     }
-
-    private void addLineToData() {
-        if (data.getLineChartData().getLines().size() >= maxNumberOfLines) {
-            Toast.makeText(getActivity(), "Samples app uses max 4 lines!", Toast.LENGTH_SHORT).show();
-            return;
-        } else {
-            ++numberOfLines;
-        }
-
-        generateData();
-    }
-
-    private class ValueTouchListener implements ComboLineColumnChartOnValueSelectListener {
-
-        @Override
-        public void onValueDeselected() {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public void onColumnValueSelected(int columnIndex, int subcolumnIndex, SubcolumnValue value) {
-//            Toast.makeText(getActivity(), "Selected column: " + value, Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onPointValueSelected(int lineIndex, int pointIndex, PointValue value) {
-//            Toast.makeText(getActivity(), "Selected line point: " + value, Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-
-
 
 
 }

@@ -110,7 +110,8 @@ public class SummaryAdapter extends BaseAdapter {
         //get necessary data from col response
         //if the user searched for only one career hide second view
         boolean secondCareer = false;
-        if(_cResponse.getCareer2() == null){
+        List<CareerResponse.Element> elements = _cResponse.getElements();
+        if(elements.size() == 1){
             rightVal.setVisibility(View.GONE);
         }
         else{
@@ -120,10 +121,10 @@ public class SummaryAdapter extends BaseAdapter {
         //todo add null checks
         if(position == 0){
             catTitle.setText("2013 AVERAGE SALARY");
-            leftVal.setText("" + _cResponse.getCareerSalary1().get(0));
+            leftVal.setText("" + elements.get(0).getCareerSalary().get(0));
             leftVal.setTextSize(14);
             if(secondCareer){
-                rightVal.setText("" + _cResponse.getCareerSalary2().get(0));
+                rightVal.setText("" + elements.get(1).getCareerSalary().get(0));
                 rightVal.setTextSize(14);
 
             }
@@ -139,20 +140,20 @@ public class SummaryAdapter extends BaseAdapter {
         }
         else if(position == 2){
             catTitle.setText("PROJECTED JOB DEMAND");
-            int jDemand =_cResponse.getCareerDemand1().get(0);
+            int jDemand = elements.get(0).getCareerDemand().get(0);
             leftVal.setText(jDemand +" JOBS");
             leftVal.setTextSize(14);
             if(secondCareer){
-                rightVal.setText(_cResponse.getCareerDemand2().get(0)+" JOBS");
+                rightVal.setText(elements.get(1).getCareerDemand().get(0)+" JOBS");
                 rightVal.setTextSize(14);
             }
         }
         else if(position == 3){
             catTitle.setText("2012 UNEMPLOYMENT");
-            leftVal.setText(_cResponse.getCareerUnemploy1().get(1)+"%");
+            leftVal.setText(elements.get(0).getCareerUnemploy().get(1)+"%");
             leftVal.setTextSize(14);
             if(secondCareer){
-                rightVal.setText(_cResponse.getCareerUnemploy2().get(1)+"%");
+                rightVal.setText(elements.get(1).getCareerUnemploy().get(1)+"%");
                 rightVal.setTextSize(14);
 
             }
