@@ -23,6 +23,6 @@ public interface MajorService {
     void getMajorInfo(@Body MajorQuery majs, Callback<MajorResponse> response);
 
 
-    @PUT("/api/v2/degrees/{level}/{name}/{rating}")
+    @PUT("/api/v2/degrees/{level}/{name}/{rating}?api_key=re5-fHO6-5CnUSglEAioWg")
     void rateMajor(@Path("level") String lvl, @Path("name") String majorName, @Path("rating") int rating, @Body HashMap<String, Integer> id, Callback<Response> cb);
 }

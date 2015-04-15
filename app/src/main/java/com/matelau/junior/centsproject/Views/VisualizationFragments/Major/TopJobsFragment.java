@@ -70,12 +70,13 @@ public class TopJobsFragment extends Fragment {
                              Bundle savedInstanceState) {
         //Get Data
         _mResponse = CentsApplication.get_mResponse();
+        List<MajorResponse.Element> elements = _mResponse.getElements();
         boolean secondMajor = false;
-        if(_mResponse.getName_2() != null){
+        if(elements.size() > 1){
             secondMajor = true;
         }
 
-        getTitlesAndVals(secondMajor);
+        getTitlesAndVals(secondMajor, elements);
 
         //normalize data
         if(job_titles1.size() < 3){
@@ -91,8 +92,11 @@ public class TopJobsFragment extends Fragment {
         _rootView = inflater.inflate(R.layout.fragment_top_jobs, container, false);
         _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
         //update locations
-        _major1 = _mResponse.getName_1();
-        _major2 = _mResponse.getName_2();
+        _major1 = elements.get(0).getName();
+        if(secondMajor){
+            _major2 = elements.get(1).getName();
+        }
+
         TextView major1Name = (TextView) _rootView.findViewById(R.id.major1);
         TextView major2Name = (TextView) _rootView.findViewById(R.id.major2);
         major1Name.setText(_major1);
@@ -120,31 +124,39 @@ public class TopJobsFragment extends Fragment {
         return _rootView;
     }
 
-    private void getTitlesAndVals(boolean secondMajor){
-        for(int i = 0 ; i< _mResponse.getJobs1().size(); i++){
+    private void getTitlesAndVals(boolean secondMajor, List<MajorResponse.Element> elements){
+        List<String> jobs1 = elements.get(0).getJobs();
+        List<String> jobs2 = null;
+        if(secondMajor){jobs2 = elements.get(1).getJobs();}
+
+        for(int i = 0 ; i< jobs1.size(); i++){
             //titles
             if(i % 2 == 0){
-                String title = (String) _mResponse.getJobs1().get(i);
+                String title = jobs1.get(i);
                 if(title != null)
                     job_titles1.add(title);
-                if(_mResponse.getJobs2().size() > 0 && secondMajor){
-                    String title2 = (String) _mResponse.getJobs2().get(i);
-                    if(title2 != null)
-                        job_titles2.add(title2);
                 }
-            }
+
             else{
-                Double salary = (Double) _mResponse.getJobs1().get(i);
-                if(salary != null)
+                    Double salary = Double.parseDouble(jobs1.get(i));
                     job_Salaries1.add(salary);
-                if(_mResponse.getJobs2().size() > 0 && secondMajor){
-                    Double salary2 = (Double) _mResponse.getJobs2().get(i);
-                    if(salary2 != null){
-                        job_Salaries2.add(salary2);
-                    }
+                }
+        }
+        if(jobs2 != null){
+            for(int i = 0 ; i< jobs2.size(); i++){
+                //titles
+                if(i % 2 == 0){
+                    String title = jobs2.get(i);
+                    if(title != null)
+                        job_titles2.add(title);
+                }
+                else{
+                    Double salary = Double.parseDouble(jobs2.get(i));
+                    job_Salaries2.add(salary);
                 }
             }
         }
+
     }
 
     private void normalize(List<String> job_titles, List<Double> salaries) {

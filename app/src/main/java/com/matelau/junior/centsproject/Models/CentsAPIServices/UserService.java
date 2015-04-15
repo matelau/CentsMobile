@@ -19,25 +19,25 @@ import retrofit.http.Path;
  * Created by matelau on 4/6/15.
  */
 public interface UserService {
-    @GET("/api/v2/users/{id}/query")
+    @GET("/api/v2/users/{id}/query?api_key=re5-fHO6-5CnUSglEAioWg")
     void getQueries(@Path("id") int id, Callback<Response> cb);
 
-    @GET("/api/v2/users/{id}")
+    @GET("/api/v2/users/{id}?api_key=re5-fHO6-5CnUSglEAioWg")
     void getProfileData(@Path("id") int id, Callback<UserResponse> cb);
 
-    @GET("/api/v2/users/{id}/ratings")
+    @GET("/api/v2/users/{id}/ratings?api_key=re5-fHO6-5CnUSglEAioWg")
     void getRatingsData(@Path("id") int id, Callback<UserResponse> cb);
 
-    @GET("/api/v2/users/{id}/completed")
+    @GET("/api/v2/users/{id}/completed?api_key=re5-fHO6-5CnUSglEAioWg")
     void getCompletedData(@Path("id") int id, Callback<Response> cb );
 
-    @POST("/api/v2/users/{id}/completed")
+    @POST("/api/v2/users/{id}/completed?api_key=re5-fHO6-5CnUSglEAioWg")
     void updateCompletedData(@Path("id") int id, @Body HashMap<String,String> section, Callback<Response> cb);
 
-    @POST("/api/v2/users/{id}/query")
+    @POST("/api/v2/users/{id}/query?api_key=re5-fHO6-5CnUSglEAioWg")
     void storeQuery(@Body Query q, @Path("id") int id, Callback<Response> cb);
 
-    @PATCH("/api/v2/users/{id}")
+    @PATCH("/api/v2/users/{id}?api_key=re5-fHO6-5CnUSglEAioWg")
     void updateFields(@Path("id") int id, @Body HashMap<String, List<Field>> fields, Callback<Response> cb);
 
 

@@ -19,6 +19,6 @@ public interface SchoolService {
     @POST("/api/v1/schools")
     void getSchools(@Body SchoolRequest s, Callback<SchoolResponse> response);
 
-    @PUT("/api/v2/schools/{name}/{rating}")
+    @PUT("/api/v2/schools/{name}/{rating}?api_key=re5-fHO6-5CnUSglEAioWg")
     void rateSchool(@Path("name") String uni, @Path("rating") int rating, @Body HashMap<String, Integer> user, Callback<Response> cb);
 }

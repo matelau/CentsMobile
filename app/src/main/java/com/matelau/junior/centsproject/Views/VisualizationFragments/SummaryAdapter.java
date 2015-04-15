@@ -60,7 +60,7 @@ public class SummaryAdapter extends BaseAdapter {
                 return 4;
             case 1:
                 if( _mResponse != null)
-                    return _mResponse.getMajor1().size();
+                    return _mResponse.getElements().get(0).getDegree().size();
                 else
                     return 4;
             case 2:
@@ -409,15 +409,15 @@ public class SummaryAdapter extends BaseAdapter {
 
 
     private void createMajorSumView(int position, TextView leftVal, TextView rightVal, TextView catTitle){
-        List<Float> vals1 = _mResponse.getMajor1();
-        List<Float> vals2 = _mResponse.getMajor2();
-        if(vals2.size() == 0){
-            vals2 = null;
+        List<MajorResponse.Element> elements = _mResponse.getElements();
+        List<Float> vals1 = elements.get(0).getDegree();
+        List<Float> vals2 = null;
+        if(elements.size() > 1){
+            vals2 = elements.get(0).getDegree();
         }
 
         if(vals2 == null){
             rightVal.setVisibility(View.GONE);
-//            leftVal.setGravity(Gravity.CENTER_HORIZONTAL);
         }
 
         //major sum consists of avg sal, major rec, maj sat, cents major rating

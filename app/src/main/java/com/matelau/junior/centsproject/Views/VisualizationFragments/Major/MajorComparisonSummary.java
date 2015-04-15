@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
+import com.matelau.junior.centsproject.Controllers.RatingsDialogFragment;
 import com.matelau.junior.centsproject.Models.VizModels.Major;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
 import com.matelau.junior.centsproject.R;
@@ -64,6 +65,12 @@ public class MajorComparisonSummary extends Fragment {
         Major m = CentsApplication.get_major1();
         if(m != null){
             _major1Title.setText(m.getName());
+            _major1Title.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    launchRatingDialog(_major1Title.getText().toString());
+                }
+            });
         }
 
 
@@ -71,6 +78,12 @@ public class MajorComparisonSummary extends Fragment {
         if(CentsApplication.get_major2() != null){
             String title2 = CentsApplication.get_major2().getName();
             _major2Title.setText(title2);
+            _major2Title.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    launchRatingDialog(_major2Title.getText().toString());
+                }
+            });
         }
         else{
             _major2Title.setVisibility(View.GONE);
@@ -91,6 +104,22 @@ public class MajorComparisonSummary extends Fragment {
         return _rootLayout;
 
 
+    }
+
+    /**
+     * send along type and text for rating
+     * @param text
+     */
+    private void launchRatingDialog(String text) {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        RatingsDialogFragment rating = new RatingsDialogFragment();
+        //set values
+        Bundle args = new Bundle();
+        args.putInt("type", 0);
+        args.putString("element", text);
+        rating.setArguments(args);
+        rating.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
+        rating.show(fm, "tag");
     }
 
     private void showMajorSelectionDialog(){

@@ -16,9 +16,9 @@ import retrofit.http.Path;
  * Created by matelau on 3/31/15.
  */
 public interface CareerService {
-    @POST("/api/v2/careers")
+    @POST("/api/v2/careers/compare")
     void getCareerInfo(@Body CareerQuery careers, Callback<CareerResponse> response);
 
-    @PUT("/api/v2/careers/{name}/{rating}")
+    @PUT("/api/v2/careers/{name}/{rating}?api_key=re5-fHO6-5CnUSglEAioWg")
     void rateCareer(@Path("name")String careerName, @Path("rating") int rating, @Body HashMap<String, Integer> id, Callback<Response> cb);
 }

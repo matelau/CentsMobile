@@ -269,7 +269,8 @@ public class MajorSelectionDialogFragment extends DialogFragment{
         //load values of previous search if one exists
         MajorResponse m = CentsApplication.get_mResponse();
         if(m != null){
-            String major = m.getName_1();
+            List<MajorResponse.Element> elements = m.getElements();
+            String major = elements.get(0).getName();
             _major1 = parseMajor(major) ;
             Log.d(LOG_TAG, "major1: " + major);
             int pos1 = getMajorPosition(major);
@@ -280,9 +281,9 @@ public class MajorSelectionDialogFragment extends DialogFragment{
             else{
                 _autoComp1.setText(major);
             }
-            if(m.getName_2() != null){
+            if(elements.size() >= 1){
                 addPlusViews();
-                String major2 = m.getName_2().trim();
+                String major2 = elements.get(1).getName();
                 _major2 = parseMajor(major2);
                 Log.d(LOG_TAG, "major2: "+major);
                 int pos2 = getMajorPosition(major);
