@@ -77,16 +77,16 @@ public class CareerResponse {
         private String name;
         @SerializedName("career_salary")
         @Expose
-        private List<Integer> careerSalary = new ArrayList<Integer>();
+        private List<Double> careerSalary = new ArrayList<>();
         @SerializedName("career_demand")
         @Expose
-        private List<Integer> careerDemand = new ArrayList<Integer>();
+        private List<Double> careerDemand = new ArrayList<>();
         @SerializedName("career_unemploy")
         @Expose
         private List<Double> careerUnemploy = new ArrayList<Double>();
         @SerializedName("career_rating")
         @Expose
-        private Integer careerRating;
+        private Double careerRating;
 
         /**
          *
@@ -111,7 +111,7 @@ public class CareerResponse {
          * @return
          * The careerSalary
          */
-        public List<Integer> getCareerSalary() {
+        public List<Double> getCareerSalary() {
             return careerSalary;
         }
 
@@ -120,7 +120,7 @@ public class CareerResponse {
          * @param careerSalary
          * The career_salary
          */
-        public void setCareerSalary(List<Integer> careerSalary) {
+        public void setCareerSalary(List<Double> careerSalary) {
             this.careerSalary = careerSalary;
         }
 
@@ -129,7 +129,7 @@ public class CareerResponse {
          * @return
          * The careerDemand
          */
-        public List<Integer> getCareerDemand() {
+        public List<Double> getCareerDemand() {
             return careerDemand;
         }
 
@@ -138,7 +138,7 @@ public class CareerResponse {
          * @param careerDemand
          * The career_demand
          */
-        public void setCareerDemand(List<Integer> careerDemand) {
+        public void setCareerDemand(List<Double> careerDemand) {
             this.careerDemand = careerDemand;
         }
 
@@ -165,7 +165,7 @@ public class CareerResponse {
          * @return
          * The careerRating
          */
-        public Integer getCareerRating() {
+        public Double getCareerRating() {
             return careerRating;
         }
 
@@ -174,7 +174,7 @@ public class CareerResponse {
          * @param careerRating
          * The career_rating
          */
-        public void setCareerRating(Integer careerRating) {
+        public void setCareerRating(Double careerRating) {
             this.careerRating = careerRating;
         }
     }
