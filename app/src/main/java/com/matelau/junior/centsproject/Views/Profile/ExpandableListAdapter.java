@@ -153,22 +153,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         major1.setName(majors.get(0).getName());
                         CentsApplication.set_major1(major1);
                     }
-//                    if(mResponse.getName_2() != null){
-//                        Major major1 = new Major();
-//                        major1.setName( mResponse.getName_2());
-//                        CentsApplication.set_major1(major1);
-//                    }
-//                    else
-//                        CentsApplication.set_major1(null);
-//                    if(mResponse.getName_1() != null){
-//                        Major major2 = new Major();
-//                        major2.setName( mResponse.getName_1());
-//                        CentsApplication.set_major2(major2);
-//                    }
-//                    else
-//                        CentsApplication.set_major2(null);
-
-
                     CentsApplication.set_mResponse(mResponse);
                     CentsApplication.set_selectedVis("Major Comparison");
                 }
@@ -231,11 +215,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         ProgressBar pb = (ProgressBar) convertView.findViewById(R.id.user_progress);
         pb.setVisibility(View.GONE);
 
-//        if (childPosition == getChildrenCount(groupPosition) - 1) {
-//            convertView.setPadding(0, 0, 0, 10);
-//        } else
-//            convertView.setPadding(0, 0, 0, 0);
-
         //Display ratings section 2,3,4
         if(groupPosition >= 2 && groupPosition < 5){
             //extract rating from string
@@ -250,12 +229,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             _ratings = _context.getResources().getStringArray(R.array.rating_values);
             ArrayAdapter<String> ratingAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_dropdown_item, _ratings);
             spinnerRating.setAdapter(ratingAdapter);
-            spinnerRating.setSelection(ratingVal);
+            //remove one from rating to fit in range 0-4
+            spinnerRating.setSelection(ratingVal-1);
             spinnerRating.setVisibility(View.VISIBLE);
             if(groupPosition == 2){
                 //major rating
-                final String level = childText.substring(childText.indexOf(",")+1, childText.length()).trim();
-                final String major = childText.substring(0, childText.indexOf(",")).trim();
+                final String level = childText.substring(childText.indexOf("(")+1, childText.length()-1).trim();
+                final String major = childText.substring(0, childText.indexOf("(")).trim();
                 Log.d(LOG_TAG, "level: "+level+", Major: "+ major);
                 spinnerRating.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -267,9 +247,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                 Log.d(LOG_TAG, "Success");
                                 //update list
                                 updateRatings( 2,  element, position);
-
                             }
-
                             @Override
                             public void failure(RetrofitError error) {
                                 Log.e(LOG_TAG, error.getMessage());
@@ -409,6 +387,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             convertView.findViewById(R.id.profile_preferences).setVisibility(View.GONE);
             TextView txtListChild = (TextView) convertView
                     .findViewById(R.id.lblListItem);
+            if(childText.length() > 30){
+                childText = childText.substring(0,28)+"...";
+            }
             txtListChild.setText(childText);
             //conduct search if user clicks previous query
             if(groupPosition == 1){

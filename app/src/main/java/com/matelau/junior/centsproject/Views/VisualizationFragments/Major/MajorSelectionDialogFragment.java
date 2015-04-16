@@ -281,7 +281,7 @@ public class MajorSelectionDialogFragment extends DialogFragment{
             else{
                 _autoComp1.setText(major);
             }
-            if(elements.size() >= 1){
+            if(elements.size() > 1){
                 addPlusViews();
                 String major2 = elements.get(1).getName();
                 _major2 = parseMajor(major2);

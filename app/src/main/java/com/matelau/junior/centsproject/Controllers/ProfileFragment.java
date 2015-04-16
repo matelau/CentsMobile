@@ -138,7 +138,7 @@ public class ProfileFragment extends Fragment {
             public void success(Response response, Response response2) {
                 String[] completed = translateResponseToArray(response);
                 int comps = completed.length;
-                ArrayList<String> lSections =  new ArrayList<String>(); //new ArrayList<String>(Arrays.asList(sections));
+                ArrayList<String> lSections =  new ArrayList<String>();
                 lSections.add("Completed : " + comps + "/13");
                 listDataChild.put(listDataHeader.get(6),lSections);
                 ArrayList<String> notCompleted = new ArrayList<String>(Arrays.asList(getActivity().getResources().getStringArray(R.array.sections)));
@@ -199,7 +199,7 @@ public class ProfileFragment extends Fragment {
                 List<DegreeRating> dRatings = userResponse.getDegreeRatings();
                 ArrayList<String> dRat = new ArrayList<String>();
                 for(DegreeRating d : dRatings){
-                    String val = d.getName()+", "+d.getLevel()+": "+d.getRating();
+                    String val = d.getName()+"("+d.getLevel()+") : "+d.getRating();
                     dRat.add(val);
                 }
 

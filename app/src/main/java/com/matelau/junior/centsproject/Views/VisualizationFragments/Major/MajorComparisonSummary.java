@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -59,34 +60,45 @@ public class MajorComparisonSummary extends Fragment {
             adRequest = new AdRequest.Builder().addTestDevice("84B46C4862CAF80187170C1A7901502C").build();
         }
 
+
         mAdView.loadAd(adRequest);
         _major1Title = (TextView) _rootLayout.findViewById(R.id.title1);
         _major2Title = (TextView) _rootLayout.findViewById(R.id.title2);
         Major m = CentsApplication.get_major1();
+        boolean secondMajor = false;
         if(m != null){
-            _major1Title.setText(m.getName());
+            _major1Title.setText(m.getName() + " (" + m.getLevel() + ")");
+        }
+
+        if(CentsApplication.get_major2() != null){
+            String title2 = CentsApplication.get_major2().getName()+" ("+m.getLevel()+")";
+            _major2Title.setText(title2);
+            secondMajor = true;
+        }
+        else{
+            _major2Title.setVisibility(View.GONE);
+        }
+
+
+        //Rating Setup
+        if(CentsApplication.is_loggedIN()){
+            Toast.makeText(getActivity(), "Click a Major Title to Rate", Toast.LENGTH_SHORT).show();
             _major1Title.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     launchRatingDialog(_major1Title.getText().toString());
                 }
             });
-        }
 
+            if(secondMajor){
+                _major2Title.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        launchRatingDialog(_major2Title.getText().toString());
+                    }
+                });
+            }
 
-
-        if(CentsApplication.get_major2() != null){
-            String title2 = CentsApplication.get_major2().getName();
-            _major2Title.setText(title2);
-            _major2Title.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    launchRatingDialog(_major2Title.getText().toString());
-                }
-            });
-        }
-        else{
-            _major2Title.setVisibility(View.GONE);
         }
 
         //Setup summary list
