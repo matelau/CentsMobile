@@ -12,10 +12,12 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
+import com.matelau.junior.centsproject.Controllers.RatingsDialogFragment;
 import com.matelau.junior.centsproject.Models.VizModels.CareerResponse;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SummaryAdapter;
@@ -64,6 +66,27 @@ public class CareerComparisonSummaryFragment extends Fragment {
             _career2Title.setVisibility(View.GONE);
         }
 
+        //Rating Setup
+        if(CentsApplication.is_loggedIN()){
+            Toast.makeText(getActivity(), "Click a Major Title to Rate", Toast.LENGTH_SHORT).show();
+            _career2Title.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    launchRatingDialog(_major1Title.getText().toString());
+                }
+            });
+
+            if(secondMajor){
+                _major2Title.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        launchRatingDialog(_major2Title.getText().toString());
+                    }
+                });
+            }
+
+        }
+
         //Setup summary list
         _search = (ImageButton) _rootLayout.findViewById(R.id.imageSearchButton);
         _search.setOnClickListener(new View.OnClickListener() {
@@ -77,6 +100,22 @@ public class CareerComparisonSummaryFragment extends Fragment {
         _careerAdapter = new SummaryAdapter(3, getActivity());
         _careerSum.setAdapter(_careerAdapter);
         return _rootLayout;
+    }
+
+    /**
+     * send along type and text for rating
+     * @param text
+     */
+    private void launchRatingDialog(String text) {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        RatingsDialogFragment rating = new RatingsDialogFragment();
+        //set values
+        Bundle args = new Bundle();
+        args.putInt("type", 1);
+        args.putString("element", text);
+        rating.setArguments(args);
+        rating.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
+        rating.show(fm, "tag");
     }
 
     private void showCareerSelectionDialog(){

@@ -284,6 +284,8 @@ public class SearchActivity extends FragmentActivity {
         Log.d(LOG_TAG, "Logged out");
         if(CentsApplication.isDebug())
             Toast.makeText(this, "Logged Out", Toast.LENGTH_SHORT).show();
+        //force return to home on logout
+        showHome();
     }
 
 

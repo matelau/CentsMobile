@@ -41,7 +41,7 @@ public class RatingsDialogFragment extends DialogFragment {
     private List<DegreeRating> dRatings;
     private List<SchoolRating> sRatings;
     private String toBeRated;
-    //0:Major,
+    //0:Major, 1:Career
     private int type;
     private int _id;
 
