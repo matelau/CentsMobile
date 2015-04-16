@@ -73,12 +73,15 @@ public class SearchFragment extends Fragment {
         // Inflate the layout for this fragment
         _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_search, container, false);
         _slider = (SliderLayout) _rootLayout.findViewById(R.id.slider);
-        AdView mAdView = (AdView) _rootLayout.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
+
         if(CentsApplication.isDebug()){
-            adRequest = new AdRequest.Builder().addTestDevice("84B46C4862CAF80187170C1A7901502C").build();
+//            only load ad if not in debug
         }
-        mAdView.loadAd(adRequest);
+        else{
+            AdView mAdView = (AdView) _rootLayout.findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        }
 
         ImageButton search_submit = (ImageButton) _rootLayout.findViewById(R.id.search_button);
         _editText = (EditText) _rootLayout.findViewById(R.id.editText1);

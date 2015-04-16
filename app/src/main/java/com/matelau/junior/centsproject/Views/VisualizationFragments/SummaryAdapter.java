@@ -114,47 +114,79 @@ public class SummaryAdapter extends BaseAdapter {
         else{
             secondCareer = true;
         }
-
-        //todo add null checks
         if(position == 0){
             catTitle.setText("2013 AVERAGE SALARY");
-            leftVal.setText("" + elements.get(0).getCareerSalary().get(0));
-            leftVal.setTextSize(14);
+            if(elements.get(0).getCareerSalary().get(0) != null){
+                int val = elements.get(0).getCareerSalary().get(0).intValue();
+                leftVal.setText("$" + val);
+            }
+            else{
+                leftVal.setText("UNKNOWN");
+            }
             if(secondCareer){
-                rightVal.setText("" + elements.get(1).getCareerSalary().get(0));
-                rightVal.setTextSize(14);
+                if(elements.get(1).getCareerSalary().get(0) != null){
+                    int val2 = elements.get(1).getCareerSalary().get(0).intValue();
+                    rightVal.setText("$" + val2);
+                }
+                else{
+                    rightVal.setText("UNKNOWN");
+                }
 
             }
         }
         else if(position == 1){
+            //update cents rating
             catTitle.setText("CENTS JOB RATING");
-            leftVal.setText("4.8 OUT OF 5.0");
-            leftVal.setTextSize(14);
+            if(elements.get(0).getCareerRating() != null){
+                leftVal.setText(""+elements.get(0).getCareerRating()+" OUT OF 5.0");
+            }
             if(secondCareer){
-                rightVal.setText("2.9 OUT OF 5.0");
-                rightVal.setTextSize(14);
+                if(elements.get(1).getCareerRating() != null){
+                    rightVal.setText(""+elements.get(1).getCareerRating()+" OUT OF 5.0");
+                }
+
             }
         }
         else if(position == 2){
             catTitle.setText("PROJECTED JOB DEMAND");
-            int jDemand = elements.get(0).getCareerDemand().get(0);
-            leftVal.setText(jDemand +" JOBS");
-            leftVal.setTextSize(14);
+            if(elements.get(0).getCareerDemand().get(0) != null){
+                int jDemand = elements.get(0).getCareerDemand().get(0).intValue();
+                leftVal.setText(jDemand + " JOBS");
+            }
+            else{
+                leftVal.setText("UNKNOWN");
+            }
+
             if(secondCareer){
-                rightVal.setText(elements.get(1).getCareerDemand().get(0)+" JOBS");
-                rightVal.setTextSize(14);
+                if(elements.get(1).getCareerDemand().get(0) != null){
+                    int jDemand2 = elements.get(1).getCareerDemand().get(0).intValue();
+                    rightVal.setText(jDemand2+" JOBS");
+                }
+                else{
+                    rightVal.setText("UNKNOWN");
+                }
             }
         }
         else if(position == 3){
             catTitle.setText("2012 UNEMPLOYMENT");
-            leftVal.setText(elements.get(0).getCareerUnemploy().get(1)+"%");
-            leftVal.setTextSize(14);
-            if(secondCareer){
-                rightVal.setText(elements.get(1).getCareerUnemploy().get(1)+"%");
-                rightVal.setTextSize(14);
+            if(elements.get(0).getCareerUnemploy().get(1) != null){
+                leftVal.setText(elements.get(0).getCareerUnemploy().get(1)+"%");
+            }
+            else{
+                leftVal.setText("UNKNOWN");
+            }
 
+            if(secondCareer){
+                if(elements.get(1).getCareerUnemploy().get(1) != null){
+                    rightVal.setText(elements.get(1).getCareerUnemploy().get(1) + "%");
+                }
+                else{
+                    rightVal.setText("UNKNOWN");
+                }
             }
         }
+        leftVal.setTextSize(14);
+        rightVal.setTextSize(14);
     }
 
 

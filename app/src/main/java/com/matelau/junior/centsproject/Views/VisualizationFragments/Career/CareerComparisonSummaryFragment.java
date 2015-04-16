@@ -49,11 +49,17 @@ public class CareerComparisonSummaryFragment extends Fragment {
 
         Log.d(LOG_TAG, "CreateView");
         _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_career_comparison_summary, container, false);
-        AdView mAdView = (AdView) _rootLayout.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        if(CentsApplication.isDebug())
-            adRequest = new AdRequest.Builder().addTestDevice("84B46C4862CAF80187170C1A7901502C").build();
-        mAdView.loadAd(adRequest);
+
+        if(CentsApplication.isDebug()){
+//            mAdView.destroy();
+        }
+        else{
+                AdView mAdView = (AdView) _rootLayout.findViewById(R.id.adView);
+                AdRequest adRequest = new AdRequest.Builder().build();
+                mAdView.loadAd(adRequest);
+        }
+
+
         CareerResponse cResponse = CentsApplication.get_cResponse();
         List<CareerResponse.Element> elements = cResponse.getElements();
         _career1Title = (TextView) _rootLayout.findViewById(R.id.title1);
@@ -68,19 +74,19 @@ public class CareerComparisonSummaryFragment extends Fragment {
 
         //Rating Setup
         if(CentsApplication.is_loggedIN()){
-            Toast.makeText(getActivity(), "Click a Major Title to Rate", Toast.LENGTH_SHORT).show();
-            _career2Title.setOnClickListener(new View.OnClickListener() {
+            Toast.makeText(getActivity(), "Click a Career Title to Rate", Toast.LENGTH_SHORT).show();
+            _career1Title.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    launchRatingDialog(_major1Title.getText().toString());
+                    launchRatingDialog(_career1Title.getText().toString());
                 }
             });
 
-            if(secondMajor){
-                _major2Title.setOnClickListener(new View.OnClickListener() {
+            if(elements.size() > 1){
+                _career2Title.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        launchRatingDialog(_major2Title.getText().toString());
+                        launchRatingDialog(_career2Title.getText().toString());
                     }
                 });
             }

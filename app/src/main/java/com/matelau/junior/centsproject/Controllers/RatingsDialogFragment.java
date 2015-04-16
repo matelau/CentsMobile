@@ -15,6 +15,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.matelau.junior.centsproject.Models.CentsAPIServices.CareerService;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.MajorService;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
 import com.matelau.junior.centsproject.Models.UserModels.CareerRating;
@@ -44,6 +45,7 @@ public class RatingsDialogFragment extends DialogFragment {
     //0:Major, 1:Career
     private int type;
     private int _id;
+    private HashMap<String, Integer> user;
 
 
     public RatingsDialogFragment() {
@@ -61,8 +63,8 @@ public class RatingsDialogFragment extends DialogFragment {
         //get id
         SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
         _id = settings.getInt("ID", 0);
-
-
+        user = new HashMap<String, Integer>();
+        user.put("user", _id);
         loadRatingData();
 
 
@@ -95,7 +97,29 @@ public class RatingsDialogFragment extends DialogFragment {
                 //rate Major
                 rateMajor(rating);
                 break;
+            case 1:
+                rateCareer(rating);
+                break;
+            default:
+                Toast.makeText(getActivity(), "Error - Please Try Again", Toast.LENGTH_SHORT).show();
+                break;
         }
+    }
+
+    private void rateCareer(float rating){
+        CareerService service = CentsApplication.get_centsRestAdapter().create(CareerService.class);
+        service.rateCareer(toBeRated, (int) rating, user, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                closeOnSuccess();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                toastOnError(error);
+            }
+        });
+
     }
 
 
@@ -128,6 +152,13 @@ public class RatingsDialogFragment extends DialogFragment {
                     }
                 }
                 break;
+            case 1:
+                for(CareerRating c : cRatings){
+                    if(toBeRated.contains(c.getName())){
+                        _rating.setRating(c.getRating());
+                    }
+                }
+                break;
             default:
 
                 break;
@@ -138,25 +169,30 @@ public class RatingsDialogFragment extends DialogFragment {
 
     }
 
+    private void closeOnSuccess(){
+        Log.d(LOG_TAG, "updated rating" );
+        dismiss();
+    }
+
+
+    private void toastOnError(RetrofitError error){
+        Log.d(LOG_TAG, error.getMessage() );
+        Toast.makeText(getActivity(), "Error - Please Try Again Later", Toast.LENGTH_SHORT).show();
+    }
+
     public void rateMajor(float rating){
         final String level = toBeRated.substring(toBeRated.indexOf("(")+1, toBeRated.length()-1).trim();
         final String major = toBeRated.substring(0, toBeRated.indexOf("(")).trim();
         MajorService service = CentsApplication.get_centsRestAdapter().create(MajorService.class);
-        final HashMap<String, Integer> user = new HashMap<String, Integer>();
-        user.put("user", _id);
         service.rateMajor(level, major, (int) rating, user, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
-                Log.d(LOG_TAG, "updated rating" );
-                dismiss();
-
+                closeOnSuccess();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d(LOG_TAG, error.getMessage() );
-                Toast.makeText(getActivity(), "Error - Please Try Again Later", Toast.LENGTH_SHORT).show();
-
+                toastOnError(error);
             }
         });
     }
