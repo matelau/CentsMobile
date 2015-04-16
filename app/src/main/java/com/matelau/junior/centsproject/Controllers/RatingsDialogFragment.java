@@ -36,16 +36,18 @@ public class RatingsDialogFragment extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_ratings_dialog, null, false);
         TextView element = (TextView) _rootLayout.findViewById(R.id.toBeRated);
-        element.setText("Rate: "+toBeRated);
+        element.setText("Rate: " + toBeRated);
         RatingBar rating = (RatingBar) _rootLayout.findViewById(R.id.rating);
         rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 ratingBar.setRating(rating);
                 ratingBar.invalidate();
-                Toast.makeText(getActivity(), "Rated: "+rating, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Coming Soon rated: "+rating, Toast.LENGTH_SHORT).show();
+                _rootLayout.invalidate();
             }
         });
+
         builder.setView(_rootLayout);
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             @Override

@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
+import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.UnemploymentFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.CostOfLivingFragment;
 import com.matelau.junior.centsproject.R;
@@ -71,7 +72,6 @@ public class VisualizationPagerFragment extends Fragment {
         //bind sliding tabs
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) _rootlayout.findViewById(R.id.tabs);
         tabs.setViewPager(_viewPager);
-
         return _rootlayout;
     }
 
@@ -81,12 +81,7 @@ public class VisualizationPagerFragment extends Fragment {
     private void initialisePaging() {
         List<Fragment> fragments = new Vector<Fragment>();
         String selectedVis = CentsApplication.get_selectedVis();
-//        String title = selectedVis.replace("Comparison", " Comparison");
         getActivity().getActionBar().setTitle(selectedVis);
-//        Log.d(LOG_TAG, "InitialisePaging - SelectedVis: " + selectedVis);
-        if(CentsApplication.isDebug())
-//            Toast.makeText(getActivity(), "Loading Vis: " + selectedVis, Toast.LENGTH_SHORT).show();
-        //load fragments based on user selections
         if(selectedVis == null){
             //return to examples
             CentsApplication.set_selectedVis("Examples");
@@ -109,12 +104,11 @@ public class VisualizationPagerFragment extends Fragment {
             case "Major Comparison":
                 completed = "View Major Comparison";
                 fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), TopJobsFragment.class.getName()));
-//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
+                //check for top jobs
+                boolean addTJ = addTobJobs();
+                if(addTJ){
+                    fragments.add(Fragment.instantiate(getActivity(), TopJobsFragment.class.getName()));
+                }
                 break;
             case "COL Comparison":
                 completed = "View City Comparison";
@@ -178,7 +172,17 @@ public class VisualizationPagerFragment extends Fragment {
         });
     }
 
+    private boolean addTobJobs(){
+        //check if any elements have
+        List<MajorResponse.Element> elements = CentsApplication.get_mResponse().getElements();
+        for(MajorResponse.Element current : elements){
+            if(current.getJobs().size() > 0){
+                return true;
+            }
+        }
 
+        return false;
+    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -256,7 +260,13 @@ public class VisualizationPagerFragment extends Fragment {
                     tabTitles = new String[]{"Summary"};
                     return tabTitles[position];
                 case "Major Comparison":
-                    tabTitles = new String[]{"Summary", "Top Jobs"}; //, "Salary","Job Satisfaction", "Graduation Rate", "Demand", "Unemployment", "Top Jobs"};
+                    boolean addTJ = addTobJobs();
+                    if(addTJ) {
+                        tabTitles = new String[]{"Summary", "Top Jobs"};
+                    }
+                    else{
+                        tabTitles = new String[]{"Summary"};
+                    }
                     return tabTitles[position];
                 case "COL Comparison":
                     tabTitles = new String[]{"Summary", "Cost of Living", "Labor Stats","Taxes","Other", "Weather"};

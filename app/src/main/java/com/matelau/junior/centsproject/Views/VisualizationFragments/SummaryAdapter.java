@@ -59,10 +59,7 @@ public class SummaryAdapter extends BaseAdapter {
             case 0:
                 return 4;
             case 1:
-                if( _mResponse != null)
-                    return _mResponse.getElements().get(0).getDegree().size();
-                else
-                    return 4;
+                return 4;
             case 2:
                 return 6;
             default:

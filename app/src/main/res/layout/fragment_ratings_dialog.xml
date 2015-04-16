@@ -21,8 +21,6 @@
         android:isIndicator="false"
         android:layout_marginBottom="15dp"
         android:max="5"
-        style="@style/centRatingBar"
-        android:id="@+id/rating"
-        />
-
+        android:id="@+id/rating"/>
+    <!--style="@style/centRatingBar"-->
 </LinearLayout>

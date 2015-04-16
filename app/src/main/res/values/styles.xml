@@ -27,8 +27,9 @@
     </style>
 
     <style name="centRatingBar" parent="@android:style/Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/cent_rate_gray1</item>
-        <item name="android:indeterminateDrawable">@drawable/cent_rate_color1</item>
+        <item name="android:progressDrawable">@drawable/cents_rating_bar_full</item>
+        <item name="android:minHeight">50dip</item>
+        <item name="android:maxHeight">50dip</item>
     </style>
 
 
