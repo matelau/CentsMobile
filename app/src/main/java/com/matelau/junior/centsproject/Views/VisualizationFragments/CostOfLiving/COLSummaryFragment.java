@@ -20,6 +20,8 @@ import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SummaryAdapter;
 
+import java.util.List;
+
 /**
  * Displays summary for Cost of Living Visualizations
  */
@@ -49,19 +51,26 @@ public class COLSummaryFragment extends Fragment {
         _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_col_summary, container, false);
         //get MajorResponse
         ColiResponse colResponse = CentsApplication.get_colResponse();
-
-        AdView mAdView = (AdView) _rootLayout.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
         if(CentsApplication.isDebug()){
-            adRequest = new AdRequest.Builder().addTestDevice("84B46C4862CAF80187170C1A7901502C").build();
+//            do nothing
         }
-        mAdView.loadAd(adRequest);
+        else{
+            AdView mAdView = (AdView) _rootLayout.findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        }
 
 
         _city1Title = (TextView) _rootLayout.findViewById(R.id.title1);
-        _city1Title.setText(colResponse.getLocation1());
+        List<ColiResponse.Element> elements = colResponse.getElements();
+        boolean hasSecondCity = elements.size() > 1;
+        _city1Title.setText(elements.get(0).getName());
         _city2Title = (TextView) _rootLayout.findViewById(R.id.title2);
-        String title2 = colResponse.getLocation2();
+        String title2 = null;
+        if(hasSecondCity){
+            title2 = elements.get(1).getName();
+        }
+
         if(title2 != null){
             _city2Title.setText(title2);
         }

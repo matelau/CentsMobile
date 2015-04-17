@@ -342,15 +342,23 @@ public class SummaryAdapter extends BaseAdapter {
     private void createColSumView(int position, TextView leftVal, TextView rightVal, TextView catTitle){
         //get necessary data from col response
         //avg cost of living cli_i[0]-100
+        List<ColiResponse.Element> elements = _colResponse.getElements();
+        boolean hasSecondCity = false;
+        if(elements.size() > 1){
+            hasSecondCity = true;
+        }
         if(position == 0){
             catTitle.setText("AVERAGE COST OF LIVING");
-            List<Double> cli1 = _colResponse.getCli1();
-            List<Double> cli2 = _colResponse.getCli2();
+            List<Double> cli1 = elements.get(0).getCli();
+            List<Double> cli2 = null;
+            if(hasSecondCity){
+                cli2 = elements.get(1).getCli();
+            }
             Double overall = cli1.get(0) - 100;
             String avgCost = costString(overall);
             leftVal.setText(avgCost);
             leftVal.setTextSize(14);
-            if(cli2.size() > 0){
+            if(hasSecondCity){
                 overall = cli2.get(0) - 100;
                 avgCost = costString(overall);
                 rightVal.setText(avgCost);
@@ -363,12 +371,15 @@ public class SummaryAdapter extends BaseAdapter {
         //avg income - labor_i[1]
         else if(position == 1){
             catTitle.setText("AVERAGE INCOME");
-            List<Double> labor1 = _colResponse.getLabor1();
-            List<Double> labor2 = _colResponse.getLabor2();
+            List<Double> labor1 = elements.get(0).getLabor();
+            List<Double> labor2 = null;
+            if(hasSecondCity){
+                labor2 = elements.get(1).getLabor();
+            }
             int income = labor1.get(1).intValue();
             leftVal.setText("$"+income);
-            if(labor2.size() > 0){
-                income = labor1.get(1).intValue();
+            if(hasSecondCity){
+                income = labor2.get(1).intValue();
                 rightVal.setText("$"+income);
             }
             else{
@@ -378,13 +389,16 @@ public class SummaryAdapter extends BaseAdapter {
         //income tax range taxes_i[1]-taxes_i[2] if 1 != 2
         else if(position == 2){
             catTitle.setText("INCOME TAX RANGE");
-            List<Double> taxes1 = _colResponse.getTaxes1();
-            List<Double> taxes2 = _colResponse.getTaxes2();
+            List<Double> taxes1 = elements.get(0).getTaxes();
+            List<Double> taxes2 = null;
+            if(hasSecondCity){
+                taxes2 = elements.get(1).getTaxes();
+            }
             Double tax1 = taxes1.get(1);
             Double tax2 = taxes1.get(2);
             String value = taxValues(tax1,tax2);
             leftVal.setText(value);
-            if(taxes2.size() > 0){
+            if(hasSecondCity){
                 tax1 = taxes2.get(1);
                 tax2 = taxes2.get(2);
                 value = taxValues(tax1, tax2);
@@ -397,14 +411,18 @@ public class SummaryAdapter extends BaseAdapter {
         //avg temp range weatherlow_i[0]-weather_i[length]
         else{//if(position == 3)
             catTitle.setText("AVERAGE TEMPERATURES");
-            List<Double> weatherLow1 = _colResponse.getWeatherlow1();
-            List<Double> weather1 = _colResponse.getWeather1();
-            List<Double> weatherLow2 = _colResponse.getWeatherlow2();
-            List<Double> weather2 = _colResponse.getWeather2();
+            List<Double> weatherLow1 = elements.get(0).getWeatherlow();
+            List<Double> weather1 = elements.get(0).getWeather();
+            List<Double> weatherLow2 = null;
+            List<Double> weather2 = null;
+            if(hasSecondCity){
+                weatherLow2 = elements.get(1).getWeatherlow();
+                weather2 = elements.get(1).getWeather();
+            }
 
             String value = weatherLow1.get(0)+"°- "+weather1.get(13)+"°";
             leftVal.setText(value);
-            if(weather2.size() > 0){
+            if(hasSecondCity){
                 value = weatherLow2.get(0)+"°- "+weather2.get(13)+"°";
                 rightVal.setText(value);
             }

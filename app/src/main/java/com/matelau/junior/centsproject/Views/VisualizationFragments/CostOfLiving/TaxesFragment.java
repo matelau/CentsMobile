@@ -69,20 +69,24 @@ public class TaxesFragment extends Fragment {
                              Bundle savedInstanceState) {
         //Get Data
         _cResponse = CentsApplication.get_colResponse();
+        List<ColiResponse.Element> elements = _cResponse.getElements();
         List<Double> taxes = _cResponse.getTaxes3();
         // set avgs
         _avgSales = taxes.get(0);
         _avgMin = taxes.get(1);
         _avgMax = taxes.get(2);
 
-        Log.d(LOG_TAG, "Create View unemployment: "+ _avgSales + " Economic Growth: "+ _avgMin);
+        Log.d(LOG_TAG, "Create View unemployment: " + _avgSales + " Economic Growth: " + _avgMin);
         setHasOptionsMenu(false);
 
         _rootView = inflater.inflate(R.layout.fragment_labor_stats, container, false);
         _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
         //update locations
-        _location = _cResponse.getLocation1();
-        _location2 = _cResponse.getLocation2();
+        _location = elements.get(0).getName();
+        _location2 = null;
+        if(elements.size() > 1){
+            _location2 = elements.get(1).getName();
+        }
         TextView loc1 = (TextView) _rootView.findViewById(R.id.col_location1);
         TextView loc2 = (TextView) _rootView.findViewById(R.id.col_location2);
         loc1.setText(_location);
@@ -182,11 +186,13 @@ public class TaxesFragment extends Fragment {
     }
 
     private ColumnChartData generateColumnData() {
-        List<Double> taxes1 = _cResponse.getTaxes1();
-        List<Double> taxes2 = _cResponse.getTaxes2();
+        List<ColiResponse.Element> elements = _cResponse.getElements();
+        List<Double> taxes1 = elements.get(0).getTaxes();
+        List<Double> taxes2 = null;
         int numSubcolumns = 1;
-        if(taxes2.size() > 0){
+        if(elements.size() > 1){
             numSubcolumns = 2;
+            taxes2 = elements.get(1).getTaxes();
         }
         int numColumns = 3;
         // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.

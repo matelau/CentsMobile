@@ -123,8 +123,10 @@ public class CostOfLivingFragment extends Fragment{
      */
     private void updateLocation(){
         ColiResponse cResponse = CentsApplication.get_colResponse();
-        _location = cResponse.getLocation1();
-        _location2 = cResponse.getLocation2();
+        List<ColiResponse.Element> elements = cResponse.getElements();
+        _location = elements.get(0).getName();
+        if(elements.size() > 1)
+            _location2 = elements.get(1).getName();
     }
 
     @Override
@@ -141,11 +143,15 @@ public class CostOfLivingFragment extends Fragment{
         int numColumns = 7;
 
         // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
-//        List<Column> columns = new ArrayList<Column>();
+        List<ColiResponse.Element> elements = CentsApplication.get_colResponse().getElements();
 
 
-        double[] col_vals = listToDblArr(CentsApplication.get_colResponse().getCli1());
-        double[] col_vals2 = listToDblArr(CentsApplication.get_colResponse().getCli2());
+        double[] col_vals = listToDblArr(elements.get(0).getCli());
+
+        double[] col_vals2 = {};
+        if(elements.size() > 1){
+            col_vals2 = listToDblArr(elements.get(1).getCli());
+        }
 
 
         List<AxisValue> axisVals = new ArrayList<AxisValue>();
@@ -203,7 +209,7 @@ public class CostOfLivingFragment extends Fragment{
         Axis axisX = new Axis(axisVals);
         axisX.setTextSize(8);
         Axis axisY = new Axis().setHasLines(true);
-        axisX.setName(CentsApplication.get_colResponse().getLocation1());
+        axisX.setName(elements.get(0).getName());
         axisY.setName("");
         _chartdata.setAxisXBottom(axisX);
         _chartdata.setAxisYLeft(axisY);

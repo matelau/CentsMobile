@@ -212,22 +212,27 @@ public class CitySelectionDialogFragment extends DialogFragment {
         //check for previous searches
         ColiResponse  c = CentsApplication.get_colResponse();
         if(c != null){
+            List<ColiResponse.Element> elements = c.getElements();
+            boolean hasSecondCity = false;
+            if(elements.size() > 1){
+                hasSecondCity = true;
+            }
             //state 1
-            String location =  c.getLocation1();
+            String location =  elements.get(0).getName();
             String state = location.substring(location.indexOf(',')+1, location.length()).trim();
             Log.d(LOG_TAG, "Loc1 = "+ state);
             int statePos = getStatePosition(state);
             Log.d(LOG_TAG, "Position = "+ statePos);
             _stateSpinner1.setSelection(statePos, true);
             //state 2
-            if(c.getLocation2() != null){
+            if(hasSecondCity){
                 addPlusViews();
-                location = c.getLocation2();
-                state = location.substring(location.indexOf(',')+1, location.length()).trim();
-                Log.d(LOG_TAG, "Loc2 = "+ state);
-                statePos = getStatePosition(state);
-                Log.d(LOG_TAG, "Position = "+ statePos);
-                _stateSpinner2.setSelection(statePos, true);
+                String location2 = elements.get(1).getName();
+                String state2 = location.substring(location2.indexOf(',') + 1, location2.length()).trim();
+                Log.d(LOG_TAG, "Loc2 = "+ state2);
+                int statePos2 = getStatePosition(state2);
+                Log.d(LOG_TAG, "Position = "+ statePos2);
+                _stateSpinner2.setSelection(statePos2, true);
             }
         }
 

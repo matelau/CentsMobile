@@ -68,18 +68,22 @@ public class LaborStatsFragment extends Fragment {
                              Bundle savedInstanceState) {
         //Get Data
         _cResponse = CentsApplication.get_colResponse();
+        List<ColiResponse.Element> elements = _cResponse.getElements();
         // set avgs
         _avgUnemployment = _cResponse.getLabor3().get(0);
         _avgEGrowth = _cResponse.getLabor3().get(2);
 
-        Log.d(LOG_TAG, "Create View unemployment: "+_avgUnemployment+ " Economic Growth: "+ _avgEGrowth);
+        Log.d(LOG_TAG, "Create View unemployment: " + _avgUnemployment + " Economic Growth: " + _avgEGrowth);
         setHasOptionsMenu(false);
 
         _rootView = inflater.inflate(R.layout.fragment_labor_stats, container, false);
         _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
         //update locations
-        _location = _cResponse.getLocation1();
-        _location2 = _cResponse.getLocation2();
+        _location = elements.get(0).getName();
+        _location2 = null;
+        if(elements.size() > 1){
+            _location2 = elements.get(1).getName();
+        }
         TextView loc1 = (TextView) _rootView.findViewById(R.id.col_location1);
         TextView loc2 = (TextView) _rootView.findViewById(R.id.col_location2);
         loc1.setText(_location);
@@ -175,8 +179,11 @@ public class LaborStatsFragment extends Fragment {
 
     private ColumnChartData generateColumnData() {
         int numSubcolumns = 1;
-        if(_cResponse.getLabor2().size() > 0){
+        List<ColiResponse.Element> elements = _cResponse.getElements();
+        boolean hasSecondCity = false;
+        if(elements.size() > 1){
             numSubcolumns = 2;
+            hasSecondCity = true;
         }
         int numColumns = 2;
         // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
@@ -190,8 +197,8 @@ public class LaborStatsFragment extends Fragment {
                 String label = "";
                 if(i == 0 && j == 0){
                     sc.setColor(getResources().getColor(R.color.compliment_primary));
-                    if(_cResponse.getLabor1().get(0) != null){
-                        float val = _cResponse.getLabor1().get(0).floatValue();
+                    if(elements.get(0).getLabor().get(0) != null){
+                        float val = elements.get(0).getLabor().get(0).floatValue();
                         if(val == 0.0f){
                             val = 0.1f;
                             label = "0%";
@@ -209,8 +216,8 @@ public class LaborStatsFragment extends Fragment {
                 }
                 else if (numSubcolumns == 2 && i == 0  && j == 1){
                     sc.setColor( getResources().getColor(R.color.gray));
-                    if(_cResponse.getLabor2().get(0) != null){
-                        float val = _cResponse.getLabor2().get(0).floatValue();
+                    if(elements.get(1).getLabor().get(0) != null){
+                        float val = elements.get(1).getLabor().get(0).floatValue();
                         if(val == 0.0f){
                             val = 0.1f;
                             label = "0%";
@@ -229,8 +236,8 @@ public class LaborStatsFragment extends Fragment {
                 //i = 1 economic growth
                 if(i == 1 && j == 0){
                     sc.setColor(getResources().getColor(R.color.compliment_primary));
-                    if(_cResponse.getLabor1().get(2) != null){
-                        float val = _cResponse.getLabor1().get(2).floatValue();
+                    if(elements.get(0).getLabor().get(2) != null){
+                        float val = elements.get(0).getLabor().get(2).floatValue();
                         if(val == 0.0f){
                             val = 0.1f;
                             label = "0%";
@@ -247,8 +254,8 @@ public class LaborStatsFragment extends Fragment {
                 }
                 else if (numSubcolumns == 2 && i == 1  && j == 1){
                     sc.setColor( getResources().getColor(R.color.gray));
-                    if(_cResponse.getLabor2().get(2) != null){
-                        float val =_cResponse.getLabor2().get(2).floatValue();
+                    if(elements.get(1).getLabor().get(2) != null){
+                        float val =elements.get(1).getLabor().get(2).floatValue();
                         if(val == 0.0f){
                             val = 0.1f;
                             label = "0%";

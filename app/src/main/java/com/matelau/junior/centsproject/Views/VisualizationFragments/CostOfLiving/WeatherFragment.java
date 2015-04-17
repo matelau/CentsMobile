@@ -63,10 +63,14 @@ public class WeatherFragment extends Fragment {
         _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
 
         _colResponse = CentsApplication.get_colResponse();
+        List<ColiResponse.Element> elements = _colResponse.getElements();
         chart = (LineChartView) _rootView.findViewById(R.id.chart);
         //update locations
-        _location = _colResponse.getLocation1();
-        _location2 = _colResponse.getLocation2();
+        _location = elements.get(0).getName();
+        _location2 = null;
+        if(elements.size() > 1){
+            _location2 = elements.get(1).getName();
+        }
         TextView loc1 = (TextView) _rootView.findViewById(R.id.col_location1);
         TextView loc2 = (TextView) _rootView.findViewById(R.id.col_location2);
         loc1.setText(_location);
@@ -102,10 +106,17 @@ public class WeatherFragment extends Fragment {
 
     private void generateData()
     {
-        List<Double> weather1 = _colResponse.getWeather1();
-        List<Double> weather1_low = _colResponse.getWeatherlow1();
-        List<Double> weather2 =_colResponse.getWeather2();
-        List<Double>weather2_low = _colResponse.getWeatherlow2();
+        List<ColiResponse.Element> elements = _colResponse.getElements();
+        List<Double> weather1 = elements.get(0).getWeather();
+        List<Double> weather1_low = elements.get(0).getWeatherlow();
+        List<Double> weather2 = null;
+        List<Double>weather2_low = null;
+        boolean hasSecondCity = false;
+        if(elements.size() > 1){
+            weather2 = elements.get(1).getWeather();
+            weather2_low = elements.get(1).getWeatherlow();
+            hasSecondCity = true;
+        }
         List<Line> lines = new ArrayList<Line>();
         List<AxisValue> axisValues = new ArrayList<AxisValue>();
         //add city 1 weather
@@ -145,7 +156,7 @@ public class WeatherFragment extends Fragment {
             lines.add(line);
         }
         //add city 2
-        if(weather2.size() > 0){
+        if(hasSecondCity){
             //offset bounds so values are not in same columns
             for (int i = 1; i < numberOfLines*2; i+=2) {
                 List<PointValue> values = new ArrayList<PointValue>();
@@ -195,22 +206,5 @@ public class WeatherFragment extends Fragment {
 
 
     }
-
-
-
-
-//    private class ValueTouchListener implements BubbleChartOnValueSelectListener {
-//
-//        @Override
-//        public void onValueSelected(int bubbleIndex, BubbleValue value) {
-////            Toast.makeText(getActivity(), "Selected: " + value, Toast.LENGTH_SHORT).show();
-//        }
-//
-//        @Override
-//        public void onValueDeselected() {
-//            // TODO Auto-generated method stub
-//
-//        }
-//    }
 
 }

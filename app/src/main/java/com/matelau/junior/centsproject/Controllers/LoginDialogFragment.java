@@ -72,7 +72,6 @@ public class LoginDialogFragment extends DialogFragment {
             public void onClick(View v) {
                 //Validate submission
                 validateLogin();
-
             }
         });
 
@@ -101,11 +100,6 @@ public class LoginDialogFragment extends DialogFragment {
         //password must be 6 chars long no white space
         String pass = _password.getText().toString();
         String email = _email.getText().toString();
-//        if(CentsApplication.isDebug()){
-//            email = "fake@xkcd.com";
-//            pass = "correcthorsebatterystaple";
-//        }
-
         if(pass.length() < 6){
             passValid = false;
         }

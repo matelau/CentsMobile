@@ -68,18 +68,22 @@ public class OtherColFragment extends Fragment {
                              Bundle savedInstanceState) {
         //Get Data
         _cResponse = CentsApplication.get_colResponse();
+        List<ColiResponse.Element> elements = _cResponse.getElements();
         // set avgs
         _avgSalary = _cResponse.getLabor3().get(1);
         _avgProperty = _cResponse.getTaxes3().get(3);
 
-        Log.d(LOG_TAG, "Create View AVG SALARY: "+ _avgSalary + " PROPERTY TAX "+ _avgProperty);
+        Log.d(LOG_TAG, "Create View AVG SALARY: " + _avgSalary + " PROPERTY TAX " + _avgProperty);
         setHasOptionsMenu(false);
 
         _rootView = inflater.inflate(R.layout.fragment_labor_stats, container, false);
         _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
         //update locations
-        _location = _cResponse.getLocation1();
-        _location2 = _cResponse.getLocation2();
+        _location = elements.get(0).getName();
+        _location2 = null;
+        if(elements.size() > 1){
+            _location2 = elements.get(1).getName();
+        }
         TextView loc1 = (TextView) _rootView.findViewById(R.id.col_location1);
         TextView loc2 = (TextView) _rootView.findViewById(R.id.col_location2);
         loc1.setText(_location);
@@ -188,7 +192,8 @@ public class OtherColFragment extends Fragment {
 
     private ColumnChartData generateColumnData() {
         int numSubcolumns = 1;
-        if(_cResponse.getLabor2().size() > 0){
+        List<ColiResponse.Element> elements=  _cResponse.getElements();
+        if(elements.size() > 1){
             numSubcolumns = 2;
         }
         int numColumns = 2;
@@ -203,8 +208,8 @@ public class OtherColFragment extends Fragment {
                 String label = "";
                 if(i == 0 && j == 0){
                     sc.setColor(getResources().getColor(R.color.compliment_primary));
-                    if(_cResponse.getLabor1().get(1) != null){
-                        float val = _cResponse.getLabor1().get(1).floatValue();
+                    if(elements.get(0).getLabor().get(1) != null){
+                        float val = elements.get(0).getLabor().get(1).floatValue();
                         if(val == 0.0f){
                             val = 0.1f;
                             label = "$0";
@@ -222,8 +227,8 @@ public class OtherColFragment extends Fragment {
                 }
                 else if (numSubcolumns == 2 && i == 0  && j == 1){
                     sc.setColor( getResources().getColor(R.color.gray));
-                    if(_cResponse.getLabor2().get(1) != null){
-                        float val = _cResponse.getLabor2().get(1).floatValue();
+                    if(elements.get(1).getLabor().get(1) != null){
+                        float val =elements.get(1).getLabor().get(1).floatValue();
                         if(val == 0.0f){
                             val = 0.1f;
                             label = "$0";
@@ -242,8 +247,8 @@ public class OtherColFragment extends Fragment {
                 //i = 1 property tax
                 if(i == 1 && j == 0){
                     sc.setColor(getResources().getColor(R.color.compliment_primary));
-                    if(_cResponse.getTaxes1().get(3) != null){
-                        float val = _cResponse.getTaxes1().get(3).floatValue();
+                    if(elements.get(0).getTaxes().get(3) != null){
+                        float val = elements.get(0).getTaxes().get(3).floatValue();
                         if(val == 0.0f){
                             val = 0.1f;
                             label = "$0";
@@ -261,8 +266,8 @@ public class OtherColFragment extends Fragment {
                 }
                 else if (numSubcolumns == 2 && i == 1  && j == 1){
                     sc.setColor( getResources().getColor(R.color.gray));
-                    if(_cResponse.getTaxes2().get(3) != null){
-                        float val = _cResponse.getTaxes2().get(3).floatValue();
+                    if(elements.get(1).getTaxes().get(3) != null){
+                        float val = elements.get(1).getTaxes().get(3).floatValue();
                         if(val == 0.0f){
                             val = 0.1f;
                             label = "$0";
