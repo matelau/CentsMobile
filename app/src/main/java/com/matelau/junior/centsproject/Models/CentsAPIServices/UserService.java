@@ -13,6 +13,7 @@ import java.util.List;
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.PATCH;
 import retrofit.http.POST;
@@ -48,6 +49,12 @@ public interface UserService {
 
     @PATCH("/api/v2/users/{id}?api_key=re5-fHO6-5CnUSglEAioWg")
     void updateFields(@Path("id") int id, @Body HashMap<String, List<Field>> fields, Callback<Response> cb);
+
+    @GET("/api/v2/users/{id}/spending_breakdown?api_key=re5-fHO6-5CnUSglEAioWg")
+    void getSpendingData(@Path("id") int id, Callback<Response> cb);
+
+    @DELETE("/api/v2/users/{id}/spending_breakdown/{category}/{name}")
+    void removeSpendingCategory(@Path("id") int id, @Path("category") String category, @Path("name") String name);
 
 
 
