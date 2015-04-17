@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,7 +91,6 @@ public class CareerSelectionDialogFragment extends DialogFragment{
         //clear old values
         if(CentsApplication.get_selectedVis()!= null && !CentsApplication.get_selectedVis().equals("Career Comparison")){
             CentsApplication.set_selectedVis(null);
-            CentsApplication.set_cResponse(null);
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -193,7 +194,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
         if (CentsApplication.get_careers() != null){
             _careers = CentsApplication.get_careers();
             initSpinner1();
-//            loadPreviousSearch();
+            loadPreviousSearch();
         }
         else{
             RecordsService service = CentsApplication.get_centsRestAdapter().create(RecordsService.class);
@@ -224,6 +225,47 @@ public class CareerSelectionDialogFragment extends DialogFragment{
         }
 
     }
+
+
+    private void loadPreviousSearch(){
+        //load values of previous search if one exists
+        CareerResponse c = CentsApplication.get_cResponse();
+        if(c != null){
+            List<CareerResponse.Element> elements = c.getElements();
+            String career = elements.get(0).getName();
+            _career1 = new Career();
+            _career1.setName(career);
+            Log.d(LOG_TAG, "career1: " + career);
+            int pos1 = getCareerPosition(career);
+            Log.d(LOG_TAG, "pos1:" + pos1);
+            if(!_useAutocomplete){
+                _careerSpinner1.setSelection(pos1, true);
+            }
+            else{
+                _autoComp1.setText(career);
+            }
+            if(elements.size() > 1){
+                addPlusViews();
+                String career2 = elements.get(1).getName();
+                _career2 = new Career();
+                _career2.setName(career2);
+                Log.d(LOG_TAG, "career2: "+career2);
+                int pos2 = getCareerPosition(career);
+                Log.d(LOG_TAG, "pos2:"+pos2);
+                if(!_useAutocomplete) {
+                    _careerSpinner2.setSelection(pos2, true);
+                }
+                else{
+                    _autoComp2.setText(career2);
+                }
+            }
+        }
+    }
+
+    private int getCareerPosition(String career){
+        return 2;
+    }
+
 
     /**
      * Switch to vis
@@ -277,7 +319,24 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                     _career2 = new Career();
                     _career2.setName(career);
 //                    _career2.setOrder(2);
-                    Log.d(LOG_TAG, "Selected2: "+ tv.getText().toString());
+                    Log.d(LOG_TAG, "Selected2: " + tv.getText().toString());
+                }
+            });
+            _autoComp2.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    //set career2 to null to force user to select an element from autocomplete
+                    _career2 = null;
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
                 }
             });
         }
@@ -320,6 +379,25 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                     _career1.setName(career);
 //                    _career1.setOrder(1);
                     Log.d(LOG_TAG, "Selected1: " + career);
+                }
+            });
+
+            _autoComp1.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    //set value to null to force user to select from auto complete
+                    _career1 = null;
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
                 }
             });
             setPreviousSearchedAutoComp();
