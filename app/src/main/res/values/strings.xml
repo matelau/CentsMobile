@@ -160,5 +160,11 @@
     <string name="title2">Title 2</string>
     <string name="sub_feedback">Submit Feedback</string>
     <string name="career_hint">Begin typing to see options</string>
+    <string name="fname">First Name</string>
+    <string name="email">Email</string>
+    <string name="pword">Password</string>
+    <string name="cpword">Confirm Password</string>
+    <string name="emessage">All Fields are Required</string>
+    <string name="register">Register</string>
 
 </resources>

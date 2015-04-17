@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.matelau.junior.centsproject.Models.CentsAPIServices.CareerService;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.MajorService;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.SchoolService;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
 import com.matelau.junior.centsproject.Models.UserModels.CareerRating;
 import com.matelau.junior.centsproject.Models.UserModels.DegreeRating;
@@ -42,7 +43,7 @@ public class RatingsDialogFragment extends DialogFragment {
     private List<DegreeRating> dRatings;
     private List<SchoolRating> sRatings;
     private String toBeRated;
-    //0:Major, 1:Career
+    //0:Major, 1:Career, 2:College,
     private int type;
     private int _id;
     private HashMap<String, Integer> user;
@@ -94,16 +95,34 @@ public class RatingsDialogFragment extends DialogFragment {
     public void rate(float rating){
         switch(type){
             case 0:
-                //rate Major
                 rateMajor(rating);
                 break;
             case 1:
                 rateCareer(rating);
                 break;
+            case 2:
+                rateCollege(rating);
+                break;
             default:
                 Toast.makeText(getActivity(), "Error - Please Try Again", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    private void rateCollege(float rating){
+        SchoolService service = CentsApplication.get_centsRestAdapter().create(SchoolService.class);
+        service.rateSchool(toBeRated, (int) rating, user, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                closeOnSuccess();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                toastOnError(error);
+            }
+        });
+
     }
 
     private void rateCareer(float rating){
@@ -149,6 +168,7 @@ public class RatingsDialogFragment extends DialogFragment {
                 for(DegreeRating d : dRatings){
                     if(toBeRated.contains(d.getName()) && toBeRated.contains(d.getLevel())){
                         _rating.setRating(d.getRating());
+                        break;
                     }
                 }
                 break;
@@ -156,9 +176,17 @@ public class RatingsDialogFragment extends DialogFragment {
                 for(CareerRating c : cRatings){
                     if(toBeRated.contains(c.getName())){
                         _rating.setRating(c.getRating());
+                        break;
                     }
                 }
                 break;
+            case 2:
+                for(SchoolRating s : sRatings){
+                    if(toBeRated.contains(s.getName())){
+                        _rating.setRating(s.getRating());
+                        break;
+                    }
+                }
             default:
 
                 break;

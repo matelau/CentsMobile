@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.matelau.junior.centsproject.Models.CentsAPIServices.LoginService;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
 import com.matelau.junior.centsproject.Models.UserModels.Id;
 import com.matelau.junior.centsproject.Models.UserModels.Login;
 import com.matelau.junior.centsproject.R;
@@ -125,7 +125,7 @@ public class LoginDialogFragment extends DialogFragment {
 
 
             //call api
-            LoginService service = CentsApplication.get_centsRestAdapter().create(LoginService.class);
+            UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
             service.login(new Login(email, pass), new Callback<Id>() {
                 @Override
                 public void success(Id id, Response response) {

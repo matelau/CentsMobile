@@ -13,8 +13,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
+import com.matelau.junior.centsproject.Controllers.RatingsDialogFragment;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SummaryAdapter;
@@ -69,6 +71,27 @@ public class CollegeComparisonSummary extends Fragment {
         _logo1 = (ImageView) _rootLayout.findViewById(R.id.logo1_image);
         _logo2 = (ImageView) _rootLayout.findViewById(R.id.logo2_image);
 
+        //Rating Setup
+        if(CentsApplication.is_loggedIN()){
+            Toast.makeText(getActivity(), "Click a College Title to Rate", Toast.LENGTH_SHORT).show();
+            _schoolName1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    launchRatingDialog(_schoolName1.getText().toString());
+                }
+            });
+
+            if(elements.size() > 1){
+                _schoolName2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        launchRatingDialog(_schoolName2.getText().toString());
+                    }
+                });
+            }
+
+        }
+
         String univ = elements.get(0).getName();
         _schoolName1.setText(univ);
         String url1 = getImgUrl(univ);
@@ -93,6 +116,23 @@ public class CollegeComparisonSummary extends Fragment {
             }
         });
         return _rootLayout;
+    }
+
+
+    /**
+     * send along type and text for rating
+     * @param text
+     */
+    private void launchRatingDialog(String text) {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        RatingsDialogFragment rating = new RatingsDialogFragment();
+        //set values
+        Bundle args = new Bundle();
+        args.putInt("type", 2);
+        args.putString("element", text);
+        rating.setArguments(args);
+        rating.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
+        rating.show(fm, "tag");
     }
 
     private void showCollegeSelectionDialog(){

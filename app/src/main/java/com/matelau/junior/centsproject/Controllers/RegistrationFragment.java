@@ -16,13 +16,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.matelau.junior.centsproject.Models.CentsAPIServices.RegisterService;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
+import com.matelau.junior.centsproject.Models.UserModels.Id;
 import com.matelau.junior.centsproject.Models.UserModels.User;
 import com.matelau.junior.centsproject.R;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.regex.Pattern;
 
 import retrofit.Callback;
@@ -48,11 +46,9 @@ public class RegistrationFragment extends Fragment {
     private Button _submit;
     private TextView _messages;
 
-
     public RegistrationFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,6 +58,7 @@ public class RegistrationFragment extends Fragment {
         //Get all the views that will need to be validated or updated
         _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_registration, container, false);
         _firstName = (EditText) _rootLayout.findViewById(R.id.first_name);
+        _firstName.requestFocus();
         _lastName = (EditText) _rootLayout.findViewById(R.id.last_name);
         _email = (EditText) _rootLayout.findViewById(R.id.user_email);
         _password = (EditText) _rootLayout.findViewById(R.id.user_password);
@@ -82,15 +79,15 @@ public class RegistrationFragment extends Fragment {
                 if(message.equals("")){
                     if(CentsApplication.isDebug())
                         Toast.makeText(getActivity(), "Registering - "+_email.getText().toString(), Toast.LENGTH_SHORT).show();
-                    RegisterService service = CentsApplication.get_centsRestAdapter().create(RegisterService.class);
+                    UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
                     //added trim - white space is getting added by view on the end of text
                     String fname = _firstName.getText().toString().trim();
                     String lname = _lastName.getText().toString().trim();
                     String pass = _password.getText().toString();
                     String confirm = _confirmPassword.getText().toString();
-                    service.register(new User(fname, lname,_email.getText().toString(), pass, confirm, "HTML"), new Callback<Response>() {
+                    service.register(new User(fname, lname, _email.getText().toString(), pass, confirm, "HTML"), new Callback<Id>() {
                         @Override
-                        public void success(Response response, Response response2) {
+                        public void success(Id id, Response response) {
                             //Store User information
                             Log.d(LOG_TAG, "Register Success");
                             CentsApplication.set_loggedIN(true);
@@ -98,7 +95,8 @@ public class RegistrationFragment extends Fragment {
                             settings.edit().
                                     putString("EMAIL", _email.getText().toString()).
                                     putString("PASSWORD", _password.getText().toString()).
-                                    commit();
+                                    putInt("ID", id.getId()).
+                                    apply();
 
                             //return to searchFrag
                             showSearch();
@@ -110,32 +108,15 @@ public class RegistrationFragment extends Fragment {
                         public void failure(RetrofitError error) {
                             Log.e(LOG_TAG, error.getMessage());
                             //set error message by parsing response body
-                            BufferedReader reader = null;
-                            StringBuilder sb = new StringBuilder();
-                            try {
-                                reader = new BufferedReader(new InputStreamReader(error.getResponse().getBody().in()));
-                                String line;
-                                try {
-                                    while ((line = reader.readLine()) != null) {
-                                        sb.append(line);
-                                    }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            String rsp = sb.toString();
-                            Log.e(LOG_TAG, rsp);
                             _messages.setText("Registration Error - Try Again");
                             _messages.setTextColor(getResources().getColor(R.color.red));
-                            if(CentsApplication.isDebug())
-                                Toast.makeText(getActivity(), rsp, Toast.LENGTH_SHORT).show();
                         }
-                    });
 
+                    });
                 }
                 else{
+                    SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+                    settings.edit().remove("EMAIL").remove("PASSWORD").remove("ID").apply();
                     _messages.setText(message);
                     _messages.setTextColor(getResources().getColor(R.color.red));
                     _messages.invalidate();
@@ -153,8 +134,6 @@ public class RegistrationFragment extends Fragment {
         getActivity().getActionBar().setTitle("Cents");
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_placeholder, new SearchFragment()).addToBackStack("registration").commit();
         showRegistrationEmailNotice();
-
-
     }
 
     /**
@@ -174,10 +153,10 @@ public class RegistrationFragment extends Fragment {
     private String validateSubmision(){
         //names must be letters only
         String message = "";
-        String fname = _firstName.getText().toString();
-        String lname = _lastName.getText().toString();
-        String pass = _password.getText().toString();
-        String confirm = _confirmPassword.getText().toString();
+        String fname = _firstName.getText().toString().trim();
+        String lname = _lastName.getText().toString().trim();
+        String pass = _password.getText().toString().trim();
+        String confirm = _confirmPassword.getText().toString().trim();
         boolean validNames = true;
         if(fname.length() < 1 || lname.length() < 1)
             validNames = false;
@@ -196,7 +175,6 @@ public class RegistrationFragment extends Fragment {
         if(!validateEmail(_email.getText().toString()))
             message += "Invalid email \n";
 
-//        validateEmail() && (_password.equals(_confirmPassword));
         return message;
     }
 
@@ -206,7 +184,7 @@ public class RegistrationFragment extends Fragment {
      * @return
      */
     private boolean isAlpha(String name) {
-        boolean isAlpha = name.matches("^.*[^a-zA-Z].*$");
+        boolean isAlpha = name.matches("^[A-z]+$");
         return isAlpha;
     }
 
