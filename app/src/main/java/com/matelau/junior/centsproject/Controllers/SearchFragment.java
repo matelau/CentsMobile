@@ -60,7 +60,7 @@ public class SearchFragment extends Fragment {
     private ImageButton _submitBtn;
     private TextView _feedback;
     private SliderLayout _slider;
-    private final String[] _popQueries = {"Dallas, TX vs Madison, WI","Computer Science vs Civil Engineering", "Can I afford college?","Stanford vs MIT", "Career options coming soon"};
+    private final String[] _popQueries = {"Dallas, TX vs Madison, WI","Computer Science vs Civil Engineering", "Can I afford college?","Stanford vs MIT", "Accountant vs. Registered Nurse (RN)"};
 
     public SearchFragment() {
         // Required empty public constructor
@@ -160,18 +160,6 @@ public class SearchFragment extends Fragment {
         _slider.setCustomAnimation(new DescriptionAnimation());
         _slider.setDuration(4000);
 
-//        _feedback = (TextView) _rootLayout.findViewById(R.id.feedback);
-//        _feedback.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //allow user to select email client and send feedback
-//                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-//                        "mailto", "admin@trycents.com", null));
-//                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "FEEDBACK");
-//                startActivity(Intent.createChooser(emailIntent, "Send email..."));
-//            }
-//        });
-
         return _rootLayout;
     }
 
@@ -267,9 +255,11 @@ public class SearchFragment extends Fragment {
                         //get first two results update names
                         //todo update to handle disambiguations
                         if(majors.size() > 2){
-                            Toast.makeText(getActivity(), "Ambiguous results", Toast.LENGTH_SHORT).show();
+                            if(CentsApplication.isDebug())
+                                    Toast.makeText(getActivity(), "Ambiguous results", Toast.LENGTH_SHORT).show();
                         }
-                        else if(majors.size() == 2){
+
+                        if(majors.size() >= 2){
                             Major major1 = new Major();
                             Major major2 = new Major();
                             major1.setName(majors.get(0).getName());

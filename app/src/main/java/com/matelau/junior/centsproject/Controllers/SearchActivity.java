@@ -1,8 +1,10 @@
 package com.matelau.junior.centsproject.Controllers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -23,6 +25,7 @@ import android.widget.Toolbar;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.R;
 
@@ -37,6 +40,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class SearchActivity extends FragmentActivity {
 
@@ -267,10 +274,39 @@ public class SearchActivity extends FragmentActivity {
                 showHelp();
                 break;
             default:
-                if(CentsApplication.isDebug())
-                    Toast.makeText(this, "Selected item:" + pos, Toast.LENGTH_SHORT).show();
+                //allow user to select email client and send feedback
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", "admin@trycents.com", null));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "FEEDBACK");
+                startActivity(Intent.createChooser(emailIntent, "Send email..."));
+                updateCompleted("Submit Feedback");
+                break;
+
         }
         _drawerLayout.closeDrawers();
+    }
+
+    /**
+     * update the users completed section
+     */
+    private void updateCompleted(String completed){
+        SharedPreferences settings = this.getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        int id = settings.getInt("ID", 0);
+        UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+        HashMap<String,String> useMobile = new HashMap<String, String>();
+        useMobile.put("section", completed);
+        service.updateCompletedData(id, useMobile, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(LOG_TAG, error.getMessage());
+
+            }
+        });
     }
 
     /**

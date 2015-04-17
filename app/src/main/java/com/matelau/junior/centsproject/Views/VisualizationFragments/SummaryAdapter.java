@@ -466,7 +466,7 @@ public class SummaryAdapter extends BaseAdapter {
         List<Float> vals1 = elements.get(0).getDegree();
         List<Float> vals2 = null;
         if(elements.size() > 1){
-            vals2 = elements.get(0).getDegree();
+            vals2 = elements.get(1).getDegree();
         }
 
         if(vals2 == null){

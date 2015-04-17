@@ -19,10 +19,11 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.RatingsDialogFragment;
-import com.matelau.junior.centsproject.Models.VizModels.Major;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SummaryAdapter;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,7 +54,9 @@ public class MajorComparisonSummary extends Fragment {
         _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_major_comparison_summary, container, false);
         //get MajorResponse
         MajorResponse mResponse = CentsApplication.get_mResponse();
+        List<MajorResponse.Element> elements = mResponse.getElements();
 
+        //load Ad
         if(CentsApplication.isDebug()){
 //            do nothing
         }
@@ -65,15 +68,14 @@ public class MajorComparisonSummary extends Fragment {
 
         _major1Title = (TextView) _rootLayout.findViewById(R.id.title1);
         _major2Title = (TextView) _rootLayout.findViewById(R.id.title2);
-        Major m = CentsApplication.get_major1();
         boolean secondMajor = false;
-        if(m != null){
-            _major1Title.setText(m.getName() + " (" + m.getLevel() + ")");
+        if(elements.get(0).getName() != null){
+                _major1Title.setText(elements.get(0).getName());
         }
 
-        if(CentsApplication.get_major2() != null){
-            String title2 = CentsApplication.get_major2().getName()+" ("+m.getLevel()+")";
-            _major2Title.setText(title2);
+
+        if(elements.size()> 1){
+            _major2Title.setText(elements.get(1).getName());
             secondMajor = true;
         }
         else{

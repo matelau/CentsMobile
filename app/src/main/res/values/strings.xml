@@ -38,6 +38,7 @@
         <item>Wizard</item>
         <item>About</item>
         <item>Help</item>
+        <item>Submit Feedback</item>
     </string-array>
 
     <string-array name="nav_array_logged_in">
@@ -48,6 +49,7 @@
         <item>Wizard</item>
         <item>About</item>
         <item>Help</item>
+        <item>Submit Feedback</item>
     </string-array>
     <string-array name="help_elements">
         <item>Cents is focused around finding and comparing statistics for majors, universities, careers and cities. Our database contains over #### cities, #### majors, #### universities and #### careers. We also provide a tool to analyze how an annual income will be divided each month between certain standard categories. Each search category can be seen with a brief explanation on the examples page.</item>

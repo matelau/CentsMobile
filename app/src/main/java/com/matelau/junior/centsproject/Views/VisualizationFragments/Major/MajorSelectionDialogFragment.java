@@ -153,9 +153,13 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                     MajorQuery mQuery = new MajorQuery();
                     mQuery.setOperation("compare");
                     List<Major> majors = new ArrayList<Major>();
-                    majors.add(_major1);
-                    CentsApplication.set_major1(_major1);
-                    String query = _major1.getName()+" ("+_major1.getLevel()+" )";
+                    String query = "";
+                    if(_major1 != null){
+                        majors.add(_major1);
+                        CentsApplication.set_major1(_major1);
+                        query = _major1.getName()+" ("+_major1.getLevel()+" )";
+                    }
+
                     if(_major2 != null){
                         majors.add(_major2);
                         CentsApplication.set_major2(_major2);
