@@ -67,6 +67,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
     private Button _cancel;
     private boolean isPlus = false;
     private TextView _instructions;
+    private boolean valuesLoaded = false;
 
     private String[] _careers;
     private Career _career1;
@@ -223,9 +224,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
             });
 
         }
-
     }
-
 
     private void loadPreviousSearch(){
         //load values of previous search if one exists
@@ -260,6 +259,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                 }
             }
         }
+        valuesLoaded = true;
     }
 
     private int getCareerPosition(String career){
@@ -331,7 +331,8 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     //set career2 to null to force user to select an element from autocomplete
-                    _career2 = null;
+                    if(valuesLoaded)
+                        _career2 = null;
                 }
 
                 @Override
@@ -391,7 +392,8 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     //set value to null to force user to select from auto complete
-                    _career1 = null;
+                    if(valuesLoaded)
+                        _career1 = null;
 
                 }
 
