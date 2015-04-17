@@ -51,7 +51,7 @@ public class CareerComparisonSummaryFragment extends Fragment {
         _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_career_comparison_summary, container, false);
 
         if(CentsApplication.isDebug()){
-//            mAdView.destroy();
+//            do nothing
         }
         else{
                 AdView mAdView = (AdView) _rootLayout.findViewById(R.id.adView);

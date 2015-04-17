@@ -138,11 +138,11 @@ public class SummaryAdapter extends BaseAdapter {
             //update cents rating
             catTitle.setText("CENTS JOB RATING");
             if(elements.get(0).getCareerRating() != null){
-                leftVal.setText(""+elements.get(0).getCareerRating()+" OUT OF 5.0");
+                leftVal.setText("" + elements.get(0).getCareerRating() + " OUT OF 5.0");
             }
             if(secondCareer){
                 if(elements.get(1).getCareerRating() != null){
-                    rightVal.setText(""+elements.get(1).getCareerRating()+" OUT OF 5.0");
+                    rightVal.setText("" + elements.get(1).getCareerRating() + " OUT OF 5.0");
                 }
 
             }
@@ -160,7 +160,7 @@ public class SummaryAdapter extends BaseAdapter {
             if(secondCareer){
                 if(elements.get(1).getCareerDemand().get(0) != null){
                     int jDemand2 = elements.get(1).getCareerDemand().get(0).intValue();
-                    rightVal.setText(jDemand2+" JOBS");
+                    rightVal.setText(jDemand2 + " JOBS");
                 }
                 else{
                     rightVal.setText("UNKNOWN");
@@ -170,7 +170,7 @@ public class SummaryAdapter extends BaseAdapter {
         else if(position == 3){
             catTitle.setText("2012 UNEMPLOYMENT");
             if(elements.get(0).getCareerUnemploy().get(1) != null){
-                leftVal.setText(elements.get(0).getCareerUnemploy().get(1)+"%");
+                leftVal.setText(elements.get(0).getCareerUnemploy().get(1) + "%");
             }
             else{
                 leftVal.setText("UNKNOWN");
@@ -191,12 +191,17 @@ public class SummaryAdapter extends BaseAdapter {
 
 
     private void createCollegeSumView(int position, TextView leftVal, TextView rightVal, TextView catTitle){
-        List<Double> school1 = _sResponse.getSchool1();
-        List<Double> school2 = _sResponse.getSchool2();
+        List<SchoolResponse.Element> elements = _sResponse.getElements();
+        List<Double> school1 = elements.get(0).getSchool();
+        List<Double> school2 = null;
+        boolean hasSecondSchool = true;
         //hide school2 if no data
-        Log.d(LOG_TAG, "School2 size: "+ school2.size());
-        if(school2.size() == 0){
+        if(elements.size() == 1){
             rightVal.setVisibility(View.GONE);
+            hasSecondSchool = false;
+        }
+        else{
+            school2 = elements.get(1).getSchool();
         }
 
         //all fields could possibly be null - must check
@@ -212,7 +217,7 @@ public class SummaryAdapter extends BaseAdapter {
                 leftVal.setText("UNRANKED");
             }
 
-            if(school2.size() > 0){
+            if(hasSecondSchool){
                 dRank = school2.get(4);
                 if(dRank != null){
                     int rank = dRank.intValue();
@@ -234,7 +239,7 @@ public class SummaryAdapter extends BaseAdapter {
             else{
                 leftVal.setText("UNKNOWN");
             }
-            if(school2.size() > 0){
+            if(hasSecondSchool){
                 tuition = school2.get(0);
                 if(tuition != null){
                     int t = tuition.intValue();
@@ -256,7 +261,7 @@ public class SummaryAdapter extends BaseAdapter {
             else{
                 leftVal.setText("UNKNOWN");
             }
-            if(school2.size() > 0){
+            if(hasSecondSchool){
                 tuition = school2.get(1);
                 if(tuition != null){
                     int t = tuition.intValue();
@@ -278,7 +283,7 @@ public class SummaryAdapter extends BaseAdapter {
             else{
                 leftVal.setText("UNKNOWN");
             }
-            if(school2.size() > 0){
+            if(hasSecondSchool){
                 gRate = school2.get(2);
                 if(gRate != null){
                     int t = gRate.intValue();
@@ -300,7 +305,7 @@ public class SummaryAdapter extends BaseAdapter {
             else{
                 leftVal.setText("UNKNOWN");
             }
-            if(school2.size() > 0){
+            if(hasSecondSchool){
                 enrollment = school2.get(3);
                 if(enrollment != null){
                     int t = enrollment.intValue();
@@ -321,7 +326,7 @@ public class SummaryAdapter extends BaseAdapter {
             else{
                 leftVal.setText("UNKNOWN");
             }
-            if(school2.size() > 0){
+            if(hasSecondSchool){
                 userRating = school2.get(5);
                 if(userRating != null){
                     rightVal.setText(userRating+" OUT OF 5.0");

@@ -54,14 +54,15 @@ public class MajorComparisonSummary extends Fragment {
         //get MajorResponse
         MajorResponse mResponse = CentsApplication.get_mResponse();
 
-        AdView mAdView = (AdView) _rootLayout.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
         if(CentsApplication.isDebug()){
-            adRequest = new AdRequest.Builder().addTestDevice("84B46C4862CAF80187170C1A7901502C").build();
+//            do nothing
+        }
+        else{
+            AdView mAdView = (AdView) _rootLayout.findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
         }
 
-
-        mAdView.loadAd(adRequest);
         _major1Title = (TextView) _rootLayout.findViewById(R.id.title1);
         _major2Title = (TextView) _rootLayout.findViewById(R.id.title2);
         Major m = CentsApplication.get_major1();

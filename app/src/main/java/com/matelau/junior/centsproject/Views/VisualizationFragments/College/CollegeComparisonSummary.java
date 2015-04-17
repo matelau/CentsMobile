@@ -21,6 +21,7 @@ import com.matelau.junior.centsproject.Views.VisualizationFragments.SummaryAdapt
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,7 +56,8 @@ public class CollegeComparisonSummary extends Fragment {
         Log.d(LOG_TAG, "CreateView");
         //get data
         _sResponse = CentsApplication.get_sApiResponse();
-        hasSecondSchool = (!(_sResponse.getSchool2() == null) && _sResponse.getSchool2().size() > 0);
+        List<SchoolResponse.Element> elements = _sResponse.getElements();
+        hasSecondSchool = (!(elements.size() == 1) && elements.get(1).getSchool().size() > 0);
         //get Views
         _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_college_summary, container, false);
         _search = (ImageButton) _rootLayout.findViewById(R.id.imageSearchButton);
@@ -67,16 +69,16 @@ public class CollegeComparisonSummary extends Fragment {
         _logo1 = (ImageView) _rootLayout.findViewById(R.id.logo1_image);
         _logo2 = (ImageView) _rootLayout.findViewById(R.id.logo2_image);
 
-        String univ = _sResponse.getSchool1Name();
+        String univ = elements.get(0).getName();
         _schoolName1.setText(univ);
         String url1 = getImgUrl(univ);
         Log.d(LOG_TAG, "url1: "+url1);
         Picasso.with(getActivity()).load(url1).placeholder(R.drawable.placeholder).into(_logo1);
 
         if(hasSecondSchool){
-             univ = _sResponse.getSchool2Name();
-            _schoolName2.setText(univ);
-            String url2 = getImgUrl(univ);
+             String univ2 = elements.get(1).getName();
+            _schoolName2.setText(univ2);
+            String url2 = getImgUrl(univ2);
             Log.d(LOG_TAG, "url2: "+url2);
             Picasso.with(getActivity()).load(url2).placeholder(R.drawable.placeholder).into(_logo2);
         }
@@ -84,16 +86,12 @@ public class CollegeComparisonSummary extends Fragment {
             _logo2.setVisibility(View.GONE);
             _schoolName2.setVisibility(View.GONE);
         }
-
-
         _search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showCollegeSelectionDialog();
             }
         });
-
-
         return _rootLayout;
     }
 

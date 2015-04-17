@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,6 +74,7 @@ public class MajorSelectionDialogFragment extends DialogFragment{
     private boolean isPlus;
     private Major _major1;
     private Major _major2;
+    private boolean valuesLoaded = false;
 
     private boolean _useAutocomplete;
 
@@ -187,7 +190,6 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                 }
                 else{
                     Toast.makeText(getActivity(), "You Must Make a Selection", Toast.LENGTH_SHORT).show();
-
                 }
             }
         });
@@ -258,7 +260,25 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                     String full_selection = tv.getText().toString();
                     _major2 = parseMajor(full_selection);
 //                            _major2.setOrder(2);
-                    Log.d(LOG_TAG, "Selected Major2: "+_major2);
+                    Log.d(LOG_TAG, "Selected Major2: " + _major2);
+                }
+            });
+            _autoComp2.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    //force user to select one of the auto complete options
+                    if(valuesLoaded)
+                        _major2 = null;
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
                 }
             });
         }
@@ -296,6 +316,7 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                 }
             }
         }
+        valuesLoaded = true;
     }
 
     private void loadMajorsList(){
@@ -378,7 +399,24 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                     TextView tv = (TextView) view;
                     String full_selection = tv.getText().toString();
                     _major1 = parseMajor(full_selection);
-                    Log.d(LOG_TAG, "Selected major1: "+_major1);
+                    Log.d(LOG_TAG, "Selected major1: " + _major1);
+                }
+            });
+            _autoComp2.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if(valuesLoaded)
+                        _major1 = null;
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
                 }
             });
         }

@@ -10,99 +10,27 @@ import java.util.List;
  * Created by matelau on 3/4/15.
  */
 public class SchoolResponse {
-    @SerializedName("school_2_name")
     @Expose
-    private String school2Name;
-    @SerializedName("school_1_name")
-    @Expose
-    private String school1Name;
-    @Expose
-    private String query;
-    @SerializedName("school_1")
-    @Expose
-    private List<Double> school1 = new ArrayList<Double>();
-    @SerializedName("school_1_image")
-    @Expose
-    private Object school1Image;
-    @SerializedName("school_2")
-    @Expose
-    private List<Double> school2 = new ArrayList<Double>();
-    @SerializedName("school_2_image")
-    @Expose
-    private Object school2Image;
+    private List<Element> elements = new ArrayList<Element>();
     @Expose
     private String operation;
 
     /**
      *
      * @return
-     * The school1
+     * The elements
      */
-    public List<Double> getSchool1() {
-        return school1;
+    public List<Element> getElements() {
+        return elements;
     }
 
     /**
      *
-     * @param school1
-     * The school_1
+     * @param elements
+     * The elements
      */
-    public void setSchool1(List<Double> school1) {
-        this.school1 = school1;
-    }
-
-    /**
-     *
-     * @return
-     * The school1Image
-     */
-    public Object getSchool1Image() {
-        return school1Image;
-    }
-
-    /**
-     *
-     * @param school1Image
-     * The school_1_image
-     */
-    public void setSchool1Image(Object school1Image) {
-        this.school1Image = school1Image;
-    }
-
-    /**
-     *
-     * @return
-     * The school2
-     */
-    public List<Double> getSchool2() {
-        return school2;
-    }
-
-    /**
-     *
-     * @param school2
-     * The school_2
-     */
-    public void setSchool2(List<Double> school2) {
-        this.school2 = school2;
-    }
-
-    /**
-     *
-     * @return
-     * The school2Image
-     */
-    public Object getSchool2Image() {
-        return school2Image;
-    }
-
-    /**
-     *
-     * @param school2Image
-     * The school_2_image
-     */
-    public void setSchool2Image(Object school2Image) {
-        this.school2Image = school2Image;
+    public void setElements(List<Element> elements) {
+        this.elements = elements;
     }
 
     /**
@@ -123,27 +51,70 @@ public class SchoolResponse {
         this.operation = operation;
     }
 
-    public String getQuery() {
-        return query;
-    }
 
-    public void setQuery(String query) {
-        this.query = query;
-    }
+    public class Element{
 
-    public String getSchool2Name() {
-        return school2Name;
-    }
+        @Expose
+        private String name;
+        @Expose
+        private List<Double> school = new ArrayList<Double>();
+        @SerializedName("school_image")
+        @Expose
+        private Object schoolImage;
 
-    public void setSchool2Name(String school2Name) {
-        this.school2Name = school2Name;
-    }
+        /**
+         *
+         * @return
+         * The name
+         */
+        public String getName() {
+            return name;
+        }
 
-    public String getSchool1Name() {
-        return school1Name;
-    }
+        /**
+         *
+         * @param name
+         * The name
+         */
+        public void setName(String name) {
+            this.name = name;
+        }
 
-    public void setSchool1Name(String school1Name) {
-        this.school1Name = school1Name;
+        /**
+         *
+         * @return
+         * The school
+         */
+        public List<Double> getSchool() {
+            return school;
+        }
+
+        /**
+         *
+         * @param school
+         * The school
+         */
+        public void setSchool(List<Double> school) {
+            this.school = school;
+        }
+
+        /**
+         *
+         * @return
+         * The schoolImage
+         */
+        public Object getSchoolImage() {
+            return schoolImage;
+        }
+
+        /**
+         *
+         * @param schoolImage
+         * The school_image
+         */
+        public void setSchoolImage(Object schoolImage) {
+            this.schoolImage = schoolImage;
+        }
+
     }
 }

@@ -137,12 +137,16 @@ public class CareerSelectionDialogFragment extends DialogFragment{
         _submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(_career1 != null ){
+                if(_career1 != null || _career2 != null ){
 //                    //create query
                     CareerQuery query = new CareerQuery();
                     ArrayList<Career> careerList = new ArrayList<Career>();
-                    careerList.add(_career1);
-                    String queryText = _career1.getName();
+                    String queryText = "";
+                    if(_career1 != null){
+                        careerList.add(_career1);
+                        queryText = _career1.getName();
+                    }
+
                     if(_career2!= null){
                         careerList.add(_career2);
                         queryText = queryText + " vs. "+ _career2.getName();
@@ -248,7 +252,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                 String career2 = elements.get(1).getName();
                 _career2 = new Career();
                 _career2.setName(career2);
-                Log.d(LOG_TAG, "career2: "+career2);
+                Log.d(LOG_TAG, "career2: " + career2);
                 int pos2 = getCareerPosition(career);
                 Log.d(LOG_TAG, "pos2:"+pos2);
                 if(!_useAutocomplete) {

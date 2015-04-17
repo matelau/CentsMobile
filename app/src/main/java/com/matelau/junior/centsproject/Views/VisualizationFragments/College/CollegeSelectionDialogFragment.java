@@ -181,9 +181,6 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
                         @Override
                         public void success(SchoolResponse schoolResponse, Response response) {
                             Log.d(LOG_TAG, "Success");
-//                            CentsApplication.set_sResponse(schoolResponse);
-                            schoolResponse.setSchool1Name(_university1);
-                            schoolResponse.setSchool2Name(_university2);
                             CentsApplication.set_sApiResponse(schoolResponse);
 
                             //get college sum frag

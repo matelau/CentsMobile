@@ -16,7 +16,7 @@ import retrofit.http.Path;
  * Created by matelau on 3/4/15.
  */
 public interface SchoolService {
-    @POST("/api/v1/schools")
+    @POST("/api/v2/schools/compare")
     void getSchools(@Body SchoolRequest s, Callback<SchoolResponse> response);
 
     @PUT("/api/v2/schools/{name}/{rating}?api_key=re5-fHO6-5CnUSglEAioWg")
