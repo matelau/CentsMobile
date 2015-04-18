@@ -37,6 +37,7 @@ import com.matelau.junior.centsproject.Models.VizModels.Major;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.R;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.LoadingFragment;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -228,6 +229,7 @@ public class SearchFragment extends Fragment {
                     if(type == null){
                         Toast.makeText(getActivity(), "We did not understand your query... here are some examples", Toast.LENGTH_SHORT).show();
                         CentsApplication.set_selectedVis("Examples");
+                        switchToVizPager();
                     }
                     //route properly
                     else if(type.equals("city")){
@@ -235,53 +237,59 @@ public class SearchFragment extends Fragment {
                         ColiResponse colResponse = gson.fromJson(rsp, ColiResponse.class);
                         CentsApplication.set_colResponse(colResponse);
                         CentsApplication.set_selectedVis("COL Comparison");
+                        switchToVizPager();
                     }
                     else if(type.equals("school")){
                         //create school obj and launch viz
                         SchoolResponse sResponse = gson.fromJson(rsp, SchoolResponse.class);
                         CentsApplication.set_sApiResponse(sResponse);
                         CentsApplication.set_selectedVis("College Comparison");
+                        switchToVizPager();
                     }
                     else if(type.equals("career")){
                         //create career obj and launch viz
                         CareerResponse cResponse = gson.fromJson(rsp, CareerResponse.class);
                         CentsApplication.set_cResponse(cResponse);
                         CentsApplication.set_selectedVis("Career Comparison");
+                        switchToVizPager();
                     }
                     else if(type.equals("major")){
                         //create major obj and launch viz
                         MajorResponse mResponse = gson.fromJson(rsp, MajorResponse.class);
                         List<MajorResponse.Element> majors = mResponse.getElements();
                         //get first two results update names
+                        CentsApplication.set_mResponse(mResponse);
+                        CentsApplication.set_selectedVis("Major Comparison");
                         //todo update to handle disambiguations
-                        if(majors.size() > 2){
-                            if(CentsApplication.isDebug())
-                                    Toast.makeText(getActivity(), "Ambiguous results", Toast.LENGTH_SHORT).show();
-                        }
-
-                        if(majors.size() >= 2){
+                        if(majors.size() == 2){
                             Major major1 = new Major();
                             Major major2 = new Major();
                             major1.setName(majors.get(0).getName());
                             major2.setName(majors.get(1).getName());
                             CentsApplication.set_major1(major1);
                             CentsApplication.set_major2(major2);
+                            switchToVizPager();
                         }
                         else{
                             Major major1 = new Major();
                             major1.setName(majors.get(0).getName());
                             CentsApplication.set_major1(major1);
+                            switchToVizPager();
                         }
 
+                        if(majors.size() > 2){
+                            if(CentsApplication.isDebug())
+                                    Toast.makeText(getActivity(), "Ambiguous results: "+majors.size(), Toast.LENGTH_SHORT).show();
+                            showLoading();
+                        }
 
-                        CentsApplication.set_mResponse(mResponse);
-                        CentsApplication.set_selectedVis("Major Comparison");
                     }
                     else if(type.equals("spending")){
                         //goto spending breakdown
                         CentsApplication.set_selectedVis("Spending Breakdown");
+                        switchToVizPager();
                     }
-                    switchToVizPager();
+
 
 
                 }
@@ -355,6 +363,13 @@ public class SearchFragment extends Fragment {
     private void switchToVizPager(){
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+        ft.addToBackStack("main-search");
+        ft.commit();
+    }
+
+    private void showLoading(){
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_placeholder, new LoadingFragment());
         ft.addToBackStack("main-search");
         ft.commit();
     }
