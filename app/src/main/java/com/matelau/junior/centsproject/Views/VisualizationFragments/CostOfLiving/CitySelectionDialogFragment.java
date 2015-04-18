@@ -228,7 +228,7 @@ public class CitySelectionDialogFragment extends DialogFragment {
             if(hasSecondCity){
                 addPlusViews();
                 String location2 = elements.get(1).getName();
-                String state2 = location.substring(location2.indexOf(',') + 1, location2.length()).trim();
+                String state2 = location2.substring(location2.indexOf(',') + 1, location2.length()).trim();
                 Log.d(LOG_TAG, "Loc2 = "+ state2);
                 int statePos2 = getStatePosition(state2);
                 Log.d(LOG_TAG, "Position = "+ statePos2);

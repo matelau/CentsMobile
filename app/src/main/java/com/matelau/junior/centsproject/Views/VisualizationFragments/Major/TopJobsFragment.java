@@ -93,8 +93,14 @@ public class TopJobsFragment extends Fragment {
         _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
         //update locations
         _major1 = elements.get(0).getName();
+        if(_major1.length() > 32){
+            _major1 = _major1.substring(0, 30)+"...";
+        }
         if(secondMajor){
             _major2 = elements.get(1).getName();
+            if(_major2.length() > 32){
+                _major2 = _major2.substring(0,30)+"...";
+            }
         }
 
         TextView major1Name = (TextView) _rootView.findViewById(R.id.major1);

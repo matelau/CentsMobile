@@ -122,6 +122,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                     addPlusViews();
                 }
                 else{
+                    //remove views and set second vars to null
                     isPlus = true;
                     _plusBtn.setBackground(getResources().getDrawable(R.drawable.ic_action_new));
                     _vs.setVisibility(View.GONE);
@@ -129,6 +130,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                     _autoComp2.setVisibility(View.GONE);
                     _careerTextView2.setVisibility(View.GONE);
                     _careerSpinner2.setVisibility(View.GONE);
+                    _career2 = null;
 
                 }
             }

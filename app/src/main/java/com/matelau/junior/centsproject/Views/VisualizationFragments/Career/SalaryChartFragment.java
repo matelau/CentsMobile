@@ -63,11 +63,19 @@ public class SalaryChartFragment extends Fragment {
         _cResponse = CentsApplication.get_cResponse();
         List<CareerResponse.Element> elements = _cResponse.getElements();
         TextView loc1 = (TextView) _rootView.findViewById(R.id.career_title1);
-        loc1.setText(elements.get(0).getName());
+        String career1 = elements.get(0).getName();
+        if(career1.length() > 32){
+            career1 = career1.substring(0,32)+"...";
+        }
+        loc1.setText(career1);
         TextView loc2 = (TextView) _rootView.findViewById(R.id.career_title2);
         boolean hasSecondCareer = false;
         if(elements.size() > 1){
-            loc2.setText(elements.get(1).getName());
+            String career2 = elements.get(1).getName();
+            if(career2.length() > 32){
+                career2 = career2.substring(0,32)+"...";
+            }
+            loc2.setText(career2);
             hasSecondCareer = true;
             numberOfLines = 2;
         }

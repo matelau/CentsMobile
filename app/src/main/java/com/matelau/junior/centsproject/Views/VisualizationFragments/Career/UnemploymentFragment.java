@@ -80,9 +80,15 @@ public class UnemploymentFragment extends Fragment {
         //update locations
         List<CareerResponse.Element> elements = _cResponse.getElements();
         _career1 = elements.get(0).getName();
+        if(_career1.length() > 32){
+            _career1 = _career1.substring(0,32)+"...";
+        }
         _career2 = null;
         if(elements.size() != 1){
             _career2 = elements.get(1).getName();
+            if(_career2.length() > 32){
+                _career2 = _career2.substring(0,32)+"...";
+            }
         }
 
         TextView loc1 = (TextView) _rootView.findViewById(R.id.col_location1);

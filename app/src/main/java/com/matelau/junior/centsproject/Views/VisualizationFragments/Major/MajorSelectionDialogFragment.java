@@ -140,6 +140,7 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                     _majorTextView2.setVisibility(View.GONE);
                     _majorSpinner2.setVisibility(View.GONE);
                     _autoComp2.setVisibility(View.GONE);
+                    _major2 = null;
 
                 }
             }

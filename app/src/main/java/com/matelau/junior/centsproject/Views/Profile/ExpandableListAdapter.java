@@ -31,6 +31,7 @@ import com.matelau.junior.centsproject.Models.CentsAPIServices.SchoolService;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
 import com.matelau.junior.centsproject.Models.UserModels.Field;
 import com.matelau.junior.centsproject.Models.UserModels.Query;
+import com.matelau.junior.centsproject.Models.VizModels.CareerResponse;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.Models.VizModels.Major;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
@@ -80,8 +81,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         service.results(searchText, new Callback<Response>() {
             @Override
             public void success(Response response1, Response response) {
-                if(CentsApplication.isDebug())
-                    Toast.makeText(_context,response.toString(), Toast.LENGTH_SHORT);
+                if (CentsApplication.isDebug())
+                    Toast.makeText(_context, response.toString(), Toast.LENGTH_SHORT);
 
                 //Process Response and route accordingly
                 //Try to get response body
@@ -107,57 +108,53 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 String rsp = sb.toString();
                 //Build Map
                 Gson gson = new Gson();
-                Map<String,String> map=new HashMap<String,String>();
-                map=(Map<String,String>) gson.fromJson(rsp, map.getClass());
+                Map<String, String> map = new HashMap<String, String>();
+                map = (Map<String, String>) gson.fromJson(rsp, map.getClass());
                 //get type
                 String type = map.get("query_type");
-                if(type == null){
+                if (type == null) {
                     Toast.makeText(_context, "We did not understand your query... here are some examples", Toast.LENGTH_SHORT).show();
                     CentsApplication.set_selectedVis("Examples");
                 }
                 //route properly
-                else if(type.equals("city")){
+                else if (type.equals("city")) {
                     //create coli obj and launch coli viz
                     ColiResponse colResponse = gson.fromJson(rsp, ColiResponse.class);
                     CentsApplication.set_colResponse(colResponse);
                     CentsApplication.set_selectedVis("COL Comparison");
-                }
-                else if(type.equals("school")){
+                } else if (type.equals("school")) {
                     //create school obj and launch viz
                     SchoolResponse sResponse = gson.fromJson(rsp, SchoolResponse.class);
                     CentsApplication.set_sApiResponse(sResponse);
                     CentsApplication.set_selectedVis("College Comparison");
-                }
-                else if(type.equals("career")){
-                    //todo create career obj and launch viz
-                    CentsApplication.set_selectedVis("College Comparison");
-                }
-                else if(type.equals("major")){
+                } else if (type.equals("career")) {
+                    //create career obj and launch viz
+                    CareerResponse cResponse = gson.fromJson(rsp, CareerResponse.class);
+                    CentsApplication.set_cResponse(cResponse);
+                    CentsApplication.set_selectedVis("Career Comparison");
+                } else if (type.equals("major")) {
                     //create major obj and launch viz
                     MajorResponse mResponse = gson.fromJson(rsp, MajorResponse.class);
                     List<MajorResponse.Element> majors = mResponse.getElements();
                     //get first two results update names
                     //todo update to handle disambiguations
-                    if(majors.size() > 2){
+                    if (majors.size() > 2) {
                         Toast.makeText(_context, "Ambiguous results", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(majors.size() == 2){
+                    } else if (majors.size() == 2) {
                         Major major1 = new Major();
                         Major major2 = new Major();
                         major1.setName(majors.get(0).getName());
                         major2.setName(majors.get(1).getName());
                         CentsApplication.set_major1(major1);
                         CentsApplication.set_major2(major2);
-                    }
-                    else{
+                    } else {
                         Major major1 = new Major();
                         major1.setName(majors.get(0).getName());
                         CentsApplication.set_major1(major1);
                     }
                     CentsApplication.set_mResponse(mResponse);
                     CentsApplication.set_selectedVis("Major Comparison");
-                }
-                else if(type.equals("spending")){
+                } else if (type.equals("spending")) {
                     //goto spending breakdown
                     CentsApplication.set_selectedVis("Spending Breakdown");
                 }
