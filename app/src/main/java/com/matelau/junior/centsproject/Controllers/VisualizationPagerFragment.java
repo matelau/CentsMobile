@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import com.astuetz.PagerSlidingTabStrip;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.SalaryChartFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.UnemploymentFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.CostOfLivingFragment;
 import com.matelau.junior.centsproject.R;
@@ -94,7 +95,7 @@ public class VisualizationPagerFragment extends Fragment {
                 completed = "View Career Comparison";
                 fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), UnemploymentFragment.class.getName()));
-//                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), SalaryChartFragment.class.getName()));
 //                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
                 break;
             case "College Comparison":
@@ -254,7 +255,7 @@ public class VisualizationPagerFragment extends Fragment {
             String[] tabTitles;
             switch (selectedVis) {
                 case "Career Comparison":
-                    tabTitles = new String[]{"Summary", "Unemployment"};  //, "Salary", "Demand", "Unemployment"};
+                    tabTitles = new String[]{"Summary", "Unemployment", "Salary"};
                     return tabTitles[position];
                 case "College Comparison":
                     tabTitles = new String[]{"Summary"};

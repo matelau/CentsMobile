@@ -116,16 +116,16 @@ public class SummaryAdapter extends BaseAdapter {
         }
         if(position == 0){
             catTitle.setText("2013 AVERAGE SALARY");
-            if(elements.get(0).getCareerSalary().get(0) != null){
-                int val = elements.get(0).getCareerSalary().get(0).intValue();
+            if(elements.get(0).getCareerSalary().get(10) != null){
+                int val = elements.get(0).getCareerSalary().get(10).intValue();
                 leftVal.setText("$" + val);
             }
             else{
                 leftVal.setText("UNKNOWN");
             }
             if(secondCareer){
-                if(elements.get(1).getCareerSalary().get(0) != null){
-                    int val2 = elements.get(1).getCareerSalary().get(0).intValue();
+                if(elements.get(1).getCareerSalary().get(10) != null){
+                    int val2 = elements.get(1).getCareerSalary().get(10).intValue();
                     rightVal.setText("$" + val2);
                 }
                 else{
