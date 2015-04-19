@@ -29,7 +29,6 @@ import com.matelau.junior.centsproject.Models.CentsAPIServices.MajorService;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.QueryService;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.SchoolService;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
-import com.matelau.junior.centsproject.Models.UserModels.Field;
 import com.matelau.junior.centsproject.Models.UserModels.Query;
 import com.matelau.junior.centsproject.Models.VizModels.CareerResponse;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
@@ -41,7 +40,6 @@ import com.matelau.junior.centsproject.R;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -356,13 +354,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         apply();
                     //update db
                     UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
-                    Field f = new Field();
-                    f.setName("prefers_autocomplete");
-                    f.setValue("" + isChecked);
-                    List<Field> fs = new ArrayList<Field>();
-                    fs.add(f);
-                    HashMap<String, List<Field>> fields = new HashMap<String, List<Field>>();
-                    fields.put("fields", fs);
+                    HashMap<String,String> values = new HashMap<String, String>();
+                    values.put("prefers_autocomplete", ""+isChecked);
+                    HashMap<String, HashMap<String, String>> fields = new HashMap<String, HashMap<String,String>>();
+                    fields.put("fields", values);
                     service.updateFields(userId, fields, new Callback<Response>() {
                         @Override
                         public void success(Response response, Response response2) {

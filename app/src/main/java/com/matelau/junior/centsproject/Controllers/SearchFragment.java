@@ -281,6 +281,7 @@ public class SearchFragment extends Fragment {
                             if(CentsApplication.isDebug())
                                     Toast.makeText(getActivity(), "Ambiguous results: "+majors.size(), Toast.LENGTH_SHORT).show();
                             showLoading();
+                            showDisambiguation();
                         }
 
                     }
@@ -383,6 +384,17 @@ public class SearchFragment extends Fragment {
         ServiceDownDialogFragment confirmation = new ServiceDownDialogFragment();
         confirmation.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
         confirmation.show(fm, "tag");
+    }
+
+
+    /**
+     * Loads the dialog ontop of current view
+     */
+    private void showDisambiguation(){
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        DisambiguationDialogFragment choiceDialog = new DisambiguationDialogFragment();
+        choiceDialog.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
+        choiceDialog.show(fm, "tag");
     }
 
 
