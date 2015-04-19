@@ -20,7 +20,10 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.matelau.junior.centsproject.Models.AmbigElement;
+import com.matelau.junior.centsproject.Models.VizModels.CareerResponse;
+import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
+import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.R;
 
 import java.util.ArrayList;
@@ -83,12 +86,84 @@ public class DisambiguationDialogFragment extends DialogFragment {
                     case 0:
                         majorSelection();
                         break;
+                    case 1:
+                        careerSelection();
+                        break;
+                    case 2:
+                        citySelection();
+                        break;
+                    case 3:
+                        schoolSelection();
+                        break;
                 }
             }
         });
 
         builder.setView(_rootLayout);
         return builder.create();
+    }
+
+    private void schoolSelection(){
+        //get response
+        SchoolResponse response = CentsApplication.get_sApiResponse();
+        //get elements
+        List<SchoolResponse.Element> elements = response.getElements();
+        //get selections
+        ArrayList<AmbigElement> selections = _adapter.elements;
+        //update response
+        ArrayList<SchoolResponse.Element> selectedElements = new ArrayList<SchoolResponse.Element>();
+        for(int i = 0; i <  selections.size(); i++){
+            if(selections.get(i).isChecked()){
+                selectedElements.add(elements.get(i));
+            }
+        }
+        response.setElements(selectedElements);
+        CentsApplication.set_sApiResponse(response);
+        CentsApplication.set_selectedVis("College Comparison");
+        switchToVizPager();
+
+    }
+
+    private void citySelection(){
+        //get response
+        ColiResponse response = CentsApplication.get_colResponse();
+        //get elements
+        List<ColiResponse.Element> elements = response.getElements();
+        //get selections
+        ArrayList<AmbigElement> selections = _adapter.elements;
+        //update response
+        ArrayList<ColiResponse.Element> selectedElements = new ArrayList<ColiResponse.Element>();
+        for(int i = 0; i <  selections.size(); i++){
+            if(selections.get(i).isChecked()){
+                selectedElements.add(elements.get(i));
+            }
+        }
+        response.setElements(selectedElements);
+        CentsApplication.set_colResponse(response);
+        CentsApplication.set_selectedVis("COL Comparison");
+        switchToVizPager();
+
+    }
+
+    private void careerSelection(){
+        //get response
+        CareerResponse response = CentsApplication.get_cResponse();
+        //get elements
+        List<CareerResponse.Element> elements = response.getElements();
+        //get selections
+        ArrayList<AmbigElement> selections = _adapter.elements;
+        //update response
+        ArrayList<CareerResponse.Element> selectedElements = new ArrayList<CareerResponse.Element>();
+        for(int i = 0; i <  selections.size(); i++){
+            if(selections.get(i).isChecked()){
+                selectedElements.add(elements.get(i));
+            }
+        }
+        response.setElements(selectedElements);
+        CentsApplication.set_cResponse(response);
+        CentsApplication.set_selectedVis("Career Comparison");
+        switchToVizPager();
+
     }
 
     private void majorSelection(){

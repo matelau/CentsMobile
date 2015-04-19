@@ -236,23 +236,78 @@ public class SearchFragment extends Fragment {
                     else if(type.equals("city")){
                         //create coli obj and launch coli viz
                         ColiResponse colResponse = gson.fromJson(rsp, ColiResponse.class);
+                        List<ColiResponse.Element> elements = colResponse.getElements();
                         CentsApplication.set_colResponse(colResponse);
-                        CentsApplication.set_selectedVis("COL Comparison");
-                        switchToVizPager();
+                        if(elements.size() <= 2){
+                            CentsApplication.set_selectedVis("COL Comparison");
+                            switchToVizPager();
+                        }
+                        else{
+                            //handle disambiguations
+                            if(CentsApplication.isDebug())
+                                Toast.makeText(getActivity(), "Ambiguous results: "+elements.size(), Toast.LENGTH_SHORT).show();
+//                            showLoading();
+                            Bundle args = new Bundle();
+                            args.putInt("type", 2);
+                            ArrayList<String> ambigSearchResults = new ArrayList<String>();
+                            for(ColiResponse.Element e: elements){
+                                ambigSearchResults.add(e.getName());
+                            }
+                            args.putStringArrayList("elements", ambigSearchResults);
+                            showDisambiguation(args);
+                        }
+
                     }
                     else if(type.equals("school")){
                         //create school obj and launch viz
                         SchoolResponse sResponse = gson.fromJson(rsp, SchoolResponse.class);
+                        List<SchoolResponse.Element> elements = sResponse.getElements();
                         CentsApplication.set_sApiResponse(sResponse);
-                        CentsApplication.set_selectedVis("College Comparison");
-                        switchToVizPager();
+                        if(elements.size() <= 2){
+                            CentsApplication.set_selectedVis("College Comparison");
+                            switchToVizPager();
+                        }
+                        else{
+                            //handle disambiguations
+                            if(CentsApplication.isDebug())
+                                Toast.makeText(getActivity(), "Ambiguous results: "+elements.size(), Toast.LENGTH_SHORT).show();
+//                            showLoading();
+                            Bundle args = new Bundle();
+                            args.putInt("type", 3);
+                            ArrayList<String> ambigSearchResults = new ArrayList<String>();
+                            for(SchoolResponse.Element e: elements){
+                                ambigSearchResults.add(e.getName());
+                            }
+                            args.putStringArrayList("elements", ambigSearchResults);
+                            showDisambiguation(args);
+
+                        }
+
                     }
                     else if(type.equals("career")){
                         //create career obj and launch viz
                         CareerResponse cResponse = gson.fromJson(rsp, CareerResponse.class);
+                        List<CareerResponse.Element> elements = cResponse.getElements();
                         CentsApplication.set_cResponse(cResponse);
-                        CentsApplication.set_selectedVis("Career Comparison");
-                        switchToVizPager();
+                        if(elements.size() <= 2){
+                            CentsApplication.set_selectedVis("Career Comparison");
+                            switchToVizPager();
+                        }
+                        else{
+                            //handle disambiguations
+                            if(CentsApplication.isDebug())
+                                Toast.makeText(getActivity(), "Ambiguous results: "+elements.size(), Toast.LENGTH_SHORT).show();
+//                            showLoading();
+                            Bundle args = new Bundle();
+                            args.putInt("type", 1);
+                            ArrayList<String> ambigSearchResults = new ArrayList<String>();
+                            for(CareerResponse.Element e: elements){
+                                ambigSearchResults.add(e.getName());
+                            }
+                            args.putStringArrayList("elements", ambigSearchResults);
+                            showDisambiguation(args);
+                        }
+
                     }
                     else if(type.equals("major")){
                         //create major obj and launch viz
@@ -261,7 +316,6 @@ public class SearchFragment extends Fragment {
                         //get first two results update names
                         CentsApplication.set_mResponse(mResponse);
                         CentsApplication.set_selectedVis("Major Comparison");
-                        //todo update to handle disambiguations
                         if(majors.size() == 2){
                             Major major1 = new Major();
                             Major major2 = new Major();
@@ -277,11 +331,11 @@ public class SearchFragment extends Fragment {
                             CentsApplication.set_major1(major1);
                             switchToVizPager();
                         }
-
+                        //handle disambiguations
                         if(majors.size() > 2){
                             if(CentsApplication.isDebug())
                                     Toast.makeText(getActivity(), "Ambiguous results: "+majors.size(), Toast.LENGTH_SHORT).show();
-                            showLoading();
+//                            showLoading();
                             Bundle args = new Bundle();
                             args.putInt("type", 0);
                             List<MajorResponse.Element> elements = mResponse.getElements();
