@@ -341,7 +341,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
                         MajorService service = CentsApplication.get_centsRestAdapter().create(MajorService.class);
-                        service.rateMajor(level, major, position, user, new Callback<Response>() {
+                        service.rateMajor(level, major, position+1, user, new Callback<Response>() {
                             @Override
                             public void success(Response response, Response response2) {
                                 Log.d(LOG_TAG, "Success");
@@ -370,7 +370,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
                         SchoolService service = CentsApplication.get_centsRestAdapter().create(SchoolService.class);
-                        service.rateSchool(element, position, user, new Callback<Response>() {
+                        service.rateSchool(element, position+1, user, new Callback<Response>() {
                             @Override
                             public void success(Response response, Response response2) {
                                 Log.d(LOG_TAG, "Success");
@@ -401,7 +401,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     public void onItemSelected(AdapterView<?> parent, View view,final int position, long id) {
 
                         CareerService service = CentsApplication.get_centsRestAdapter().create(CareerService.class);
-                        service.rateCareer(element, position, user, new Callback<Response>() {
+                        service.rateCareer(element, position+1, user, new Callback<Response>() {
                             @Override
                             public void success(Response response, Response response2) {
                                 Log.d(LOG_TAG, "Success");
@@ -586,8 +586,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private void updateRatings(int groupPosition, String element, int rating){
         String header = _listDataHeader.get(groupPosition);
         List<String> ratingsList = _listDataChild.get(header);
+        List<String> newRatingsList = new ArrayList<String>();
+        newRatingsList.addAll(ratingsList);
+        rating = rating + 1;
+        Log.d(LOG_TAG, "element: " + element+ " update rating: "+ header+" rating: "+rating);
         String newRating = "";
         int index = -1;
+        //look through ratings to find match
         for(int i = 0; i < ratingsList.size(); i++){
             if(ratingsList.get(i).contains(element)){
                 newRating = element+" :"+rating;
@@ -595,10 +600,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 break;
             }
         }
-        if(!newRating.equals("")){
-            ratingsList.remove(index);
-            ratingsList.add(index, newRating);
+        if(!newRating.equals("")) {
+            newRatingsList.remove(index);
+            newRatingsList.add(index, newRating);
         }
+
+        _listDataChild.put(header, newRatingsList);
     }
 
     @Override
