@@ -42,6 +42,7 @@ import com.matelau.junior.centsproject.Views.VisualizationFragments.LoadingFragm
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -281,7 +282,16 @@ public class SearchFragment extends Fragment {
                             if(CentsApplication.isDebug())
                                     Toast.makeText(getActivity(), "Ambiguous results: "+majors.size(), Toast.LENGTH_SHORT).show();
                             showLoading();
-                            showDisambiguation();
+                            Bundle args = new Bundle();
+                            args.putInt("type", 0);
+                            List<MajorResponse.Element> elements = mResponse.getElements();
+                            ArrayList<String> ambigSearchResults = new ArrayList<String>();
+                            for(MajorResponse.Element e: elements){
+                                ambigSearchResults.add(e.getName());
+                            }
+                            args.putStringArrayList("elements", ambigSearchResults);
+
+                            showDisambiguation(args);
                         }
 
                     }
@@ -390,10 +400,11 @@ public class SearchFragment extends Fragment {
     /**
      * Loads the dialog ontop of current view
      */
-    private void showDisambiguation(){
+    private void showDisambiguation(Bundle args){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         DisambiguationDialogFragment choiceDialog = new DisambiguationDialogFragment();
         choiceDialog.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
+        choiceDialog.setArguments(args);
         choiceDialog.show(fm, "tag");
     }
 
