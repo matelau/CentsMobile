@@ -196,7 +196,7 @@ public class SearchFragment extends Fragment {
                 public void success(Response response1, Response response) {
                     if(CentsApplication.isDebug())
                         Toast.makeText(getActivity(),response.toString(), Toast.LENGTH_SHORT);
-//                Log.v(LOG_TAG, "Query Service Response: "+rsp);
+
                     _query =  _editText.getText().toString();
                     _submitBtn.clearAnimation();
                     //Process Response and route accordingly
@@ -354,9 +354,6 @@ public class SearchFragment extends Fragment {
                         CentsApplication.set_selectedVis("Spending Breakdown");
                         switchToVizPager();
                     }
-
-
-
                 }
 
                 @Override

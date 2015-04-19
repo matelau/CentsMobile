@@ -3,6 +3,7 @@ package com.matelau.junior.centsproject.Views.Profile;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
+import com.matelau.junior.centsproject.Controllers.DisambiguationDialogFragment;
 import com.matelau.junior.centsproject.Controllers.ServiceDownDialogFragment;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.CareerService;
@@ -40,6 +42,7 @@ import com.matelau.junior.centsproject.R;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,13 +63,22 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private HashMap<String, List<String>> _listDataChild;
     private String[] _ratings;
     private boolean _isProfile = true;
-
+    private FragmentManager _fm;
     public ExpandableListAdapter(Context context, List<String> listDataHeader,
                                  HashMap<String, List<String>> listChildData, boolean isProfile) {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listChildData;
         this._isProfile = isProfile;
+    }
+
+    public ExpandableListAdapter(Context context, List<String> listDataHeader,
+                                 HashMap<String, List<String>> listChildData, boolean isProfile, FragmentManager fm) {
+        this._context = context;
+        this._listDataHeader = listDataHeader;
+        this._listDataChild = listChildData;
+        this._isProfile = isProfile;
+        this._fm = fm;
     }
 
     @Override
@@ -112,55 +124,133 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 map = (Map<String, String>) gson.fromJson(rsp, map.getClass());
                 //get type
                 String type = map.get("query_type");
-                if (type == null) {
+                if(type == null){
                     Toast.makeText(_context, "We did not understand your query... here are some examples", Toast.LENGTH_SHORT).show();
                     CentsApplication.set_selectedVis("Examples");
+                    switchToVizPager();
                 }
                 //route properly
-                else if (type.equals("city")) {
+                else if(type.equals("city")){
                     //create coli obj and launch coli viz
                     ColiResponse colResponse = gson.fromJson(rsp, ColiResponse.class);
+                    List<ColiResponse.Element> elements = colResponse.getElements();
                     CentsApplication.set_colResponse(colResponse);
-                    CentsApplication.set_selectedVis("COL Comparison");
-                } else if (type.equals("school")) {
+                    if(elements.size() <= 2){
+                        CentsApplication.set_selectedVis("COL Comparison");
+                        switchToVizPager();
+                    }
+                    else{
+                        //handle disambiguations
+                        if(CentsApplication.isDebug())
+                            Toast.makeText(_context, "Ambiguous results: "+elements.size(), Toast.LENGTH_SHORT).show();
+//                            showLoading();
+                        Bundle args = new Bundle();
+                        args.putInt("type", 2);
+                        ArrayList<String> ambigSearchResults = new ArrayList<String>();
+                        for(ColiResponse.Element e: elements){
+                            ambigSearchResults.add(e.getName());
+                        }
+                        args.putStringArrayList("elements", ambigSearchResults);
+                        showDisambiguation(args);
+                    }
+
+                }
+                else if(type.equals("school")){
                     //create school obj and launch viz
                     SchoolResponse sResponse = gson.fromJson(rsp, SchoolResponse.class);
+                    List<SchoolResponse.Element> elements = sResponse.getElements();
                     CentsApplication.set_sApiResponse(sResponse);
-                    CentsApplication.set_selectedVis("College Comparison");
-                } else if (type.equals("career")) {
+                    if(elements.size() <= 2){
+                        CentsApplication.set_selectedVis("College Comparison");
+                        switchToVizPager();
+                    }
+                    else{
+                        //handle disambiguations
+                        if(CentsApplication.isDebug())
+                            Toast.makeText(_context, "Ambiguous results: "+elements.size(), Toast.LENGTH_SHORT).show();
+//                            showLoading();
+                        Bundle args = new Bundle();
+                        args.putInt("type", 3);
+                        ArrayList<String> ambigSearchResults = new ArrayList<String>();
+                        for(SchoolResponse.Element e: elements){
+                            ambigSearchResults.add(e.getName());
+                        }
+                        args.putStringArrayList("elements", ambigSearchResults);
+                        showDisambiguation(args);
+
+                    }
+
+                }
+                else if(type.equals("career")){
                     //create career obj and launch viz
                     CareerResponse cResponse = gson.fromJson(rsp, CareerResponse.class);
+                    List<CareerResponse.Element> elements = cResponse.getElements();
                     CentsApplication.set_cResponse(cResponse);
-                    CentsApplication.set_selectedVis("Career Comparison");
-                } else if (type.equals("major")) {
+                    if(elements.size() <= 2){
+                        CentsApplication.set_selectedVis("Career Comparison");
+                        switchToVizPager();
+                    }
+                    else{
+                        //handle disambiguations
+                        if(CentsApplication.isDebug())
+                            Toast.makeText(_context, "Ambiguous results: "+elements.size(), Toast.LENGTH_SHORT).show();
+//                            showLoading();
+                        Bundle args = new Bundle();
+                        args.putInt("type", 1);
+                        ArrayList<String> ambigSearchResults = new ArrayList<String>();
+                        for(CareerResponse.Element e: elements){
+                            ambigSearchResults.add(e.getName());
+                        }
+                        args.putStringArrayList("elements", ambigSearchResults);
+                        showDisambiguation(args);
+                    }
+
+                }
+                else if(type.equals("major")){
                     //create major obj and launch viz
                     MajorResponse mResponse = gson.fromJson(rsp, MajorResponse.class);
                     List<MajorResponse.Element> majors = mResponse.getElements();
                     //get first two results update names
-                    //todo update to handle disambiguations
-                    if (majors.size() > 2) {
-                        Toast.makeText(_context, "Ambiguous results", Toast.LENGTH_SHORT).show();
-                    } else if (majors.size() == 2) {
+                    CentsApplication.set_mResponse(mResponse);
+                    CentsApplication.set_selectedVis("Major Comparison");
+                    if(majors.size() == 2){
                         Major major1 = new Major();
                         Major major2 = new Major();
                         major1.setName(majors.get(0).getName());
                         major2.setName(majors.get(1).getName());
                         CentsApplication.set_major1(major1);
                         CentsApplication.set_major2(major2);
-                    } else {
+                        switchToVizPager();
+                    }
+                    else{
                         Major major1 = new Major();
                         major1.setName(majors.get(0).getName());
                         CentsApplication.set_major1(major1);
+                        switchToVizPager();
                     }
-                    CentsApplication.set_mResponse(mResponse);
-                    CentsApplication.set_selectedVis("Major Comparison");
-                } else if (type.equals("spending")) {
+                    //handle disambiguations
+                    if(majors.size() > 2){
+                        if(CentsApplication.isDebug())
+                            Toast.makeText(_context, "Ambiguous results: "+majors.size(), Toast.LENGTH_SHORT).show();
+//                            showLoading();
+                        Bundle args = new Bundle();
+                        args.putInt("type", 0);
+                        List<MajorResponse.Element> elements = mResponse.getElements();
+                        ArrayList<String> ambigSearchResults = new ArrayList<String>();
+                        for(MajorResponse.Element e: elements){
+                            ambigSearchResults.add(e.getName());
+                        }
+                        args.putStringArrayList("elements", ambigSearchResults);
+
+                        showDisambiguation(args);
+                    }
+
+                }
+                else if(type.equals("spending")){
                     //goto spending breakdown
                     CentsApplication.set_selectedVis("Spending Breakdown");
+                    switchToVizPager();
                 }
-                switchToVizPager();
-
-
             }
 
             @Override
@@ -174,6 +264,18 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
 
     }
+
+    /**
+     * Loads the dialog ontop of current view
+     */
+    private void showDisambiguation(Bundle args){
+        FragmentManager fm = _fm;
+        DisambiguationDialogFragment choiceDialog = new DisambiguationDialogFragment();
+        choiceDialog.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
+        choiceDialog.setArguments(args);
+        choiceDialog.show(fm, "tag");
+    }
+
 
     private void switchToVizPager(){
         FragmentTransaction ft = ((FragmentActivity) _context).getSupportFragmentManager().beginTransaction();   //_context.getApplicationContext().get.getSupportFragmentManager().beginTransaction();
