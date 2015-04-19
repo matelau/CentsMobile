@@ -59,12 +59,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     // child data in format of header title, child title
     private HashMap<String, List<String>> _listDataChild;
     private String[] _ratings;
+    private boolean _isProfile = true;
 
     public ExpandableListAdapter(Context context, List<String> listDataHeader,
-                                 HashMap<String, List<String>> listChildData) {
+                                 HashMap<String, List<String>> listChildData, boolean isProfile) {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listChildData;
+        this._isProfile = isProfile;
     }
 
     @Override
@@ -212,7 +214,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         pb.setVisibility(View.GONE);
 
         //Display ratings section 2,3,4
-        if(groupPosition >= 2 && groupPosition < 5){
+        if(groupPosition >= 2 && groupPosition < 5 && _isProfile){
             //extract rating from string
             final int ratingVal = Integer.parseInt(childText.substring(childText.indexOf(':') + 1, childText.length()).trim());
             //extract rating element
@@ -260,7 +262,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 });
 
             }
-            else if(groupPosition == 3){
+            else if(groupPosition == 3 && _isProfile){
                 //update university ratings
                 spinnerRating.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -324,7 +326,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             }
         }
         //completed sections
-        if(groupPosition == 6){
+        if(groupPosition == 6 && _isProfile){
             //show progressbar
             if(childText.contains("Completed :")){
                 int numberOfComps = Integer.parseInt(childText.substring(childText.indexOf(":")+1,childText.indexOf("/")).trim());
@@ -338,7 +340,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
 
         //preferences
-        if(groupPosition == 5){
+        if(groupPosition == 5 && _isProfile){
             //hide default layout
             convertView.findViewById(R.id.profile_data).setVisibility(View.GONE);
             convertView.findViewById(R.id.profile_preferences).setVisibility(View.VISIBLE);
@@ -380,12 +382,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             convertView.findViewById(R.id.profile_preferences).setVisibility(View.GONE);
             TextView txtListChild = (TextView) convertView
                     .findViewById(R.id.lblListItem);
-            if(childText.length() > 30){
+            if(childText.length() > 30 && _isProfile){
                 childText = childText.substring(0,28)+"...";
             }
             txtListChild.setText(childText);
             //conduct search if user clicks previous query
-            if(groupPosition == 1){
+            if(groupPosition == 1 && _isProfile){
                 txtListChild.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

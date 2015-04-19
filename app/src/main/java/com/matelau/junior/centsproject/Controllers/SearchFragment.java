@@ -368,10 +368,7 @@ public class SearchFragment extends Fragment {
                     _submitBtn.clearAnimation();
                 }
             });
-
-
         }
-
     }
 
     /**
@@ -392,7 +389,6 @@ public class SearchFragment extends Fragment {
             @Override
             public void failure(RetrofitError error) {
                 Log.e(LOG_TAG, error.getMessage());
-
             }
         });
     }

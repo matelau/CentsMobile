@@ -40,7 +40,7 @@ public class HelpFragment extends Fragment {
         //setup profile card list
         _profileCats = (ExpandableListView) _rootLayout.findViewById(R.id.help_categories_list);
         prepareListData();
-        listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
+        listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, false);
 
         // setting list adapter
         _profileCats.setAdapter(listAdapter);

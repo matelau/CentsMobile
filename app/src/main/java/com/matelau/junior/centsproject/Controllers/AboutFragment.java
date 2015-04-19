@@ -49,7 +49,7 @@ public class AboutFragment extends Fragment {
         //setup profile card list
         _aboutCats = (ExpandableListView) _rootLayout.findViewById(R.id.about_categories_list);
         prepareListData();
-        listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
+        listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, false);
         if(CentsApplication.is_loggedIN()){
             updateCompleted("View About");
         }

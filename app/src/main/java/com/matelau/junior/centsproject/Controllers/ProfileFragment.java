@@ -68,7 +68,7 @@ public class ProfileFragment extends Fragment {
         _profileCats = (ExpandableListView) _rootLayout.findViewById(R.id.profile_categories_list);
 
         prepareListData();
-        listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
+        listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, true);
 
         // setting list adapter
         _profileCats.setAdapter(listAdapter);
