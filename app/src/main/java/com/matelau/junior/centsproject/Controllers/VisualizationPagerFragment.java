@@ -18,17 +18,18 @@ import android.widget.RelativeLayout;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
+import com.matelau.junior.centsproject.Models.VizModels.CareerResponse;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
-import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.SalaryChartFragment;
-import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.UnemploymentFragment;
-import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.CostOfLivingFragment;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.CareerComparisonSummaryFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.CareerIntroFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.SalaryChartFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.UnemploymentFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.College.CollegeComparisonSummary;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.College.CollegeIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLSummaryFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.CostOfLivingFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.LaborStatsFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.OtherColFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.TaxesFragment;
@@ -95,7 +96,11 @@ public class VisualizationPagerFragment extends Fragment {
                 completed = "View Career Comparison";
                 fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), UnemploymentFragment.class.getName()));
-                fragments.add(Fragment.instantiate(getActivity(), SalaryChartFragment.class.getName()));
+                boolean addSalary = addSalary();
+                if(addSalary){
+                    fragments.add(Fragment.instantiate(getActivity(), SalaryChartFragment.class.getName()));
+                }
+
 //                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
                 break;
             case "College Comparison":
@@ -147,6 +152,29 @@ public class VisualizationPagerFragment extends Fragment {
         //This line is required so the viewPager does not destroy pages when they are removed from the screen
         //if there are more tabs created this number will need to increase
         _viewPager.setOffscreenPageLimit(5);
+
+    }
+
+
+    /**
+     * Check to make sure at least one salary over time consists of more than one value + hi, low
+     * @return
+     */
+    private boolean addSalary(){
+        List<CareerResponse.Element> elements = CentsApplication.get_cResponse().getElements();
+        for(CareerResponse.Element current : elements){
+            int countNonNulls = 0;
+            List<Double> salaryData = current.getCareerSalary();
+            for(Double d: salaryData){
+                if(d != null){
+                    countNonNulls++;
+                }
+                if(countNonNulls > 3){
+                    return true;
+                }
+            }
+        }
+        return false;
 
     }
 
@@ -255,7 +283,10 @@ public class VisualizationPagerFragment extends Fragment {
             String[] tabTitles;
             switch (selectedVis) {
                 case "Career Comparison":
-                    tabTitles = new String[]{"Summary", "Unemployment", "Salary"};
+                    tabTitles = new String[]{"Summary", "Unemployment"};
+                    if(addSalary()) {
+                        tabTitles = new String[]{"Summary", "Unemployment", "Salary"};
+                    }
                     return tabTitles[position];
                 case "College Comparison":
                     tabTitles = new String[]{"Summary"};
