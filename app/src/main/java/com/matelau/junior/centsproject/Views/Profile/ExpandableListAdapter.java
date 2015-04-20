@@ -37,6 +37,7 @@ import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.Models.VizModels.Major;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
+import com.matelau.junior.centsproject.Models.VizModels.SpendingResponse;
 import com.matelau.junior.centsproject.R;
 
 import java.io.BufferedReader;
@@ -249,6 +250,18 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 else if(type.equals("spending")){
                     //goto spending breakdown
                     CentsApplication.set_selectedVis("Spending Breakdown");
+                    if(map.containsKey("income")){
+                        SpendingResponse sr = gson.fromJson(rsp, SpendingResponse.class);
+                        Double salary = sr.getIncome();
+                        SharedPreferences settings = _context.getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+                        settings.edit().putString("salary", salary.intValue()+"").apply();
+                        CentsApplication.set_occupationSalary(salary.intValue()+"");
+                    }
+                    else{
+                        CentsApplication.set_occupationSalary("45000");
+                        SharedPreferences settings = _context.getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+                        settings.edit().putString("salary", "45000").apply();
+                    }
                     switchToVizPager();
                 }
             }
@@ -484,7 +497,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             convertView.findViewById(R.id.profile_preferences).setVisibility(View.GONE);
             TextView txtListChild = (TextView) convertView
                     .findViewById(R.id.lblListItem);
-            if(childText.length() > 30 && _isProfile){
+            if(childText.length() > 30 && _isProfile && groupPosition != 1){
                 childText = childText.substring(0,28)+"...";
             }
             txtListChild.setText(childText);

@@ -36,6 +36,7 @@ import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.Models.VizModels.Major;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
+import com.matelau.junior.centsproject.Models.VizModels.SpendingResponse;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.LoadingFragment;
 
@@ -46,6 +47,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -62,7 +64,7 @@ public class SearchFragment extends Fragment {
     private ImageButton _submitBtn;
     private TextView _feedback;
     private SliderLayout _slider;
-    private final String[] _popQueries = {"Dallas, TX vs Madison, WI","Computer Science vs Civil Engineering", "Can I afford college?","Stanford vs MIT", "Accountant vs. Registered Nurse (RN)"};
+
 
     public SearchFragment() {
         // Required empty public constructor
@@ -129,22 +131,34 @@ public class SearchFragment extends Fragment {
                         @Override
                         public void onSliderClick(BaseSliderView baseSliderView) {
                             String type = baseSliderView.getDescription();
-                            switch(type){
+                            Random r = new Random();
+                            int index = 0;
+                            switch (type) {
                                 case "City Comparison":
-                                    _editText.setText(_popQueries[0]);
+                                    String[] popLocationQueries = {"Dallas, TX vs Madison, WI","Las Vegas vs Seattle","slc vs sf","Boston, MA vs Detroit, MI","Omaha, NE vs NYC"};
+                                    index = Math.abs(r.nextInt() % popLocationQueries.length);
+                                    _editText.setText(popLocationQueries[index]);
                                     break;
                                 case "Plan Spending":
-                                    _editText.setText(_popQueries[2]);
+                                    String[] popSpending = { "What can I afford with a salary of 35,000?", "What can I afford as a physical therapist (PT)?"};
+                                    index = Math.abs(r.nextInt() % popSpending.length);
+                                    _editText.setText(popSpending[index]);
                                     break;
                                 case "College Comparison":
-                                    _editText.setText(_popQueries[3]);
+                                    String[] popSchools = {"LSU vs Bama", "U of U vs BYU", "Harvard", "Princeton vs Yale", "UCLA vs Stanford"};
+                                    index = Math.abs(r.nextInt() % popSchools.length);
+                                    _editText.setText(popSchools[index]);
                                     break;
                                 case "Career Comparison":
-                                    _editText.setText(_popQueries[4]);
+                                    String[] popCareers = {"Software Developer vs Account Manager", "Registered Nurse", "Director of Operations", "Anesthesiologist vs Surgeon", "Sales Associate"};
+                                    index = Math.abs(r.nextInt() % popCareers.length);
+                                    _editText.setText(popCareers[index]);
                                     break;
                                 default:
                                     //major comp
-                                    _editText.setText(_popQueries[1]);
+                                    String[] popMajors = {"Computer Science vs Civil Engineering", "Art History", "Business Management Bachelors", "Law", "Computer Science Masters"};
+                                    index = Math.abs(r.nextInt() % popMajors.length);
+                                    _editText.setText(popMajors[index]);
                                     break;
 
                             }
@@ -153,13 +167,13 @@ public class SearchFragment extends Fragment {
 
             //add your extra information
             textSliderView.getBundle()
-                    .putString("extra",name);
+                    .putString("extra", name);
 
             _slider.addSlider(textSliderView);
         }
         _slider.setPresetTransformer(SliderLayout.Transformer.Accordion);
-        _slider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-        _slider.setCustomAnimation(new DescriptionAnimation());
+            _slider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+            _slider.setCustomAnimation(new DescriptionAnimation());
         _slider.setDuration(4000);
 
         return _rootLayout;
@@ -352,6 +366,16 @@ public class SearchFragment extends Fragment {
                     else if(type.equals("spending")){
                         //goto spending breakdown
                         CentsApplication.set_selectedVis("Spending Breakdown");
+                        if(map.containsKey("income")){
+                            SpendingResponse sr = gson.fromJson(rsp, SpendingResponse.class);
+                            Double salary = sr.getIncome();
+                            SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+                            settings.edit().putString("salary", salary.intValue()+"").apply();
+                            CentsApplication.set_occupationSalary(salary.intValue()+"");
+                        }
+                        else{
+                            CentsApplication.set_occupationSalary("45000");
+                        }
                         switchToVizPager();
                     }
                 }
