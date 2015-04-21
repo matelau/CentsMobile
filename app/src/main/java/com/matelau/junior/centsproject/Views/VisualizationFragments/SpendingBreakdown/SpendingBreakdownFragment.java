@@ -217,12 +217,15 @@ public class SpendingBreakdownFragment extends Fragment {
                         List<SpendingBreakdownCategory> sbVals = new ArrayList<SpendingBreakdownCategory>();
                         for (SpendingElementResponse current : elements) {
                             Float f = current.getValue()/100f;
-                            SpendingBreakdownCategory val = new SpendingBreakdownCategory(current.getCategory(),f, false);
+                            SpendingBreakdownCategory val = new SpendingBreakdownCategory(current.getName(),f, false);
                             sbVals.add(val);
                         }
                         //add taxes
                         sbVals.add(0, new SpendingBreakdownCategory("TAXES", 0.0f, true));
                         CentsApplication.set_sbValues(sbVals);
+                        calculateTaxes(Float.parseFloat(CentsApplication.get_occupationSalary()));
+                        //update viz
+                        generateData();
                     }
                 }
 
