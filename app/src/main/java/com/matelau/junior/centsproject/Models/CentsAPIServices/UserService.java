@@ -5,6 +5,7 @@ import com.matelau.junior.centsproject.Models.UserModels.Login;
 import com.matelau.junior.centsproject.Models.UserModels.Query;
 import com.matelau.junior.centsproject.Models.UserModels.User;
 import com.matelau.junior.centsproject.Models.UserModels.UserResponse;
+import com.matelau.junior.centsproject.Models.VizModels.SpendingElementResponse;
 
 import java.util.HashMap;
 
@@ -52,6 +53,9 @@ public interface UserService {
     @GET("/api/v2/users/{id}/spending_breakdown?api_key=re5-fHO6-5CnUSglEAioWg")
     void getSpendingData(@Path("id") int id, Callback<Response> cb);
 
+    @GET("/api/v2/users/{id}/spending_breakdown/default?api_key=re5-fHO6-5CnUSglEAioWg")
+    void getDefaultSpendingData(@Path("id") int id, Callback<SpendingElementResponse[]> cb);
+
     @DELETE("/api/v2/users/{id}/spending_breakdown/{category}/{name}")
     void removeSpendingCategory(@Path("id") int id, @Path("category") String category, @Path("name") String name);
 
@@ -59,6 +63,6 @@ public interface UserService {
     void updateSpendingFields(@Path("id") int id, @Path("category") String category, @Body HashMap<String, HashMap<String,String>> fields, Callback<Response> cb);
 
     @PUT("/api/v2/users/{id}/spending_breakdown/{category}")
-    void initSpendingFields(@Path("id") int id, @Path("category") String category, @Body HashMap<String, HashMap<String,String>> fields, Callback<Response> cb);
+    void initDefaultSpendingFields(@Path("id") int id, @Path("category") String category, @Body HashMap<String, HashMap<String, String>> fields, Callback<Response> cb);
 
 }

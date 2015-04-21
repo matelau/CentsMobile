@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by matelau on 4/20/15.
  */
-public class SpendingResponse {
+public class SpendingQPResponse {
     @Expose
     private String query;
     @Expose

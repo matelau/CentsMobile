@@ -24,11 +24,9 @@ import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.SearchFragment;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
 import com.matelau.junior.centsproject.Models.VizModels.SpendingBreakdownCategory;
+import com.matelau.junior.centsproject.Models.VizModels.SpendingElementResponse;
 import com.matelau.junior.centsproject.R;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -207,35 +205,24 @@ public class SpendingBreakdownFragment extends Fragment {
             _id = settings.getInt("ID", 0);
             //check for spending breakdown on db
             UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
-            service.getSpendingData(_id, new Callback<Response>() {
-                @Override
-                public void success(Response response, Response response2) {
-                    //Process Response and route accordingly
-                    //Try to get response body
-                    BufferedReader reader = null;
-                    StringBuilder sb = new StringBuilder();
-                    try {
-
-                        reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
-
-                        String line;
-
-                        try {
-                            while ((line = reader.readLine()) != null) {
-                                sb.append(line);
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    String rsp = sb.toString();
-                    Log.d(LOG_TAG, rsp);
-                    if (rsp.equals("[]")) {
+            service.getDefaultSpendingData(_id, new Callback<SpendingElementResponse[]>() {
+               @Override
+                public void success(SpendingElementResponse[] spendingElementResponse, Response response) {
+                    List<SpendingElementResponse> elements = Arrays.asList(spendingElementResponse);
+                    if (elements.size() == 0) {
                         //no values saved init values
                         setDefaultVars(false);
+                    }
+                    else {
+                        List<SpendingBreakdownCategory> sbVals = new ArrayList<SpendingBreakdownCategory>();
+                        for (SpendingElementResponse current : elements) {
+                            Float f = current.getValue()/100f;
+                            SpendingBreakdownCategory val = new SpendingBreakdownCategory(current.getCategory(),f, false);
+                            sbVals.add(val);
+                        }
+                        //add taxes
+                        sbVals.add(0, new SpendingBreakdownCategory("TAXES", 0.0f, true));
+                        CentsApplication.set_sbValues(sbVals);
                     }
                 }
 
@@ -349,7 +336,7 @@ public class SpendingBreakdownFragment extends Fragment {
         HashMap<String, HashMap<String, String>> fields = new HashMap<String, HashMap<String,String>>();
         fields.put("fields", elements);
         UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
-        service.initSpendingFields(_id, "default", fields, new Callback<Response>() {
+        service.initDefaultSpendingFields(_id, "default", fields, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 Log.d(LOG_TAG, "updated spending records");

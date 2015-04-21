@@ -37,7 +37,7 @@ import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.Models.VizModels.Major;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
-import com.matelau.junior.centsproject.Models.VizModels.SpendingResponse;
+import com.matelau.junior.centsproject.Models.VizModels.SpendingQPResponse;
 import com.matelau.junior.centsproject.R;
 
 import java.io.BufferedReader;
@@ -251,7 +251,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     //goto spending breakdown
                     CentsApplication.set_selectedVis("Spending Breakdown");
                     if(map.containsKey("income")){
-                        SpendingResponse sr = gson.fromJson(rsp, SpendingResponse.class);
+                        SpendingQPResponse sr = gson.fromJson(rsp, SpendingQPResponse.class);
                         Double salary = sr.getIncome();
                         SharedPreferences settings = _context.getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
                         settings.edit().putString("salary", salary.intValue()+"").apply();
