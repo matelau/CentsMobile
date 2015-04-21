@@ -15,6 +15,7 @@ import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.PATCH;
 import retrofit.http.POST;
+import retrofit.http.PUT;
 import retrofit.http.Path;
 
 /**
@@ -54,6 +55,10 @@ public interface UserService {
     @DELETE("/api/v2/users/{id}/spending_breakdown/{category}/{name}")
     void removeSpendingCategory(@Path("id") int id, @Path("category") String category, @Path("name") String name);
 
+    @PATCH("/api/v2/users/{id}/spending_breakdown/{category}")
+    void updateSpendingFields(@Path("id") int id, @Path("category") String category, @Body HashMap<String, HashMap<String,String>> fields, Callback<Response> cb);
 
+    @PUT("/api/v2/users/{id}/spending_breakdown/{category}")
+    void initSpendingFields(@Path("id") int id, @Path("category") String category, @Body HashMap<String, HashMap<String,String>> fields, Callback<Response> cb);
 
 }

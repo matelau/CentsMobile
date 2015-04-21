@@ -22,13 +22,18 @@ import android.widget.Toast;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.SearchFragment;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
 import com.matelau.junior.centsproject.Models.VizModels.SpendingBreakdownCategory;
 import com.matelau.junior.centsproject.R;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -36,6 +41,9 @@ import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.PieChartView;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  */
@@ -55,7 +63,8 @@ public class SpendingBreakdownFragment extends Fragment {
     private boolean hasCenterText2 = true;
     private boolean hasArcSeparated = false;
     private boolean hasLabelForSelected = false;
-    private int _height = 800;
+//    private int _height = 800;
+    private int _id;
 
 
     public SpendingBreakdownFragment() {
@@ -79,6 +88,8 @@ public class SpendingBreakdownFragment extends Fragment {
         _default = (Button) rootView.findViewById(R.id.default_btn);
         _student = (Button) rootView.findViewById(R.id.student_btn);
         _custom = (Button) rootView.findViewById(R.id.custom_btn);
+
+
         initVisVars();
 
         _income.setText(CentsApplication.get_occupationSalary());
@@ -125,7 +136,7 @@ public class SpendingBreakdownFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //launch modification dialog frag
-                setDefaultVars();
+                setDefaultVars(true);
             }
         });
 
@@ -160,7 +171,7 @@ public class SpendingBreakdownFragment extends Fragment {
         });
 
         //modify circle text to be x percentage in size based on view height
-        _height = container.getHeight();
+//        _height = container.getHeight();
 
         generateData();
 
@@ -190,6 +201,51 @@ public class SpendingBreakdownFragment extends Fragment {
      * Sets Vis Options to default if not set
      */
     private void initVisVars(){
+        if(CentsApplication.is_loggedIN()){
+            //load user id
+            SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+            _id = settings.getInt("ID", 0);
+            //check for spending breakdown on db
+            UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+            service.getSpendingData(_id, new Callback<Response>() {
+                @Override
+                public void success(Response response, Response response2) {
+                    //Process Response and route accordingly
+                    //Try to get response body
+                    BufferedReader reader = null;
+                    StringBuilder sb = new StringBuilder();
+                    try {
+
+                        reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
+
+                        String line;
+
+                        try {
+                            while ((line = reader.readLine()) != null) {
+                                sb.append(line);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    String rsp = sb.toString();
+                    Log.d(LOG_TAG, rsp);
+                    if (rsp.equals("[]")) {
+                        //no values saved init values
+                        setDefaultVars(false);
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.d(LOG_TAG, error.getMessage());
+
+                }
+            });
+        }
         // read file to see if user has saved values
         String filename = CentsApplication.get_currentBreakdown()+".dat";
         if(CentsApplication.doesFileExist(filename, getActivity())){
@@ -197,14 +253,8 @@ public class SpendingBreakdownFragment extends Fragment {
             CentsApplication.loadSB(filename, getActivity());
         }
         else{
-            //load defaults
-            if(CentsApplication.get_sbValues() == null){
-                ArrayList<String> labels = new ArrayList<String>(Arrays.asList("TAXES","HOUSING", "FOOD", "TRANSPORTATION", "UTILITIES","LOANS","OTHER DEBT", "INSURANCE","SAVINGS","HEALTH","MISC"));
-                //Percents from Wesley - Food 17, Housing 25, Utilities 6, Transportation 12, Healthcare 5, Insurance 8, Student/Credit Debt 12, Savings 10, Misc 5
-                ArrayList<Float> percents = new ArrayList<Float>(Arrays.asList(0.0f,.25f, .20f,.08f, .05f, .08f,.11f,.06f,.07f,.03f,.07f));
-                ArrayList<SpendingBreakdownCategory> sbcVals = listBuilder(labels,percents);
-                CentsApplication.set_sbValues(sbcVals);
-            }
+                setDefaultVars(false);
+
         }
         loadSalaryFromPref();
 
@@ -222,7 +272,7 @@ public class SpendingBreakdownFragment extends Fragment {
     private void loadSalaryFromPref(){
         SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
         String salary = settings.getString("salary", "");
-        Log.d(LOG_TAG, "Loaded Salary from pref: "+salary);
+        Log.d(LOG_TAG, "Loaded Salary from pref: " + salary);
         if(salary != ""){
             //set var
             CentsApplication.set_occupationSalary(salary);
@@ -255,7 +305,7 @@ public class SpendingBreakdownFragment extends Fragment {
         showModDialog("student");
     }
 
-    private void setDefaultVars(){
+    private void setDefaultVars(boolean showMod){
         //if  vars are already saved/loaded use those instead these values overwrite
         String filename ="default.dat";
         if(CentsApplication.doesFileExist(filename, getActivity())){
@@ -272,7 +322,44 @@ public class SpendingBreakdownFragment extends Fragment {
             CentsApplication.set_sbValues(values);
         }
 
-        showModDialog("default");
+        if(CentsApplication.is_loggedIN()){
+            storeDefault();
+        }
+
+        if(showMod)
+            showModDialog("default");
+    }
+
+
+    /**
+     * updates default sb values on db
+     */
+    private void storeDefault(){
+        ArrayList<SpendingBreakdownCategory> values = (ArrayList<SpendingBreakdownCategory>) CentsApplication.get_sbValues();
+        //build map to be passed as value
+        HashMap<String, String> elements = new HashMap<String,String>();
+        for(SpendingBreakdownCategory current : values){
+            //dont store taxes it will be calculated
+            if(!current._category.equals("TAXES")){
+                float percent = current._percent * 100f;
+                elements.put(current._category, ""+percent);
+            }
+        }
+
+        HashMap<String, HashMap<String, String>> fields = new HashMap<String, HashMap<String,String>>();
+        fields.put("fields", elements);
+        UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+        service.initSpendingFields(_id, "default", fields, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Log.d(LOG_TAG, "updated spending records");
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(LOG_TAG, error.getMessage());
+            }
+        });
     }
 
     /**
@@ -571,13 +658,12 @@ public class SpendingBreakdownFragment extends Fragment {
             //get random values for everything else
             Random rnd = new Random();
             for(int i = def.length-1; i < count ; i++){
-                //TODO improve color generation - make sure colors are not too bright and not too similar between indices
+                //color generation - make sure colors are not too bright and not too similar between indices
                 colors[i] = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
                 if(i > 0){
                     int lastcol = colors[i - 1];
                     // greater than causes more brights less than more darks
                     while((lastcol - colors[i] <= 77)){
-//                        Log.d(LOG_TAG, "color collision");
                         colors[i] = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
                     }
 
