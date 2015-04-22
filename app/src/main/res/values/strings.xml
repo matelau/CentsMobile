@@ -168,5 +168,6 @@
     <string name="cpword">Confirm Password</string>
     <string name="emessage">All Fields are Required</string>
     <string name="register">Register</string>
+    <string name="spending_instructions">Single tap to switch between tabs, double tap to modify</string>
 
 </resources>
