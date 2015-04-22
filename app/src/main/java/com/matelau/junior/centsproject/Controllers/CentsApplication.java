@@ -72,7 +72,7 @@ public class CentsApplication extends Application{
 
 
     //Spending Breakdown Vis
-    private static String _occupationSalary = "45000";
+    private static String _occupationSalary = null;
     private static Float _disposableIncome;
     private static List<String> _sbLabels;
     private static List<Float> _sbPercents;

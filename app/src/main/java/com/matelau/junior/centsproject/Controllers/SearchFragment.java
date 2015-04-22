@@ -135,7 +135,7 @@ public class SearchFragment extends Fragment {
                             int index = 0;
                             switch (type) {
                                 case "City Comparison":
-                                    String[] popLocationQueries = {"Dallas, TX vs Madison, WI","Las Vegas vs Seattle","slc vs sf","Boston, MA vs Detroit, MI","Omaha, NE vs NYC"};
+                                    String[] popLocationQueries = {"Dallas, TX vs Madison, WI","Fort Lauderdale vs Houston","slc vs sf","Boston, MA vs Detroit, MI","Omaha, NE vs NYC"};
                                     index = Math.abs(r.nextInt() % popLocationQueries.length);
                                     _editText.setText(popLocationQueries[index]);
                                     break;
@@ -374,7 +374,7 @@ public class SearchFragment extends Fragment {
                             CentsApplication.set_occupationSalary(salary.intValue()+"");
                         }
                         else{
-                            CentsApplication.set_occupationSalary("45000");
+                            CentsApplication.set_occupationSalary(null);
                         }
                         switchToVizPager();
                     }

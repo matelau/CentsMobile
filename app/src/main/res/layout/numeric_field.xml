@@ -16,6 +16,7 @@
         android:textColor="@android:color/black"
         android:maxLines="1"
         android:elevation="10dp"
+        android:padding="1dp"
         android:textSize="12sp"
         android:inputType="numberDecimal"
         android:imeOptions="actionDone"

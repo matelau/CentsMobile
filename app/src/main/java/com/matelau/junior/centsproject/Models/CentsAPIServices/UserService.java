@@ -51,18 +51,24 @@ public interface UserService {
     void updateFields(@Path("id") int id, @Body HashMap<String, HashMap<String, String>> fields, Callback<Response> cb);
 
     @GET("/api/v2/users/{id}/spending_breakdown?api_key=re5-fHO6-5CnUSglEAioWg")
-    void getSpendingData(@Path("id") int id, Callback<Response> cb);
+    void getAllspendingData(@Path("id") int id, Callback<Response> cb);
 
     @GET("/api/v2/users/{id}/spending_breakdown/default?api_key=re5-fHO6-5CnUSglEAioWg")
     void getDefaultSpendingData(@Path("id") int id, Callback<SpendingElementResponse[]> cb);
 
-    @DELETE("/api/v2/users/{id}/spending_breakdown/{category}/{name}")
+    @GET("/api/v2/users/{id}/spending_breakdown/student?api_key=re5-fHO6-5CnUSglEAioWg")
+    void getStudentSpendingData(@Path("id") int id, Callback<SpendingElementResponse[]> cb);
+
+    @GET("/api/v2/users/{id}/spending_breakdown/custom?api_key=re5-fHO6-5CnUSglEAioWg")
+    void getCusomSpendingData(@Path("id") int id, Callback<SpendingElementResponse[]> cb);
+
+    @DELETE("/api/v2/users/{id}/spending_breakdown/{category}/{name}?api_key=re5-fHO6-5CnUSglEAioWg")
     void removeSpendingCategory(@Path("id") int id, @Path("category") String category, @Path("name") String name);
 
-    @PATCH("/api/v2/users/{id}/spending_breakdown/{category}")
+    @PATCH("/api/v2/users/{id}/spending_breakdown/{category}?api_key=re5-fHO6-5CnUSglEAioWg")
     void updateSpendingFields(@Path("id") int id, @Path("category") String category, @Body HashMap<String, HashMap<String,String>> fields, Callback<Response> cb);
 
-    @PUT("/api/v2/users/{id}/spending_breakdown/{category}")
-    void initDefaultSpendingFields(@Path("id") int id, @Path("category") String category, @Body HashMap<String, HashMap<String, String>> fields, Callback<Response> cb);
+    @PUT("/api/v2/users/{id}/spending_breakdown/{category}?api_key=re5-fHO6-5CnUSglEAioWg")
+    void initSpendingFields(@Path("id") int id, @Path("category") String category, @Body HashMap<String, HashMap<String, String>> fields, Callback<Response> cb);
 
 }
