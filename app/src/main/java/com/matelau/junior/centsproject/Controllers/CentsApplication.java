@@ -37,7 +37,7 @@ import retrofit.RestAdapter;
 public class CentsApplication extends Application{
 
     //debug true = show toast, set login credentials
-    private static boolean debug = true;
+    private static boolean debug = false;
     private static String LOG_TAG = CentsApplication.class.getSimpleName();
     private static Context _centsContext;
     //Api Services
