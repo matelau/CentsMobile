@@ -367,6 +367,7 @@ public class SearchFragment extends Fragment {
                         //goto spending breakdown
                         CentsApplication.set_selectedVis("Spending Breakdown");
                         if(map.containsKey("income")){
+                            CentsApplication.set_incomeFromQP(true);
                             SpendingQPResponse sr = gson.fromJson(rsp, SpendingQPResponse.class);
                             Double salary = sr.getIncome();
                             SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);

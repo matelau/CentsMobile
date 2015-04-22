@@ -27,6 +27,9 @@ import com.matelau.junior.centsproject.Models.VizModels.SpendingBreakdownCategor
 import com.matelau.junior.centsproject.Models.VizModels.SpendingElementResponse;
 import com.matelau.junior.centsproject.R;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -86,6 +89,13 @@ public class SpendingBreakdownFragment extends Fragment {
         _default = (Button) rootView.findViewById(R.id.default_btn);
         _student = (Button) rootView.findViewById(R.id.student_btn);
         _custom = (Button) rootView.findViewById(R.id.custom_btn);
+
+        if(CentsApplication.is_loggedIN())
+        {
+            //load user id
+            SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+            _id = settings.getInt("ID", 0);
+        }
 
         initVisVars();
 
@@ -177,6 +187,7 @@ public class SpendingBreakdownFragment extends Fragment {
 
     private void updateIncome(Editable s){
         //get previous sal
+        CentsApplication.set_incomeFromQP(false);
         Float prevDisposable = CentsApplication.get_disposableIncome();
         CentsApplication.set_occupationSalary(s.toString());
         SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
@@ -187,6 +198,24 @@ public class SpendingBreakdownFragment extends Fragment {
         //get locked values and update their percentage based on new values
         Float currDisposable = CentsApplication.get_disposableIncome();
         updateLockedPercentage(prevDisposable, currDisposable);
+        if(CentsApplication.is_loggedIN()){
+            //store to db
+            UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+            HashMap<String, String> income = new HashMap<String, String>();
+            income.put("income", s.toString());
+            service.putIncome(_id, income, new Callback<Response>() {
+                @Override
+                public void success(Response response, Response response2) {
+                    generateData();
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(LOG_TAG, error.getMessage());
+
+                }
+            });
+        }
         //redraw viz
         generateData();
     }
@@ -195,6 +224,9 @@ public class SpendingBreakdownFragment extends Fragment {
      * Sets Vis Options to default if not set
      */
     private void initVisVars(){
+
+        initSalary();
+
         //if user is logged in check for records via api
         if(CentsApplication.is_loggedIN()){
             if(CentsApplication.get_currentBreakdown().equals("default")){
@@ -208,6 +240,8 @@ public class SpendingBreakdownFragment extends Fragment {
             }
         }
 
+
+
         //these get written by default until network requests go through and update files/viz
         // read file to see if user has saved values
         String filename = CentsApplication.get_currentBreakdown()+".dat";
@@ -219,35 +253,88 @@ public class SpendingBreakdownFragment extends Fragment {
                 setDefaultVars(false);
 
         }
-        loadSalaryFromPref();
+
 
         calculateTaxes(Float.parseFloat(CentsApplication.get_occupationSalary()));
     }
 
-    private void loadSalaryFromPref(){
-        //todo check for income on db
-        if(CentsApplication.get_occupationSalary() == null){
-            SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
-            String salary = settings.getString("salary", "");
-            Log.d(LOG_TAG, "Loaded Salary from pref: " + salary);
-            if(salary != ""){
-                //set var
-                CentsApplication.set_occupationSalary(salary);
-                //set View
-            }
-            else {
-                CentsApplication.set_occupationSalary("45000");
+    private void initSalary(){
+            //if logged in check if income is coming from qp else check api for income
+            if(CentsApplication.is_loggedIN()){
+                //load sal in the meantime
+                loadSalary();
+                //check if qp updated local salary
+                if(!CentsApplication.is_incomeFromQP()){
+                    //check api for income
+                    UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+                    service.getIncome(_id, new Callback<Response>() {
+                        @Override
+                        public void success(Response response, Response response2) {
+                            //process income and store locally
+                            BufferedReader reader = null;
+                            StringBuilder sb = new StringBuilder();
+                            try {
 
+                                reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
+
+                                String line;
+
+                                try {
+                                    while ((line = reader.readLine()) != null) {
+                                        sb.append(line);
+                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            String rsp = sb.toString();
+                            if(rsp != null){
+                                int salary = (int) Float.parseFloat(rsp);
+                                CentsApplication.set_occupationSalary(rsp);
+                                _income.setText(""+salary);
+                                _income.invalidate();
+                            }
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.e(LOG_TAG, error.getMessage());
+
+                        }
+                    });
+
+                }
+            else{
+                loadSalary();
             }
+
         }
+    }
+
+    /**
+     * loads salary from preference
+     */
+    private void loadSalary(){
+        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        String salary = settings.getString("salary", "");
+        Log.d(LOG_TAG, "Loaded Salary from pref: " + salary);
+        if(salary != ""){
+            //set var
+            CentsApplication.set_occupationSalary(salary);
+            //set View
+        }
+        else {
+            CentsApplication.set_occupationSalary("45000");
+        }
+
     }
 
 
     private void initDefaultVars(boolean showMod){
         if(CentsApplication.is_loggedIN()){
-            //load user id
-            SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
-            _id = settings.getInt("ID", 0);
             //check for spending breakdown on db
             UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
             service.getDefaultSpendingData(_id, new Callback<SpendingElementResponse[]>() {
@@ -332,9 +419,6 @@ public class SpendingBreakdownFragment extends Fragment {
      */
     private void initStudentVars(boolean showMod){
         if(CentsApplication.is_loggedIN()){
-            //load user id
-            SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
-            _id = settings.getInt("ID", 0);
             //check for spending breakdown on db
             UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
             service.getStudentSpendingData(_id, new Callback<SpendingElementResponse[]>() {

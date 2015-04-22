@@ -71,4 +71,10 @@ public interface UserService {
     @PUT("/api/v2/users/{id}/spending_breakdown/{category}?api_key=re5-fHO6-5CnUSglEAioWg")
     void initSpendingFields(@Path("id") int id, @Path("category") String category, @Body HashMap<String, HashMap<String, String>> fields, Callback<Response> cb);
 
+    @GET("/api/v2/users/{id}/spending_breakdown/income?api_key=re5-fHO6-5CnUSglEAioWg")
+    void getIncome(@Path("id") int id, Callback<Response> cb);
+
+    @PUT("/api/v2/users/{id}/spending_breakdown/income?api_key=re5-fHO6-5CnUSglEAioWg")
+    void putIncome(@Path("id") int id, @Body HashMap<String, String> income, Callback<Response> cb);
+
 }

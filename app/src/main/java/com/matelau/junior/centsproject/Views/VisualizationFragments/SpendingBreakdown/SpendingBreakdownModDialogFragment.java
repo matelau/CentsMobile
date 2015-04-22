@@ -142,7 +142,10 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
 
 
         public void add(){
+            _values = CentsApplication.get_sbValues();
             notifyDataSetChanged();
+
+
 
         }
 
@@ -259,6 +262,33 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
             CentsApplication.saveSB(filename, getActivity());
             if(CentsApplication.is_loggedIN()){
                 updateCompleted("Create Custom Spending");
+                //store sb to db via api
+                HashMap<String, String> elements = new HashMap<String,String>();
+                for(SpendingBreakdownCategory current : _values){
+                    //dont store taxes it will be calculated
+                    if(!current._category.equals("TAXES")){
+                        float percent = current._percent * 100f;
+                        elements.put(current._category, ""+percent);
+                    }
+                }
+                SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+                int _id = settings.getInt("ID", 0);
+
+                HashMap<String, HashMap<String, String>> fields = new HashMap<String, HashMap<String,String>>();
+                fields.put("fields", elements);
+                UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+                service.initSpendingFields(_id, CentsApplication.get_currentBreakdown(), fields, new Callback<Response>() {
+                    @Override
+                    public void success(Response response, Response response2) {
+                        Log.d(LOG_TAG, "updated spending records for: " + CentsApplication.get_currentBreakdown());
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e(LOG_TAG, error.getMessage());
+                    }
+                });
+
             }
 
         }

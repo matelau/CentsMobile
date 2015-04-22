@@ -7,9 +7,9 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.matelau.junior.centsproject.Models.VizModels.CareerResponse;
 import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.Models.Design.JobInfo;
+import com.matelau.junior.centsproject.Models.VizModels.CareerResponse;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.Models.VizModels.Major;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
@@ -82,6 +82,7 @@ public class CentsApplication extends Application{
     private static SpendingBreakdownModDialogFragment.SBArrayAdapter _rAdapter;
     private static String _currentBreakdown = "default";
     private static boolean _sbToast = false;
+    private static boolean _incomeFromQP = false;
 
     //Cost of Living Vis
     private static ColiResponse _colResponse;
@@ -330,7 +331,13 @@ public class CentsApplication extends Application{
         CentsApplication._sbToast = _sbToast;
     }
 
+    public static boolean is_incomeFromQP() {
+        return _incomeFromQP;
+    }
 
+    public static void set_incomeFromQP(boolean _incomeFromQP) {
+        CentsApplication._incomeFromQP = _incomeFromQP;
+    }
 
     public static ColiResponse get_colResponse() {
         return _colResponse;
@@ -520,6 +527,35 @@ public class CentsApplication extends Application{
         catch(Exception e){
             e.printStackTrace();
         }
+
+//        if(_loggedIN){
+//            //store sb to db via api
+//            HashMap<String, String> elements = new HashMap<String,String>();
+//            for(SpendingBreakdownCategory current : _sbValues){
+//                //dont store taxes it will be calculated
+//                if(!current._category.equals("TAXES")){
+//                    float percent = current._percent * 100f;
+//                    elements.put(current._category, ""+percent);
+//                }
+//            }
+//            SharedPreferences settings = context.getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+//            int _id = settings.getInt("ID", 0);
+//
+//            HashMap<String, HashMap<String, String>> fields = new HashMap<String, HashMap<String,String>>();
+//            fields.put("fields", elements);
+//            UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+//            service.initSpendingFields(_id, _currentBreakdown, fields, new Callback<Response>() {
+//                @Override
+//                public void success(Response response, Response response2) {
+//                    Log.d(LOG_TAG, "updated spending records for: " + _currentBreakdown);
+//                }
+//
+//                @Override
+//                public void failure(RetrofitError error) {
+//                    Log.e(LOG_TAG, error.getMessage());
+//                }
+//            });
+//        }
 
     }
 
