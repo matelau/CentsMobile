@@ -64,8 +64,9 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
     private Button _submit;
     private Button _cancel;
     private boolean isPlus = true;
-    private boolean initLoad1 = true;
-    private boolean initLoad2 = true;
+
+    private String prevUni1;
+    private String prevUni2;
 
     public CollegeSelectionDialogFragment() {
         // Required empty public constructor
@@ -245,11 +246,13 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
         int pos1 = CentsApplication.getPos1();
         if(s != null && pos1 != -1){
             _states1.setSelection(pos1, true);
+            prevUni1 = s.getElements().get(0).getName();
             loadCollegeList1(pos1,true);
             int pos2 = CentsApplication.getPos2();
             if(pos2 != -1){
                 addPlusViews();
                 _states2.setSelection(pos2, true);
+                prevUni2 = s.getElements().get(1).getName();
                 loadCollegeList2(pos2,true);
             }
         }
@@ -335,7 +338,6 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
             @Override
             public void success(String[] response, Response response2) {
                 String[] unis1 = response;
-
                 _universitySpinner1.setVisibility(View.VISIBLE);
                 _universitySpinner1.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, unis1));
                 _universitySpinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -355,9 +357,9 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
                 });
 
                 //set uni selection to previous search
-                if(setUni){
+                if(prevUni1 != null){
                     for(int i = 0; i < unis1.length; i++){
-                        if(unis1[i].trim().equals(CentsApplication.get_university1().trim())){
+                        if(unis1[i].trim().equals(prevUni1.trim())){
                             _universitySpinner1.setSelection(i);
                             break;
                         }
@@ -414,9 +416,9 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
                 });
 
                 //set uni selection to previous search
-                if(setUni){
+                if(prevUni2 != null){
                     for(int i = 0; i < unis2.length; i++){
-                        if(unis2[i].trim().equals(CentsApplication.get_university2().trim())){
+                        if(unis2[i].trim().equals(prevUni2.trim())) {
                             _universitySpinner2.setSelection(i);
                             break;
                         }

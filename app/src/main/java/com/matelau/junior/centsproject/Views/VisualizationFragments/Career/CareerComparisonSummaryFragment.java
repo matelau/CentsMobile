@@ -45,8 +45,6 @@ public class CareerComparisonSummaryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // get data
-
         Log.d(LOG_TAG, "CreateView");
         _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_career_comparison_summary, container, false);
 
@@ -124,6 +122,9 @@ public class CareerComparisonSummaryFragment extends Fragment {
         rating.show(fm, "tag");
     }
 
+    /**
+     * Show selection mechanism
+     */
     private void showCareerSelectionDialog(){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         CareerSelectionDialogFragment csd = new CareerSelectionDialogFragment();

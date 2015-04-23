@@ -71,6 +71,9 @@ public class CitySelectionDialogFragment extends DialogFragment {
     private String _city2;
     private String _state2;
 
+    private String _previousCity1 = null;
+    private String _previousCity2 = null;
+
 
 
     public CitySelectionDialogFragment() {
@@ -144,7 +147,6 @@ public class CitySelectionDialogFragment extends DialogFragment {
         _submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO add loading image to layout and show on query dismiss in callback
                 if (_city1 != null && _state1 != null){
                     CostOfLiving col = new CostOfLiving();
                     CostOfLivingLocation loc1 = new CostOfLivingLocation();
@@ -205,6 +207,16 @@ public class CitySelectionDialogFragment extends DialogFragment {
             }
         });
 
+        checkForPreviousSearch();
+
+        builder.setTitle("Enter Locations For Comparison").setView(_rootLayout);
+        return builder.create();
+    }
+
+    /**
+     * sets spinners to previous search if available
+     */
+    private void checkForPreviousSearch(){
         //check for previous searches
         ColiResponse  c = CentsApplication.get_colResponse();
         if(c != null){
@@ -215,8 +227,9 @@ public class CitySelectionDialogFragment extends DialogFragment {
             }
             //state 1
             String location =  elements.get(0).getName();
-            String state = location.substring(location.indexOf(',')+1, location.length()).trim();
-            Log.d(LOG_TAG, "Loc1 = "+ state);
+            String state = location.substring(location.indexOf(',') + 1, location.length()).trim();
+            _previousCity1 = location.substring(0, location.indexOf(",")).trim();
+            Log.d(LOG_TAG, "Loc1 = "+ state+" city1: "+_previousCity1);
             int statePos = getStatePosition(state);
             Log.d(LOG_TAG, "Position = "+ statePos);
             _stateSpinner1.setSelection(statePos, true);
@@ -225,16 +238,14 @@ public class CitySelectionDialogFragment extends DialogFragment {
                 addPlusViews();
                 String location2 = elements.get(1).getName();
                 String state2 = location2.substring(location2.indexOf(',') + 1, location2.length()).trim();
-                Log.d(LOG_TAG, "Loc2 = "+ state2);
+                _previousCity2  = location2.substring(0, location2.indexOf(",")).trim();
+                Log.d(LOG_TAG, "Loc2 = "+ state2+" city2: "+ _previousCity2);
                 int statePos2 = getStatePosition(state2);
                 Log.d(LOG_TAG, "Position = "+ statePos2);
                 _stateSpinner2.setSelection(statePos2, true);
             }
         }
 
-
-        builder.setTitle("Enter Locations For Comparison").setView(_rootLayout);
-        return builder.create();
     }
 
 
@@ -360,6 +371,7 @@ public class CitySelectionDialogFragment extends DialogFragment {
                         TextView tv = (TextView) view;
                         _city1 = tv.getText().toString();
                         Log.d(LOG_TAG, "selected city1: "+_city1);
+
                     }
 
                     @Override
@@ -369,6 +381,14 @@ public class CitySelectionDialogFragment extends DialogFragment {
                     }
                 });
                 _cityTextView1.setVisibility(View.VISIBLE);
+                if(_previousCity1 != null){
+                    for(int index = 0 ; index < cities.length; index++ ){
+                        if(cities[index].trim().equals(_previousCity1)){
+                            _citySpinner1.setSelection(index,true);
+                            break;
+                        }
+                    }
+                }
 
             }
 
@@ -379,6 +399,8 @@ public class CitySelectionDialogFragment extends DialogFragment {
 
             }
         });
+
+
 
     }
 
@@ -416,7 +438,16 @@ public class CitySelectionDialogFragment extends DialogFragment {
 
                     }
                 });
+
                 _cityTextView2.setVisibility(View.VISIBLE);
+                if(_previousCity2 != null){
+                    for(int i =0; i < cities.length; i++){
+                        if(cities[i].trim().equals(_previousCity2.trim())){
+                            _citySpinner2.setSelection(i, true);
+                            break;
+                        }
+                    }
+                }
 
             }
 
