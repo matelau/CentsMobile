@@ -4,6 +4,7 @@ package com.matelau.junior.centsproject.Views.VisualizationFragments.Major;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,11 +43,26 @@ public class MajorIntroFragment extends Fragment {
         return _rootLayout;
     }
 
+    /**
+     * Show Selection Dialog
+     */
     private void showMajorSelectionDialog(){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         MajorSelectionDialogFragment msd = new MajorSelectionDialogFragment();
         msd.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
         msd.show(fm, "tag");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
     }
 
 

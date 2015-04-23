@@ -137,11 +137,27 @@ public class MajorComparisonSummary extends Fragment {
         rating.show(fm, "tag");
     }
 
+
+    /**
+     * Show selection dialog
+     */
     private void showMajorSelectionDialog(){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         MajorSelectionDialogFragment msd = new MajorSelectionDialogFragment();
         msd.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
         msd.show(fm, "tag");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
     }
 
 

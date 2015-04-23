@@ -486,7 +486,13 @@ public class SummaryAdapter extends BaseAdapter {
     }
 
 
-
+    /**
+     * Sets major sum views to match model
+     * @param position
+     * @param leftVal
+     * @param rightVal
+     * @param catTitle
+     */
     private void createMajorSumView(int position, TextView leftVal, TextView rightVal, TextView catTitle){
         List<MajorResponse.Element> elements = _mResponse.getElements();
         List<Float> vals1 = elements.get(0).getDegree();

@@ -133,6 +133,11 @@ public class TopJobsFragment extends Fragment {
         return _rootView;
     }
 
+    /**
+     * Sets values for titles and salaries
+     * @param secondMajor
+     * @param elements
+     */
     private void getTitlesAndVals(boolean secondMajor, List<MajorResponse.Element> elements){
         List<String> jobs1 = elements.get(0).getJobs();
         List<String> jobs2 = null;
@@ -168,6 +173,12 @@ public class TopJobsFragment extends Fragment {
 
     }
 
+
+    /**
+     * Insures Tob Job array has at least 3 elements for vis
+     * @param job_titles
+     * @param salaries
+     */
     private void normalize(List<String> job_titles, List<Double> salaries) {
         int prevLength = job_titles.size();
         for(int i = prevLength; i < 3; i++){
@@ -176,6 +187,9 @@ public class TopJobsFragment extends Fragment {
         }
     }
 
+    /**
+     * Shows Selection dialog
+     */
     private void showMajorSelectionDialog(){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         MajorSelectionDialogFragment csd = new MajorSelectionDialogFragment();
@@ -183,10 +197,12 @@ public class TopJobsFragment extends Fragment {
         csd.show(fm, "tag");
     }
 
+    /**
+     * Generates data from models for vis
+     */
     private void generateData() {
         data = new ComboLineColumnChartData(generateColumnData(), generateLineData());
         List<AxisValue> axisValues = new ArrayList<AxisValue>();
-//        axisValues
         if (hasAxes) {
             Axis axisX = new Axis(axisValues);
             Axis axisY = new Axis().setHasLines(true).setInside(true).setName("Avg. Salary").setHasTiltedLabels(true);
@@ -196,6 +212,11 @@ public class TopJobsFragment extends Fragment {
         chart.setComboLineColumnChartData(data);
     }
 
+
+    /**
+     * Generate National salary data points for vis
+     * @return
+     */
     private LineChartData generateLineData() {
         List<Line> lines = new ArrayList<Line>();
         for (int i = 0; i < numberOfLines; ++i) {
@@ -225,6 +246,10 @@ public class TopJobsFragment extends Fragment {
 
     }
 
+    /**
+     * Generate job model data for vis
+     * @return
+     */
     private ColumnChartData generateColumnData() {
         int numSubcolumns = 1;
         if(job_titles2.size() > 0){
@@ -292,4 +317,15 @@ public class TopJobsFragment extends Fragment {
         return columnChartData;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
+    }
 }

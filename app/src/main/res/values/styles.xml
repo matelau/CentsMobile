@@ -26,13 +26,6 @@
         <item name="android:fontFamily">sans-serif-thin</item>
     </style>
 
-    <style name="centRatingBar" parent="@android:style/Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/cents_rating_bar_full</item>
-        <item name="android:minHeight">50dip</item>
-        <item name="android:maxHeight">50dip</item>
-    </style>
-
-
     <style name="MenuTextAppearance" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Menu">
         <item name="android:textColor">@android:color/black</item>
     </style>

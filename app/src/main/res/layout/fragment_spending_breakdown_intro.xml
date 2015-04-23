@@ -34,7 +34,7 @@
                     <ImageView
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:background="@drawable/spend_compare" />
+                        android:background="@drawable/spend_compare1" />
                     </android.support.v7.widget.CardView>
                     <TextView android:layout_width="fill_parent"
                         android:layout_height="fill_parent"

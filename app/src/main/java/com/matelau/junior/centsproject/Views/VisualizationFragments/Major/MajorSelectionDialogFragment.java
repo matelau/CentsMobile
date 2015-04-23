@@ -101,6 +101,7 @@ public class MajorSelectionDialogFragment extends DialogFragment{
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
+        //create links to all views
         _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_selection_dialog, null, false);
         _majorSpinner1 = (Spinner) _rootLayout.findViewById(R.id.state_spinner1);
         _majorSpinner2 = (Spinner) _rootLayout.findViewById(R.id.state_spinner2);
@@ -119,9 +120,6 @@ public class MajorSelectionDialogFragment extends DialogFragment{
         _plusBtn = _rootLayout.findViewById(R.id.circle);
 
         loadMajorsList();
-
-
-
 
         _plusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,7 +208,11 @@ public class MajorSelectionDialogFragment extends DialogFragment{
 
     }
 
-
+    /**
+     * Returns the position of a major in the majors array
+     * @param major
+     * @return
+     */
     private int getMajorPosition(String major){
         major = major.trim();
         int pos = -1;
@@ -222,6 +224,10 @@ public class MajorSelectionDialogFragment extends DialogFragment{
         return pos;
     }
 
+
+    /**
+     * Adds secondary selection mechanisms
+     */
     private void addPlusViews(){
         isPlus = false;
         _plusBtn.setBackground(getResources().getDrawable(R.drawable.minus));
@@ -237,14 +243,11 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     String full_selection = _majors[position];
                     _major2 = parseMajor(full_selection);
-//                            _major2.setOrder(2);
                     Log.d(LOG_TAG, "Selected Major2: " + _major2);
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
+                public void onNothingSelected(AdapterView<?> parent) {}
             });
 
 
@@ -268,9 +271,7 @@ public class MajorSelectionDialogFragment extends DialogFragment{
             });
             _autoComp2.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -278,18 +279,17 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                     if(!initialLoad2){
                         _major2 = null;
                     }
-
                 }
 
                 @Override
-                public void afterTextChanged(Editable s) {
-
-                }
+                public void afterTextChanged(Editable s) {}
             });
         }
-
     }
 
+    /**
+     * Checks for previous search and sets selection mechanism to reflect
+     */
     private void loadPreviousSearch(){
         //load values of previous search if one exists
         MajorResponse m = CentsApplication.get_mResponse();
@@ -324,6 +324,9 @@ public class MajorSelectionDialogFragment extends DialogFragment{
 
     }
 
+    /**
+     * Pulls the list of majors via api if not stored or loads previously stored values
+     */
     private void loadMajorsList(){
         if (CentsApplication.get_majors() != null){
             _majors = CentsApplication.get_majors();
@@ -367,11 +370,14 @@ public class MajorSelectionDialogFragment extends DialogFragment{
         int first_paren = major.indexOf('(');
         m.setName(major.substring(0,first_paren));
         //get lvl
-        String level  = major.substring(first_paren+1, major.length()-1);
+        String level  = major.substring(first_paren + 1, major.length() - 1);
         m.setLevel(level);
         return m;
     }
 
+    /**
+     * Loads first selection mechanism
+     */
     private void initSpinner1(){
         if(!_useAutocomplete){
             _majorAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, _majors);
@@ -381,8 +387,9 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     String full_selection = _majors[position];
                     _major1 = parseMajor(full_selection);
-                    Log.d(LOG_TAG, "Selected major1: "+_major1);
+                    Log.d(LOG_TAG, "Selected major1: " + _major1);
                 }
+
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
 
@@ -407,21 +414,27 @@ public class MajorSelectionDialogFragment extends DialogFragment{
             });
             _autoComp2.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if(!initialLoad1){
+                    if (!initialLoad1) {
                         _major1 = null;
                     }
                 }
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
             });
         }
     }
 
+    /**
+     * Stores the query via the api
+     * @param searchText
+     */
     private void storeQuery(String searchText){
         //create query model
         Query q = new Query();
@@ -429,7 +442,7 @@ public class MajorSelectionDialogFragment extends DialogFragment{
         //load user id
         SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
         int ID = settings.getInt("ID", 0);
-        Log.d(LOG_TAG, "Loaded ID from Prefs: "+ID);
+        Log.d(LOG_TAG, "Loaded ID from Prefs: " + ID);
         UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
         service.storeQuery(q, ID, new Callback<Response>() {
             @Override
@@ -443,6 +456,18 @@ public class MajorSelectionDialogFragment extends DialogFragment{
 
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
     }
 
 }
