@@ -4,6 +4,7 @@ package com.matelau.junior.centsproject.Views.VisualizationFragments.Career;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,21 +31,16 @@ import lecho.lib.hellocharts.view.LineChartView;
  * A simple {@link Fragment} subclass.
  */
 public class SalaryChartFragment extends Fragment {
+    private final String LOG_TAG = SalaryChartFragment.class.getSimpleName();
     private RelativeLayout _rootView;
     private LineChartView chart;
     private LineChartData data;
     private int numberOfLines = 1;
-    private int maxNumberOfLines = 2;
     private int numberOfPoints = 10;
 
     private boolean hasAxes = true;
     private boolean hasAxesNames = true;
-    private boolean hasLines = true;
     private boolean hasPoints = true;
-    private boolean isFilled = false;
-    private boolean hasLabels = false;
-    private boolean isCubic = false;
-    private boolean hasLabelForSelected = false;
     private CareerResponse _cResponse;
     private ImageButton _search;
 
@@ -97,6 +93,9 @@ public class SalaryChartFragment extends Fragment {
         return _rootView;
     }
 
+    /**
+     * Show selection dialog
+     */
     private void showCareerSelectionDialog(){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         CareerSelectionDialogFragment csd = new CareerSelectionDialogFragment();
@@ -104,7 +103,10 @@ public class SalaryChartFragment extends Fragment {
         csd.show(fm, "tag");
     }
 
-
+    /**
+     * Generates data to be used in vis
+     * @param hasSecondCareer
+     */
     private void generateData(boolean hasSecondCareer) {
         List<CareerResponse.Element> elements = _cResponse.getElements();
         List<Double> career1Sal = elements.get(0).getCareerSalary();
@@ -173,6 +175,18 @@ public class SalaryChartFragment extends Fragment {
         data.setBaseValue(Float.NEGATIVE_INFINITY);
         chart.setLineChartData(data);
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
     }
 
 

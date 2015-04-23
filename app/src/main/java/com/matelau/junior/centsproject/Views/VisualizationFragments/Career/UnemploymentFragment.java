@@ -39,15 +39,12 @@ public class UnemploymentFragment extends Fragment {
     private ComboLineColumnChartData data;
 
     private int numberOfLines = 1;
-    private int maxNumberOfLines = 4;
     private int numberOfPoints = 2;
 
     private boolean hasAxes = true;
-    private boolean hasAxesNames = false;
     private boolean hasPoints = true;
     private boolean hasLines = true;
     private boolean isCubic = false;
-    private boolean hasLabels = false;
     private CareerResponse _cResponse;
     private  Double _2011Unemployment;
     private Double _2012Unemployment;
@@ -119,6 +116,9 @@ public class UnemploymentFragment extends Fragment {
         return _rootView;
     }
 
+    /**
+     * Show selection dialog
+     */
     private void showCareerSelectionDialog(){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         CareerSelectionDialogFragment csd = new CareerSelectionDialogFragment();
@@ -126,6 +126,11 @@ public class UnemploymentFragment extends Fragment {
         csd.show(fm, "tag");
     }
 
+
+    /**
+     * Generates data for vis
+     * @param elements
+     */
     private void generateData(List<CareerResponse.Element> elements) {
         // Chart looks the best when line data and column data have similar maximum viewports.
         data = new ComboLineColumnChartData(generateColumnData(elements), generateLineData());
@@ -136,10 +141,6 @@ public class UnemploymentFragment extends Fragment {
         if (hasAxes) {
             Axis axisX = new Axis(axisValues);
             Axis axisY = new Axis().setHasLines(true);
-            if (hasAxesNames) {
-//                axisX.setName("Percent");
-//                axisY.setName("Percent");
-            }
             data.setAxisXBottom(axisX);
             data.setAxisYLeft(axisY);
         } else {
@@ -149,6 +150,11 @@ public class UnemploymentFragment extends Fragment {
         chart.setComboLineColumnChartData(data);
     }
 
+
+    /**
+     * Generates national avg point data for vis
+     * @return
+     */
     private LineChartData generateLineData() {
 
         List<Line> lines = new ArrayList<Line>();
@@ -182,6 +188,11 @@ public class UnemploymentFragment extends Fragment {
 
     }
 
+    /**
+     * Generates unemployment column data for vis
+     * @param elements
+     * @return
+     */
     private ColumnChartData generateColumnData(List<CareerResponse.Element> elements) {
         int numSubcolumns = 1;
         List<Double> unemploy1 = elements.get(0).getCareerUnemploy();
@@ -288,6 +299,18 @@ public class UnemploymentFragment extends Fragment {
         ColumnChartData columnChartData = new ColumnChartData(columns);
         columnChartData.setFillRatio(.3f);
         return columnChartData;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
     }
 
 

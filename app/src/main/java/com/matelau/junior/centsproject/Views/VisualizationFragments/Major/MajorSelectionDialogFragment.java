@@ -311,7 +311,7 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                 String major2 = elements.get(1).getName();
                 _major2 = parseMajor(major2);
                 Log.d(LOG_TAG, "major2: "+major);
-                int pos2 = getMajorPosition(major);
+                int pos2 = getMajorPosition(major2);
                 Log.d(LOG_TAG, "pos2:"+pos2);
                 if(!_useAutocomplete) {
                     _majorSpinner2.setSelection(pos2, true);

@@ -197,6 +197,10 @@ public class CareerSelectionDialogFragment extends DialogFragment{
         return builder.create();
     }
 
+
+    /**
+     * loads the list of careers via api
+     */
     private void loadCareersList(){
         if (CentsApplication.get_careers() != null){
             _careers = CentsApplication.get_careers();
@@ -210,12 +214,12 @@ public class CareerSelectionDialogFragment extends DialogFragment{
             ArrayList<String> tables = new ArrayList<String>();
             tables.add("careers");
             query.setTables(tables);
-            service.getRecordsV2(new Callback<Response>() {
+            service.getRecordsV2(new Callback<String[]>() {
                 @Override
-                public void success(Response response, Response response2) {
+                public void success(String[] response , Response response2) {
                     //get list
                     Log.d(LOG_TAG, "Received Careers List");
-                    _careers = careersFromJson(response2);
+                    _careers = response;
                     //cache careers list
                     CentsApplication.set_careers(_careers);
                     initSpinner1();
@@ -232,6 +236,9 @@ public class CareerSelectionDialogFragment extends DialogFragment{
         }
     }
 
+    /**
+     * Sets Selections to previously searched careers
+     */
     private void loadPreviousSearch(){
         //load values of previous search if one exists
         CareerResponse c = CentsApplication.get_cResponse();
@@ -255,7 +262,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                 _career2 = new Career();
                 _career2.setName(career2);
                 Log.d(LOG_TAG, "career2: " + career2);
-                int pos2 = getCareerPosition(career);
+                int pos2 = getCareerPosition(career2);
                 Log.d(LOG_TAG, "pos2:"+pos2);
                 if(!_useAutocomplete) {
                     _careerSpinner2.setSelection(pos2, true);
@@ -268,8 +275,18 @@ public class CareerSelectionDialogFragment extends DialogFragment{
         valuesLoaded = true;
     }
 
+    /**
+     * returns the position within the career array of a career
+     * @param career
+     * @return
+     */
     private int getCareerPosition(String career){
-        return 2;
+        for(int i = 0; i < _careers.length; i++){
+            if(career.trim().equals(_careers[i].trim())){
+                return i;
+            }
+        }
+        return -1;
     }
 
 
@@ -285,6 +302,9 @@ public class CareerSelectionDialogFragment extends DialogFragment{
         dismiss();
     }
 
+    /**
+     * Adds secondary selection views
+     */
     private void addPlusViews(){
         isPlus = false;
         _plusBtn.setBackground(getResources().getDrawable(R.drawable.minus));
@@ -330,9 +350,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
             });
             _autoComp2.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -342,15 +360,16 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                 }
 
                 @Override
-                public void afterTextChanged(Editable s) {
-
-                }
+                public void afterTextChanged(Editable s) {}
             });
         }
 
 
     }
 
+    /**
+     * Initializes first selection mechanism
+     */
     private void initSpinner1(){
         if(!_useAutocomplete){
             _careerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, _careers);
@@ -391,9 +410,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
 
             _autoComp1.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -404,9 +421,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                 }
 
                 @Override
-                public void afterTextChanged(Editable s) {
-
-                }
+                public void afterTextChanged(Editable s) {}
             });
             setPreviousSearchedAutoComp();
         }
@@ -414,6 +429,9 @@ public class CareerSelectionDialogFragment extends DialogFragment{
     }
 
 
+    /**
+     * Updates autocomp views to reflect previous searches
+     */
     private void setPreviousSearchedAutoComp(){
         //load last searched items
         CareerResponse cResponse = CentsApplication.get_cResponse();
@@ -462,6 +480,10 @@ public class CareerSelectionDialogFragment extends DialogFragment{
 
     }
 
+    /**
+     * Stores query via api
+     * @param searchText
+     */
     private void storeQuery(String searchText){
         //create query model
         Query q = new Query();
@@ -483,5 +505,17 @@ public class CareerSelectionDialogFragment extends DialogFragment{
 
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
     }
 }
