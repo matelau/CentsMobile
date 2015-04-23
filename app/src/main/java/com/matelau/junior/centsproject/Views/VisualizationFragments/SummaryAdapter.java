@@ -338,7 +338,13 @@ public class SummaryAdapter extends BaseAdapter {
         }
     }
 
-
+    /**
+     * Sets COL sum views to represent models
+     * @param position
+     * @param leftVal
+     * @param rightVal
+     * @param catTitle
+     */
     private void createColSumView(int position, TextView leftVal, TextView rightVal, TextView catTitle){
         //get necessary data from col response
         //avg cost of living cli_i[0]-100
@@ -420,10 +426,10 @@ public class SummaryAdapter extends BaseAdapter {
                 weather2 = elements.get(1).getWeather();
             }
 
-            String value = weatherLow1.get(0)+"°- "+weather1.get(13)+"°";
+            String value = weatherLow1.get(0).intValue()+"°- "+weather1.get(13).intValue()+"°";
             leftVal.setText(value);
             if(hasSecondCity){
-                value = weatherLow2.get(0)+"°- "+weather2.get(13)+"°";
+                value = weatherLow2.get(0).intValue()+"°- "+weather2.get(13).intValue()+"°";
                 rightVal.setText(value);
             }
             else{
@@ -432,19 +438,30 @@ public class SummaryAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * converts col values to proper string format for display
+     * @param overall
+     * @return
+     */
     private String costString(Double overall){
         String avgCost = "";
         if(overall > 0){
-            avgCost = Math.abs(overall)+"% ABOVE NATIONAL AVERAGE";
+            avgCost = (int)Math.abs(overall)+"% ABOVE NATIONAL AVERAGE";
 
         }
         else{
-            avgCost = Math.abs(overall)+"% BELOW NATIONAL AVERAGE";
+            avgCost = (int)Math.abs(overall)+"% BELOW NATIONAL AVERAGE";
         }
 
         return avgCost;
     }
 
+    /**
+     * converts tax values to proper string format for display
+     * @param tax1
+     * @param tax2
+     * @return
+     */
     private String taxValues(Double tax1, Double tax2){
         String value = "";
         if(tax1.equals(tax2)){

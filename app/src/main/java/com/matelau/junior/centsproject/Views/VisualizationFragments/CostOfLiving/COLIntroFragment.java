@@ -4,6 +4,7 @@ package com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLivin
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ import com.matelau.junior.centsproject.R;
  * A simple {@link Fragment} subclass.
  */
 public class COLIntroFragment extends Fragment {
-
+    private String LOG_TAG = COLIntroFragment.class.getSimpleName();
     private RelativeLayout _rootLayout;
     private Button _beginCOL;
 
@@ -49,6 +50,18 @@ public class COLIntroFragment extends Fragment {
         CitySelectionDialogFragment csd = new CitySelectionDialogFragment();
         csd.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
         csd.show(fm, "tag");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
     }
 
 

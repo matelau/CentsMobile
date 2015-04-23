@@ -61,6 +61,8 @@ public class MajorSelectionDialogFragment extends DialogFragment{
     private ArrayAdapter<String> _majorAdapter;
     private AutoCompleteTextView _autoComp1;
     private AutoCompleteTextView _autoComp2;
+    private boolean initialLoad1 = true;
+    private boolean initialLoad2 = true;
 
 
     private String[] _majors;
@@ -277,8 +279,10 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     //force user to select one of the auto complete options
-                    if(valuesLoaded)
+                    if(!initialLoad2){
                         _major2 = null;
+                    }
+
                 }
 
                 @Override
@@ -321,7 +325,7 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                 }
             }
         }
-        valuesLoaded = true;
+
     }
 
     private void loadMajorsList(){
@@ -415,8 +419,9 @@ public class MajorSelectionDialogFragment extends DialogFragment{
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if(valuesLoaded)
+                    if(!initialLoad1){
                         _major1 = null;
+                    }
                 }
 
                 @Override

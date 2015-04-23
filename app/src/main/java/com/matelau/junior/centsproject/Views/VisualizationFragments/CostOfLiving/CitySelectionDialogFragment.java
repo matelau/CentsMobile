@@ -241,6 +241,11 @@ public class CitySelectionDialogFragment extends DialogFragment {
         return builder.create();
     }
 
+
+    /**
+     * stores the users query
+     * @param searchText
+     */
     private void storeQuery(String searchText){
         //create query model
         Query q = new Query();
@@ -264,6 +269,10 @@ public class CitySelectionDialogFragment extends DialogFragment {
         });
     }
 
+
+    /**
+     * Adds secondary selection views
+     */
     public void addPlusViews(){
         _stateSpinner2.setVisibility(View.VISIBLE);
         _stateTextView2.setVisibility(View.VISIBLE);
@@ -289,6 +298,13 @@ public class CitySelectionDialogFragment extends DialogFragment {
         _plusBtn.setBackground(getResources().getDrawable(minus));
 
     }
+
+
+    /**
+     * Returns the position of state in the states array
+     * @param state
+     * @return
+     */
     public int getStatePosition(String state){
         int pos = -1;
         for(int i = 0; i < _states.length; i++){
@@ -327,6 +343,10 @@ public class CitySelectionDialogFragment extends DialogFragment {
 
     }
 
+    /**
+     * retrieves cities for the first spinner and displays them
+     * @param state
+     */
     public void getCities1(String state){
         RecordsService service = CentsApplication.get_centsRestAdapter().create(RecordsService.class);
         RecordQuery query = new RecordQuery();
@@ -370,6 +390,11 @@ public class CitySelectionDialogFragment extends DialogFragment {
 
     }
 
+
+    /**
+     * Retrieves cities for the second spinner and displays them
+     * @param state
+     */
     public void getCities2(String state){
         RecordsService service = CentsApplication.get_centsRestAdapter().create(RecordsService.class);
         RecordQuery query = new RecordQuery();
@@ -413,6 +438,11 @@ public class CitySelectionDialogFragment extends DialogFragment {
 
     }
 
+    /**
+     * Parses Retrofit response and returns an array of cities
+     * @param response
+     * @return
+     */
     private String[] citiesFromJson(Response response){
         Gson gson = new Gson();
         BufferedReader reader = null;
@@ -438,6 +468,19 @@ public class CitySelectionDialogFragment extends DialogFragment {
         String[] respArr = gson.fromJson(rsp, String[].class);
 
         return respArr;
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
     }
 
 }

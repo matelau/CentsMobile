@@ -4,6 +4,7 @@ package com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLivin
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,11 +30,10 @@ import lecho.lib.hellocharts.view.LineChartView;
  * A simple {@link Fragment} subclass.
  */
 public class WeatherFragment extends Fragment {
-
+    private String LOG_TAG = WeatherFragment.class.getSimpleName();
     private LineChartView chart;
     private LineChartData data;
     private int numberOfLines = 12;
-    private int maxNumberOfLines = 12;
     private int numberOfPoints = 2;
     private boolean hasAxes = true;
     private boolean hasLines = true;
@@ -97,6 +97,10 @@ public class WeatherFragment extends Fragment {
         return _rootView;
     }
 
+
+    /**
+     * Shows the selection dialog
+     */
     private void showCitySelectionDialog(){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         CitySelectionDialogFragment csd = new CitySelectionDialogFragment();
@@ -104,6 +108,9 @@ public class WeatherFragment extends Fragment {
         csd.show(fm, "tag");
     }
 
+    /**
+     * generates data to be displayed in vis
+     */
     private void generateData()
     {
         List<ColiResponse.Element> elements = _colResponse.getElements();
@@ -140,7 +147,7 @@ public class WeatherFragment extends Fragment {
                     value = weather1_low.get(index).floatValue();
                 }
                 PointValue pv = new PointValue(i , value);
-                pv.setLabel(value+"°F");
+                pv.setLabel((int) value+"°F");
                 values.add(pv);
             }
 
@@ -171,7 +178,7 @@ public class WeatherFragment extends Fragment {
                         value = weather2_low.get(index).floatValue();
                     }
                     PointValue pv = new PointValue(i , value);
-                    pv.setLabel(value+"°F");
+                    pv.setLabel((int)value+"°F");
                     values.add(pv);
                 }
 
@@ -203,8 +210,18 @@ public class WeatherFragment extends Fragment {
         data.setBaseValue(Float.NEGATIVE_INFINITY);
         chart.setLineChartData(data);
 
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
     }
 
 }

@@ -94,7 +94,9 @@ public class COLSummaryFragment extends Fragment {
     }
 
 
-
+    /**
+     * Shows selection dialog
+     */
     private void showCitySelectionDialog(){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         CitySelectionDialogFragment csd = new CitySelectionDialogFragment();
@@ -102,8 +104,15 @@ public class COLSummaryFragment extends Fragment {
         csd.show(fm, "tag");
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
 
-
-
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
+    }
 }

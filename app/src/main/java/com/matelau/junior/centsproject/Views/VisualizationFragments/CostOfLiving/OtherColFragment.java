@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lecho.lib.hellocharts.formatter.AxisValueFormatter;
-import lecho.lib.hellocharts.listener.ComboLineColumnChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
@@ -39,15 +38,12 @@ public class OtherColFragment extends Fragment {
     private ComboLineColumnChartData data;
 
     private int numberOfLines = 1;
-    private int maxNumberOfLines = 4;
     private int numberOfPoints = 2;
 
     private boolean hasAxes = true;
-    private boolean hasAxesNames = false;
     private boolean hasPoints = true;
     private boolean hasLines = true;
     private boolean isCubic = false;
-    private boolean hasLabels = false;
     private ColiResponse _cResponse;
     private  Double _avgSalary;
     private Double _avgProperty;
@@ -107,13 +103,16 @@ public class OtherColFragment extends Fragment {
         });
 
         chart = (ComboLineColumnChartView) _rootView.findViewById(R.id.chart);
-        chart.setOnValueTouchListener(new ValueTouchListener());
 
         generateData();
 
         return _rootView;
     }
 
+
+    /**
+     * Show selection dialog
+     */
     private void showCitySelectionDialog(){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         CitySelectionDialogFragment csd = new CitySelectionDialogFragment();
@@ -121,6 +120,9 @@ public class OtherColFragment extends Fragment {
         csd.show(fm, "tag");
     }
 
+    /**
+     * Generate data to be used by vis
+     */
     private void generateData() {
         // Chart looks the best when line data and column data have similar maximum viewports.
         data = new ComboLineColumnChartData(generateColumnData(), generateLineData());
@@ -143,10 +145,6 @@ public class OtherColFragment extends Fragment {
                 }
             };
             Axis axisY = new Axis().setHasLines(true).setFormatter(yFormat).setName("Amount in USD");
-            if (hasAxesNames) {
-//                axisX.setName("Percent");
-//                axisY.setName("Percent");
-            }
             data.setAxisXBottom(axisX);
             data.setAxisYLeft(axisY);
         } else {
@@ -156,6 +154,10 @@ public class OtherColFragment extends Fragment {
         chart.setComboLineColumnChartData(data);
     }
 
+    /**
+     * generate avg data for vis
+     * @return
+     */
     private LineChartData generateLineData() {
 
         List<Line> lines = new ArrayList<Line>();
@@ -190,6 +192,10 @@ public class OtherColFragment extends Fragment {
 
     }
 
+    /**
+     * generate salary and tax data for vis
+     * @return
+     */
     private ColumnChartData generateColumnData() {
         int numSubcolumns = 1;
         List<ColiResponse.Element> elements=  _cResponse.getElements();
@@ -215,7 +221,7 @@ public class OtherColFragment extends Fragment {
                             label = "$0";
                         }
                         else{
-                            label = "$"+val;
+                            label = "$"+(int)val;
 
                         }
                         sc.setValue(val);
@@ -234,7 +240,7 @@ public class OtherColFragment extends Fragment {
                             label = "$0";
                         }
                         else{
-                            label = "$"+val;
+                            label = "$"+(int)val;
 
                         }
                         sc.setValue(val);
@@ -254,7 +260,7 @@ public class OtherColFragment extends Fragment {
                             label = "$0";
                         }
                         else{
-                            label = "$"+val;
+                            label = "$"+(int)val;
 
                         }
                         sc.setValue(val);
@@ -273,7 +279,7 @@ public class OtherColFragment extends Fragment {
                             label = "$0";
                         }
                         else{
-                            label = "$"+val;
+                            label = "$"+(int)val;
 
                         }
                         sc.setValue(val);
@@ -296,27 +302,17 @@ public class OtherColFragment extends Fragment {
         return columnChartData;
     }
 
-
-    private class ValueTouchListener implements ComboLineColumnChartOnValueSelectListener {
-
-        @Override
-        public void onValueDeselected() {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public void onColumnValueSelected(int columnIndex, int subcolumnIndex, SubcolumnValue value) {
-//            Toast.makeText(getActivity(), "Selected column: " + value, Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onPointValueSelected(int lineIndex, int pointIndex, PointValue value) {
-//            Toast.makeText(getActivity(), "Selected line point: " + value, Toast.LENGTH_SHORT).show();
-        }
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
+    }
 
 
 

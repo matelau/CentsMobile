@@ -102,6 +102,9 @@ public class TopJobsFragment extends Fragment {
                 _major2 = _major2.substring(0,30)+"...";
             }
         }
+        else{
+            _major2 = null;
+        }
 
         TextView major1Name = (TextView) _rootView.findViewById(R.id.major1);
         TextView major2Name = (TextView) _rootView.findViewById(R.id.major2);

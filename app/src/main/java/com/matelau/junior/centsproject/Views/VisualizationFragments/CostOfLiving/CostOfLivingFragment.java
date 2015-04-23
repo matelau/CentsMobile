@@ -37,8 +37,6 @@ public class CostOfLivingFragment extends Fragment{
     CardView _cv;
     ColumnChartView _chart;
     ColumnChartData _chartdata;
-    private boolean hasAxes = true;
-    private boolean hasAxesNames = true;
     private boolean hasLabels = true;
     private boolean hasLabelForSelected = true;
     private TextView _loc2;
@@ -84,6 +82,10 @@ public class CostOfLivingFragment extends Fragment{
         return _rootView;
     }
 
+
+    /**
+     * Show selection dialog
+     */
     private void showCitySelectionDialog(){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         CitySelectionDialogFragment csd = new CitySelectionDialogFragment();
@@ -107,16 +109,6 @@ public class CostOfLivingFragment extends Fragment{
 
     }
 
-    /*
-        Pulls up Dialog box to select a second location
-     */
-    public void showSecondCityDialog(){
-        FragmentManager fm = getFragmentManager();
-        CitySelectionDialogFragment csd = new CitySelectionDialogFragment();
-        csd.setTargetFragment(this, 01);
-        csd.show(fm, "CitySelection");
-    }
-
 
     /**
      *  Sets vars for updated location
@@ -132,6 +124,7 @@ public class CostOfLivingFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(LOG_TAG, "Resumed");
         updateLocation();
         generateData();
     }
@@ -145,30 +138,26 @@ public class CostOfLivingFragment extends Fragment{
         // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
         List<ColiResponse.Element> elements = CentsApplication.get_colResponse().getElements();
 
-
         double[] col_vals = listToDblArr(elements.get(0).getCli());
-
         double[] col_vals2 = {};
         if(elements.size() > 1){
             col_vals2 = listToDblArr(elements.get(1).getCli());
         }
 
-
         List<AxisValue> axisVals = new ArrayList<AxisValue>();
         List<Column> columns = new ArrayList<Column>();
         List<SubcolumnValue> values;
         for(int i = 0; i < numColumns; i++){
-//            List<ColumnValue> values = new ArrayList<ColumnValue>();
             values = new ArrayList<SubcolumnValue>();
             //normalize col_vals National avg = 0
             float column_value = (float) (col_vals[i] - 100f);
             int c;
             String label = "";
             if(column_value < 0) {
-                label =  Math.abs(column_value) + "% below";
+                label =  (int)Math.abs(column_value) + "% below";
             }
             else{
-                label = column_value + "% above";
+                label = (int)column_value + "% above";
             }
             //if column_value = 0 add a negligible value to display
             if(Math.round(column_value) == 0)
@@ -182,10 +171,10 @@ public class CostOfLivingFragment extends Fragment{
                 float column_value2 = (float) (col_vals2[i] - 100f);
                 String label2 = "";
                 if(column_value2 < 0) {
-                    label2 =  Math.abs(column_value2) + "% below";
+                    label2 =  (int)Math.abs(column_value2) + "% below";
                 }
                 else{
-                    label2 = column_value2 + "% above";
+                    label2 = (int)column_value2 + "% above";
                 }
                 //if column_value = 0 add a negligible value to display
                 if(Math.round(column_value2) == 0)
@@ -209,17 +198,22 @@ public class CostOfLivingFragment extends Fragment{
         Axis axisX = new Axis(axisVals);
         axisX.setTextSize(8);
         Axis axisY = new Axis().setHasLines(true);
-        axisX.setName(elements.get(0).getName());
         axisY.setName("");
         _chartdata.setAxisXBottom(axisX);
         _chartdata.setAxisYLeft(axisY);
 
-        _chartdata.setValueLabelTextSize(6);
+        _chartdata.setValueLabelTextSize(9);
         //make the bars smaller so they don't overfill chart
         _chartdata.setFillRatio(.7f);
         _chart.setColumnChartData(_chartdata);
     }
 
+
+    /**
+     * converts double list to array
+     * @param doubles
+     * @return
+     */
     private double[] listToDblArr(List<Double> doubles){
         final double[] result = new double[doubles.size()];
         for(int i = 0; i<doubles.size(); i++){
@@ -229,5 +223,10 @@ public class CostOfLivingFragment extends Fragment{
         return result;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
 
 }

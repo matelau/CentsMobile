@@ -17,7 +17,6 @@ import com.matelau.junior.centsproject.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import lecho.lib.hellocharts.listener.ComboLineColumnChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
@@ -110,13 +109,15 @@ public class TaxesFragment extends Fragment {
         });
 
         chart = (ComboLineColumnChartView) _rootView.findViewById(R.id.chart);
-        chart.setOnValueTouchListener(new ValueTouchListener());
 
         generateData();
 
         return _rootView;
     }
 
+    /**
+     * Shows the selection dialog
+     */
     private void showCitySelectionDialog(){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         CitySelectionDialogFragment csd = new CitySelectionDialogFragment();
@@ -124,6 +125,10 @@ public class TaxesFragment extends Fragment {
         csd.show(fm, "tag");
     }
 
+
+    /**
+     * generates data for vis
+     */
     private void generateData() {
         // Chart looks the best when line data and column data have similar maximum viewports.
         data = new ComboLineColumnChartData(generateColumnData(), generateLineData());
@@ -135,10 +140,6 @@ public class TaxesFragment extends Fragment {
         if (hasAxes) {
             Axis axisX = new Axis(axisValues);
             Axis axisY = new Axis().setHasLines(true).setName("Tax Rates");
-            if (hasAxesNames) {
-//                axisX.setName("Percent");
-//                axisY.setName("Percent");
-            }
             data.setAxisXBottom(axisX);
             data.setAxisYLeft(axisY);
         } else {
@@ -148,6 +149,11 @@ public class TaxesFragment extends Fragment {
         chart.setComboLineColumnChartData(data);
     }
 
+
+    /**
+     * generates avg tax data to be displayed in vis
+     * @return
+     */
     private LineChartData generateLineData() {
 
         List<Line> lines = new ArrayList<Line>();
@@ -185,6 +191,10 @@ public class TaxesFragment extends Fragment {
 
     }
 
+    /**
+     * generates tax data to be displayed in vis
+     * @return
+     */
     private ColumnChartData generateColumnData() {
         List<ColiResponse.Element> elements = _cResponse.getElements();
         List<Double> taxes1 = elements.get(0).getTaxes();
@@ -334,24 +344,16 @@ public class TaxesFragment extends Fragment {
         return columnChartData;
     }
 
-    private class ValueTouchListener implements ComboLineColumnChartOnValueSelectListener {
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
 
-        @Override
-        public void onValueDeselected() {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public void onColumnValueSelected(int columnIndex, int subcolumnIndex, SubcolumnValue value) {
-//            Toast.makeText(getActivity(), "Selected column: " + value, Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onPointValueSelected(int lineIndex, int pointIndex, PointValue value) {
-//            Toast.makeText(getActivity(), "Selected line point: " + value, Toast.LENGTH_SHORT).show();
-        }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
     }
 
 
