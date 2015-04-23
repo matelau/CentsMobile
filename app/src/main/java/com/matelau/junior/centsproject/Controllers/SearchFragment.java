@@ -198,7 +198,7 @@ public class SearchFragment extends Fragment {
             _submitBtn.startAnimation(AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.rotate));
             if(CentsApplication.isDebug())
                 Toast.makeText(getActivity(), "Search for:" + searchText, Toast.LENGTH_SHORT).show();
-            //Todo if valid response and user is logged in from query service store searchText to _query
+            //store searchText via api
             if(CentsApplication.is_loggedIN()){
                 storeQuery(searchText);
             }
@@ -239,7 +239,7 @@ public class SearchFragment extends Fragment {
                     map=(Map<String,String>) gson.fromJson(rsp, map.getClass());
                     //get type
                     String type = map.get("query_type");
-                    if(type == null){
+                    if(type == null || type.equals("loan")){
                         Toast.makeText(getActivity(), "We did not understand your query... here are some examples", Toast.LENGTH_SHORT).show();
                         CentsApplication.set_selectedVis("Examples");
                         switchToVizPager();
@@ -371,6 +371,11 @@ public class SearchFragment extends Fragment {
                         else{
                             CentsApplication.set_occupationSalary(null);
                         }
+                        switchToVizPager();
+                    }
+                    else{
+                        //goto spending breakdown
+                        CentsApplication.set_selectedVis("Examples");
                         switchToVizPager();
                     }
                 }
