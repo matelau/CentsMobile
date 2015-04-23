@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class DisambiguationDialogFragment extends DialogFragment {
+    private final String LOG_TAG = DisambiguationDialogFragment.class.getSimpleName();
     private RelativeLayout _rootLayout;
     private ListView _ambiguousList;
     private AmbigAdapter _adapter;
@@ -103,6 +105,21 @@ public class DisambiguationDialogFragment extends DialogFragment {
         return builder.create();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "resumed");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "destroyed");
+    }
+
+    /**
+     * handle school selection
+     */
     private void schoolSelection(){
         //get response
         SchoolResponse response = CentsApplication.get_sApiResponse();
@@ -124,6 +141,9 @@ public class DisambiguationDialogFragment extends DialogFragment {
 
     }
 
+    /**
+     * handle city selection
+     */
     private void citySelection(){
         //get response
         ColiResponse response = CentsApplication.get_colResponse();
@@ -145,6 +165,9 @@ public class DisambiguationDialogFragment extends DialogFragment {
 
     }
 
+    /**
+     * handle career selection
+     */
     private void careerSelection(){
         //get response
         CareerResponse response = CentsApplication.get_cResponse();
@@ -166,6 +189,9 @@ public class DisambiguationDialogFragment extends DialogFragment {
 
     }
 
+    /**
+     * handle major selection
+     */
     private void majorSelection(){
         //get response
         MajorResponse mResponse = CentsApplication.get_mResponse();
@@ -186,6 +212,10 @@ public class DisambiguationDialogFragment extends DialogFragment {
         switchToVizPager();
     }
 
+
+    /**
+     * Switch to appropriate vis
+     */
     private void switchToVizPager(){
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
@@ -208,6 +238,9 @@ public class DisambiguationDialogFragment extends DialogFragment {
         ft.commit();
     }
 
+    /**
+     * Adapter used to display disambiguation options within a listview
+     */
     private class AmbigAdapter extends ArrayAdapter<AmbigElement> {
         public ArrayList<AmbigElement> elements;
         private Context _context;

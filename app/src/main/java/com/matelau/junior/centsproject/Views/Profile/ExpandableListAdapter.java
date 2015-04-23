@@ -88,7 +88,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 .get(childPosititon);
     }
 
-
+    /**
+     * if a user clicks on a previous search routes that search to the qp and handles response
+     * @param searchText
+     */
     private void handleSubmit(String searchText){
         QueryService service = CentsApplication.get_queryParsingRestAdapter().create(QueryService.class);
         service.results(searchText, new Callback<Response>() {
@@ -102,9 +105,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 BufferedReader reader = null;
                 StringBuilder sb = new StringBuilder();
                 try {
-
                     reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
-
                     String line;
 
                     try {
@@ -144,7 +145,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         //handle disambiguations
                         if(CentsApplication.isDebug())
                             Toast.makeText(_context, "Ambiguous results: "+elements.size(), Toast.LENGTH_SHORT).show();
-//                            showLoading();
                         Bundle args = new Bundle();
                         args.putInt("type", 2);
                         ArrayList<String> ambigSearchResults = new ArrayList<String>();
@@ -169,7 +169,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         //handle disambiguations
                         if(CentsApplication.isDebug())
                             Toast.makeText(_context, "Ambiguous results: "+elements.size(), Toast.LENGTH_SHORT).show();
-//                            showLoading();
                         Bundle args = new Bundle();
                         args.putInt("type", 3);
                         ArrayList<String> ambigSearchResults = new ArrayList<String>();
@@ -195,7 +194,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         //handle disambiguations
                         if(CentsApplication.isDebug())
                             Toast.makeText(_context, "Ambiguous results: "+elements.size(), Toast.LENGTH_SHORT).show();
-//                            showLoading();
                         Bundle args = new Bundle();
                         args.putInt("type", 1);
                         ArrayList<String> ambigSearchResults = new ArrayList<String>();
@@ -233,7 +231,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     if(majors.size() > 2){
                         if(CentsApplication.isDebug())
                             Toast.makeText(_context, "Ambiguous results: "+majors.size(), Toast.LENGTH_SHORT).show();
-//                            showLoading();
                         Bundle args = new Bundle();
                         args.putInt("type", 0);
                         List<MajorResponse.Element> elements = mResponse.getElements();
@@ -289,14 +286,20 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         choiceDialog.show(fm, "tag");
     }
 
-
+    /**
+     * Switches to appropriate view
+     */
     private void switchToVizPager(){
-        FragmentTransaction ft = ((FragmentActivity) _context).getSupportFragmentManager().beginTransaction();   //_context.getApplicationContext().get.getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = ((FragmentActivity) _context).getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
         ft.addToBackStack("main-search");
         ft.commit();
     }
 
+
+    /**
+     * Displays a dialog notification that the service is down
+     */
     private void showServiceDownNotification(){
         FragmentManager fm = ((FragmentActivity) _context).getSupportFragmentManager();
         ServiceDownDialogFragment confirmation = new ServiceDownDialogFragment();
@@ -524,6 +527,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
+    /**
+     * stores query via api
+     * @param searchText
+     */
     private void storeQuery(String searchText){
         //create query model
         Query q = new Query();

@@ -75,6 +75,18 @@ public class ProfileFragment extends Fragment {
         return _rootLayout;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "resumed");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "destroyed");
+    }
+
     /**
      * update the users completed section
      */
@@ -96,6 +108,9 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    /**
+     * inits models to be used after network tasks complete
+     */
     private void prepareListData(){
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();
@@ -131,12 +146,15 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    /**
+     * loads a users completed data via api
+     */
     private void loadCompletedData(){
         UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
-        service.getCompletedData(_id, new Callback<Response>() {
+        service.getCompletedData(_id, new Callback<String[]>() {
             @Override
-            public void success(Response response, Response response2) {
-                String[] completed = translateResponseToArray(response);
+            public void success(String[] response, Response response2) {
+                String[] completed =  response;
                 int comps = completed.length;
                 ArrayList<String> lSections =  new ArrayList<String>();
                 lSections.add("Completed : " + comps + "/13");
@@ -156,6 +174,9 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    /**
+     * loads a users query data via api
+     */
     private void loadQueryData(){
         UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
         service.getQueries(_id, new Callback<Response>() {
@@ -164,7 +185,7 @@ public class ProfileFragment extends Fragment {
                 String[] queries = translateResponseToArray(response);
                 ArrayList<String> qs = new ArrayList<String>();
                 for (String s : queries) {
-                    if(qs.size() < 11)
+                    if (qs.size() < 11)
                         qs.add(s);
                     else
                         break;
@@ -182,6 +203,9 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    /**
+     * loads a users rating data via api
+     */
     private void loadRatingData(){
         UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
         service.getRatingsData(_id, new Callback<UserResponse>() {
@@ -191,22 +215,22 @@ public class ProfileFragment extends Fragment {
                 //ratings
                 List<CareerRating> cRatings = userResponse.getCareerRatings();
                 List<String> cRat = new ArrayList<String>();
-                for(CareerRating c: cRatings){
-                    String val = c.getName()+": "+c.getRating();
+                for (CareerRating c : cRatings) {
+                    String val = c.getName() + ": " + c.getRating();
                     cRat.add(val);
                 }
 
                 List<DegreeRating> dRatings = userResponse.getDegreeRatings();
                 ArrayList<String> dRat = new ArrayList<String>();
-                for(DegreeRating d : dRatings){
-                    String val = d.getName()+"("+d.getLevel()+") : "+d.getRating();
+                for (DegreeRating d : dRatings) {
+                    String val = d.getName() + "(" + d.getLevel() + ") : " + d.getRating();
                     dRat.add(val);
                 }
 
                 List<SchoolRating> sRatings = userResponse.getSchoolRatings();
                 List<String> sRat = new ArrayList<String>();
-                for(SchoolRating s : sRatings){
-                    String val = s.getName()+": "+s.getRating();
+                for (SchoolRating s : sRatings) {
+                    String val = s.getName() + ": " + s.getRating();
                     sRat.add(val);
                 }
                 //major
@@ -227,6 +251,9 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    /**
+     * loads a users profile data via api
+     */
     private void loadProfileData(){
         UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
         service.getProfileData(_id, new Callback<UserResponse>() {
@@ -257,6 +284,11 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    /**
+     * Converts a retrofit response to a string array
+     * @param response
+     * @return
+     */
     private String[] translateResponseToArray(Response response){
         Gson gson = new Gson();
         BufferedReader reader = null;

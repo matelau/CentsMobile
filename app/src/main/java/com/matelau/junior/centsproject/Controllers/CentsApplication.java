@@ -37,7 +37,7 @@ import retrofit.RestAdapter;
 public class CentsApplication extends Application{
 
     //debug true = show toast, set login credentials
-    private static boolean debug = true;
+    private static boolean debug = false;
     private static String LOG_TAG = CentsApplication.class.getSimpleName();
     private static Context _centsContext;
     //Api Services
@@ -528,35 +528,6 @@ public class CentsApplication extends Application{
         catch(Exception e){
             e.printStackTrace();
         }
-
-//        if(_loggedIN){
-//            //store sb to db via api
-//            HashMap<String, String> elements = new HashMap<String,String>();
-//            for(SpendingBreakdownCategory current : _sbValues){
-//                //dont store taxes it will be calculated
-//                if(!current._category.equals("TAXES")){
-//                    float percent = current._percent * 100f;
-//                    elements.put(current._category, ""+percent);
-//                }
-//            }
-//            SharedPreferences settings = context.getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
-//            int _id = settings.getInt("ID", 0);
-//
-//            HashMap<String, HashMap<String, String>> fields = new HashMap<String, HashMap<String,String>>();
-//            fields.put("fields", elements);
-//            UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
-//            service.initSpendingFields(_id, _currentBreakdown, fields, new Callback<Response>() {
-//                @Override
-//                public void success(Response response, Response response2) {
-//                    Log.d(LOG_TAG, "updated spending records for: " + _currentBreakdown);
-//                }
-//
-//                @Override
-//                public void failure(RetrofitError error) {
-//                    Log.e(LOG_TAG, error.getMessage());
-//                }
-//            });
-//        }
 
     }
 

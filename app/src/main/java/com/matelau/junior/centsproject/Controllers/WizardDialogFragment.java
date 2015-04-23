@@ -155,6 +155,10 @@ public class WizardDialogFragment extends DialogFragment {
 
     }
 
+    /**
+     * Switches view to College Comp or Major Comp
+     * @param pos
+     */
     private void selectCollegeOrMajor(int pos){
         Log.d(LOG_TAG, "College Item Selected: " + pos);
         switch(pos){
@@ -174,6 +178,10 @@ public class WizardDialogFragment extends DialogFragment {
         }
     }
 
+    /**
+     * Switches view to Spending Breakdown or Cost of Living
+     * @param pos
+     */
     private void selectCost(int pos){
         Log.d(LOG_TAG, "Cost Item Selected: " + pos);
         switch(pos) {
@@ -193,4 +201,15 @@ public class WizardDialogFragment extends DialogFragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "resumed");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "destroyed");
+    }
 }

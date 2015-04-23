@@ -91,7 +91,23 @@ public class RatingsDialogFragment extends DialogFragment {
         return builder.create();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "resumed");
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "destroyed");
+    }
+
+
+    /**
+     * Switches to the appropriate rating system
+     * @param rating
+     */
     public void rate(float rating){
         switch(type){
             case 0:
@@ -109,6 +125,11 @@ public class RatingsDialogFragment extends DialogFragment {
         }
     }
 
+
+    /**
+     * Sends college rating to the api
+     * @param rating
+     */
     private void rateCollege(float rating){
         SchoolService service = CentsApplication.get_centsRestAdapter().create(SchoolService.class);
         service.rateSchool(toBeRated, (int) rating, user, new Callback<Response>() {
@@ -125,6 +146,10 @@ public class RatingsDialogFragment extends DialogFragment {
 
     }
 
+    /**
+     * Sends career rating to the api
+     * @param rating
+     */
     private void rateCareer(float rating){
         CareerService service = CentsApplication.get_centsRestAdapter().create(CareerService.class);
         service.rateCareer(toBeRated, (int) rating, user, new Callback<Response>() {
@@ -142,6 +167,9 @@ public class RatingsDialogFragment extends DialogFragment {
     }
 
 
+    /**
+     * loads all rating data for a user
+     */
     private void loadRatingData(){
         UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
         service.getRatingsData(_id, new Callback<UserResponse>() {
@@ -162,6 +190,10 @@ public class RatingsDialogFragment extends DialogFragment {
         });
     }
 
+
+    /**
+     * Checks if the element being rated has been rated before and updates view
+     */
     private void checkForPreviousRating(){
         switch(type){
             case 0:
@@ -197,17 +229,27 @@ public class RatingsDialogFragment extends DialogFragment {
 
     }
 
+    /**
+     * log success and close dialog
+     */
     private void closeOnSuccess(){
         Log.d(LOG_TAG, "updated rating" );
         dismiss();
     }
 
-
+    /**
+     * Shows an error message
+     * @param error
+     */
     private void toastOnError(RetrofitError error){
         Log.d(LOG_TAG, error.getMessage() );
         Toast.makeText(getActivity(), "Error - Please Try Again Later", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Sends major rating to the api
+     * @param rating
+     */
     public void rateMajor(float rating){
         final String level = toBeRated.substring(toBeRated.indexOf("(")+1, toBeRated.length()-1).trim();
         final String major = toBeRated.substring(0, toBeRated.indexOf("(")).trim();

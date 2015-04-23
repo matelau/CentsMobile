@@ -38,7 +38,6 @@ import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SpendingQPResponse;
 import com.matelau.junior.centsproject.R;
-import com.matelau.junior.centsproject.Views.VisualizationFragments.LoadingFragment;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -283,7 +282,6 @@ public class SearchFragment extends Fragment {
                             //handle disambiguations
                             if(CentsApplication.isDebug())
                                 Toast.makeText(getActivity(), "Ambiguous results: "+elements.size(), Toast.LENGTH_SHORT).show();
-//                            showLoading();
                             Bundle args = new Bundle();
                             args.putInt("type", 3);
                             ArrayList<String> ambigSearchResults = new ArrayList<String>();
@@ -438,17 +436,12 @@ public class SearchFragment extends Fragment {
         });
     }
 
-
+    /**
+     * Switches to appropriate views
+     */
     private void switchToVizPager(){
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
-        ft.addToBackStack("main-search");
-        ft.commit();
-    }
-
-    private void showLoading(){
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_placeholder, new LoadingFragment());
         ft.addToBackStack("main-search");
         ft.commit();
     }

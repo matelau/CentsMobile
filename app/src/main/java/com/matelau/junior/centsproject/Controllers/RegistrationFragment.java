@@ -126,7 +126,19 @@ public class RegistrationFragment extends Fragment {
         return _rootLayout;
     }
 
-    /*
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "resumed");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "destroyed");
+    }
+
+    /**
      * Replaces registration with the searchFragment
      */
     private void showSearch(){

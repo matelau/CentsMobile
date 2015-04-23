@@ -3,6 +3,7 @@ package com.matelau.junior.centsproject.Controllers;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import java.util.List;
 
 
 public class HelpFragment extends Fragment {
+    private final String LOG_TAG = HelpFragment.class.getSimpleName();
     private RelativeLayout _rootLayout;
     private ExpandableListView _profileCats;
     private ExpandableListAdapter listAdapter;
@@ -47,6 +49,21 @@ public class HelpFragment extends Fragment {
         return _rootLayout;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "resumed");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "destroyed");
+    }
+
+    /**
+     * Creates View header text and child elements
+     */
     private void prepareListData(){
         //get help strings
         helpVals = getResources().getStringArray(R.array.help_elements);

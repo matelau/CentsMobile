@@ -87,6 +87,18 @@ public class LoginDialogFragment extends DialogFragment {
         return builder.create();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "resumed");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "destroyed");
+    }
+
     /**
      * Validates login submissions
      */
@@ -157,12 +169,15 @@ public class LoginDialogFragment extends DialogFragment {
             });
         }
 
-
-
         return passValid && emailValid;
 
     }
 
+    /**
+     * local email validation
+     * @param hex
+     * @return
+     */
     private boolean validateEmail(final String hex) {
         Pattern pattern = Pattern.compile(EMAIL_PATTERN);
         return pattern.matcher(hex).matches();

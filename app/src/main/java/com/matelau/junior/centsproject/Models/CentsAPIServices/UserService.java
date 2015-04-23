@@ -39,7 +39,7 @@ public interface UserService {
     void getRatingsData(@Path("id") int id, Callback<UserResponse> cb);
 
     @GET("/api/v2/users/{id}/completed?api_key=re5-fHO6-5CnUSglEAioWg")
-    void getCompletedData(@Path("id") int id, Callback<Response> cb );
+    void getCompletedData(@Path("id") int id, Callback<String[]> cb );
 
     @POST("/api/v2/users/{id}/completed?api_key=re5-fHO6-5CnUSglEAioWg")
     void updateCompletedData(@Path("id") int id, @Body HashMap<String,String> section, Callback<Response> cb);

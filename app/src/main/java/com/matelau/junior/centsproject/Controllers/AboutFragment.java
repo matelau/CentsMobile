@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import retrofit.client.Response;
  * A simple {@link Fragment} subclass.
  */
 public class AboutFragment extends Fragment {
+    private final String LOG_TAG = AboutFragment.class.getSimpleName();
     private RelativeLayout _rootLayout;
     private ExpandableListView _aboutCats;
     private ExpandableListAdapter listAdapter;
@@ -59,6 +61,18 @@ public class AboutFragment extends Fragment {
         return _rootLayout;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "resumed");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "destroyed");
+    }
+
     /**
      * update the users completed section
      */
@@ -83,7 +97,9 @@ public class AboutFragment extends Fragment {
     }
 
 
-
+    /**
+     * Prepares Header views and child elements
+     */
     private void prepareListData(){
         //get help strings
         _aboutVals = getResources().getStringArray(R.array.about_elements);

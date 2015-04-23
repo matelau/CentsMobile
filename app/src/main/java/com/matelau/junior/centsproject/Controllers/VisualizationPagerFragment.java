@@ -2,7 +2,6 @@ package com.matelau.junior.centsproject.Controllers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -75,6 +74,18 @@ public class VisualizationPagerFragment extends Fragment {
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) _rootlayout.findViewById(R.id.tabs);
         tabs.setViewPager(_viewPager);
         return _rootlayout;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "resumed");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "destroyed");
     }
 
     /**
@@ -201,6 +212,10 @@ public class VisualizationPagerFragment extends Fragment {
         });
     }
 
+    /**
+     * Looks for top jobs for a majors and if there is returns true
+     * @return
+     */
     private boolean addTobJobs(){
         //check if any elements have
         List<MajorResponse.Element> elements = CentsApplication.get_mResponse().getElements();
@@ -213,20 +228,6 @@ public class VisualizationPagerFragment extends Fragment {
         return false;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-    }
 
     /**
      * Adapter used to switch views inside the view pager based on user selections
@@ -270,7 +271,6 @@ public class VisualizationPagerFragment extends Fragment {
             trans.remove((Fragment) object);
             trans.commit();
         }
-
 
 
         @Override
