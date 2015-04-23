@@ -89,7 +89,7 @@
     <orderEntry type="library" exported="" name="play-services-drive-7.0.0" level="project" />
     <orderEntry type="library" exported="" name="gson-2.3.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-maps-7.0.0" level="project" />
-    <orderEntry type="library" exported="" name="hellocharts-library-1.5.2" level="project" />
+    <orderEntry type="library" exported="" name="hellocharts-library-1.5.3" level="project" />
     <orderEntry type="library" exported="" name="picasso-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-appindexing-7.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-cast-7.0.0" level="project" />

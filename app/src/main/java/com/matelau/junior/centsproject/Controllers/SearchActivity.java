@@ -23,12 +23,9 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
-import com.matelau.junior.centsproject.Models.Design.Col;
 import com.matelau.junior.centsproject.R;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -44,14 +41,6 @@ public class SearchActivity extends FragmentActivity {
     private String[] _navElements;
     private ActionBarDrawerToggle _drawerToggle;
     private LinearLayout _drawerLinear;
-    private boolean _isDrawerOpen;
-
-    //State City processing
-    private List<Col> _cols;
-    private String[] _states;
-    private String[] _supportedCities;
-    private Set<String> _supportedStatesHash;
-
 
 
     @Override

@@ -7,8 +7,6 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.matelau.junior.centsproject.Models.Design.Col;
-import com.matelau.junior.centsproject.Models.Design.JobInfo;
 import com.matelau.junior.centsproject.Models.VizModels.CareerResponse;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.Models.VizModels.Major;
@@ -65,11 +63,8 @@ public class CentsApplication extends Application{
     private static String _password;
 
     //Lists
-    private static List<JobInfo> _jobSearchResultList;
     private static String[] _states;
     private static String[] _cities;
-    private static List<Col> _cols;
-
 
     //Spending Breakdown Vis
     private static String _occupationSalary = null;
@@ -116,14 +111,6 @@ public class CentsApplication extends Application{
 
     public static void set_indeedRestAdapter(RestAdapter _indeedRestAdapter) {
         CentsApplication._indeedRestAdapter = _indeedRestAdapter;
-    }
-
-    public static List<JobInfo> get_jobSearchResultList() {
-        return _jobSearchResultList;
-    }
-
-    public static void set_jobSearchResultList(List<JobInfo> _jobSearchResultList) {
-        CentsApplication._jobSearchResultList = _jobSearchResultList;
     }
 
     public static String get_searchedCity() {
@@ -213,15 +200,6 @@ public class CentsApplication extends Application{
     public static void set_searchState2(String _searchState2) {
         CentsApplication._searchState2 = _searchState2;
     }
-
-    public static List<Col> get_cols() {
-        return _cols;
-    }
-
-    public static void set_cols(List<Col> _cols) {
-        CentsApplication._cols = _cols;
-    }
-
 
     public static RestAdapter get_queryParsingRestAdapter() {
         return _queryParsingRestAdapter;

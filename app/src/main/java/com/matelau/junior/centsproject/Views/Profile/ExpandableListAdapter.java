@@ -126,7 +126,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 map = (Map<String, String>) gson.fromJson(rsp, map.getClass());
                 //get type
                 String type = map.get("query_type");
-                if(type == null){
+                if(type == null || type.equals("loan")){
                     Toast.makeText(_context, "We did not understand your query... here are some examples", Toast.LENGTH_SHORT).show();
                     CentsApplication.set_selectedVis("Examples");
                     switchToVizPager();

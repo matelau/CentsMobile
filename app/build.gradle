@@ -38,7 +38,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.4.0'
     compile 'com.googlecode.android-query:android-query:0.25.9'
 //    visualization
-    compile 'com.github.lecho:hellocharts-library:1.5.2@aar'
+    compile 'com.github.lecho:hellocharts-library:1.5.3@aar'
 //    ads
     compile 'com.google.android.gms:play-services:7.0.0'
 //    slider
