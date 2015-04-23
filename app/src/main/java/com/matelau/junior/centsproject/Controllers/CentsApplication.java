@@ -92,6 +92,7 @@ public class CentsApplication extends Application{
     private static SchoolResponse _sApiResponse;
     private static String _university1;
     private static String _university2;
+    //the position of the universities state in the state array
     private static int pos1 = -1;
     private static int pos2 = -1;
 

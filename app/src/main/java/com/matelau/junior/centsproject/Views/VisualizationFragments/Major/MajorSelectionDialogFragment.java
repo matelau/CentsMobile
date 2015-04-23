@@ -24,22 +24,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.MajorService;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.RecordsService;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
 import com.matelau.junior.centsproject.Models.UserModels.Query;
-import com.matelau.junior.centsproject.Models.VizModels.RecordQuery;
-import com.matelau.junior.centsproject.Models.CentsAPIServices.RecordsService;
 import com.matelau.junior.centsproject.Models.VizModels.Major;
 import com.matelau.junior.centsproject.Models.VizModels.MajorQuery;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
+import com.matelau.junior.centsproject.Models.VizModels.RecordQuery;
 import com.matelau.junior.centsproject.R;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -341,12 +337,12 @@ public class MajorSelectionDialogFragment extends DialogFragment{
             ArrayList<String> tables = new ArrayList<String>();
             tables.add("majors");
             query.setTables(tables);
-            service.getRecords(query, new Callback<Response>() {
+            service.getRecords(query, new Callback<String[]>() {
                 @Override
-                public void success(Response response, Response response2) {
+                public void success(String[] response, Response response2) {
                     //get list
                     Log.d(LOG_TAG, "Received Majors List");
-                    _majors = majorsFromJson(response2);
+                    _majors = response; // majorsFromJson(response2);
                     //cache majors list
                     CentsApplication.set_majors(_majors);
                     initSpinner1();
@@ -358,9 +354,7 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                     Toast.makeText(getActivity(), "Error loading list please try again later", Toast.LENGTH_SHORT).show();
                 }
             });
-
         }
-
     }
 
     /**
@@ -413,9 +407,7 @@ public class MajorSelectionDialogFragment extends DialogFragment{
             });
             _autoComp2.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -425,9 +417,7 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                 }
 
                 @Override
-                public void afterTextChanged(Editable s) {
-
-                }
+                public void afterTextChanged(Editable s) {}
             });
         }
     }
@@ -455,31 +445,4 @@ public class MajorSelectionDialogFragment extends DialogFragment{
         });
     }
 
-    private String[] majorsFromJson(Response response){
-        Gson gson = new Gson();
-        BufferedReader reader = null;
-        StringBuilder sb = new StringBuilder();
-        try {
-
-            reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
-
-            String line;
-
-            try {
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String rsp = sb.toString();
-        String[] respArr = gson.fromJson(rsp, String[].class);
-
-        return respArr;
-
-    }
 }

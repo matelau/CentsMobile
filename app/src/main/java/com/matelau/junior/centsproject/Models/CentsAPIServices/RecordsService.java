@@ -13,7 +13,9 @@ import retrofit.http.POST;
  */
 public interface RecordsService {
     @POST("/api/v1/record_names")
-    void getRecords(@Body RecordQuery query, Callback<Response> s);
+    void getRecords(@Body RecordQuery query, Callback<String[]> s);
+
+    @POST("/api/v1/re")
 
     @GET("/api/v2/careers")
     void getRecordsV2(Callback<Response> s);

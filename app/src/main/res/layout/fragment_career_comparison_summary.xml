@@ -87,7 +87,8 @@
                 android:background="@drawable/search_orange"
                 android:id="@+id/imageSearchButton"
                 android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 

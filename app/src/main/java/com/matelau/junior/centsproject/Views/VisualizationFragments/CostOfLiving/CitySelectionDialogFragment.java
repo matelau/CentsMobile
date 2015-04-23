@@ -19,22 +19,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.CostOfLivingService;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.RecordsService;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
 import com.matelau.junior.centsproject.Models.UserModels.Query;
+import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.Models.VizModels.CostOfLiving;
 import com.matelau.junior.centsproject.Models.VizModels.CostOfLivingLocation;
-import com.matelau.junior.centsproject.Models.CentsAPIServices.CostOfLivingService;
 import com.matelau.junior.centsproject.Models.VizModels.RecordQuery;
-import com.matelau.junior.centsproject.Models.CentsAPIServices.RecordsService;
-import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.R;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -337,10 +333,6 @@ public class CitySelectionDialogFragment extends DialogFragment {
             _citySpinner1.setVisibility(View.GONE);
             _cityTextView1.setVisibility(View.GONE);
         }
-
-
-
-
     }
 
     /**
@@ -355,10 +347,10 @@ public class CitySelectionDialogFragment extends DialogFragment {
         tables.add("cost of living");
         query.setTables(tables);
         query.setWhere(state);
-        service.getRecords(query, new Callback<Response>() {
+        service.getRecords(query, new Callback<String[]>() {
             @Override
-            public void success(Response response, Response response2) {
-                String[] cities = citiesFromJson(response2);
+            public void success(String[] response, Response response2) {
+                String[] cities = response;// citiesFromJson(response2);
                 Log.d(LOG_TAG, "success");
                 _citySpinner1.setVisibility(View.VISIBLE);
                 _citySpinner1.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, cities));
@@ -403,10 +395,10 @@ public class CitySelectionDialogFragment extends DialogFragment {
         tables.add("cost of living");
         query.setTables(tables);
         query.setWhere(state);
-        service.getRecords(query, new Callback<Response>() {
+        service.getRecords(query, new Callback<String[]>() {
             @Override
-            public void success(Response response, Response response2) {
-                String[] cities = citiesFromJson(response2);
+            public void success(String[] response, Response response2) {
+                String[] cities = response; // citiesFromJson(response2);
                 Log.d(LOG_TAG, "success");
                 _citySpinner2.setVisibility(View.VISIBLE);
                 _citySpinner2.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, cities));
@@ -437,39 +429,6 @@ public class CitySelectionDialogFragment extends DialogFragment {
         });
 
     }
-
-    /**
-     * Parses Retrofit response and returns an array of cities
-     * @param response
-     * @return
-     */
-    private String[] citiesFromJson(Response response){
-        Gson gson = new Gson();
-        BufferedReader reader = null;
-        StringBuilder sb = new StringBuilder();
-        try {
-
-            reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
-
-            String line;
-
-            try {
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String rsp = sb.toString();
-        String[] respArr = gson.fromJson(rsp, String[].class);
-
-        return respArr;
-    }
-
 
     @Override
     public void onDestroy() {

@@ -41,11 +41,27 @@ public class CollegeIntroFragment extends Fragment {
         return _rootLayout;
     }
 
+
+    /**
+     * Show selection dialog
+     */
     private void showCollegeSelectionDialog(){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         CollegeSelectionDialogFragment collegeSelect = new CollegeSelectionDialogFragment();
         collegeSelect.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
         collegeSelect.show(fm, "tag");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
     }
 
 }

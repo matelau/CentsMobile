@@ -15,6 +15,8 @@ import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.R;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
 /**
@@ -28,6 +30,7 @@ public class SummaryAdapter extends BaseAdapter {
     private SchoolResponse _sResponse;
     private CareerResponse _cResponse;
     private Context _context;
+    private final NumberFormat _formatter = new DecimalFormat("#.##");
     public SummaryAdapter(int type, Context context){
         //Set Type -  0 COL Sum, 1 Major Sum, 2 College Sum, 3 Career Sum
         Log.d(LOG_TAG, "Type: "+type);
@@ -138,11 +141,11 @@ public class SummaryAdapter extends BaseAdapter {
             //update cents rating
             catTitle.setText("CENTS JOB RATING");
             if(elements.get(0).getCareerRating() != null){
-                leftVal.setText("" + elements.get(0).getCareerRating() + " OUT OF 5.0");
+                leftVal.setText(_formatter.format( elements.get(0).getCareerRating()) + " OUT OF 5.0");
             }
             if(secondCareer){
                 if(elements.get(1).getCareerRating() != null){
-                    rightVal.setText("" + elements.get(1).getCareerRating() + " OUT OF 5.0");
+                    rightVal.setText(_formatter.format(elements.get(1).getCareerRating()) + " OUT OF 5.0");
                 }
 
             }
@@ -189,7 +192,13 @@ public class SummaryAdapter extends BaseAdapter {
         rightVal.setTextSize(14);
     }
 
-
+    /**
+     * Sets College sum views to represent models
+     * @param position
+     * @param leftVal
+     * @param rightVal
+     * @param catTitle
+     */
     private void createCollegeSumView(int position, TextView leftVal, TextView rightVal, TextView catTitle){
         List<SchoolResponse.Element> elements = _sResponse.getElements();
         List<Double> school1 = elements.get(0).getSchool();
@@ -321,7 +330,7 @@ public class SummaryAdapter extends BaseAdapter {
             catTitle.setText("CENTS USER RATING");
             Double userRating = school1.get(5);
             if(userRating != null){
-                leftVal.setText(userRating+" OUT OF 5.0");
+                leftVal.setText(_formatter.format(userRating)+" OUT OF 5.0");
             }
             else{
                 leftVal.setText("UNKNOWN");
@@ -329,7 +338,7 @@ public class SummaryAdapter extends BaseAdapter {
             if(hasSecondSchool){
                 userRating = school2.get(5);
                 if(userRating != null){
-                    rightVal.setText(userRating+" OUT OF 5.0");
+                    rightVal.setText(_formatter.format(userRating)+" OUT OF 5.0");
                 }
                 else{
                     rightVal.setText("UNKNOWN");
@@ -468,7 +477,7 @@ public class SummaryAdapter extends BaseAdapter {
             value = tax1+"%";
         }
         else{
-            value = tax1+"%-"+tax2+"%";
+            value = _formatter.format(tax1)+"%-"+_formatter.format(tax2)+"%";
         }
 
         return value;
@@ -540,14 +549,14 @@ public class SummaryAdapter extends BaseAdapter {
         else if(position == 3){
             catTitle.setText("CENTS MAJOR RATING");
             if(vals1.get(position) != null){
-                leftVal.setText(vals1.get(position)+" OUT OF 5.0");
+                leftVal.setText(_formatter.format(vals1.get(position))+" OUT OF 5.0");
             }
             else{
                 leftVal.setText("Unknown");
             }
             if(vals2 != null){
                 if(vals2.get(position) != null)
-                    rightVal.setText(vals2.get(position)+ " OUT OF 5.0");
+                    rightVal.setText(_formatter.format(vals2.get(position))+ " OUT OF 5.0");
                 else
                     rightVal.setText("Unknown");
 

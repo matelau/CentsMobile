@@ -21,22 +21,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.RecordsService;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.SchoolService;
 import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
 import com.matelau.junior.centsproject.Models.UserModels.Query;
 import com.matelau.junior.centsproject.Models.VizModels.RecordQuery;
-import com.matelau.junior.centsproject.Models.CentsAPIServices.RecordsService;
 import com.matelau.junior.centsproject.Models.VizModels.School;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolRequest;
-import com.matelau.junior.centsproject.Models.CentsAPIServices.SchoolService;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.R;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -68,6 +64,8 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
     private Button _submit;
     private Button _cancel;
     private boolean isPlus = true;
+    private boolean initLoad1 = true;
+    private boolean initLoad2 = true;
 
     public CollegeSelectionDialogFragment() {
         // Required empty public constructor
@@ -77,7 +75,8 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreateDialog");
-        //if selected vis is a city comparison switch background fragment to search - to clear old viz
+
+        //if selected vis is a college comparison and selected vis is set to college comp clear values
         if(CentsApplication.get_selectedVis()!= null &&  !CentsApplication.get_selectedVis().equals("College Comparison")){
             CentsApplication.set_selectedVis(null);
         }
@@ -110,13 +109,17 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //load universities
-                if(!_states[position].equals("Select State")){
-                    Log.d(LOG_TAG, "Selected State1: "+_states[position]);
+                if (!_states[position].equals("Select State")) {
+                    Log.d(LOG_TAG, "Selected State1: " + _states[position]);
                     _universityTextView1.setText("University - 1");
                     _universityTextView1.setVisibility(View.VISIBLE);
                     //store positions in case user searches again
                     CentsApplication.setPos1(position);
-                    loadCollegeList1(position);
+                    //check for prior search
+                    loadCollegeList1(position, false);
+                }
+                else{
+                    loadPriorSearch();
                 }
 
             }
@@ -155,53 +158,7 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 //submit Universities
-                if(_university1 != null){
-                    ArrayList<School> schools = new ArrayList<School>();
-                    School school1 = new School();
-                    school1.setName(_university1);
-                    schools.add(school1);
-                    CentsApplication.set_university1(_university1);
-                    CentsApplication.set_sApiResponse(null);
-                    String query = _university1;
-                    if(_university2 != null){
-                        School school2 = new School();
-                        school2.setName(_university2);
-                        CentsApplication.set_university2(_university2);
-                        schools.add(school2);
-                        query = query + " vs. "+_university2;
-                    }
-                    if(CentsApplication.is_loggedIN()){
-                        storeQuery(query);
-                    }
-                    SchoolRequest sr = new SchoolRequest();
-                    sr.setOperation("compare");
-                    sr.setSchools(schools);
-                    SchoolService service = CentsApplication.get_centsRestAdapter().create(SchoolService.class);
-                    service.getSchools(sr, new Callback<SchoolResponse>() {
-                        @Override
-                        public void success(SchoolResponse schoolResponse, Response response) {
-                            Log.d(LOG_TAG, "Success");
-                            CentsApplication.set_sApiResponse(schoolResponse);
-
-                            //get college sum frag
-                            CentsApplication.set_selectedVis("College Comparison");
-                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                            ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
-                            ft.addToBackStack("college-intro");
-                            ft.commit();
-                            dismiss();
-
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            Log.e(LOG_TAG, error.getMessage());
-                            Toast.makeText(getActivity(), "Error - Please try again", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
-
-                }
+                submitUniversities();
             }
         });
 
@@ -213,25 +170,94 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
             }
         });
 
+
+        builder.setView(_rootLayout);
+        return builder.create();
+    }
+
+    /**
+     * Submits the selected universities
+     */
+    private void submitUniversities(){
+        if(_university1 != null){
+            ArrayList<School> schools = new ArrayList<School>();
+            School school1 = new School();
+            school1.setName(_university1);
+            schools.add(school1);
+            CentsApplication.set_university1(_university1);
+            CentsApplication.set_sApiResponse(null);
+            String query = _university1;
+            if(_university2 != null){
+                School school2 = new School();
+                school2.setName(_university2);
+                CentsApplication.set_university2(_university2);
+                schools.add(school2);
+                query = query + " vs. "+_university2;
+            }
+            if(CentsApplication.is_loggedIN()){
+                storeQuery(query);
+            }
+            SchoolRequest sr = new SchoolRequest();
+            sr.setOperation("compare");
+            sr.setSchools(schools);
+            SchoolService service = CentsApplication.get_centsRestAdapter().create(SchoolService.class);
+            service.getSchools(sr, new Callback<SchoolResponse>() {
+                @Override
+                public void success(SchoolResponse schoolResponse, Response response) {
+                    Log.d(LOG_TAG, "Success");
+                    CentsApplication.set_sApiResponse(schoolResponse);
+                    //show college comparison
+                    showCollegeComparison();
+
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(LOG_TAG, error.getMessage());
+                    Toast.makeText(getActivity(), "Error - Please try again", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        }
+
+    }
+
+    /**
+     * Switches fragment to the college comparison summary
+     */
+    private void showCollegeComparison(){
+        //get college sum frag
+        CentsApplication.set_selectedVis("College Comparison");
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+        ft.addToBackStack("college-intro");
+        ft.commit();
+        dismiss();
+    }
+
+    /**
+     * if a prior university search has been completed preload the state and college list
+     */
+    private void loadPriorSearch(){
         //check for already performed searches
-        SchoolResponse s= CentsApplication.get_sApiResponse();
+        SchoolResponse s = CentsApplication.get_sApiResponse();
+        //retrieve state position within the state array
         int pos1 = CentsApplication.getPos1();
-        //TODO need to figure out a way to locate the state given a university
         if(s != null && pos1 != -1){
             _states1.setSelection(pos1, true);
-            loadCollegeList1(pos1);
+            loadCollegeList1(pos1,true);
             int pos2 = CentsApplication.getPos2();
             if(pos2 != -1){
                 addPlusViews();
                 _states2.setSelection(pos2, true);
-                loadCollegeList2(pos2);
+                loadCollegeList2(pos2,true);
             }
         }
-        builder.setView(_rootLayout);
-        return builder.create();
-
     }
-
+    /**
+     * stores a users latest query
+     * @param searchText
+     */
     private void storeQuery(String searchText){
         //create query model
         Query q = new Query();
@@ -239,7 +265,7 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
         //load user id
         SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
         int ID = settings.getInt("ID", 0);
-        Log.d(LOG_TAG, "Loaded ID from Prefs: "+ID);
+        Log.d(LOG_TAG, "Loaded ID from Prefs: " + ID);
         UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
         service.storeQuery(q, ID, new Callback<Response>() {
             @Override
@@ -255,6 +281,9 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
         });
     }
 
+    /**
+     * adds secondary views
+     */
     private void addPlusViews(){
         isPlus = false;
         _plusBtn.setBackground(getResources().getDrawable(R.drawable.minus));
@@ -267,12 +296,12 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //load universities
-                if(!_states[position].equals("Select State")) {
+                if (!_states[position].equals("Select State")) {
                     Log.d(LOG_TAG, "Selected State2: " + _states[position]);
                     _universityTextView2.setText("University - 2");
                     _universityTextView2.setVisibility(View.VISIBLE);
                     CentsApplication.setPos2(position);
-                    loadCollegeList2(position);
+                    loadCollegeList2(position, false);
                 }
 
             }
@@ -285,24 +314,12 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
 
     }
 
+
     /**
-     *
-     * @returns hashmap of state to state abbreviations
+     * Loads first spinner with colleges from a selected state
+     * @param position
      */
-    private HashMap<String,String> makeStateMap(){
-        HashMap<String, String> stateMap = new HashMap<String, String>();
-        _states = getResources().getStringArray(R.array.states_array);
-        for(int i = 1; i < _states.length; i++){
-
-            stateMap.put(_states[i], _state_abbrv[i-1]);
-        }
-
-        Log.d(LOG_TAG, "Created State Map");
-
-        return stateMap;
-    }
-
-    private void loadCollegeList1(int position){
+    private void loadCollegeList1(int position, final boolean setUni){
         //Load College Records
         RecordsService service = CentsApplication.get_centsRestAdapter().create(RecordsService.class);
         RecordQuery query = new RecordQuery();
@@ -312,45 +329,23 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
         query.setTables(tables);
         //minus 1 due to select state in states abbreviation
         String abbr = _state_abbrv[position-1];
-        Log.d(LOG_TAG, "loading unis in: "+abbr);
+        Log.d(LOG_TAG, "loading unis in: " + abbr);
         query.setWhere(abbr);
-        service.getRecords(query, new Callback<Response>() {
+        service.getRecords(query, new Callback<String[]>() {
             @Override
-            public void success(Response response, Response response2) {
-                Gson gson = new Gson();
-                BufferedReader reader = null;
-                StringBuilder sb = new StringBuilder();
-                try {
+            public void success(String[] response, Response response2) {
+                String[] unis1 = response;
 
-                    reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
-
-                    String line;
-
-                    try {
-                        while ((line = reader.readLine()) != null) {
-                            sb.append(line);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                String rsp = sb.toString();
-                Log.d(LOG_TAG, "success: " + rsp);
-                //convert to string arr
-                String[] unis1 = gson.fromJson(rsp, String[].class);
                 _universitySpinner1.setVisibility(View.VISIBLE);
-                _universitySpinner1.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item,unis1 ));
+                _universitySpinner1.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, unis1));
                 _universitySpinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         TextView tv = (TextView) view;
-                        if(tv != null){
+                        if (tv != null ) {
                             _university1 = tv.getText().toString();
                         }
-                        Log.d(LOG_TAG, "Selected Uni1: "+_university1);
+                        Log.d(LOG_TAG, "Selected Uni1: " + _university1);
                     }
 
                     @Override
@@ -358,6 +353,16 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
 
                     }
                 });
+
+                //set uni selection to previous search
+                if(setUni){
+                    for(int i = 0; i < unis1.length; i++){
+                        if(unis1[i].trim().equals(CentsApplication.get_university1().trim())){
+                            _universitySpinner1.setSelection(i);
+                            break;
+                        }
+                    }
+                }
             }
 
             @Override
@@ -368,7 +373,12 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
         });
     }
 
-    private void loadCollegeList2(int position){
+
+    /**
+     * Loads second spinner with colleges from a selected state
+     * @param position
+     */
+    private void loadCollegeList2(int position, final boolean setUni){
         //Load College Records
         RecordsService service = CentsApplication.get_centsRestAdapter().create(RecordsService.class);
         RecordQuery query = new RecordQuery();
@@ -380,49 +390,40 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
         String abbr = _state_abbrv[position-1];
         Log.d(LOG_TAG, "loading unis in: "+abbr);
         query.setWhere(abbr);
-        service.getRecords(query, new Callback<Response>() {
+        service.getRecords(query, new Callback<String[]>() {
             @Override
-            public void success(Response response, Response response2) {
-                Gson gson = new Gson();
-                BufferedReader reader = null;
-                StringBuilder sb = new StringBuilder();
-                try {
-
-                    reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
-
-                    String line;
-
-                    try {
-                        while ((line = reader.readLine()) != null) {
-                            sb.append(line);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                String rsp = sb.toString();
-                Log.d(LOG_TAG, "success: " + rsp);
-                //convert to string arr
-                String[] unis2 = gson.fromJson(rsp, String[].class);
+            public void success(String[] response, Response response2) {
+                String[] unis2 = response;
                 _universitySpinner2.setVisibility(View.VISIBLE);
                 _universitySpinner2.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, unis2));
+
                 _universitySpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         TextView tv = (TextView) view;
-                        if(tv != null){
+                        if (tv != null) {
                             _university2 = tv.getText().toString();
                         }
-                        Log.d(LOG_TAG, "Selected Uni1: "+_university2);
+                        Log.d(LOG_TAG, "Selected Uni1: " + _university2);
                     }
+
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {
 
                     }
                 });
+
+                //set uni selection to previous search
+                if(setUni){
+                    for(int i = 0; i < unis2.length; i++){
+                        if(unis2[i].trim().equals(CentsApplication.get_university2().trim())){
+                            _universitySpinner2.setSelection(i);
+                            break;
+                        }
+                    }
+                }
+
+
             }
 
             @Override
@@ -432,28 +433,19 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
             }
         });
     }
-    private void handleResponse(Response response){
-        Gson gson = new Gson();
-        BufferedReader reader = null;
-        StringBuilder sb = new StringBuilder();
-        try {
 
-            reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
 
-            String line;
-
-            try {
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String rsp = sb.toString();
-        dismiss();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
+    }
+
+
 }

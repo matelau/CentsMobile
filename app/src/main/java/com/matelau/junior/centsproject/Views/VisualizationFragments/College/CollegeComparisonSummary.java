@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,7 +96,7 @@ public class CollegeComparisonSummary extends Fragment {
         String univ = elements.get(0).getName();
         _schoolName1.setText(univ);
         String url1 = getImgUrl(univ);
-        Log.d(LOG_TAG, "url1: "+url1);
+        Log.d(LOG_TAG, "url1: " + url1);
         Picasso.with(getActivity()).load(url1).placeholder(R.drawable.placeholder).into(_logo1);
 
         if(hasSecondSchool){
@@ -115,6 +116,13 @@ public class CollegeComparisonSummary extends Fragment {
                 showCollegeSelectionDialog();
             }
         });
+        //move search button to the right if only one element
+        if(elements.size() == 1){
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)_search.getLayoutParams();
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            _search.setLayoutParams(params);
+        }
+
         return _rootLayout;
     }
 
@@ -135,6 +143,10 @@ public class CollegeComparisonSummary extends Fragment {
         rating.show(fm, "tag");
     }
 
+
+    /**
+     * Show selection dialog
+     */
     private void showCollegeSelectionDialog(){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         CollegeSelectionDialogFragment collegeSelect = new CollegeSelectionDialogFragment();
@@ -158,6 +170,18 @@ public class CollegeComparisonSummary extends Fragment {
         tag = tag.replace(" ", "-");
         String url = "http://www.american-school-search.com/images/logo/"+tag+".gif";
         return url;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
     }
 
 
