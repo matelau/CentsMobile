@@ -129,18 +129,32 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
         return builder.create();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
+    }
 
 
-
+    /**
+     * Adapter to handle the modification of spending breakdown elements
+     */
     public class SBArrayAdapter extends BaseAdapter{
         List<SpendingBreakdownCategory> _values;
 
         public SBArrayAdapter(){
             _values = CentsApplication.get_sbValues();
-
         }
 
-
+        /**
+         * updates Application context with new List
+         */
         public void add(){
             _values = CentsApplication.get_sbValues();
             notifyDataSetChanged();
@@ -192,9 +206,7 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
             //add listeners
             et.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -210,9 +222,7 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
                 }
 
                 @Override
-                public void afterTextChanged(Editable s) {
-
-                }
+                public void afterTextChanged(Editable s) {}
             });
 
             lock.setOnClickListener(new View.OnClickListener() {
@@ -256,7 +266,9 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
         }
 
 
-
+        /**
+         * Stores values to local storage and db if logged in
+         */
         public void save(){
             String filename = CentsApplication.get_currentBreakdown()+".dat";
             CentsApplication.saveSB(filename, getActivity());
@@ -310,7 +322,7 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
 
                 @Override
                 public void failure(RetrofitError error) {
-//                Log.e(LOG_TAG, error.getMessage());
+                    Log.e(LOG_TAG, error.getMessage());
 
                 }
             });

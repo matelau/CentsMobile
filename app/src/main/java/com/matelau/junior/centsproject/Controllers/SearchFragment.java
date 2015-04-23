@@ -62,7 +62,6 @@ public class SearchFragment extends Fragment {
     private String _query;
     private RelativeLayout _rootLayout;
     private ImageButton _submitBtn;
-    private TextView _feedback;
     private SliderLayout _slider;
 
 
@@ -260,7 +259,6 @@ public class SearchFragment extends Fragment {
                             //handle disambiguations
                             if(CentsApplication.isDebug())
                                 Toast.makeText(getActivity(), "Ambiguous results: "+elements.size(), Toast.LENGTH_SHORT).show();
-//                            showLoading();
                             Bundle args = new Bundle();
                             args.putInt("type", 2);
                             ArrayList<String> ambigSearchResults = new ArrayList<String>();
@@ -311,7 +309,6 @@ public class SearchFragment extends Fragment {
                             //handle disambiguations
                             if(CentsApplication.isDebug())
                                 Toast.makeText(getActivity(), "Ambiguous results: "+elements.size(), Toast.LENGTH_SHORT).show();
-//                            showLoading();
                             Bundle args = new Bundle();
                             args.putInt("type", 1);
                             ArrayList<String> ambigSearchResults = new ArrayList<String>();
@@ -349,7 +346,6 @@ public class SearchFragment extends Fragment {
                         if(majors.size() > 2){
                             if(CentsApplication.isDebug())
                                     Toast.makeText(getActivity(), "Ambiguous results: "+majors.size(), Toast.LENGTH_SHORT).show();
-//                            showLoading();
                             Bundle args = new Bundle();
                             args.putInt("type", 0);
                             List<MajorResponse.Element> elements = mResponse.getElements();
@@ -478,6 +474,18 @@ public class SearchFragment extends Fragment {
         choiceDialog.setTargetFragment(fm.findFragmentById(R.id.fragment_placeholder), 01);
         choiceDialog.setArguments(args);
         choiceDialog.show(fm, "tag");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
     }
 
 

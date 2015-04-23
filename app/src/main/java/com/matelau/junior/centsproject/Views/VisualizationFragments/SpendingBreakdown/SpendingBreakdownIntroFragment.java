@@ -51,5 +51,19 @@ public class SpendingBreakdownIntroFragment extends Fragment {
         return _rootLayout;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
+    }
+
+
+
 
 }

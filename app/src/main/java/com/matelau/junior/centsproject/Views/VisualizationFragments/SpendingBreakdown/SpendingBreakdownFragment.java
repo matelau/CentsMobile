@@ -62,9 +62,7 @@ public class SpendingBreakdownFragment extends Fragment {
     private boolean hasCenterCircle = true;
     private boolean hasCenterText1 = true;
     private boolean hasCenterText2 = true;
-    private boolean hasArcSeparated = false;
     private boolean hasLabelForSelected = false;
-//    private int _height = 800;
     private int _id;
 
 
@@ -102,15 +100,10 @@ public class SpendingBreakdownFragment extends Fragment {
         _income.setText(CentsApplication.get_occupationSalary());
         _income.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //Get All Locked values
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -184,7 +177,10 @@ public class SpendingBreakdownFragment extends Fragment {
     }
 
 
-
+    /**
+     * If income is modified handles storing and updating vis
+     * @param s
+     */
     private void updateIncome(Editable s){
         //get previous sal
         CentsApplication.set_incomeFromQP(false);
@@ -240,8 +236,6 @@ public class SpendingBreakdownFragment extends Fragment {
             }
         }
 
-
-
         //these get written by default until network requests go through and update files/viz
         // read file to see if user has saved values
         String filename = CentsApplication.get_currentBreakdown()+".dat";
@@ -249,15 +243,14 @@ public class SpendingBreakdownFragment extends Fragment {
             //loadfile
             CentsApplication.loadSB(filename, getActivity());
         }
-        else{
-                setDefaultVars(false);
-
-        }
-
+        else{ setDefaultVars(false);}
 
         calculateTaxes(Float.parseFloat(CentsApplication.get_occupationSalary()));
     }
 
+    /**
+     * Sets Salary vars
+     */
     private void initSalary(){
             //if logged in check if income is coming from qp else check api for income
             if(CentsApplication.is_loggedIN()){
@@ -307,9 +300,7 @@ public class SpendingBreakdownFragment extends Fragment {
                     });
 
                 }
-            else{
-                loadSalary();
-            }
+            else{loadSalary();}
 
         }
     }
@@ -333,6 +324,10 @@ public class SpendingBreakdownFragment extends Fragment {
     }
 
 
+    /**
+     * Set Default template
+     * @param showMod
+     */
     private void initDefaultVars(boolean showMod){
         if(CentsApplication.is_loggedIN()){
             //check for spending breakdown on db
@@ -429,7 +424,6 @@ public class SpendingBreakdownFragment extends Fragment {
                         //no values saved init values
                         CentsApplication.set_currentBreakdown("student");
                         initSB("student");
-//                        showModDialog("student");
 
                     } else {
                         //load values from db
@@ -528,6 +522,11 @@ public class SpendingBreakdownFragment extends Fragment {
         });
     }
 
+
+    /**
+     * Custom default template
+     * @param showMod
+     */
     private void initCustomVars(boolean showMod) {
         if (CentsApplication.is_loggedIN()) {
             //load user id
@@ -543,7 +542,6 @@ public class SpendingBreakdownFragment extends Fragment {
                         //no values saved init values
                         CentsApplication.set_currentBreakdown("custom");
                         initSB("custom");
-//                        showModDialog("custom");
 
                     } else {
                         //load values from db
@@ -863,7 +861,11 @@ public class SpendingBreakdownFragment extends Fragment {
         return sum;
     }
 
-
+    /**
+     * Generates random colors for additions to the spending breakdown vis
+     * @param count
+     * @return
+     */
     private int[] getColors(int count){
         int[] def = new int[]{Color.argb(255, 0x4d, 0x4d, 0x4d),Color.argb(255,0x5d, 0xa5,0xda), Color.argb(255, 0xFA, 0xA4, 0x3A), Color.LTGRAY, Color.argb(255,0x60, 0xBD, 0x68), Color.argb(255, 0xF1, 0x7C,0xB0),Color.argb(255,0xB2,0x91, 0x2F), Color.argb(255,0xB2,0x76, 0xB2),  Color.argb(255, 0xDE,0xCF, 0x3F),Color.argb(255, 0xF1, 0x58, 0x54)};
         if(count <= def.length ){
@@ -898,9 +900,16 @@ public class SpendingBreakdownFragment extends Fragment {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
+
+    @Override
     public void onResume() {
         generateData();
         super.onResume();
-
+        Log.d(LOG_TAG, "Resumed");
     }
+
 }
