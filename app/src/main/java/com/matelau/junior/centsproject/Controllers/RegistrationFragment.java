@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +34,6 @@ import retrofit.client.Response;
 public class RegistrationFragment extends Fragment {
 
     private String LOG_TAG = RegistrationFragment.class.getSimpleName();
-    private LinearLayout _rootLayout;
     private static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
@@ -43,7 +43,6 @@ public class RegistrationFragment extends Fragment {
     private EditText _email;
     private EditText _password;
     private EditText _confirmPassword;
-    private Button _submit;
     private TextView _messages;
 
     public RegistrationFragment() {
@@ -56,14 +55,14 @@ public class RegistrationFragment extends Fragment {
 
         Log.d(LOG_TAG, "onCreateView");
         //Get all the views that will need to be validated or updated
-        _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_registration, container, false);
+        LinearLayout _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_registration, container, false);
         _firstName = (EditText) _rootLayout.findViewById(R.id.first_name);
         _firstName.requestFocus();
         _lastName = (EditText) _rootLayout.findViewById(R.id.last_name);
         _email = (EditText) _rootLayout.findViewById(R.id.user_email);
         _password = (EditText) _rootLayout.findViewById(R.id.user_password);
         _confirmPassword = (EditText) _rootLayout.findViewById(R.id.confirm_password);
-        _submit = (Button) _rootLayout.findViewById(R.id.register_submit);
+        Button _submit = (Button) _rootLayout.findViewById(R.id.register_submit);
         _messages = (TextView) _rootLayout.findViewById(R.id.registration_msg);
         _messages.setVisibility(View.VISIBLE);
         //TODO add email type to registration
@@ -76,9 +75,9 @@ public class RegistrationFragment extends Fragment {
                 _messages.setText("Registering..");
                 _messages.setTextColor(getResources().getColor(R.color.green));
                 _messages.invalidate();
-                if(message.equals("")){
-                    if(CentsApplication.isDebug())
-                        Toast.makeText(getActivity(), "Registering - "+_email.getText().toString(), Toast.LENGTH_SHORT).show();
+                if (message.equals("")) {
+                    if (CentsApplication.isDebug())
+                        Toast.makeText(getActivity(), "Registering - " + _email.getText().toString(), Toast.LENGTH_SHORT).show();
                     UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
                     //added trim - white space is getting added by view on the end of text
                     String fname = _firstName.getText().toString().trim();
@@ -100,7 +99,7 @@ public class RegistrationFragment extends Fragment {
 
                             //return to searchFrag
                             showSearch();
-                            if(CentsApplication.isDebug())
+                            if (CentsApplication.isDebug())
                                 Toast.makeText(getActivity(), "Registered", Toast.LENGTH_SHORT).show();
                         }
 
@@ -113,8 +112,7 @@ public class RegistrationFragment extends Fragment {
                         }
 
                     });
-                }
-                else{
+                } else {
                     SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
                     settings.edit().remove("EMAIL").remove("PASSWORD").remove("ID").apply();
                     _messages.setText(message);
@@ -144,7 +142,12 @@ public class RegistrationFragment extends Fragment {
     private void showSearch(){
         //update title
         getActivity().getActionBar().setTitle("Cents");
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_placeholder, new SearchFragment()).addToBackStack("registration").commit();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        if(fm.getBackStackEntryCount() > 5){
+            fm.popBackStack();
+        }
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.fragment_placeholder, new SearchFragment()).addToBackStack("registration").commit();
         showRegistrationEmailNotice();
     }
 

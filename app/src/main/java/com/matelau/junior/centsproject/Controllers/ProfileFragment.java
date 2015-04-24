@@ -38,9 +38,6 @@ import retrofit.client.Response;
  */
 public class ProfileFragment extends Fragment {
     private String LOG_TAG = ProfileFragment.class.getSimpleName();
-    private RelativeLayout _rootLayout;
-    private ExpandableListView _profileCats;
-    private ExpandableListAdapter listAdapter;
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
     private int _id;
@@ -55,7 +52,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_profile, null, false);
+        RelativeLayout _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_profile, null, false);
         //load user id
         SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
         _id = settings.getInt("ID", 0);
@@ -65,10 +62,10 @@ public class ProfileFragment extends Fragment {
         Log.d(LOG_TAG, "Checked value: " + checked);
 
         //setup profile card list
-        _profileCats = (ExpandableListView) _rootLayout.findViewById(R.id.profile_categories_list);
+        ExpandableListView _profileCats = (ExpandableListView) _rootLayout.findViewById(R.id.profile_categories_list);
 
         prepareListData();
-        listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, true, getActivity().getSupportFragmentManager());
+        ExpandableListAdapter listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, true, getActivity().getSupportFragmentManager());
 
         // setting list adapter
         _profileCats.setAdapter(listAdapter);

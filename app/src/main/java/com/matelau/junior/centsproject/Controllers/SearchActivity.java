@@ -40,7 +40,6 @@ public class SearchActivity extends FragmentActivity {
     private ListView _drawerList;
     private String[] _navElements;
     private ActionBarDrawerToggle _drawerToggle;
-    private LinearLayout _drawerLinear;
 
 
     @Override
@@ -97,7 +96,7 @@ public class SearchActivity extends FragmentActivity {
     private void configureDrawer(Boolean loggedIn){
         _drawerLayout =  (DrawerLayout) findViewById(R.id.drawer_layout);
         _drawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.primary_dark));
-        _drawerLinear = (LinearLayout) findViewById(R.id.drawer_linear);
+        LinearLayout _drawerLinear = (LinearLayout) findViewById(R.id.drawer_linear);
 
         _drawerList = (ListView) findViewById(R.id.left_drawer);
         //Determine which menu elements to use based on login status
@@ -321,7 +320,11 @@ public class SearchActivity extends FragmentActivity {
     }
 
     private void showProfile(){
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentManager fm = this.getSupportFragmentManager();
+        if(fm.getBackStackEntryCount() > 5){
+            fm.popBackStackImmediate();
+        }
+        FragmentTransaction ft = fm.beginTransaction();
         _toolbar.setTitle("Profile");
         // Replace the container with the new fragment
         ft.replace(R.id.fragment_placeholder, new ProfileFragment());
@@ -331,7 +334,11 @@ public class SearchActivity extends FragmentActivity {
     }
 
     private void showHelp(){
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentManager fm = this.getSupportFragmentManager();
+        if(fm.getBackStackEntryCount() > 5){
+            fm.popBackStackImmediate();
+        }
+        FragmentTransaction ft = fm.beginTransaction();
         _toolbar.setTitle("Help");
         ft.replace(R.id.fragment_placeholder, new HelpFragment());
         ft.addToBackStack("main-search");
@@ -350,7 +357,11 @@ public class SearchActivity extends FragmentActivity {
      */
     private void showHome(){
         //Home
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentManager fm = this.getSupportFragmentManager();
+        if(fm.getBackStackEntryCount() > 5){
+            fm.popBackStackImmediate();
+        }
+        FragmentTransaction ft = fm.beginTransaction();
         _toolbar.setTitle("Cents");
         //Attach Search Fragment
         // Replace the container with the new fragment
@@ -364,8 +375,12 @@ public class SearchActivity extends FragmentActivity {
      * Set placeholder to examples views
      */
     private void showExamples(){
+        FragmentManager fm = this.getSupportFragmentManager();
+        if(fm.getBackStackEntryCount() > 5){
+            fm.popBackStackImmediate();
+        }
         CentsApplication.set_selectedVis("Examples");
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
         ft.addToBackStack("main-search");
         ft.commit();
@@ -375,7 +390,11 @@ public class SearchActivity extends FragmentActivity {
      * Set placeholder to Registration Views
      */
     private void showRegistration(){
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentManager fm = this.getSupportFragmentManager();
+        if(fm.getBackStackEntryCount() > 5){
+            fm.popBackStackImmediate();
+        }
+        FragmentTransaction ft = fm.beginTransaction();
         _toolbar.setTitle("Register");
         //Attach Search Fragment
         // Replace the container with the new fragment
@@ -390,7 +409,11 @@ public class SearchActivity extends FragmentActivity {
      * Set placeholder to About view
      */
     private void showAbout(){
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentManager fm = this.getSupportFragmentManager();
+        if(fm.getBackStackEntryCount() > 5){
+            fm.popBackStackImmediate();
+        }
+        FragmentTransaction ft = fm.beginTransaction();
         _toolbar.setTitle("About");
         ft.replace(R.id.fragment_placeholder, new AboutFragment());
         ft.addToBackStack("main-search");

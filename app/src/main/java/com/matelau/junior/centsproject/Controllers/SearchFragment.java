@@ -61,7 +61,6 @@ public class SearchFragment extends Fragment {
     private String _query;
     private RelativeLayout _rootLayout;
     private ImageButton _submitBtn;
-    private SliderLayout _slider;
 
 
     public SearchFragment() {
@@ -74,7 +73,7 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_search, container, false);
-        _slider = (SliderLayout) _rootLayout.findViewById(R.id.slider);
+        SliderLayout _slider = (SliderLayout) _rootLayout.findViewById(R.id.slider);
 
         if(CentsApplication.isDebug()){
 //            only load ad if not in debug
@@ -445,7 +444,11 @@ public class SearchFragment extends Fragment {
      * Switches to appropriate views
      */
     private void switchToVizPager(){
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        if(fm.getBackStackEntryCount() > 5){
+            fm.popBackStackImmediate();
+        }
+        FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
         ft.addToBackStack("main-search");
         ft.commit();

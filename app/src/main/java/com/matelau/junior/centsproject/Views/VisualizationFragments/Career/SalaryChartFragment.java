@@ -32,17 +32,10 @@ import lecho.lib.hellocharts.view.LineChartView;
  */
 public class SalaryChartFragment extends Fragment {
     private final String LOG_TAG = SalaryChartFragment.class.getSimpleName();
-    private RelativeLayout _rootView;
     private LineChartView chart;
-    private LineChartData data;
     private int numberOfLines = 1;
-    private int numberOfPoints = 10;
 
-    private boolean hasAxes = true;
-    private boolean hasAxesNames = true;
-    private boolean hasPoints = true;
     private CareerResponse _cResponse;
-    private ImageButton _search;
 
 
     public SalaryChartFragment() {
@@ -53,9 +46,9 @@ public class SalaryChartFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        _rootView = (RelativeLayout) inflater.inflate(R.layout.fragment_salary_chart, container, false);
+        RelativeLayout _rootView = (RelativeLayout) inflater.inflate(R.layout.fragment_salary_chart, container, false);
         chart = (LineChartView) _rootView.findViewById(R.id.chart);
-        _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
+        ImageButton _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
         _cResponse = CentsApplication.get_cResponse();
         List<CareerResponse.Element> elements = _cResponse.getElements();
         TextView loc1 = (TextView) _rootView.findViewById(R.id.career_title1);
@@ -116,6 +109,8 @@ public class SalaryChartFragment extends Fragment {
 
         List<Line> lines = new ArrayList<Line>();
         for (int i = 0; i < numberOfLines; ++i) {
+            int numberOfPoints = 10;
+            boolean hasPoints = true;
             if( i == 0){
                 List<PointValue> values = new ArrayList<PointValue>();
                 for (int j = 0; j <= numberOfPoints; ++j) {
@@ -148,8 +143,9 @@ public class SalaryChartFragment extends Fragment {
 
         }
 
-        data = new LineChartData(lines);
+        LineChartData data = new LineChartData(lines);
 
+        boolean hasAxes = true;
         if (hasAxes) {
             Axis axisX = new Axis();
             String[] years = {"2003", "2004","2005","2006","2007","2008","2009","2010","2011","2012","2013"};
@@ -162,6 +158,7 @@ public class SalaryChartFragment extends Fragment {
 
             axisX.setValues(axisValues);
             Axis axisY = new Axis().setHasLines(true).setHasTiltedLabels(true).setInside(true);
+            boolean hasAxesNames = true;
             if (hasAxesNames) {
                 axisY.setName("Average National Salaries ($)");
             }

@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,16 +36,10 @@ import java.util.List;
  */
 public class DisambiguationDialogFragment extends DialogFragment {
     private final String LOG_TAG = DisambiguationDialogFragment.class.getSimpleName();
-    private RelativeLayout _rootLayout;
-    private ListView _ambiguousList;
     private AmbigAdapter _adapter;
 
     private int _type;
     private ArrayList<String> _options;
-
-
-
-
 
     public DisambiguationDialogFragment() {
         // Required empty public constructor
@@ -67,8 +62,8 @@ public class DisambiguationDialogFragment extends DialogFragment {
             elements.add(element);
         }
 
-        _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_disambiguation_dialog, null, false);
-        _ambiguousList = (ListView) _rootLayout.findViewById(R.id.sb_attr_list);
+        RelativeLayout _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_disambiguation_dialog, null, false);
+        ListView _ambiguousList = (ListView) _rootLayout.findViewById(R.id.sb_attr_list);
         _adapter = new AmbigAdapter(getActivity(), R.layout.ambigous_element, elements);
         _ambiguousList.setAdapter(_adapter);
 
@@ -217,7 +212,11 @@ public class DisambiguationDialogFragment extends DialogFragment {
      * Switch to appropriate vis
      */
     private void switchToVizPager(){
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        if(fm.getBackStackEntryCount() > 5){
+            fm.popBackStack();
+        }
+        FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
         ft.addToBackStack("main-search");
         ft.commit();

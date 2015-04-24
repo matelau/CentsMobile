@@ -18,9 +18,6 @@ import com.matelau.junior.centsproject.R;
  */
 public class COLIntroFragment extends Fragment {
     private String LOG_TAG = COLIntroFragment.class.getSimpleName();
-    private RelativeLayout _rootLayout;
-    private Button _beginCOL;
-
 
 
     public COLIntroFragment() {
@@ -31,8 +28,8 @@ public class COLIntroFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_colintro, container, false);
-        _beginCOL = (Button) _rootLayout.findViewById(R.id.ool_begin);
+        RelativeLayout _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_colintro, container, false);
+        Button _beginCOL = (Button) _rootLayout.findViewById(R.id.ool_begin);
         _beginCOL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

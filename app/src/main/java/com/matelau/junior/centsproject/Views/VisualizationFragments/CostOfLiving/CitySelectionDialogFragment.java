@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -52,7 +53,6 @@ public class CitySelectionDialogFragment extends DialogFragment {
 
     private String LOG_TAG = CitySelectionDialogFragment.class.getSimpleName();
 
-    private LinearLayout _rootLayout;
     private ArrayAdapter<String> _stateAdapter;
     private Spinner _stateSpinner1;
     private Spinner _stateSpinner2;
@@ -65,8 +65,6 @@ public class CitySelectionDialogFragment extends DialogFragment {
 
     private Spinner _citySpinner1;
     private Spinner _citySpinner2;
-    private Button _submit;
-    private Button _cancel;
 
     private String[] _states;
     private String[] _allCities;
@@ -86,8 +84,6 @@ public class CitySelectionDialogFragment extends DialogFragment {
     private AutoCompleteTextView _autoComp2;
     private String _prevlocation = null;
     private String _prevlocation2 = null;
-    private String _currentLocation = null;
-    private String _currentLocation2 = null;
 
     private boolean initialLoad1 = true;
     private boolean initialLoad2 = true;
@@ -116,7 +112,7 @@ public class CitySelectionDialogFragment extends DialogFragment {
         _states = getResources().getStringArray(R.array.states_array);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_selection_dialog, null, false);
+        LinearLayout _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_selection_dialog, null, false);
         TextView instructions = (TextView) _rootLayout.findViewById(R.id.selection_instructions);
         if(_useAutocomplete)
             instructions.setText("Select one or two cities");
@@ -132,8 +128,8 @@ public class CitySelectionDialogFragment extends DialogFragment {
         _autoComp2 = (AutoCompleteTextView) _rootLayout.findViewById(R.id.ac_view2);
 
         _citySpinner2 = (Spinner) _rootLayout.findViewById(R.id.option_input2);
-        _submit = (Button) _rootLayout.findViewById(R.id.submit_select);
-        _cancel = (Button) _rootLayout.findViewById(R.id.cancel_select);
+        Button _submit = (Button) _rootLayout.findViewById(R.id.submit_select);
+        Button _cancel = (Button) _rootLayout.findViewById(R.id.cancel_select);
         _stateSpinner2 = (Spinner) _rootLayout.findViewById(R.id.state_spinner2);
         hideView(false);
         _stateSpinner1 = (Spinner) _rootLayout.findViewById(R.id.state_spinner1);
@@ -227,9 +223,13 @@ public class CitySelectionDialogFragment extends DialogFragment {
                     Log.d(LOG_TAG, "success");
                     CentsApplication.set_colResponse(coliResponse);
                     CentsApplication.set_selectedVis("COL Comparison");
-                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    if(fm.getBackStackEntryCount() > 5){
+                        fm.popBackStack();
+                    }
+                    FragmentTransaction ft = fm.beginTransaction();
                     ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
-                    ft.addToBackStack("city-intro");
+                    ft.addToBackStack("col-selection");
                     ft.commit();
                     dismiss();
                 }

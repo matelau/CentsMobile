@@ -20,12 +20,8 @@ import java.util.List;
 
 public class HelpFragment extends Fragment {
     private final String LOG_TAG = HelpFragment.class.getSimpleName();
-    private RelativeLayout _rootLayout;
-    private ExpandableListView _profileCats;
-    private ExpandableListAdapter listAdapter;
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
-    private String[] helpVals;
 
 
     public HelpFragment() {
@@ -37,12 +33,12 @@ public class HelpFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_help, null, false);
+        RelativeLayout _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_help, null, false);
 
         //setup profile card list
-        _profileCats = (ExpandableListView) _rootLayout.findViewById(R.id.help_categories_list);
+        ExpandableListView _profileCats = (ExpandableListView) _rootLayout.findViewById(R.id.help_categories_list);
         prepareListData();
-        listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, false);
+        ExpandableListAdapter listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, false);
 
         // setting list adapter
         _profileCats.setAdapter(listAdapter);
@@ -66,7 +62,7 @@ public class HelpFragment extends Fragment {
      */
     private void prepareListData(){
         //get help strings
-        helpVals = getResources().getStringArray(R.array.help_elements);
+        String[] helpVals = getResources().getStringArray(R.array.help_elements);
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();
 

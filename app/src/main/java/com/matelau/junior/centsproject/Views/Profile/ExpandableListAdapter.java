@@ -62,7 +62,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private List<String> _listDataHeader; // header titles
     // child data in format of header title, child title
     private HashMap<String, List<String>> _listDataChild;
-    private String[] _ratings;
     private boolean _isProfile = true;
     private FragmentManager _fm;
     public ExpandableListAdapter(Context context, List<String> listDataHeader,
@@ -290,7 +289,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
      * Switches to appropriate view
      */
     private void switchToVizPager(){
-        FragmentTransaction ft = ((FragmentActivity) _context).getSupportFragmentManager().beginTransaction();
+        FragmentManager fm = ((FragmentActivity) _context).getSupportFragmentManager();
+        if(fm.getBackStackEntryCount() > 5){
+            fm.popBackStack();
+        }
+        FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
         ft.addToBackStack("main-search");
         ft.commit();
@@ -342,7 +345,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             final HashMap<String, Integer> user = new HashMap<String, Integer>();
             user.put("user", userId);
             childText = element;
-            _ratings = _context.getResources().getStringArray(R.array.rating_values);
+            String[] _ratings = _context.getResources().getStringArray(R.array.rating_values);
             ArrayAdapter<String> ratingAdapter = new ArrayAdapter<String>(_context, android.R.layout.simple_spinner_dropdown_item, _ratings);
             spinnerRating.setAdapter(ratingAdapter);
             //remove one from rating to fit in range 0-4

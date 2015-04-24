@@ -37,12 +37,9 @@ public class CostOfLivingFragment extends Fragment{
     CardView _cv;
     ColumnChartView _chart;
     ColumnChartData _chartdata;
-    private boolean hasLabels = true;
-    private boolean hasLabelForSelected = true;
     private TextView _loc2;
     private static String _location;
     private static String _location2;
-    private ImageButton _search;
     private View _rootView;
     private final String[] _labels_short = {"Overall", "Goods", "grocery", "health", "housing","trans","util"};
 
@@ -57,7 +54,7 @@ public class CostOfLivingFragment extends Fragment{
         // create visualizations!
         _rootView = inflater.inflate(R.layout.fragment_cost_of_living, container, false);
         _cv = (CardView) _rootView.findViewById(R.id.col_card_view);
-        _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
+        ImageButton _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
 
         _loc2 = (TextView) _rootView.findViewById(R.id.col_location2);
         _chart = (ColumnChartView) _rootView.findViewById(R.id.col_vis);
@@ -76,7 +73,7 @@ public class CostOfLivingFragment extends Fragment{
                 //show city selection
                 showCitySelectionDialog();
 
-               }
+            }
         });
 
         return _rootView;
@@ -185,7 +182,9 @@ public class CostOfLivingFragment extends Fragment{
             }
 
             Column column = new Column(values);
+            boolean hasLabels = true;
             column.setHasLabels(hasLabels);
+            boolean hasLabelForSelected = true;
             column.setHasLabelsOnlyForSelected(hasLabelForSelected);
             columns.add(column);
             AxisValue currentAxis = new AxisValue(i);

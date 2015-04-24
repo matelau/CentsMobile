@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -50,9 +51,6 @@ import retrofit.client.Response;
  */
 public class MajorSelectionDialogFragment extends DialogFragment{
     private String LOG_TAG = MajorSelectionDialogFragment.class.getSimpleName();
-    private LinearLayout _rootLayout;
-    private Button _submit;
-    private Button _cancel;
     private View _plusBtn;
     private Spinner _majorSpinner1;
     private Spinner _majorSpinner2;
@@ -63,13 +61,10 @@ public class MajorSelectionDialogFragment extends DialogFragment{
     private boolean initialLoad2 = true;
     private String[] _majors;
     private TextView _vs;
-    private TextView _majorTextView1;
     private TextView _majorTextView2;
-    private TextView _instructions;
     private boolean isPlus;
     private Major _major1;
     private Major _major2;
-    private boolean valuesLoaded = false;
 
     private boolean _useAutocomplete;
 
@@ -99,19 +94,19 @@ public class MajorSelectionDialogFragment extends DialogFragment{
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         //create links to all views
-        _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_selection_dialog, null, false);
+        LinearLayout _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_selection_dialog, null, false);
         _majorSpinner1 = (Spinner) _rootLayout.findViewById(R.id.state_spinner1);
         _majorSpinner2 = (Spinner) _rootLayout.findViewById(R.id.state_spinner2);
         TextView instructions = (TextView) _rootLayout.findViewById(R.id.selection_instructions);
         instructions.setText("Select a state to view Universities");
-        _submit = (Button) _rootLayout.findViewById(R.id.submit_select);
-        _cancel = (Button) _rootLayout.findViewById(R.id.cancel_select);
+        Button _submit = (Button) _rootLayout.findViewById(R.id.submit_select);
+        Button _cancel = (Button) _rootLayout.findViewById(R.id.cancel_select);
         _autoComp1 = (AutoCompleteTextView) _rootLayout.findViewById(R.id.ac_view1);
         _autoComp2 = (AutoCompleteTextView) _rootLayout.findViewById(R.id.ac_view2);
         _vs = (TextView) _rootLayout.findViewById(R.id.vs);
-        _instructions = (TextView) _rootLayout.findViewById(R.id.selection_instructions);
+        TextView _instructions = (TextView) _rootLayout.findViewById(R.id.selection_instructions);
         _instructions.setText("Select one or two Majors");
-        _majorTextView1 = (TextView) _rootLayout.findViewById(R.id.stateTextView);
+        TextView _majorTextView1 = (TextView) _rootLayout.findViewById(R.id.stateTextView);
         _majorTextView1.setText("Major - 1");
         _majorTextView2 = (TextView) _rootLayout.findViewById(R.id.stateTextView2);
         _plusBtn = _rootLayout.findViewById(R.id.circle);
@@ -141,10 +136,9 @@ public class MajorSelectionDialogFragment extends DialogFragment{
         _submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(_major1 != null || _major2 !=null ){
-                   handleSubmit();
-                }
-                else{
+                if (_major1 != null || _major2 != null) {
+                    handleSubmit();
+                } else {
                     Toast.makeText(getActivity(), "You Must Make a Selection", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -196,7 +190,11 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                 //launch summary vis
                 Log.d(LOG_TAG, "success");
                 CentsApplication.set_selectedVis("Major Comparison");
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                if(fm.getBackStackEntryCount() > 5){
+                    fm.popBackStackImmediate();
+                }
+                FragmentTransaction ft = fm.beginTransaction();
                 ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
                 ft.addToBackStack("major-intro");
                 ft.commit();

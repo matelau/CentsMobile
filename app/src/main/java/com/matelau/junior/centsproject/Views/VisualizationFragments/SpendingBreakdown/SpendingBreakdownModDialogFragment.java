@@ -12,7 +12,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -46,15 +45,7 @@ import retrofit.client.Response;
  */
 public class SpendingBreakdownModDialogFragment extends DialogFragment {
     private String LOG_TAG = SpendingBreakdownModDialogFragment.class.getSimpleName();
-    private RelativeLayout _rootLayout;
-    private RelativeLayout _circle;
     private ImageButton _spending_plus;
-    private ImageButton _lock;
-    private ListView _sbAttributes;
-    private LinearLayoutManager _sbLayoutManager;
-    private SBArrayAdapter _rAdapter;
-    private List<String> _sbAttr;
-    private List<Float> _sbAttrVals;
     private int _sizeBeforeMod;
 
 
@@ -68,8 +59,8 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
         Log.d(LOG_TAG, "OnCreateDialog");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
-        _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_spending_breakdown_mod_dialog, null, false);
-        _circle = (RelativeLayout) _rootLayout.findViewById(R.id.plus_spending_category);
+        RelativeLayout _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_spending_breakdown_mod_dialog, null, false);
+        RelativeLayout _circle = (RelativeLayout) _rootLayout.findViewById(R.id.plus_spending_category);
         _spending_plus = (ImageButton) _circle.findViewById(R.id.circle_btn);
 
         //add more cats
@@ -88,13 +79,13 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
 
         //******  setup Attribute List ********************
         //get Attr
-        _sbAttr = CentsApplication.get_sbLabels();
-        _sbAttrVals = CentsApplication.get_sbPercents();
+        List<String> _sbAttr = CentsApplication.get_sbLabels();
+        List<Float> _sbAttrVals = CentsApplication.get_sbPercents();
         _sizeBeforeMod = CentsApplication.get_sbValues().size();
 
         //setup dynamic listview
-        _sbAttributes = (ListView) _rootLayout.findViewById(R.id.sb_attr_list);
-        _rAdapter = new SBArrayAdapter();
+        ListView _sbAttributes = (ListView) _rootLayout.findViewById(R.id.sb_attr_list);
+        SBArrayAdapter _rAdapter = new SBArrayAdapter();
         CentsApplication.set_rAdapter(_rAdapter);
         _sbAttributes.setAdapter(_rAdapter);
 

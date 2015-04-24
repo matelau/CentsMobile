@@ -36,24 +36,10 @@ public class UnemploymentFragment extends Fragment {
     //ntl average 2011 - 6.0, 2012 - 6.8
     private String LOG_TAG = UnemploymentFragment.class.getSimpleName();
     private ComboLineColumnChartView chart;
-    private ComboLineColumnChartData data;
 
-    private int numberOfLines = 1;
-    private int numberOfPoints = 2;
-
-    private boolean hasAxes = true;
-    private boolean hasPoints = true;
-    private boolean hasLines = true;
-    private boolean isCubic = false;
-    private CareerResponse _cResponse;
     private  Double _2011Unemployment;
     private Double _2012Unemployment;
     private final String[] _labels = {"Unemployment Rate 2011", "Unemployment Rate 2012"};
-
-    private static String _career1;
-    private static String _career2;
-    private ImageButton _search;
-    private View _rootView;
 
     public UnemploymentFragment() {
         // Required empty public constructor
@@ -64,7 +50,7 @@ public class UnemploymentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //Get Data
-        _cResponse = CentsApplication.get_cResponse();
+        CareerResponse _cResponse = CentsApplication.get_cResponse();
         // set avgs
         _2011Unemployment = _cResponse.getCareerUnemploy3().get(0);
         _2012Unemployment = _cResponse.getCareerUnemploy3().get(1);
@@ -72,19 +58,19 @@ public class UnemploymentFragment extends Fragment {
         Log.d(LOG_TAG, "Create View unemployment 2011: " + _2011Unemployment + " unemployment 2012: " + _2012Unemployment);
         setHasOptionsMenu(false);
 
-        _rootView = inflater.inflate(R.layout.fragment_labor_stats, container, false);
-        _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
+        View _rootView = inflater.inflate(R.layout.fragment_labor_stats, container, false);
+        ImageButton _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
         //update locations
         List<CareerResponse.Element> elements = _cResponse.getElements();
-        _career1 = elements.get(0).getName();
+        String _career1 = elements.get(0).getName();
         if(_career1.length() > 32){
-            _career1 = _career1.substring(0,32)+"...";
+            _career1 = _career1.substring(0, 32)+"...";
         }
-        _career2 = null;
+        String _career2 = null;
         if(elements.size() != 1){
             _career2 = elements.get(1).getName();
             if(_career2.length() > 32){
-                _career2 = _career2.substring(0,32)+"...";
+                _career2 = _career2.substring(0, 32)+"...";
             }
         }
 
@@ -133,11 +119,12 @@ public class UnemploymentFragment extends Fragment {
      */
     private void generateData(List<CareerResponse.Element> elements) {
         // Chart looks the best when line data and column data have similar maximum viewports.
-        data = new ComboLineColumnChartData(generateColumnData(elements), generateLineData());
+        ComboLineColumnChartData data = new ComboLineColumnChartData(generateColumnData(elements), generateLineData());
         List<AxisValue> axisValues = new ArrayList<AxisValue>();
         //add labels to axis
         axisValues.add(new AxisValue(0, _labels[0].toCharArray() ));
         axisValues.add(new AxisValue(1, _labels[1].toCharArray() ));
+        boolean hasAxes = true;
         if (hasAxes) {
             Axis axisX = new Axis(axisValues);
             Axis axisY = new Axis().setHasLines(true);
@@ -158,8 +145,10 @@ public class UnemploymentFragment extends Fragment {
     private LineChartData generateLineData() {
 
         List<Line> lines = new ArrayList<Line>();
+        int numberOfLines = 1;
         for (int i = 0; i < numberOfLines; ++i) {
             List<PointValue> values = new ArrayList<PointValue>();
+            int numberOfPoints = 2;
             for (int j = 0; j < numberOfPoints; ++j) {
                 PointValue pt = new PointValue();
                 if(j == 0){
@@ -175,9 +164,12 @@ public class UnemploymentFragment extends Fragment {
 
             Line line = new Line(values);
             line.setColor(getResources().getColor(R.color.black));
+            boolean isCubic = false;
             line.setCubic(isCubic);
             line.setHasLabels(true);
+            boolean hasLines = true;
             line.setHasLines(hasLines);
+            boolean hasPoints = true;
             line.setHasPoints(hasPoints);
             lines.add(line);
         }

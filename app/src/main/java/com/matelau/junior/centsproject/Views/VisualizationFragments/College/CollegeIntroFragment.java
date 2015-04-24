@@ -15,8 +15,6 @@ import com.matelau.junior.centsproject.R;
 
 public class CollegeIntroFragment extends Fragment {
     private String LOG_TAG = CollegeIntroFragment.class.getSimpleName();
-    private RelativeLayout _rootLayout;
-    private Button _begin;
 
     public CollegeIntroFragment() {
         // Required empty public constructor
@@ -28,8 +26,8 @@ public class CollegeIntroFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_college_intro, container, false);
-        _begin = (Button) _rootLayout.findViewById(R.id.college_begin);
+        RelativeLayout _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_college_intro, container, false);
+        Button _begin = (Button) _rootLayout.findViewById(R.id.college_begin);
         _begin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

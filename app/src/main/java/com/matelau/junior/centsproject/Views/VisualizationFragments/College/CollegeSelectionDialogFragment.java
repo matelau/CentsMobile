@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -52,7 +53,6 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
     private final String[] _state_abbrv = {"AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"};
     private String[] _states;
     private String[] _unis;
-    private LinearLayout _rootLayout;
     private Spinner _states1;
     private Spinner _states2;
     private TextView _stateTextView2;
@@ -66,8 +66,6 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
     private ArrayAdapter<String> _stateAdapter;
     private TextView _vs;
     private View _plusBtn;
-    private Button _submit;
-    private Button _cancel;
     private boolean isPlus = true;
     private AutoCompleteTextView _autoComp1;
     private AutoCompleteTextView _autoComp2;
@@ -98,15 +96,15 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         _states = getResources().getStringArray(R.array.states_array);
-        _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_selection_dialog, null, false);
+        LinearLayout _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_selection_dialog, null, false);
         //get views
         TextView instructions = (TextView) _rootLayout.findViewById(R.id.selection_instructions);
         instructions.setText("Select a state to view Universities");
         if(_useAutocomplete){
             instructions.setText("Select one or two Universities");
         }
-        _submit = (Button) _rootLayout.findViewById(R.id.submit_select);
-        _cancel = (Button) _rootLayout.findViewById(R.id.cancel_select);
+        Button _submit = (Button) _rootLayout.findViewById(R.id.submit_select);
+        Button _cancel = (Button) _rootLayout.findViewById(R.id.cancel_select);
         _vs = (TextView) _rootLayout.findViewById(R.id.vs);
         _universityTextView1 = (TextView) _rootLayout.findViewById(R.id.optionTextView1);
         _plusBtn = _rootLayout.findViewById(R.id.circle);
@@ -247,7 +245,11 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
     private void showCollegeComparison(){
         //get college sum frag
         CentsApplication.set_selectedVis("College Comparison");
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        if(fm.getBackStackEntryCount() > 5){
+            fm.popBackStack();
+        }
+        FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
         ft.addToBackStack("college-intro");
         ft.commit();

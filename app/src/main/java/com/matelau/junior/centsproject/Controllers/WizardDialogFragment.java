@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -114,7 +115,11 @@ public class WizardDialogFragment extends DialogFragment {
     private void switchToVisFrag(String selected){
         //close wizard
         dismiss();
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        if(fm.getBackStackEntryCount() > 5){
+            fm.popBackStack();
+        }
+        FragmentTransaction ft = fm.beginTransaction();
         //Add Intros here as they are created
         getActivity().getActionBar().setTitle(selected);
         if(selected.equals("COL Comparison")){

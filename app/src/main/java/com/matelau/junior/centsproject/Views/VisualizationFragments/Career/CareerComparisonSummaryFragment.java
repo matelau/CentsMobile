@@ -28,12 +28,8 @@ import java.util.List;
  * Hosts Career comparison Summary view
  */
 public class CareerComparisonSummaryFragment extends Fragment {
-    private LinearLayout _rootLayout;
     private TextView _career1Title;
     private TextView _career2Title;
-    private ListView _careerSum;
-    private SummaryAdapter _careerAdapter;
-    private ImageButton _search;
 
     private String LOG_TAG = CareerComparisonSummaryFragment.class.getSimpleName();
 
@@ -46,7 +42,7 @@ public class CareerComparisonSummaryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(LOG_TAG, "CreateView");
-        _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_career_comparison_summary, container, false);
+        LinearLayout _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_career_comparison_summary, container, false);
 
         if(CentsApplication.isDebug()){
 //            do nothing
@@ -92,16 +88,16 @@ public class CareerComparisonSummaryFragment extends Fragment {
         }
 
         //Setup summary list
-        _search = (ImageButton) _rootLayout.findViewById(R.id.imageSearchButton);
+        ImageButton _search = (ImageButton) _rootLayout.findViewById(R.id.imageSearchButton);
         _search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //launch selection Dialog
-               showCareerSelectionDialog();
+                showCareerSelectionDialog();
             }
         });
-        _careerSum = (ListView) _rootLayout.findViewById(R.id.career_sum_list);
-        _careerAdapter = new SummaryAdapter(3, getActivity());
+        ListView _careerSum = (ListView) _rootLayout.findViewById(R.id.career_sum_list);
+        SummaryAdapter _careerAdapter = new SummaryAdapter(3, getActivity());
         _careerSum.setAdapter(_careerAdapter);
         return _rootLayout;
     }

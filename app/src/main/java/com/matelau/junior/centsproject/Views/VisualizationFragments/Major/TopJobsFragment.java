@@ -35,30 +35,11 @@ import lecho.lib.hellocharts.view.ComboLineColumnChartView;
 public class TopJobsFragment extends Fragment {
     private String LOG_TAG = TopJobsFragment.class.getSimpleName();
     private ComboLineColumnChartView chart;
-    private ComboLineColumnChartData data;
 
-    private int numberOfLines = 1;
-    private int numberOfPoints = 3;
-
-    private boolean hasAxes = true;
-    private boolean hasAxesNames = false;
-    private boolean hasPoints = true;
-    private boolean hasLines = true;
-    private boolean isCubic = false;
-    private boolean hasLabels = false;
-    private MajorResponse _mResponse;
-    private Double _avgSalary = 44888.16;
     private List<String> job_titles1 = new ArrayList<String>();
     private List<String> job_titles2 = new ArrayList<String>();
     private List<Double> job_Salaries1 = new ArrayList<Double>();
     private List<Double> job_Salaries2 = new ArrayList<Double>();
-
-
-
-    private static String _major1;
-    private static String _major2;
-    private ImageButton _search;
-    private View _rootView;
 
     public TopJobsFragment(){
         //Empty Constructor
@@ -69,7 +50,7 @@ public class TopJobsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //Get Data
-        _mResponse = CentsApplication.get_mResponse();
+        MajorResponse _mResponse = CentsApplication.get_mResponse();
         List<MajorResponse.Element> elements = _mResponse.getElements();
         boolean secondMajor = false;
         if(elements.size() > 1){
@@ -89,17 +70,18 @@ public class TopJobsFragment extends Fragment {
         Log.d(LOG_TAG, "Create View top Jobs: Jobs List size1: " + job_titles1.size() + " Jobs List size1: " + job_titles2.size());
         setHasOptionsMenu(false);
 
-        _rootView = inflater.inflate(R.layout.fragment_top_jobs, container, false);
-        _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
+        View _rootView = inflater.inflate(R.layout.fragment_top_jobs, container, false);
+        ImageButton _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
         //update locations
-        _major1 = elements.get(0).getName();
+        String _major1 = elements.get(0).getName();
         if(_major1.length() > 32){
             _major1 = _major1.substring(0, 30)+"...";
         }
+        String _major2;
         if(secondMajor){
             _major2 = elements.get(1).getName();
             if(_major2.length() > 32){
-                _major2 = _major2.substring(0,30)+"...";
+                _major2 = _major2.substring(0, 30)+"...";
             }
         }
         else{
@@ -201,8 +183,9 @@ public class TopJobsFragment extends Fragment {
      * Generates data from models for vis
      */
     private void generateData() {
-        data = new ComboLineColumnChartData(generateColumnData(), generateLineData());
+        ComboLineColumnChartData data = new ComboLineColumnChartData(generateColumnData(), generateLineData());
         List<AxisValue> axisValues = new ArrayList<AxisValue>();
+        boolean hasAxes = true;
         if (hasAxes) {
             Axis axisX = new Axis(axisValues);
             Axis axisY = new Axis().setHasLines(true).setInside(true).setName("Avg. Salary").setHasTiltedLabels(true);
@@ -219,10 +202,13 @@ public class TopJobsFragment extends Fragment {
      */
     private LineChartData generateLineData() {
         List<Line> lines = new ArrayList<Line>();
+        int numberOfLines = 1;
         for (int i = 0; i < numberOfLines; ++i) {
             List<PointValue> values = new ArrayList<PointValue>();
+            int numberOfPoints = 3;
             for (int j = 0; j < numberOfPoints; ++j) {
                 PointValue pt = new PointValue();
+                Double _avgSalary = 44888.16;
                 pt.set(j, _avgSalary.floatValue());
                 pt.setLabel("");
                 if(j == 1){
@@ -233,9 +219,12 @@ public class TopJobsFragment extends Fragment {
 
             Line line = new Line(values);
             line.setColor(getResources().getColor(R.color.black));
+            boolean isCubic = false;
             line.setCubic(isCubic);
             line.setHasLabels(true);
+            boolean hasLines = true;
             line.setHasLines(hasLines);
+            boolean hasPoints = true;
             line.setHasPoints(hasPoints);
             lines.add(line);
         }

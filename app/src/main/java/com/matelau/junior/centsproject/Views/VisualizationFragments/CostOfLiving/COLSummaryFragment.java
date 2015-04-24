@@ -27,12 +27,6 @@ import java.util.List;
  */
 public class COLSummaryFragment extends Fragment {
 
-    private LinearLayout _rootLayout;
-    private TextView _city1Title;
-    private TextView _city2Title;
-    private ListView _citiesSum;
-    private SummaryAdapter _citiesAdapter;
-    private ImageButton _search;
     private String LOG_TAG = COLSummaryFragment.class.getSimpleName();
 
 
@@ -48,7 +42,7 @@ public class COLSummaryFragment extends Fragment {
         // Inflate the layout for this fragment
         Log.d(LOG_TAG, "CreateView");
 
-        _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_col_summary, container, false);
+        LinearLayout _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_col_summary, container, false);
         //get MajorResponse
         ColiResponse colResponse = CentsApplication.get_colResponse();
         if(CentsApplication.isDebug()){
@@ -61,11 +55,11 @@ public class COLSummaryFragment extends Fragment {
         }
 
 
-        _city1Title = (TextView) _rootLayout.findViewById(R.id.title1);
+        TextView _city1Title = (TextView) _rootLayout.findViewById(R.id.title1);
         List<ColiResponse.Element> elements = colResponse.getElements();
         boolean hasSecondCity = elements.size() > 1;
         _city1Title.setText(elements.get(0).getName());
-        _city2Title = (TextView) _rootLayout.findViewById(R.id.title2);
+        TextView _city2Title = (TextView) _rootLayout.findViewById(R.id.title2);
         String title2 = null;
         if(hasSecondCity){
             title2 = elements.get(1).getName();
@@ -79,7 +73,7 @@ public class COLSummaryFragment extends Fragment {
         }
 
         //Setup summary list
-        _search = (ImageButton) _rootLayout.findViewById(R.id.imageSearchButton);
+        ImageButton _search = (ImageButton) _rootLayout.findViewById(R.id.imageSearchButton);
         _search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,8 +81,8 @@ public class COLSummaryFragment extends Fragment {
                 showCitySelectionDialog();
             }
         });
-        _citiesSum = (ListView) _rootLayout.findViewById(R.id.col_sum_list);
-        _citiesAdapter = new SummaryAdapter(0, getActivity());
+        ListView _citiesSum = (ListView) _rootLayout.findViewById(R.id.col_sum_list);
+        SummaryAdapter _citiesAdapter = new SummaryAdapter(0, getActivity());
         _citiesSum.setAdapter(_citiesAdapter);
         return _rootLayout;
     }

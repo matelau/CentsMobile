@@ -32,7 +32,6 @@ import retrofit.client.Response;
  */
 public class SpendingBreakdownAttributeAdditionDialogFragment extends DialogFragment {
     private String LOG_TAG = SpendingBreakdownAttributeAdditionDialogFragment.class.getSimpleName();
-    private FrameLayout _rootLayout;
     private EditText _value;
     private EditText _category;
 //    protected
@@ -49,7 +48,7 @@ public class SpendingBreakdownAttributeAdditionDialogFragment extends DialogFrag
         Log.d(LOG_TAG, "OnCreateDialog");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
-        _rootLayout = (FrameLayout) inflater.inflate(R.layout.fragment_spending_breakdown_attribute_addition, null, false);
+        FrameLayout _rootLayout = (FrameLayout) inflater.inflate(R.layout.fragment_spending_breakdown_attribute_addition, null, false);
         _value = (EditText) _rootLayout.findViewById(R.id.editText1);
         _category = (EditText) _rootLayout.findViewById(R.id.attr_category);
         _category.setOnFocusChangeListener(new View.OnFocusChangeListener() {

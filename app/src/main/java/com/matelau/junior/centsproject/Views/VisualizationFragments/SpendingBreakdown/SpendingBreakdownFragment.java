@@ -50,19 +50,8 @@ import retrofit.client.Response;
  */
 public class SpendingBreakdownFragment extends Fragment {
     private String LOG_TAG = SpendingBreakdownFragment.class.getSimpleName();
-    private ImageButton _search;
     private PieChartView _chart;
     private EditText _income;
-    private PieChartData data;
-    private Button _default;
-    private Button _student;
-    private Button _custom;
-    private boolean hasLabels = true;
-    private boolean hasLabelsOutside = true;
-    private boolean hasCenterCircle = true;
-    private boolean hasCenterText1 = true;
-    private boolean hasCenterText2 = true;
-    private boolean hasLabelForSelected = false;
     private int _id;
 
 
@@ -83,10 +72,10 @@ public class SpendingBreakdownFragment extends Fragment {
         _income = (EditText) rootView.findViewById(R.id.editText1);
 
         //Get buttons
-        _search = (ImageButton) rootView.findViewById(R.id.imageSearchButton);
-        _default = (Button) rootView.findViewById(R.id.default_btn);
-        _student = (Button) rootView.findViewById(R.id.student_btn);
-        _custom = (Button) rootView.findViewById(R.id.custom_btn);
+        ImageButton _search = (ImageButton) rootView.findViewById(R.id.imageSearchButton);
+        Button _default = (Button) rootView.findViewById(R.id.default_btn);
+        Button _student = (Button) rootView.findViewById(R.id.student_btn);
+        Button _custom = (Button) rootView.findViewById(R.id.custom_btn);
 
         if(CentsApplication.is_loggedIN())
         {
@@ -100,10 +89,12 @@ public class SpendingBreakdownFragment extends Fragment {
         _income.setText(CentsApplication.get_occupationSalary());
         _income.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -163,7 +154,11 @@ public class SpendingBreakdownFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //return search frag
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                if (fm.getBackStackEntryCount() > 5) {
+                    fm.popBackStack();
+                }
+                FragmentTransaction ft = fm.beginTransaction();
                 ft.replace(R.id.fragment_placeholder, new SearchFragment());
                 ft.addToBackStack("spending-breakdown");
                 ft.commit();
@@ -239,11 +234,12 @@ public class SpendingBreakdownFragment extends Fragment {
         //these get written by default until network requests go through and update files/viz
         // read file to see if user has saved values
         String filename = CentsApplication.get_currentBreakdown()+".dat";
-        if(CentsApplication.doesFileExist(filename, getActivity())){
+        if (CentsApplication.doesFileExist(filename, getActivity())){
             //loadfile
             CentsApplication.loadSB(filename, getActivity());
         }
-        else{ setDefaultVars(false);}
+        else{ setDefaultVars(false);
+        }
 
         calculateTaxes(Float.parseFloat(CentsApplication.get_occupationSalary()));
     }
@@ -252,12 +248,12 @@ public class SpendingBreakdownFragment extends Fragment {
      * Sets Salary vars
      */
     private void initSalary(){
-            //if logged in check if income is coming from qp else check api for income
-            if(CentsApplication.is_loggedIN()){
-                //load sal in the meantime
-                loadSalary();
+        //if logged in check if income is coming from qp else check api for income
+        //load sal in the meantime
+        loadSalary();
+        if(CentsApplication.is_loggedIN()){
                 //check if qp updated local salary
-                if(!CentsApplication.is_incomeFromQP()){
+                if(!CentsApplication.is_incomeFromQP()) {
                     //check api for income
                     UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
                     service.getIncome(_id, new Callback<Response>() {
@@ -267,11 +263,8 @@ public class SpendingBreakdownFragment extends Fragment {
                             BufferedReader reader = null;
                             StringBuilder sb = new StringBuilder();
                             try {
-
                                 reader = new BufferedReader(new InputStreamReader(response.getBody().in()));
-
                                 String line;
-
                                 try {
                                     while ((line = reader.readLine()) != null) {
                                         sb.append(line);
@@ -284,10 +277,10 @@ public class SpendingBreakdownFragment extends Fragment {
                             }
 
                             String rsp = sb.toString();
-                            if(rsp != null){
+                            if (rsp != null) {
                                 int salary = (int) Float.parseFloat(rsp);
                                 CentsApplication.set_occupationSalary(rsp);
-                                _income.setText(""+salary);
+                                _income.setText("" + salary);
                                 _income.invalidate();
                             }
                         }
@@ -298,11 +291,9 @@ public class SpendingBreakdownFragment extends Fragment {
 
                         }
                     });
-
                 }
-            else{loadSalary();}
-
         }
+
     }
 
     /**
@@ -412,7 +403,7 @@ public class SpendingBreakdownFragment extends Fragment {
     /**
      *Student Default Template
      */
-    private void initStudentVars(boolean showMod){
+    private void initStudentVars(boolean showMod) {
         if(CentsApplication.is_loggedIN()){
             //check for spending breakdown on db
             UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
@@ -465,7 +456,7 @@ public class SpendingBreakdownFragment extends Fragment {
         //if student vars are already saved/loaded use those instead these values overwrite
         String filename = "student.dat";
         CentsApplication.set_currentBreakdown("student");
-        if(CentsApplication.doesFileExist(filename, getActivity())){
+        if (CentsApplication.doesFileExist(filename, getActivity())){
             //loadfile
             CentsApplication.loadSB(filename, getActivity());
         }
@@ -506,7 +497,7 @@ public class SpendingBreakdownFragment extends Fragment {
         CentsApplication.set_currentBreakdown(cat);
         saveVals(values);
 
-        HashMap<String, HashMap<String, String>> fields = new HashMap<String, HashMap<String,String>>();
+        HashMap<String, HashMap<String, String>> fields = new HashMap<String, HashMap<String, String>>();
         fields.put("fields", elements);
         UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
         service.initSpendingFields(_id, cat, fields, new Callback<Response>() {
@@ -572,7 +563,7 @@ public class SpendingBreakdownFragment extends Fragment {
             }
 
             //if user is currently on custom sb show dialog
-            setCustomVars(CentsApplication.get_currentBreakdown().equals("custom") && showMod);
+        setCustomVars(CentsApplication.get_currentBreakdown().equals("custom") && showMod);
         }
 
 
@@ -583,7 +574,7 @@ public class SpendingBreakdownFragment extends Fragment {
         // if vars are already saved/loaded use those instead these values overwrite
         String filename = "custom.dat";
         CentsApplication.set_currentBreakdown("custom");
-        if(CentsApplication.doesFileExist(filename, getActivity())){
+        if (CentsApplication.doesFileExist(filename, getActivity())){
             //loadfile
             CentsApplication.loadSB(filename, getActivity());
         }
@@ -629,7 +620,7 @@ public class SpendingBreakdownFragment extends Fragment {
      */
     private void saveVals(List<SpendingBreakdownCategory> vals){
         CentsApplication.set_sbValues(vals);
-        String filename = CentsApplication.get_currentBreakdown()+".dat";
+        String filename = CentsApplication.get_currentBreakdown() + ".dat";
         CentsApplication.saveSB(filename, getActivity());
     }
 
@@ -772,10 +763,14 @@ public class SpendingBreakdownFragment extends Fragment {
             values.add(arcValue.setLabel(label));
         }
 
-        data = new PieChartData(values);
+        PieChartData data = new PieChartData(values);
+        boolean hasLabels = true;
         data.setHasLabels(hasLabels);
+        boolean hasLabelForSelected = false;
         data.setHasLabelsOnlyForSelected(hasLabelForSelected);
+        boolean hasLabelsOutside = true;
         data.setHasLabelsOutside(hasLabelsOutside);
+        boolean hasCenterCircle = true;
         data.setHasCenterCircle(hasCenterCircle);
 
         //limits the amount of space the pie chart can take from 0-1
@@ -799,6 +794,7 @@ public class SpendingBreakdownFragment extends Fragment {
         Log.d(LOG_TAG, "completion: "+completion);
 
         //check if over/under budget and modify text to show by how much
+        boolean hasCenterText1 = true;
         if (hasCenterText1) {
             data.setCenterText1Color(getResources().getColor(R.color.black));
             if(completion > 1.001f){
@@ -817,16 +813,17 @@ public class SpendingBreakdownFragment extends Fragment {
 
         }
 
+        boolean hasCenterText2 = true;
         if (hasCenterText2) {
             if(completion > 1.001f){
                 Float percent = completion - 1.0f;
-                data.setCenterText2("$"+CentsApplication.convPercentToDollar(percent, false) + " You must spend less");
+                data.setCenterText2("$" + CentsApplication.convPercentToDollar(percent, false) + " You must spend less");
                 data.setCenterText2Color(getResources().getColor(R.color.red));
 
             }
             else if(completion < .995f){
                 Float percent = 1f- completion;
-                data.setCenterText2("$"+CentsApplication.convPercentToDollar(percent, false));
+                data.setCenterText2("$" + CentsApplication.convPercentToDollar(percent, false));
                 data.setCenterText2Color(getResources().getColor(R.color.blue));
             }
             else{

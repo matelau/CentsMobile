@@ -31,20 +31,11 @@ import java.util.List;
  */
 public class CollegeComparisonSummary extends Fragment {
 
-    private LinearLayout _rootLayout;
-    private SchoolResponse _sResponse;
     private TextView _schoolName1;
     private TextView _schoolName2;
-    private SummaryAdapter _schoolAdapter;
-    private ListView _schoolSum;
-    private ImageView _logo1;
-    private ImageView _logo2;
-    private ImageButton _search;
     private HashMap<String, String> _logos;
 
     private String LOG_TAG = CollegeComparisonSummary.class.getSimpleName();
-    private boolean hasSecondSchool = true;
-
 
     public CollegeComparisonSummary() {
         // Required empty public constructor
@@ -58,19 +49,19 @@ public class CollegeComparisonSummary extends Fragment {
         // Inflate the layout for this fragment
         Log.d(LOG_TAG, "CreateView");
         //get data
-        _sResponse = CentsApplication.get_sApiResponse();
+        SchoolResponse _sResponse = CentsApplication.get_sApiResponse();
         List<SchoolResponse.Element> elements = _sResponse.getElements();
-        hasSecondSchool = (!(elements.size() == 1) && elements.get(1).getSchool().size() > 0);
+        boolean hasSecondSchool = (!(elements.size() == 1) && elements.get(1).getSchool().size() > 0);
         //get Views
-        _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_college_summary, container, false);
-        _search = (ImageButton) _rootLayout.findViewById(R.id.imageSearchButton);
+        LinearLayout _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_college_summary, container, false);
+        ImageButton _search = (ImageButton) _rootLayout.findViewById(R.id.imageSearchButton);
         _schoolName1 = (TextView) _rootLayout.findViewById(R.id.title1);
         _schoolName2 = (TextView) _rootLayout.findViewById(R.id.title2);
-        _schoolSum = (ListView) _rootLayout.findViewById(R.id.college_sum_list);
-        _schoolAdapter = new SummaryAdapter(2, getActivity());
+        ListView _schoolSum = (ListView) _rootLayout.findViewById(R.id.college_sum_list);
+        SummaryAdapter _schoolAdapter = new SummaryAdapter(2, getActivity());
         _schoolSum.setAdapter(_schoolAdapter);
-        _logo1 = (ImageView) _rootLayout.findViewById(R.id.logo1_image);
-        _logo2 = (ImageView) _rootLayout.findViewById(R.id.logo2_image);
+        ImageView _logo1 = (ImageView) _rootLayout.findViewById(R.id.logo1_image);
+        ImageView _logo2 = (ImageView) _rootLayout.findViewById(R.id.logo2_image);
 
         //Rating Setup
         if(CentsApplication.is_loggedIN()){
@@ -118,7 +109,7 @@ public class CollegeComparisonSummary extends Fragment {
         });
         //move search button to the right if only one element
         if(elements.size() == 1){
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)_search.getLayoutParams();
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) _search.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             _search.setLayoutParams(params);
         }

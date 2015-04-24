@@ -35,9 +35,6 @@ import retrofit.client.Response;
 public class LoginDialogFragment extends DialogFragment {
 
     private String LOG_TAG = LoginDialogFragment.class.getSimpleName();
-    private LinearLayout _rootLayout;
-    private Button _submit;
-    private Button _cancel;
     private EditText _email;
     private EditText _password;
     private TextView _errorMsg;
@@ -56,10 +53,10 @@ public class LoginDialogFragment extends DialogFragment {
         Log.d(LOG_TAG, "onCreateDialog");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_login_dialog, null, false);
+        LinearLayout _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_login_dialog, null, false);
         //get buttons
-        _submit = (Button) _rootLayout.findViewById(R.id.login_submit);
-        _cancel = (Button) _rootLayout.findViewById(R.id.login_cancel);
+        Button _submit = (Button) _rootLayout.findViewById(R.id.login_submit);
+        Button _cancel = (Button) _rootLayout.findViewById(R.id.login_cancel);
         //add listeners
         _cancel.setOnClickListener(new View.OnClickListener() {
             @Override

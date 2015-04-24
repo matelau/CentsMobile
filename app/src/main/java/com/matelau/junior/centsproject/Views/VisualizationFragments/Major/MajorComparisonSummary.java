@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,14 +29,8 @@ import java.util.List;
  */
 public class MajorComparisonSummary extends Fragment {
     private String LOG_TAG = MajorComparisonSummary.class.getSimpleName();
-    private LinearLayout _rootLayout;
     private TextView _major1Title;
     private TextView _major2Title;
-    private ListView _majorSum;
-    private SummaryAdapter _majorAdapter;
-    private ImageView _image1;
-    private ImageView _image2;
-    private ImageButton _search;
 
 
     public MajorComparisonSummary() {
@@ -51,7 +44,7 @@ public class MajorComparisonSummary extends Fragment {
         // Inflate the layout for this fragment
         Log.d(LOG_TAG, "CreateView");
 
-        _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_major_comparison_summary, container, false);
+        LinearLayout _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_major_comparison_summary, container, false);
         //get MajorResponse
         MajorResponse mResponse = CentsApplication.get_mResponse();
         List<MajorResponse.Element> elements = mResponse.getElements();
@@ -105,7 +98,7 @@ public class MajorComparisonSummary extends Fragment {
         }
 
         //Setup summary list
-        _search = (ImageButton) _rootLayout.findViewById(R.id.imageSearchButton);
+        ImageButton _search = (ImageButton) _rootLayout.findViewById(R.id.imageSearchButton);
         _search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,8 +106,8 @@ public class MajorComparisonSummary extends Fragment {
                 showMajorSelectionDialog();
             }
         });
-        _majorSum = (ListView) _rootLayout.findViewById(R.id.major_sum_list);
-        _majorAdapter = new SummaryAdapter(1, getActivity());
+        ListView _majorSum = (ListView) _rootLayout.findViewById(R.id.major_sum_list);
+        SummaryAdapter _majorAdapter = new SummaryAdapter(1, getActivity());
         _majorSum.setAdapter(_majorAdapter);
         return _rootLayout;
 

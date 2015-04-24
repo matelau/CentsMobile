@@ -53,20 +53,15 @@ import retrofit.client.Response;
 public class CareerSelectionDialogFragment extends DialogFragment{
     private String LOG_TAG = CareerSelectionDialogFragment.class.getSimpleName();
 
-    private LinearLayout _rootLayout;
     private ArrayAdapter<String> _careerAdapter;
     private Spinner _careerSpinner1;
     private Spinner _careerSpinner2;
-    private TextView _careerTextView1;
     private TextView _careerTextView2;
     private AutoCompleteTextView _autoComp1;
     private AutoCompleteTextView _autoComp2;
     private TextView _vs;
     private View _plusBtn;
-    private Button _submit;
-    private Button _cancel;
     private boolean isPlus = false;
-    private TextView _instructions;
     private boolean valuesLoaded = false;
 
     private String[] _careers;
@@ -96,15 +91,15 @@ public class CareerSelectionDialogFragment extends DialogFragment{
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_selection_dialog, null, false);
+        LinearLayout _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_selection_dialog, null, false);
         TextView instructions = (TextView) _rootLayout.findViewById(R.id.selection_instructions);
         instructions.setText("Select a state to view Universities");
-        _submit = (Button) _rootLayout.findViewById(R.id.submit_select);
-        _cancel = (Button) _rootLayout.findViewById(R.id.cancel_select);
+        Button _submit = (Button) _rootLayout.findViewById(R.id.submit_select);
+        Button _cancel = (Button) _rootLayout.findViewById(R.id.cancel_select);
         _vs = (TextView) _rootLayout.findViewById(R.id.vs);
-        _instructions = (TextView) _rootLayout.findViewById(R.id.selection_instructions);
+        TextView _instructions = (TextView) _rootLayout.findViewById(R.id.selection_instructions);
         _instructions.setText("Select one or two Careers");
-        _careerTextView1 = (TextView) _rootLayout.findViewById(R.id.stateTextView);
+        TextView _careerTextView1 = (TextView) _rootLayout.findViewById(R.id.stateTextView);
         _careerTextView1.setText("Career - 1");
         _careerTextView2 = (TextView) _rootLayout.findViewById(R.id.stateTextView2);
         _plusBtn = _rootLayout.findViewById(R.id.circle);
@@ -139,21 +134,21 @@ public class CareerSelectionDialogFragment extends DialogFragment{
         _submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(_career1 != null || _career2 != null ){
+                if (_career1 != null || _career2 != null) {
 //                    //create query
                     CareerQuery query = new CareerQuery();
                     ArrayList<Career> careerList = new ArrayList<Career>();
                     String queryText = "";
-                    if(_career1 != null){
+                    if (_career1 != null) {
                         careerList.add(_career1);
                         queryText = _career1.getName();
                     }
 
-                    if(_career2!= null){
+                    if (_career2 != null) {
                         careerList.add(_career2);
-                        queryText = queryText + " vs. "+ _career2.getName();
+                        queryText = queryText + " vs. " + _career2.getName();
                     }
-                    if(CentsApplication.is_loggedIN()){
+                    if (CentsApplication.is_loggedIN()) {
                         storeQuery(queryText);
                     }
                     query.setCareers(careerList);
@@ -177,8 +172,7 @@ public class CareerSelectionDialogFragment extends DialogFragment{
                             Toast.makeText(getActivity(), "There was an error - Please try again", Toast.LENGTH_SHORT).show();
                         }
                     });
-                }
-                else{
+                } else {
                     Toast.makeText(getActivity(), "You Must Make a Selection", Toast.LENGTH_SHORT).show();
 
                 }

@@ -34,29 +34,11 @@ import lecho.lib.hellocharts.view.ComboLineColumnChartView;
 public class TaxesFragment extends Fragment {
     private String LOG_TAG = LaborStatsFragment.class.getSimpleName();
     private ComboLineColumnChartView chart;
-    private ComboLineColumnChartData data;
-
-    private int numberOfLines = 1;
-    private int maxNumberOfLines = 4;
-    private int numberOfPoints = 3;
-
-    private boolean hasAxes = true;
-    private boolean hasAxesNames = false;
-    private boolean hasPoints = true;
-    private boolean hasLines = true;
-    private boolean isCubic = false;
-    private boolean hasLabels = false;
     private ColiResponse _cResponse;
     private  Double _avgSales;
     private Double _avgMin;
     private Double _avgMax;
-    private Double _avgProperty;
     private final String[] _labels = {"SALES TAX", "MIN - INCOME", "MAX - INCOME"};
-
-    private static String _location;
-    private static String _location2;
-    private ImageButton _search;
-    private View _rootView;
 
     public TaxesFragment() {
         // Required empty public constructor
@@ -78,11 +60,11 @@ public class TaxesFragment extends Fragment {
         Log.d(LOG_TAG, "Create View unemployment: " + _avgSales + " Economic Growth: " + _avgMin);
         setHasOptionsMenu(false);
 
-        _rootView = inflater.inflate(R.layout.fragment_labor_stats, container, false);
-        _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
+        View _rootView = inflater.inflate(R.layout.fragment_labor_stats, container, false);
+        ImageButton _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
         //update locations
-        _location = elements.get(0).getName();
-        _location2 = null;
+        String _location = elements.get(0).getName();
+        String _location2 = null;
         if(elements.size() > 1){
             _location2 = elements.get(1).getName();
         }
@@ -131,12 +113,13 @@ public class TaxesFragment extends Fragment {
      */
     private void generateData() {
         // Chart looks the best when line data and column data have similar maximum viewports.
-        data = new ComboLineColumnChartData(generateColumnData(), generateLineData());
+        ComboLineColumnChartData data = new ComboLineColumnChartData(generateColumnData(), generateLineData());
         List<AxisValue> axisValues = new ArrayList<AxisValue>();
         //add labels to axis
         axisValues.add(new AxisValue(0, _labels[0].toCharArray() ));
         axisValues.add(new AxisValue(1, _labels[1].toCharArray() ));
         axisValues.add(new AxisValue(2, _labels[2].toCharArray() ));
+        boolean hasAxes = true;
         if (hasAxes) {
             Axis axisX = new Axis(axisValues);
             Axis axisY = new Axis().setHasLines(true).setName("Tax Rates");
@@ -157,8 +140,10 @@ public class TaxesFragment extends Fragment {
     private LineChartData generateLineData() {
 
         List<Line> lines = new ArrayList<Line>();
+        int numberOfLines = 1;
         for (int i = 0; i < numberOfLines; ++i) {
             List<PointValue> values = new ArrayList<PointValue>();
+            int numberOfPoints = 3;
             for (int j = 0; j < numberOfPoints; ++j) {
                 PointValue pt = new PointValue();
                 if(j == 0){
@@ -178,9 +163,12 @@ public class TaxesFragment extends Fragment {
 
             Line line = new Line(values);
             line.setColor(getResources().getColor(R.color.black));
+            boolean isCubic = false;
             line.setCubic(isCubic);
             line.setHasLabels(true);
+            boolean hasLines = true;
             line.setHasLines(hasLines);
+            boolean hasPoints = true;
             line.setHasPoints(hasPoints);
             lines.add(line);
         }

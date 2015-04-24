@@ -29,12 +29,8 @@ import retrofit.client.Response;
  */
 public class AboutFragment extends Fragment {
     private final String LOG_TAG = AboutFragment.class.getSimpleName();
-    private RelativeLayout _rootLayout;
-    private ExpandableListView _aboutCats;
-    private ExpandableListAdapter listAdapter;
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
-    private String[] _aboutVals;
 
 
     public AboutFragment() {
@@ -46,12 +42,12 @@ public class AboutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_about, null, false);
+        RelativeLayout _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_about, null, false);
 
         //setup profile card list
-        _aboutCats = (ExpandableListView) _rootLayout.findViewById(R.id.about_categories_list);
+        ExpandableListView _aboutCats = (ExpandableListView) _rootLayout.findViewById(R.id.about_categories_list);
         prepareListData();
-        listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, false);
+        ExpandableListAdapter listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, false);
         if(CentsApplication.is_loggedIN()){
             updateCompleted("View About");
         }
@@ -102,7 +98,7 @@ public class AboutFragment extends Fragment {
      */
     private void prepareListData(){
         //get help strings
-        _aboutVals = getResources().getStringArray(R.array.about_elements);
+        String[] _aboutVals = getResources().getStringArray(R.array.about_elements);
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();
 

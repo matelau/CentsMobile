@@ -32,24 +32,10 @@ import lecho.lib.hellocharts.view.LineChartView;
 public class WeatherFragment extends Fragment {
     private String LOG_TAG = WeatherFragment.class.getSimpleName();
     private LineChartView chart;
-    private LineChartData data;
-    private int numberOfLines = 12;
-    private int numberOfPoints = 2;
-    private boolean hasAxes = true;
-    private boolean hasLines = true;
-    private boolean hasPoints = true;
     private ValueShape shape = ValueShape.CIRCLE;
-    private boolean isFilled = false;
-    private boolean hasLabels = false;
-    private boolean isCubic = true;
-    private boolean hasLabelForSelected = true;
 
     private ColiResponse _colResponse;
 
-    private static String _location;
-    private static String _location2;
-    private ImageButton _search;
-    private View _rootView;
     private static String[] months = {"JAN", "FEB", "MAR", "APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};
 
 
@@ -59,15 +45,15 @@ public class WeatherFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        _rootView = inflater.inflate(R.layout.fragment_weather, container, false);
-        _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
+        View _rootView = inflater.inflate(R.layout.fragment_weather, container, false);
+        ImageButton _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
 
         _colResponse = CentsApplication.get_colResponse();
         List<ColiResponse.Element> elements = _colResponse.getElements();
         chart = (LineChartView) _rootView.findViewById(R.id.chart);
         //update locations
-        _location = elements.get(0).getName();
-        _location2 = null;
+        String _location = elements.get(0).getName();
+        String _location2 = null;
         if(elements.size() > 1){
             _location2 = elements.get(1).getName();
         }
@@ -127,7 +113,15 @@ public class WeatherFragment extends Fragment {
         List<Line> lines = new ArrayList<Line>();
         List<AxisValue> axisValues = new ArrayList<AxisValue>();
         //add city 1 weather
-        for (int i = 0; i < numberOfLines*2; i+=2) {
+        int numberOfLines = 12;
+        int numberOfPoints = 2;
+        boolean hasLines = true;
+        boolean hasPoints = true;
+        boolean isFilled = false;
+        boolean hasLabels = false;
+        boolean isCubic = true;
+        boolean hasLabelForSelected = true;
+        for (int i = 0; i < numberOfLines *2; i+=2) {
 
             List<PointValue> values = new ArrayList<PointValue>();
             //create axis labels
@@ -165,7 +159,7 @@ public class WeatherFragment extends Fragment {
         //add city 2
         if(hasSecondCity){
             //offset bounds so values are not in same columns
-            for (int i = 1; i < numberOfLines*2; i+=2) {
+            for (int i = 1; i < numberOfLines *2; i+=2) {
                 List<PointValue> values = new ArrayList<PointValue>();
                 for (int j = 0; j < numberOfPoints; ++j) {
                     int index = (i - 1)/2;
@@ -195,8 +189,9 @@ public class WeatherFragment extends Fragment {
             }
         }
 
-        data = new LineChartData(lines);
+        LineChartData data = new LineChartData(lines);
 
+        boolean hasAxes = true;
         if (hasAxes) {
             Axis axisX = new Axis(axisValues);
             Axis axisY = new Axis().setHasLines(true).setName("High and Low Temperature Range");

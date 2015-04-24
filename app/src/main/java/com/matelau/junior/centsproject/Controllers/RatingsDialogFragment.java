@@ -36,7 +36,6 @@ import retrofit.client.Response;
  */
 public class RatingsDialogFragment extends DialogFragment {
     private String LOG_TAG = RatingsDialogFragment.class.getSimpleName();
-    private LinearLayout _rootLayout;
     private RatingBar _rating;
     private boolean ratingLoaded = false;
     private List<CareerRating> cRatings;
@@ -71,7 +70,7 @@ public class RatingsDialogFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_ratings_dialog, null, false);
+        LinearLayout _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_ratings_dialog, null, false);
         TextView element = (TextView) _rootLayout.findViewById(R.id.toBeRated);
         element.setText("Rate: " + toBeRated);
         _rating = (RatingBar) _rootLayout.findViewById(R.id.rating);
