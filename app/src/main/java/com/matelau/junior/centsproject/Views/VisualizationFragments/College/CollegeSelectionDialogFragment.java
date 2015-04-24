@@ -13,8 +13,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -364,7 +366,7 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
                     _unis = strings;
                     CentsApplication.set_unis(strings);
                     loadAutoComp1();
-                    if(s != null && s.getElements().size() > 1)
+                    if (s != null && s.getElements().size() > 1)
                         loadAutoComp2();
 
                 }
@@ -378,6 +380,9 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
         }
     }
 
+    /**
+     * loads views for autocomp and hides others
+     */
     private void loadAutoComp1(){
         //hide spinner show autoComp
         Log.d(LOG_TAG, "Loading AutoText");
@@ -413,12 +418,31 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
             }
         });
 
+        _autoComp1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (event != null) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH ||
+                            actionId == EditorInfo.IME_ACTION_DONE ||
+                            event.getAction() == KeyEvent.ACTION_DOWN &&
+                                    event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                        submitUniversities();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
         if(_prevUni1 != null){
             _autoComp1.setText(_prevUni1);
             _university1 = _prevUni1;
         }
     }
 
+    /**
+     * loads views for autocompletion hides others
+     */
     private void loadAutoComp2(){
         //load auto comp 2
         //hide spinner show autoComp
@@ -453,6 +477,22 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
+            }
+        });
+
+        _autoComp2.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (event != null) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH ||
+                            actionId == EditorInfo.IME_ACTION_DONE ||
+                            event.getAction() == KeyEvent.ACTION_DOWN &&
+                                    event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                        submitUniversities();
+                        return true;
+                    }
+                }
+                return false;
             }
         });
 

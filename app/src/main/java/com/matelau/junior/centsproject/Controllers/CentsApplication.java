@@ -81,6 +81,7 @@ public class CentsApplication extends Application{
 
     //Cost of Living Vis
     private static ColiResponse _colResponse;
+    private static String[] _allCities;
 
     //School Comp vars
     //response from api
@@ -180,6 +181,14 @@ public class CentsApplication extends Application{
 
     public static String[] get_cities() {
         return _cities;
+    }
+
+    public static String[] get_allCities() {
+        return _allCities;
+    }
+
+    public static void set_allCities(String[] _allCities) {
+        CentsApplication._allCities = _allCities;
     }
 
     public static void set_cities(String[] _cities) {

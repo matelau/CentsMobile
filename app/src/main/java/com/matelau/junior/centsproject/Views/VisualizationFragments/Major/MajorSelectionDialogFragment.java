@@ -13,8 +13,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -104,8 +106,8 @@ public class MajorSelectionDialogFragment extends DialogFragment{
         instructions.setText("Select a state to view Universities");
         _submit = (Button) _rootLayout.findViewById(R.id.submit_select);
         _cancel = (Button) _rootLayout.findViewById(R.id.cancel_select);
-
-
+        _autoComp1 = (AutoCompleteTextView) _rootLayout.findViewById(R.id.ac_view1);
+        _autoComp2 = (AutoCompleteTextView) _rootLayout.findViewById(R.id.ac_view2);
         _vs = (TextView) _rootLayout.findViewById(R.id.vs);
         _instructions = (TextView) _rootLayout.findViewById(R.id.selection_instructions);
         _instructions.setText("Select one or two Majors");
@@ -127,7 +129,6 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                     isPlus = true;
                     _plusBtn.setBackground(getResources().getDrawable(R.drawable.ic_action_new));
                     _vs.setVisibility(View.GONE);
-                    _vs.setVisibility(View.GONE);
                     _majorTextView2.setVisibility(View.GONE);
                     _majorSpinner2.setVisibility(View.GONE);
                     _autoComp2.setVisibility(View.GONE);
@@ -141,48 +142,7 @@ public class MajorSelectionDialogFragment extends DialogFragment{
             @Override
             public void onClick(View v) {
                 if(_major1 != null || _major2 !=null ){
-                    //create query
-                    MajorQuery mQuery = new MajorQuery();
-                    mQuery.setOperation("compare");
-                    List<Major> majors = new ArrayList<Major>();
-                    String query = "";
-                    if(_major1 != null){
-                        majors.add(_major1);
-                        CentsApplication.set_major1(_major1);
-                        query = _major1.getName()+" ("+_major1.getLevel()+" )";
-                    }
-
-                    if(_major2 != null){
-                        majors.add(_major2);
-                        CentsApplication.set_major2(_major2);
-                        query = query+" vs. "+_major2.getName()+" ("+_major2.getLevel()+" )";
-                    }
-                    if(CentsApplication.is_loggedIN()){
-                        storeQuery(query);
-                    }
-                    mQuery.setMajors(majors);
-                    MajorService service = CentsApplication.get_centsRestAdapter().create(MajorService.class);
-                    service.getMajorInfo(mQuery, new Callback<MajorResponse>() {
-                        @Override
-                        public void success(MajorResponse majorResponse, Response response) {
-                            //Set MajorResponse
-                            CentsApplication.set_mResponse(majorResponse);
-                            //launch summary vis
-                            Log.d(LOG_TAG, "success");
-                            CentsApplication.set_selectedVis("Major Comparison");
-                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                            ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
-                            ft.addToBackStack("major-intro");
-                            ft.commit();
-                            dismiss();
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            Toast.makeText(getActivity(), "Error - please try again", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
+                   handleSubmit();
                 }
                 else{
                     Toast.makeText(getActivity(), "You Must Make a Selection", Toast.LENGTH_SHORT).show();
@@ -201,6 +161,54 @@ public class MajorSelectionDialogFragment extends DialogFragment{
         builder.setView(_rootLayout);
         return builder.create();
 
+    }
+
+    /**
+     * submits queries to the api
+     */
+    private void handleSubmit(){
+        //create query
+        MajorQuery mQuery = new MajorQuery();
+        mQuery.setOperation("compare");
+        List<Major> majors = new ArrayList<Major>();
+        String query = "";
+        if(_major1 != null){
+            majors.add(_major1);
+            CentsApplication.set_major1(_major1);
+            query = _major1.getName()+" ("+_major1.getLevel()+" )";
+        }
+
+        if(_major2 != null){
+            majors.add(_major2);
+            CentsApplication.set_major2(_major2);
+            query = query+" vs. "+_major2.getName()+" ("+_major2.getLevel()+" )";
+        }
+        if(CentsApplication.is_loggedIN()){
+            storeQuery(query);
+        }
+        mQuery.setMajors(majors);
+        MajorService service = CentsApplication.get_centsRestAdapter().create(MajorService.class);
+        service.getMajorInfo(mQuery, new Callback<MajorResponse>() {
+            @Override
+            public void success(MajorResponse majorResponse, Response response) {
+                //Set MajorResponse
+                CentsApplication.set_mResponse(majorResponse);
+                //launch summary vis
+                Log.d(LOG_TAG, "success");
+                CentsApplication.set_selectedVis("Major Comparison");
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
+                ft.addToBackStack("major-intro");
+                ft.commit();
+                dismiss();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(getActivity(), "Error - please try again", Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     /**
@@ -265,18 +273,36 @@ public class MajorSelectionDialogFragment extends DialogFragment{
             });
             _autoComp2.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     //force user to select one of the auto complete options
-                    if(!initialLoad2){
+                    if (!initialLoad2) {
                         _major2 = null;
                     }
                 }
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
+            });
+
+            _autoComp2.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (event != null) {
+                        if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH ||
+                                actionId == EditorInfo.IME_ACTION_DONE ||
+                                event.getAction() == KeyEvent.ACTION_DOWN &&
+                                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                            handleSubmit();
+                            return true;
+                        }
+                    }
+                    return false;
+                }
             });
         }
     }
@@ -406,7 +432,7 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                     Log.d(LOG_TAG, "Selected major1: " + _major1);
                 }
             });
-            _autoComp2.addTextChangedListener(new TextWatcher() {
+            _autoComp1.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 }
@@ -420,6 +446,22 @@ public class MajorSelectionDialogFragment extends DialogFragment{
 
                 @Override
                 public void afterTextChanged(Editable s) {
+                }
+            });
+
+            _autoComp1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (event != null) {
+                        if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH ||
+                                actionId == EditorInfo.IME_ACTION_DONE ||
+                                event.getAction() == KeyEvent.ACTION_DOWN &&
+                                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                            handleSubmit();
+                            return true;
+                        }
+                    }
+                    return false;
                 }
             });
         }
