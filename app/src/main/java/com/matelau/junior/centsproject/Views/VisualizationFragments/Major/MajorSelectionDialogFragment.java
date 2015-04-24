@@ -191,9 +191,6 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                 Log.d(LOG_TAG, "success");
                 CentsApplication.set_selectedVis("Major Comparison");
                 FragmentManager fm = getActivity().getSupportFragmentManager();
-                if(fm.getBackStackEntryCount() > 5){
-                    fm.popBackStackImmediate();
-                }
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
                 ft.addToBackStack("major-intro");

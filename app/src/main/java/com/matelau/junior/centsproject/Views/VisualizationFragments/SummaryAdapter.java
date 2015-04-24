@@ -18,6 +18,7 @@ import com.matelau.junior.centsproject.R;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by matelau on 3/5/15.
@@ -121,7 +122,7 @@ public class SummaryAdapter extends BaseAdapter {
             catTitle.setText("2013 AVERAGE SALARY");
             if(elements.get(0).getCareerSalary().get(10) != null){
                 int val = elements.get(0).getCareerSalary().get(10).intValue();
-                leftVal.setText("$" + val);
+                leftVal.setText("$" + NumberFormat.getNumberInstance(Locale.US).format(val));
             }
             else{
                 leftVal.setText("UNKNOWN");
@@ -129,7 +130,7 @@ public class SummaryAdapter extends BaseAdapter {
             if(secondCareer){
                 if(elements.get(1).getCareerSalary().get(10) != null){
                     int val2 = elements.get(1).getCareerSalary().get(10).intValue();
-                    rightVal.setText("$" + val2);
+                    rightVal.setText("$" + NumberFormat.getNumberInstance(Locale.US).format(val2));
                 }
                 else{
                     rightVal.setText("UNKNOWN");

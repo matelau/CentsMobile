@@ -143,9 +143,6 @@ public class RegistrationFragment extends Fragment {
         //update title
         getActivity().getActionBar().setTitle("Cents");
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        if(fm.getBackStackEntryCount() > 5){
-            fm.popBackStack();
-        }
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.fragment_placeholder, new SearchFragment()).addToBackStack("registration").commit();
         showRegistrationEmailNotice();

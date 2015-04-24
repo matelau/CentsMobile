@@ -37,7 +37,6 @@ public class CentsApplication extends Application{
     //debug true = show toast, set login credentials
     private static boolean debug = false;
     private static String LOG_TAG = CentsApplication.class.getSimpleName();
-    private static Context _centsContext;
     //Api Services
     private static RestAdapter _gdRestAdapter = new RestAdapter.Builder().setEndpoint("https://api.glassdoor.com/").build();
     private static RestAdapter _indeedRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("http://api.indeed.com").build();
@@ -102,9 +101,7 @@ public class CentsApplication extends Application{
     //Career comp vars
     private static CareerResponse _cResponse;
     private static String[] _careers;
-
-    public static Context getAppContext() {return _centsContext;}
-
+    
     public static RestAdapter get_gdRestAdapter() {return _gdRestAdapter;}
 
     public static RestAdapter get_indeedRestAdapter() {

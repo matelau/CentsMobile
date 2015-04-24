@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -289,7 +290,8 @@ public class CareerSelectionDialogFragment extends DialogFragment{
      */
     private void switchToViewPager(){
         CentsApplication.set_selectedVis("Career Comparison");
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
         ft.addToBackStack("career-intro");
         ft.commit();

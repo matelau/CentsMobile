@@ -116,9 +116,6 @@ public class WizardDialogFragment extends DialogFragment {
         //close wizard
         dismiss();
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        if(fm.getBackStackEntryCount() > 5){
-            fm.popBackStack();
-        }
         FragmentTransaction ft = fm.beginTransaction();
         //Add Intros here as they are created
         getActivity().getActionBar().setTitle(selected);

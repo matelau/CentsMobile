@@ -246,9 +246,6 @@ public class CollegeSelectionDialogFragment extends DialogFragment {
         //get college sum frag
         CentsApplication.set_selectedVis("College Comparison");
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        if(fm.getBackStackEntryCount() > 5){
-            fm.popBackStack();
-        }
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
         ft.addToBackStack("college-intro");

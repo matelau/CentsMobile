@@ -290,9 +290,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
      */
     private void switchToVizPager(){
         FragmentManager fm = ((FragmentActivity) _context).getSupportFragmentManager();
-        if(fm.getBackStackEntryCount() > 5){
-            fm.popBackStack();
-        }
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
         ft.addToBackStack("main-search");

@@ -224,9 +224,6 @@ public class CitySelectionDialogFragment extends DialogFragment {
                     CentsApplication.set_colResponse(coliResponse);
                     CentsApplication.set_selectedVis("COL Comparison");
                     FragmentManager fm = getActivity().getSupportFragmentManager();
-                    if(fm.getBackStackEntryCount() > 5){
-                        fm.popBackStack();
-                    }
                     FragmentTransaction ft = fm.beginTransaction();
                     ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
                     ft.addToBackStack("col-selection");

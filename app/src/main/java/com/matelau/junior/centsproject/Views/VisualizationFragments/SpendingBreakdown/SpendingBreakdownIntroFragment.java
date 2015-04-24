@@ -40,9 +40,6 @@ public class SpendingBreakdownIntroFragment extends Fragment {
                 Log.d(LOG_TAG, "onClick Switch to ViewPager");
                 CentsApplication.set_selectedVis("Spending Breakdown");
                 FragmentManager fm = getActivity().getSupportFragmentManager();
-                if (fm.getBackStackEntryCount() > 5) {
-                    fm.popBackStack();
-                }
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
                 ft.addToBackStack("spending-intro");

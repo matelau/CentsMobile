@@ -155,9 +155,6 @@ public class SpendingBreakdownFragment extends Fragment {
             public void onClick(View v) {
                 //return search frag
                 FragmentManager fm = getActivity().getSupportFragmentManager();
-                if (fm.getBackStackEntryCount() > 5) {
-                    fm.popBackStack();
-                }
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.replace(R.id.fragment_placeholder, new SearchFragment());
                 ft.addToBackStack("spending-breakdown");

@@ -321,9 +321,6 @@ public class SearchActivity extends FragmentActivity {
 
     private void showProfile(){
         FragmentManager fm = this.getSupportFragmentManager();
-        if(fm.getBackStackEntryCount() > 5){
-            fm.popBackStackImmediate();
-        }
         FragmentTransaction ft = fm.beginTransaction();
         _toolbar.setTitle("Profile");
         // Replace the container with the new fragment
@@ -335,9 +332,6 @@ public class SearchActivity extends FragmentActivity {
 
     private void showHelp(){
         FragmentManager fm = this.getSupportFragmentManager();
-        if(fm.getBackStackEntryCount() > 5){
-            fm.popBackStackImmediate();
-        }
         FragmentTransaction ft = fm.beginTransaction();
         _toolbar.setTitle("Help");
         ft.replace(R.id.fragment_placeholder, new HelpFragment());
@@ -358,9 +352,6 @@ public class SearchActivity extends FragmentActivity {
     private void showHome(){
         //Home
         FragmentManager fm = this.getSupportFragmentManager();
-        if(fm.getBackStackEntryCount() > 5){
-            fm.popBackStackImmediate();
-        }
         FragmentTransaction ft = fm.beginTransaction();
         _toolbar.setTitle("Cents");
         //Attach Search Fragment
@@ -376,9 +367,6 @@ public class SearchActivity extends FragmentActivity {
      */
     private void showExamples(){
         FragmentManager fm = this.getSupportFragmentManager();
-        if(fm.getBackStackEntryCount() > 5){
-            fm.popBackStackImmediate();
-        }
         CentsApplication.set_selectedVis("Examples");
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.fragment_placeholder, new VisualizationPagerFragment());
@@ -391,9 +379,6 @@ public class SearchActivity extends FragmentActivity {
      */
     private void showRegistration(){
         FragmentManager fm = this.getSupportFragmentManager();
-        if(fm.getBackStackEntryCount() > 5){
-            fm.popBackStackImmediate();
-        }
         FragmentTransaction ft = fm.beginTransaction();
         _toolbar.setTitle("Register");
         //Attach Search Fragment
@@ -410,9 +395,6 @@ public class SearchActivity extends FragmentActivity {
      */
     private void showAbout(){
         FragmentManager fm = this.getSupportFragmentManager();
-        if(fm.getBackStackEntryCount() > 5){
-            fm.popBackStackImmediate();
-        }
         FragmentTransaction ft = fm.beginTransaction();
         _toolbar.setTitle("About");
         ft.replace(R.id.fragment_placeholder, new AboutFragment());
