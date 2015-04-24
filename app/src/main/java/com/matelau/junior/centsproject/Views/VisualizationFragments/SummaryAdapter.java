@@ -155,7 +155,7 @@ public class SummaryAdapter extends BaseAdapter {
             catTitle.setText("PROJECTED JOB DEMAND");
             if(elements.get(0).getCareerDemand().get(0) != null){
                 int jDemand = elements.get(0).getCareerDemand().get(0).intValue();
-                leftVal.setText(jDemand + " JOBS");
+                leftVal.setText(NumberFormat.getNumberInstance(Locale.US).format(jDemand) + " JOBS");
             }
             else{
                 leftVal.setText("UNKNOWN");
@@ -164,7 +164,7 @@ public class SummaryAdapter extends BaseAdapter {
             if(secondCareer){
                 if(elements.get(1).getCareerDemand().get(0) != null){
                     int jDemand2 = elements.get(1).getCareerDemand().get(0).intValue();
-                    rightVal.setText(jDemand2 + " JOBS");
+                    rightVal.setText(NumberFormat.getNumberInstance(Locale.US).format(jDemand2) + " JOBS");
                 }
                 else{
                     rightVal.setText("UNKNOWN");
@@ -244,7 +244,7 @@ public class SummaryAdapter extends BaseAdapter {
             Double tuition = school1.get(0);
             if(tuition != null){
                 int t = tuition.intValue();
-                leftVal.setText("$"+t);
+                leftVal.setText("$"+NumberFormat.getNumberInstance(Locale.US).format(t));
             }
             else{
                 leftVal.setText("UNKNOWN");
@@ -253,7 +253,7 @@ public class SummaryAdapter extends BaseAdapter {
                 tuition = school2.get(0);
                 if(tuition != null){
                     int t = tuition.intValue();
-                    rightVal.setText("$"+t);
+                    rightVal.setText("$"+NumberFormat.getNumberInstance(Locale.US).format(t));
                 }
                 else{
                     rightVal.setText("UNKNOWN");
@@ -266,7 +266,7 @@ public class SummaryAdapter extends BaseAdapter {
             Double tuition = school1.get(1);
             if(tuition != null){
                 int t = tuition.intValue();
-                leftVal.setText("$"+t);
+                leftVal.setText("$"+NumberFormat.getNumberInstance(Locale.US).format(t));
             }
             else{
                 leftVal.setText("UNKNOWN");
@@ -275,7 +275,7 @@ public class SummaryAdapter extends BaseAdapter {
                 tuition = school2.get(1);
                 if(tuition != null){
                     int t = tuition.intValue();
-                    rightVal.setText("$"+t);
+                    rightVal.setText("$"+NumberFormat.getNumberInstance(Locale.US).format(t));
                 }
                 else{
                     rightVal.setText("UNKNOWN");
@@ -310,7 +310,7 @@ public class SummaryAdapter extends BaseAdapter {
             Double enrollment = school1.get(3);
             if(enrollment != null){
                 int t = enrollment.intValue();
-                leftVal.setText(""+t);
+                leftVal.setText(""+NumberFormat.getNumberInstance(Locale.US).format(t));
             }
             else{
                 leftVal.setText("UNKNOWN");
@@ -319,7 +319,7 @@ public class SummaryAdapter extends BaseAdapter {
                 enrollment = school2.get(3);
                 if(enrollment != null){
                     int t = enrollment.intValue();
-                    rightVal.setText(""+t);
+                    rightVal.setText(""+NumberFormat.getNumberInstance(Locale.US).format(t));
                 }
                 else{
                     rightVal.setText("UNKNOWN");
@@ -393,10 +393,10 @@ public class SummaryAdapter extends BaseAdapter {
                 labor2 = elements.get(1).getLabor();
             }
             int income = labor1.get(1).intValue();
-            leftVal.setText("$"+income);
+            leftVal.setText("$"+NumberFormat.getNumberInstance(Locale.US).format(income));
             if(hasSecondCity){
                 income = labor2.get(1).intValue();
-                rightVal.setText("$"+income);
+                rightVal.setText("$"+NumberFormat.getNumberInstance(Locale.US).format(income));
             }
             else{
                 rightVal.setVisibility(View.GONE);
@@ -510,14 +510,14 @@ public class SummaryAdapter extends BaseAdapter {
         if(position == 0){
             catTitle.setText("AVERAGE SALARY");
             if(vals1.get(position) != null){
-                leftVal.setText("$"+vals1.get(position).intValue());
+                leftVal.setText("$"+NumberFormat.getNumberInstance(Locale.US).format(vals1.get(position).intValue()));
             }
             else{
                 leftVal.setText("Unknown");
             }
             if(vals2 != null){
                 if(vals2.get(position) != null)
-                    rightVal.setText("$"+vals2.get(position).intValue());
+                    rightVal.setText("$"+NumberFormat.getNumberInstance(Locale.US).format(vals2.get(position).intValue()));
                 else
                     rightVal.setText("Unknown");
 

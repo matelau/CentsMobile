@@ -137,13 +137,13 @@
         android:layout_gravity="center"
         android:id="@+id/city_add">
         <View
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:background="@drawable/circle"
             android:id="@+id/circle1"/>
         <View
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:background="@drawable/ic_action_new"
             android:id="@+id/circle"
             android:layout_above="@+id/circle1"

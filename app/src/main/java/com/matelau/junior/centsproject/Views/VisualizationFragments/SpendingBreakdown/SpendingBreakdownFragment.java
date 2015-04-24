@@ -32,10 +32,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import lecho.lib.hellocharts.model.PieChartData;
@@ -749,14 +751,14 @@ public class SpendingBreakdownFragment extends Fragment {
         SliceValue taxArcValue = new SliceValue(percents[0], colors[0]);
 
         float taxMonthlyPortion = percents[0] * salary;
-        String taxLabel = labels[0].toUpperCase()+" "+df.format(taxMonthlyPortion);
+        String taxLabel = labels[0].toUpperCase()+" "+ NumberFormat.getNumberInstance(Locale.US).format((int) taxMonthlyPortion);
         values.add(taxArcValue.setLabel(taxLabel));
         //---------All Other Values -------------
         for (int i = 1; i < numValues; ++i) {
             SliceValue arcValue = new SliceValue(percents[i], colors[i]);
 
             float monthlyPortion = percents[i] * (CentsApplication.get_disposableIncome()/12f);
-            String label = labels[i].toUpperCase()+" "+df.format(monthlyPortion);
+            String label = labels[i].toUpperCase()+" "+NumberFormat.getNumberInstance(Locale.US).format((int) monthlyPortion);
             values.add(arcValue.setLabel(label));
         }
 

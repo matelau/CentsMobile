@@ -42,8 +42,8 @@
                             android:id="@+id/col_location1"
                             android:text="Loading"
                             android:textColor="@android:color/black"
-                            android:textSize="12dp"
-                            android:padding="2dp"
+                            android:textSize="10sp"
+                            android:layout_margin="2dp"
                             android:gravity="center"
                             android:layout_centerHorizontal="true"/>
                         <ImageView
@@ -63,9 +63,9 @@
                             android:layout_height="fill_parent"
                             android:id="@+id/col_location2"
                             android:text="Loading"
-                            android:padding="2dp"
+                            android:layout_margin="2dp"
                             android:textColor="@android:color/black"
-                            android:textSize="12dp"
+                            android:textSize="10sp"
                             android:gravity="center"
                             android:layout_centerHorizontal="true"/>
                         <ImageView
