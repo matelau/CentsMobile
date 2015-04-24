@@ -90,6 +90,7 @@ public class CentsApplication extends Application{
     //the position of the universities state in the state array
     private static int pos1 = -1;
     private static int pos2 = -1;
+    private static String[] _unis;
 
     //Major Comp Vars
     private static MajorResponse _mResponse;
@@ -348,6 +349,14 @@ public class CentsApplication extends Application{
 
     public static void set_university2(String _university2) {
         CentsApplication._university2 = _university2;
+    }
+
+    public static String[] get_unis() {
+        return _unis;
+    }
+
+    public static void set_unis(String[] _unis) {
+        CentsApplication._unis = _unis;
     }
 
     public static MajorResponse get_mResponse() {

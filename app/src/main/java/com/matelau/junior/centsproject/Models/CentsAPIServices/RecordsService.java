@@ -16,4 +16,10 @@ public interface RecordsService {
 
     @GET("/api/v2/careers")
     void getRecordsV2(Callback<String[]> s);
+
+    @GET("/api/v2/schools")
+    void getSchoolsV2(Callback<String[]> s);
+
+    @GET("/api/v2/cost_of_living?only_state_names=false")
+    void getCitiesV2(Callback<String[]> s);
 }

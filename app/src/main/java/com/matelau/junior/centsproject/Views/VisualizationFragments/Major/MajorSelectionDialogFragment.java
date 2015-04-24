@@ -59,16 +59,11 @@ public class MajorSelectionDialogFragment extends DialogFragment{
     private AutoCompleteTextView _autoComp2;
     private boolean initialLoad1 = true;
     private boolean initialLoad2 = true;
-
-
     private String[] _majors;
-
-
     private TextView _vs;
     private TextView _majorTextView1;
     private TextView _majorTextView2;
     private TextView _instructions;
-
     private boolean isPlus;
     private Major _major1;
     private Major _major2;
@@ -109,8 +104,8 @@ public class MajorSelectionDialogFragment extends DialogFragment{
         instructions.setText("Select a state to view Universities");
         _submit = (Button) _rootLayout.findViewById(R.id.submit_select);
         _cancel = (Button) _rootLayout.findViewById(R.id.cancel_select);
-        _autoComp1 = (AutoCompleteTextView) _rootLayout.findViewById(R.id.ac_view1);
-        _autoComp2 = (AutoCompleteTextView) _rootLayout.findViewById(R.id.ac_view2);
+
+
         _vs = (TextView) _rootLayout.findViewById(R.id.vs);
         _instructions = (TextView) _rootLayout.findViewById(R.id.selection_instructions);
         _instructions.setText("Select one or two Majors");
@@ -265,7 +260,6 @@ public class MajorSelectionDialogFragment extends DialogFragment{
                     TextView tv = (TextView) view;
                     String full_selection = tv.getText().toString();
                     _major2 = parseMajor(full_selection);
-//                            _major2.setOrder(2);
                     Log.d(LOG_TAG, "Selected Major2: " + _major2);
                 }
             });
