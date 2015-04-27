@@ -85,7 +85,7 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
 
         //setup dynamic listview
         ListView _sbAttributes = (ListView) _rootLayout.findViewById(R.id.sb_attr_list);
-        SBArrayAdapter _rAdapter = new SBArrayAdapter();
+        final SBArrayAdapter _rAdapter = new SBArrayAdapter();
         CentsApplication.set_rAdapter(_rAdapter);
         _sbAttributes.setAdapter(_rAdapter);
 
@@ -94,6 +94,8 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                //save all changes via api on submit if logged in
+                _rAdapter.save(true);
                 //reload viz
                 CentsApplication.set_selectedVis("Spending Breakdown");
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -209,7 +211,7 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
                     }
 
                     _values.get(position)._percent = percent;
-                    save();
+                    save(false);
                 }
 
                 @Override
@@ -230,7 +232,7 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
                         lock.setBackground(getResources().getDrawable(R.drawable.lock_color_small));
                     }
                     //save change
-                    save();
+                    save(false);
 
                     notifyDataSetChanged();
                 }
@@ -247,7 +249,7 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
                         _values.remove(position);
                     }
                     //save change
-                    save();
+                    save(true);
                     notifyDataSetChanged();
 
                 }
@@ -260,10 +262,10 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
         /**
          * Stores values to local storage and db if logged in
          */
-        public void save(){
+        public void save(boolean saveAPI){
             String filename = CentsApplication.get_currentBreakdown()+".dat";
             CentsApplication.saveSB(filename, getActivity());
-            if(CentsApplication.is_loggedIN()){
+            if(CentsApplication.is_loggedIN() && saveAPI){
                 updateCompleted("Create Custom Spending");
                 //store sb to db via api
                 HashMap<String, String> elements = new HashMap<String,String>();

@@ -513,7 +513,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         String query = tv.getText().toString();
                         handleSubmit(query);
                         storeQuery(query);
-                        Toast.makeText(_context, "Searching for: "+query, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
