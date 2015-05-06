@@ -21,7 +21,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:text="@string/natl_res"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:padding="5dp"
             android:textColor="@color/primary_gray"
             android:id="@+id/cat1_value"
@@ -31,19 +31,11 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:text="@string/natl_res"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:padding="5dp"
             android:textColor="@color/primary_gray"
             android:id="@+id/cat2_value"
             android:gravity="center_horizontal"
             android:layout_weight="1"/>
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            ads:adSize="BANNER"
-            ads:adUnitId="@string/listing_ad_unit_id">
-        </com.google.android.gms.ads.AdView>
     </LinearLayout>
 </LinearLayout>

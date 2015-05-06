@@ -3,6 +3,7 @@ package com.matelau.junior.centsproject.Controllers;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +19,9 @@ import java.util.List;
 
 
 public class HelpFragment extends Fragment {
-    private RelativeLayout _rootLayout;
-    private ExpandableListView _profileCats;
-    private ExpandableListAdapter listAdapter;
+    private final String LOG_TAG = HelpFragment.class.getSimpleName();
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
-    private String[] helpVals;
 
 
     public HelpFragment() {
@@ -35,21 +33,36 @@ public class HelpFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_help, null, false);
+        RelativeLayout _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_help, null, false);
 
         //setup profile card list
-        _profileCats = (ExpandableListView) _rootLayout.findViewById(R.id.help_categories_list);
+        ExpandableListView _profileCats = (ExpandableListView) _rootLayout.findViewById(R.id.help_categories_list);
         prepareListData();
-        listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
+        ExpandableListAdapter listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild, false);
 
         // setting list adapter
         _profileCats.setAdapter(listAdapter);
         return _rootLayout;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "resumed");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "destroyed");
+    }
+
+    /**
+     * Creates View header text and child elements
+     */
     private void prepareListData(){
         //get help strings
-        helpVals = getResources().getStringArray(R.array.help_elements);
+        String[] helpVals = getResources().getStringArray(R.array.help_elements);
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();
 

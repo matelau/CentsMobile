@@ -37,16 +37,11 @@ public class CostOfLivingFragment extends Fragment{
     CardView _cv;
     ColumnChartView _chart;
     ColumnChartData _chartdata;
-    private boolean hasAxes = true;
-    private boolean hasAxesNames = true;
-    private boolean hasLabels = true;
-    private boolean hasLabelForSelected = true;
     private TextView _loc2;
     private static String _location;
     private static String _location2;
-    private ImageButton _search;
     private View _rootView;
-    private final String[] _labels_short = {"Over", "goods", "groc", "health", "housing","trans","util"};
+    private final String[] _labels_short = {"Overall", "Goods", "grocery", "health", "housing","trans","util"};
 
     public CostOfLivingFragment() {
         // Required empty public constructor
@@ -59,7 +54,7 @@ public class CostOfLivingFragment extends Fragment{
         // create visualizations!
         _rootView = inflater.inflate(R.layout.fragment_cost_of_living, container, false);
         _cv = (CardView) _rootView.findViewById(R.id.col_card_view);
-        _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
+        ImageButton _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
 
         _loc2 = (TextView) _rootView.findViewById(R.id.col_location2);
         _chart = (ColumnChartView) _rootView.findViewById(R.id.col_vis);
@@ -78,12 +73,16 @@ public class CostOfLivingFragment extends Fragment{
                 //show city selection
                 showCitySelectionDialog();
 
-               }
+            }
         });
 
         return _rootView;
     }
 
+
+    /**
+     * Show selection dialog
+     */
     private void showCitySelectionDialog(){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         CitySelectionDialogFragment csd = new CitySelectionDialogFragment();
@@ -107,29 +106,22 @@ public class CostOfLivingFragment extends Fragment{
 
     }
 
-    /*
-        Pulls up Dialog box to select a second location
-     */
-    public void showSecondCityDialog(){
-        FragmentManager fm = getFragmentManager();
-        CitySelectionDialogFragment csd = new CitySelectionDialogFragment();
-        csd.setTargetFragment(this, 01);
-        csd.show(fm, "CitySelection");
-    }
-
 
     /**
      *  Sets vars for updated location
      */
     private void updateLocation(){
         ColiResponse cResponse = CentsApplication.get_colResponse();
-        _location = cResponse.getLocation1();
-        _location2 = cResponse.getLocation2();
+        List<ColiResponse.Element> elements = cResponse.getElements();
+        _location = elements.get(0).getName();
+        if(elements.size() > 1)
+            _location2 = elements.get(1).getName();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(LOG_TAG, "Resumed");
         updateLocation();
         generateData();
     }
@@ -141,28 +133,28 @@ public class CostOfLivingFragment extends Fragment{
         int numColumns = 7;
 
         // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
-//        List<Column> columns = new ArrayList<Column>();
+        List<ColiResponse.Element> elements = CentsApplication.get_colResponse().getElements();
 
-
-        double[] col_vals = listToDblArr(CentsApplication.get_colResponse().getCli1());
-        double[] col_vals2 = listToDblArr(CentsApplication.get_colResponse().getCli2());
-
+        double[] col_vals = listToDblArr(elements.get(0).getCli());
+        double[] col_vals2 = {};
+        if(elements.size() > 1){
+            col_vals2 = listToDblArr(elements.get(1).getCli());
+        }
 
         List<AxisValue> axisVals = new ArrayList<AxisValue>();
         List<Column> columns = new ArrayList<Column>();
         List<SubcolumnValue> values;
         for(int i = 0; i < numColumns; i++){
-//            List<ColumnValue> values = new ArrayList<ColumnValue>();
             values = new ArrayList<SubcolumnValue>();
             //normalize col_vals National avg = 0
             float column_value = (float) (col_vals[i] - 100f);
             int c;
             String label = "";
             if(column_value < 0) {
-                label =  Math.abs(column_value) + "% below";
+                label =  (int)Math.abs(column_value) + "% below";
             }
             else{
-                label = column_value + "% above";
+                label = (int)column_value + "% above";
             }
             //if column_value = 0 add a negligible value to display
             if(Math.round(column_value) == 0)
@@ -176,10 +168,10 @@ public class CostOfLivingFragment extends Fragment{
                 float column_value2 = (float) (col_vals2[i] - 100f);
                 String label2 = "";
                 if(column_value2 < 0) {
-                    label2 =  Math.abs(column_value2) + "% below";
+                    label2 =  (int)Math.abs(column_value2) + "% below";
                 }
                 else{
-                    label2 = column_value2 + "% above";
+                    label2 = (int)column_value2 + "% above";
                 }
                 //if column_value = 0 add a negligible value to display
                 if(Math.round(column_value2) == 0)
@@ -190,34 +182,37 @@ public class CostOfLivingFragment extends Fragment{
             }
 
             Column column = new Column(values);
+            boolean hasLabels = true;
             column.setHasLabels(hasLabels);
+            boolean hasLabelForSelected = true;
             column.setHasLabelsOnlyForSelected(hasLabelForSelected);
             columns.add(column);
-            axisVals.add(new AxisValue(i, _labels_short[i].toUpperCase().toCharArray()));
+            AxisValue currentAxis = new AxisValue(i);
+            currentAxis.setLabel(_labels_short[i].toUpperCase());
+            axisVals.add(currentAxis);
         }
 
         _chartdata = new ColumnChartData(columns);
 
-        if (hasAxes) {
-            Axis axisX = new Axis();
-            Axis axisY = new Axis().setHasLines(true);
-            if (hasAxesNames) {
-                axisX.setName(CentsApplication.get_colResponse().getLocation1());
-                axisY.setName("");
-            }
-            _chartdata.setAxisXBottom(new Axis(axisVals));
-            _chartdata.setAxisYLeft(axisY);
-        } else {
-            _chartdata.setAxisXBottom(null);
-            _chartdata.setAxisYLeft(null);
-        }
+        Axis axisX = new Axis(axisVals);
+        axisX.setTextSize(8);
+        Axis axisY = new Axis().setHasLines(true);
+        axisY.setName("");
+        _chartdata.setAxisXBottom(axisX);
+        _chartdata.setAxisYLeft(axisY);
 
-        _chartdata.setValueLabelTextSize(8);
+        _chartdata.setValueLabelTextSize(9);
         //make the bars smaller so they don't overfill chart
         _chartdata.setFillRatio(.7f);
         _chart.setColumnChartData(_chartdata);
     }
 
+
+    /**
+     * converts double list to array
+     * @param doubles
+     * @return
+     */
     private double[] listToDblArr(List<Double> doubles){
         final double[] result = new double[doubles.size()];
         for(int i = 0; i<doubles.size(); i++){
@@ -227,5 +222,10 @@ public class CostOfLivingFragment extends Fragment{
         return result;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
 
 }

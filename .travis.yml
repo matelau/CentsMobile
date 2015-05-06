@@ -9,11 +9,11 @@ android:
   components:
     # Uncomment the lines below if you want to
     # use the latest revision of Android SDK Tools
-    # - platform-tools
-    # - tools
+    - platform-tools
+    - tools
 
     # The BuildTools version used by your project
-    - build-tools-21.1.2
+    - build-tools-22.0.1
 
     # The SDK version used to compile your project
     - android-21
@@ -22,11 +22,12 @@ android:
     - extra-google-m2repository
     - extra-android-m2repository
     - addon-google_apis-google-21
+    - extra-google-google_play_services
 
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
     - sys-img-armeabi-v7a-android-21
-notifications:
-  slack:
-    rooms:
-      - codepurpose:QoQ34tZgxAo6tbjND3RfzLeU#capstone-notification
+# notifications:
+  # slack:
+  #   rooms:
+  #     - codepurpose:QoQ34tZgxAo6tbjND3RfzLeU#capstone-notification

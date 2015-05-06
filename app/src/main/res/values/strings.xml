@@ -38,6 +38,7 @@
         <item>Wizard</item>
         <item>About</item>
         <item>Help</item>
+        <item>Submit Feedback</item>
     </string-array>
 
     <string-array name="nav_array_logged_in">
@@ -48,22 +49,23 @@
         <item>Wizard</item>
         <item>About</item>
         <item>Help</item>
+        <item>Submit Feedback</item>
     </string-array>
     <string-array name="help_elements">
-        <item>Cents is focused around finding and comparing statistics for majors, universities, careers and cities. Our database contains over #### cities, #### majors, #### universities and #### careers. We also provide a tool to analyze how an annual income will be divided each month between certain standard categories. Each search category can be seen with a brief explantion on the examples page.</item>
+        <item>Cents is focused around finding and comparing statistics for majors, universities, careers and cities. Our database contains over 2200 cities, 330 majors, 900 universities and 650  careers. We also provide a tool to analyze how an annual income will be divided each month between certain standard categories. Each search category can be seen with a brief explanation on the examples page.</item>
         <item>Cents is built around getting results quickly. To best achieve this please the limit the complexity of your searches. If you want to compare two school, enter something along these lines: "Stanford vs. MIT". All other searches are structured the same way (City 1 vs City 2). One term may also be entered for each search if a comparison is not needed. All searches can be made easily from the examples page, where auto complete can assist with search terms.</item>
-        <item>Cents will automatically redirect to the examples page if the search is not recognized successfully. There all categories displayed with auto fill capabilites to allow a more guided search for the user. If you still feel like we are missing something big, feel free to contact us.</item>
+        <item>Cents will automatically redirect to the examples page if the search is not recognized successfully. There all categories displayed with auto fill capabilities to allow a more guided search for the user. If you still feel like we are missing something big, feel free to contact us.</item>
         <item>We pull our data from the Bureau of Labor Statistics to satisfy our data reliability requirements. Not all careers are available, but many times, a broader career can be found. Our examples page has auto complete functionality that we hope will help guide you towards successful results.</item>
-        <item>Right now our database contains over #### cities, so there are some smaller cities that are not available. We suggest searching for a larger nearby city that can give some insight into the smaller surrounding cities. To check out all cities that we have right now, go to the examples page.</item>
-        <item>Right now our database contains over #### universities, so there are some smaller universities that are not available. We are always seeking out reliable data for the smaller universities, so come back and check soon. To check out all universities that we have right now, go to the examples page.</item>
+        <item>Right now our database contains over 2200 cities, so there are some smaller cities that are not available. We suggest searching for a larger nearby city that can give some insight into the smaller surrounding cities. To check out all cities that we have right now, go to the examples page.</item>
+        <item>Right now our database contains over 900 universities, so there are some smaller universities that are not available. We are always seeking out reliable data for the smaller universities, so come back and check soon. To check out all universities that we have right now, go to the examples page.</item>
         <item>Each school seems to name a major differently, so we have gone through and decided upon a standard to make data storage and retrieval much faster. We realize that our name may differ from many schools and so we have implemented an auto complete feature on the examples page to help.</item>
     </string-array>
 
     <string-array name="about_elements">
         <item>The Cents idea is to help prepare potential and current college students face the realities of their educational choices. There are a lot of graduates that have entered the workforce with a large amount of debt and without the prospect of jobs to allow them to pay off that debt. Cents will provide users information, in a very intuitive way, that will allow students to see the impact of their educational choices and what the future statistically holds.</item>
         <item>We have strict requirements for our data. To meet these standards we rely heavily on data released publicly by reputable organizations. Thus, most data comes from government sources. We also have some crowd sourced data, the cents user ratings, which rely upon you, the user.</item>
-        <item>Our cents job rating is a derived statistic based off of current and projected values provided by the Bureau of Labor Statistics. Each value is given a weight and scaled to reflect a rating from 0 to 5. User ratings are crowd sourced, meaning our users are able to give their input. Users can vote only vote once, and all votes are weighted equally.</item>
-        <item>We are four students finishing our bachelors degree in computer science and the University of Utah. We saw a need for a tool like this and have been working hard ever since. We love feedback, tell us what we are doing good, need to improve, or anything else you can think of. Thanks for visiting!</item>
+        <item>Our Cents job rating is a derived statistic based off of current and projected values provided by the Bureau of Labor Statistics. Each value is given a weight and scaled to reflect a rating from 0 to 5. User ratings are crowd sourced, meaning our users are able to give their input. Users can vote only vote once, and all votes are weighted equally.</item>
+        <item>Cents is created by students who have had to deal with the harsh financial realities college goers face today. We love feedback, tell us what we are doing good, need to improve, or anything else you can think of. Thanks for visiting!</item>
     </string-array>
 
     <string-array name="states_array">
@@ -120,6 +122,31 @@
         <item>Wyoming</item>
         </string-array>
 
+    <string-array name="rating_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="sections">
+        <item>View Major Comparison</item>
+        <item>View College Comparison</item>
+        <item>View Career Comparison</item>
+        <item>View Spending Breakdown</item>
+        <item>View About</item>
+        <item>View City Comparison</item>
+        <item>Create Custom Spending</item>
+        <item>Create Custom Color</item>
+        <item>Use Mobile</item>
+        <item>Use Wizard</item>
+        <item>Use Main Search</item>
+        <item>Use Examples</item>
+        <item>Submit Feedback</item>
+    </string-array>
+
+
 
 
     <string name="title_activity_visualization_pager">VisualizationPagerActivity</string>
@@ -134,5 +161,13 @@
     <string name="title1">Title1</string>
     <string name="title2">Title 2</string>
     <string name="sub_feedback">Submit Feedback</string>
+    <string name="career_hint">Begin typing to see options</string>
+    <string name="fname">First Name</string>
+    <string name="email">Email</string>
+    <string name="pword">Password</string>
+    <string name="cpword">Confirm Password</string>
+    <string name="emessage">All Fields are Required</string>
+    <string name="register">Register</string>
+    <string name="spending_instructions">Single tap to switch between tabs, double tap to modify</string>
 
 </resources>

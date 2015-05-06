@@ -3,10 +3,25 @@
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+
+    <com.daimajia.slider.library.SliderLayout
+        android:id="@+id/slider"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_alignParentTop="true"
+        />
+    <com.daimajia.slider.library.Indicators.PagerIndicator
+        android:id="@+id/custom_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@+id/slider"
+        />
     <TextView
     android:layout_width="match_parent"
     android:layout_height="30dp"
-    android:text="WHAT WOULD YOU LIKE TO KNOW?"
+    android:text="WHAT WOULD YOU LIKE TO COMPARE?"
     android:gravity="center"
     android:id="@+id/searchbar_text"
     android:layout_above="@+id/search_bar"
@@ -46,22 +61,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id">
     </com.google.android.gms.ads.AdView>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="16dp"
-        android:text="@string/sub_feedback"
-        android:textColor="@color/compliment_primary"
-        android:gravity="center"
-        android:id="@+id/feedback"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="15dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/help_text" />
+
+
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="16dp"-->
+        <!--android:text="@string/sub_feedback"-->
+        <!--android:textColor="@color/compliment_primary"-->
+        <!--android:gravity="center"-->
+        <!--android:id="@+id/feedback"-->
+        <!--android:layout_marginLeft="10dp"-->
+        <!--android:layout_marginRight="10dp"-->
+        <!--android:layout_marginBottom="15dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignStart="@+id/help_text" />-->
 
 </RelativeLayout>

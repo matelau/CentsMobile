@@ -1,6 +1,7 @@
 package com.matelau.junior.centsproject.Controllers;
 
-import android.net.Uri;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -15,25 +16,36 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.CostOfLivingFragment;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
+import com.matelau.junior.centsproject.Models.VizModels.CareerResponse;
+import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.CareerComparisonSummaryFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.CareerIntroFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.SalaryChartFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.Career.UnemploymentFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.College.CollegeComparisonSummary;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.College.CollegeIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLIntroFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.COLSummaryFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.CostOfLivingFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.LaborStatsFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.OtherColFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.TaxesFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.WeatherFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.MajorComparisonSummary;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.MajorIntroFragment;
+import com.matelau.junior.centsproject.Views.VisualizationFragments.Major.TopJobsFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownFragment;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SpendingBreakdown.SpendingBreakdownIntroFragment;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * PagerFragment used to show visualizations and summaries
@@ -61,8 +73,19 @@ public class VisualizationPagerFragment extends Fragment {
         //bind sliding tabs
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) _rootlayout.findViewById(R.id.tabs);
         tabs.setViewPager(_viewPager);
-
         return _rootlayout;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "resumed");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "destroyed");
     }
 
     /**
@@ -71,38 +94,41 @@ public class VisualizationPagerFragment extends Fragment {
     private void initialisePaging() {
         List<Fragment> fragments = new Vector<Fragment>();
         String selectedVis = CentsApplication.get_selectedVis();
-//        String title = selectedVis.replace("Comparison", " Comparison");
         getActivity().getActionBar().setTitle(selectedVis);
-//        Log.d(LOG_TAG, "InitialisePaging - SelectedVis: " + selectedVis);
-        if(CentsApplication.isDebug())
-//            Toast.makeText(getActivity(), "Loading Vis: " + selectedVis, Toast.LENGTH_SHORT).show();
-        //load fragments based on user selections
         if(selectedVis == null){
             //return to examples
             CentsApplication.set_selectedVis("Examples");
             selectedVis = "Examples";
         }
+        String completed = "";
 
         switch (selectedVis) {
             case "Career Comparison":
+                completed = "View Career Comparison";
                 fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
-//                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
-//                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
+                fragments.add(Fragment.instantiate(getActivity(), UnemploymentFragment.class.getName()));
+                boolean addSalary = addSalary();
+                if(addSalary){
+                    fragments.add(Fragment.instantiate(getActivity(), SalaryChartFragment.class.getName()));
+                }
+
 //                fragments.add(Fragment.instantiate(getActivity(), CareerComparisonSummaryFragment.class.getName()));
                 break;
             case "College Comparison":
+                completed = "View College Comparison";
                 fragments.add(Fragment.instantiate(getActivity(), CollegeComparisonSummary.class.getName()));
                 break;
             case "Major Comparison":
+                completed = "View Major Comparison";
                 fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
-//                fragments.add(Fragment.instantiate(getActivity(), MajorComparisonSummary.class.getName()));
+                //check for top jobs
+                boolean addTJ = addTobJobs();
+                if(addTJ){
+                    fragments.add(Fragment.instantiate(getActivity(), TopJobsFragment.class.getName()));
+                }
                 break;
             case "COL Comparison":
+                completed = "View City Comparison";
                 getActivity().getActionBar().setTitle("City Comparison");
                 fragments.add(Fragment.instantiate(getActivity(), COLSummaryFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), CostOfLivingFragment.class.getName()));
@@ -112,11 +138,13 @@ public class VisualizationPagerFragment extends Fragment {
                 fragments.add(Fragment.instantiate(getActivity(), WeatherFragment.class.getName()));
                 break;
             case "Spending Breakdown":
+                completed = "View Spending Breakdown";
                 fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownFragment.class.getName()));
 //                fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownModDialogFragment.class.getName()));
                 break;
             default:
                 //load examples fragments
+                completed = "Use Examples";
                 fragments.add(Fragment.instantiate(getActivity(), COLIntroFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), SpendingBreakdownIntroFragment.class.getName()));
                 fragments.add(Fragment.instantiate(getActivity(), CollegeIntroFragment.class.getName()));
@@ -124,11 +152,14 @@ public class VisualizationPagerFragment extends Fragment {
                 fragments.add(Fragment.instantiate(getActivity(), MajorIntroFragment.class.getName()));
                 break;
         }
+
+        if(CentsApplication.is_loggedIN()){
+            updateCompleted(completed);
+        }
         //set fragments
         _pageAdapter = new PageAdapter(getActivity().getSupportFragmentManager(), fragments);
         _viewPager.setAdapter(_pageAdapter);
         CentsApplication.set_viewPager(_viewPager);
-        //For Alpha I want to default to view with the viz TODO modify after alpha
         //This line is required so the viewPager does not destroy pages when they are removed from the screen
         //if there are more tabs created this number will need to increase
         _viewPager.setOffscreenPageLimit(5);
@@ -137,19 +168,66 @@ public class VisualizationPagerFragment extends Fragment {
 
 
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     * Check to make sure at least one salary over time consists of more than one value + hi, low
+     * @return
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+    private boolean addSalary(){
+        List<CareerResponse.Element> elements = CentsApplication.get_cResponse().getElements();
+        for(CareerResponse.Element current : elements){
+            int countNonNulls = 0;
+            List<Double> salaryData = current.getCareerSalary();
+            for(Double d: salaryData){
+                if(d != null){
+                    countNonNulls++;
+                }
+                if(countNonNulls > 3){
+                    return true;
+                }
+            }
+        }
+        return false;
+
     }
+
+    /**
+     * update the users completed section
+     */
+    private void updateCompleted(String completed){
+        SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+        int id = settings.getInt("ID", 0);
+        UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+        HashMap<String,String> completedTask = new HashMap<String, String>();
+        completedTask.put("section", completed);
+        service.updateCompletedData(id, completedTask, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(LOG_TAG, error.getMessage());
+
+            }
+        });
+    }
+
+    /**
+     * Looks for top jobs for a majors and if there is returns true
+     * @return
+     */
+    private boolean addTobJobs(){
+        //check if any elements have
+        List<MajorResponse.Element> elements = CentsApplication.get_mResponse().getElements();
+        for(MajorResponse.Element current : elements){
+            if(current.getJobs().size() > 0){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     /**
      * Adapter used to switch views inside the view pager based on user selections
@@ -195,7 +273,6 @@ public class VisualizationPagerFragment extends Fragment {
         }
 
 
-
         @Override
         /**
          * Returns titles for pager sliding tabs
@@ -206,13 +283,22 @@ public class VisualizationPagerFragment extends Fragment {
             String[] tabTitles;
             switch (selectedVis) {
                 case "Career Comparison":
-                    tabTitles = new String[]{"Summary"};  //, "Salary", "Demand", "Unemployment"};
+                    tabTitles = new String[]{"Summary", "Unemployment"};
+                    if(addSalary()) {
+                        tabTitles = new String[]{"Summary", "Unemployment", "Salary"};
+                    }
                     return tabTitles[position];
                 case "College Comparison":
                     tabTitles = new String[]{"Summary"};
                     return tabTitles[position];
                 case "Major Comparison":
-                    tabTitles = new String[]{"Summary"}; //, "Salary","Job Satisfaction", "Graduation Rate", "Demand", "Unemployment", "Top Jobs"};
+                    boolean addTJ = addTobJobs();
+                    if(addTJ) {
+                        tabTitles = new String[]{"Summary", "Top Jobs"};
+                    }
+                    else{
+                        tabTitles = new String[]{"Summary"};
+                    }
                     return tabTitles[position];
                 case "COL Comparison":
                     tabTitles = new String[]{"Summary", "Cost of Living", "Labor Stats","Taxes","Other", "Weather"};

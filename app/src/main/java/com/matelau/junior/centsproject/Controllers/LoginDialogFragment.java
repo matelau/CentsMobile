@@ -11,14 +11,16 @@ import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.matelau.junior.centsproject.Models.CentsAPIModels.Login;
-import com.matelau.junior.centsproject.Models.CentsAPIModels.LoginService;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
+import com.matelau.junior.centsproject.Models.UserModels.Id;
+import com.matelau.junior.centsproject.Models.UserModels.Login;
 import com.matelau.junior.centsproject.R;
 
 import java.util.regex.Pattern;
@@ -33,9 +35,6 @@ import retrofit.client.Response;
 public class LoginDialogFragment extends DialogFragment {
 
     private String LOG_TAG = LoginDialogFragment.class.getSimpleName();
-    private LinearLayout _rootLayout;
-    private Button _submit;
-    private Button _cancel;
     private EditText _email;
     private EditText _password;
     private TextView _errorMsg;
@@ -51,13 +50,13 @@ public class LoginDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.d(LOG_TAG, "onCreateDialog" );
+        Log.d(LOG_TAG, "onCreateDialog");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_login_dialog, null, false);
+        LinearLayout _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_login_dialog, null, false);
         //get buttons
-        _submit = (Button) _rootLayout.findViewById(R.id.login_submit);
-        _cancel = (Button) _rootLayout.findViewById(R.id.login_cancel);
+        Button _submit = (Button) _rootLayout.findViewById(R.id.login_submit);
+        Button _cancel = (Button) _rootLayout.findViewById(R.id.login_cancel);
         //add listeners
         _cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +69,6 @@ public class LoginDialogFragment extends DialogFragment {
             public void onClick(View v) {
                 //Validate submission
                 validateLogin();
-
             }
         });
 
@@ -86,6 +84,18 @@ public class LoginDialogFragment extends DialogFragment {
         return builder.create();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "resumed");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "destroyed");
+    }
+
     /**
      * Validates login submissions
      */
@@ -99,11 +109,6 @@ public class LoginDialogFragment extends DialogFragment {
         //password must be 6 chars long no white space
         String pass = _password.getText().toString();
         String email = _email.getText().toString();
-//        if(CentsApplication.isDebug()){
-//            email = "fake@xkcd.com";
-//            pass = "correcthorsebatterystaple";
-//        }
-
         if(pass.length() < 6){
             passValid = false;
         }
@@ -123,45 +128,53 @@ public class LoginDialogFragment extends DialogFragment {
 
 
             //call api
-            LoginService service = CentsApplication.get_centsRestAdapter().create(LoginService.class);
-            service.login(new Login(email, pass), new Callback<Response>() {
+            UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+            service.login(new Login(email, pass), new Callback<Id>() {
                 @Override
-                public void success(Response response, Response response2) {
-                    Log.d(LOG_TAG, "Login Success ");
+                public void success(Id id, Response response) {
+                    Log.d(LOG_TAG, "Login Success id: "+id.getId());
                     _errorMsg.setVisibility(View.GONE);
-//                    String sResponse = response.().toString();
-                    if(CentsApplication.isDebug())
-                        Toast.makeText(getActivity(), "Login Success", Toast.LENGTH_SHORT).show();
+                    //hide keyboard after submit
+                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(_password.getWindowToken(), 0);
+                    Toast.makeText(getActivity(), "Login Success", Toast.LENGTH_SHORT).show();
                     //Store Login information and update app state
                     CentsApplication.set_loggedIN(true);
                     SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
                     settings.edit().
                             putString("EMAIL", _email.getText().toString()).
                             putString("PASSWORD", _password.getText().toString()).
-                            commit();
+                            putInt("ID", id.getId()).
+                            apply();
                     dismiss();
+
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
                     Log.e(LOG_TAG, error.getMessage());
+                    Toast.makeText(getActivity(), "Error Please Try Again", Toast.LENGTH_SHORT).show();
                     //Remove Login information and update app state
                     CentsApplication.set_loggedIN(false);
                     SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
-                    settings.edit().remove("EMAIL").remove("Password").commit();
+                    settings.edit().remove("EMAIL").remove("PASSWORD").remove("ID").apply();
                     _errorMsg.setTextColor(getResources().getColor(R.color.red));
                     _errorMsg.setText("Authentication Failed");
                     _errorMsg.setVisibility(View.VISIBLE);
+
                 }
             });
         }
-
-
 
         return passValid && emailValid;
 
     }
 
+    /**
+     * local email validation
+     * @param hex
+     * @return
+     */
     private boolean validateEmail(final String hex) {
         Pattern pattern = Pattern.compile(EMAIL_PATTERN);
         return pattern.matcher(hex).matches();

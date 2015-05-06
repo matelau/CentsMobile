@@ -4,6 +4,7 @@ package com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLivin
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,27 +30,12 @@ import lecho.lib.hellocharts.view.LineChartView;
  * A simple {@link Fragment} subclass.
  */
 public class WeatherFragment extends Fragment {
-
+    private String LOG_TAG = WeatherFragment.class.getSimpleName();
     private LineChartView chart;
-    private LineChartData data;
-    private int numberOfLines = 12;
-    private int maxNumberOfLines = 12;
-    private int numberOfPoints = 2;
-    private boolean hasAxes = true;
-    private boolean hasLines = true;
-    private boolean hasPoints = true;
     private ValueShape shape = ValueShape.CIRCLE;
-    private boolean isFilled = false;
-    private boolean hasLabels = false;
-    private boolean isCubic = true;
-    private boolean hasLabelForSelected = true;
 
     private ColiResponse _colResponse;
 
-    private static String _location;
-    private static String _location2;
-    private ImageButton _search;
-    private View _rootView;
     private static String[] months = {"JAN", "FEB", "MAR", "APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};
 
 
@@ -59,14 +45,18 @@ public class WeatherFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        _rootView = inflater.inflate(R.layout.fragment_weather, container, false);
-        _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
+        View _rootView = inflater.inflate(R.layout.fragment_weather, container, false);
+        ImageButton _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
 
         _colResponse = CentsApplication.get_colResponse();
+        List<ColiResponse.Element> elements = _colResponse.getElements();
         chart = (LineChartView) _rootView.findViewById(R.id.chart);
         //update locations
-        _location = _colResponse.getLocation1();
-        _location2 = _colResponse.getLocation2();
+        String _location = elements.get(0).getName();
+        String _location2 = null;
+        if(elements.size() > 1){
+            _location2 = elements.get(1).getName();
+        }
         TextView loc1 = (TextView) _rootView.findViewById(R.id.col_location1);
         TextView loc2 = (TextView) _rootView.findViewById(R.id.col_location2);
         loc1.setText(_location);
@@ -93,6 +83,10 @@ public class WeatherFragment extends Fragment {
         return _rootView;
     }
 
+
+    /**
+     * Shows the selection dialog
+     */
     private void showCitySelectionDialog(){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         CitySelectionDialogFragment csd = new CitySelectionDialogFragment();
@@ -100,16 +94,34 @@ public class WeatherFragment extends Fragment {
         csd.show(fm, "tag");
     }
 
+    /**
+     * generates data to be displayed in vis
+     */
     private void generateData()
     {
-        List<Double> weather1 = _colResponse.getWeather1();
-        List<Double> weather1_low = _colResponse.getWeatherlow1();
-        List<Double> weather2 =_colResponse.getWeather2();
-        List<Double>weather2_low = _colResponse.getWeatherlow2();
+        List<ColiResponse.Element> elements = _colResponse.getElements();
+        List<Double> weather1 = elements.get(0).getWeather();
+        List<Double> weather1_low = elements.get(0).getWeatherlow();
+        List<Double> weather2 = null;
+        List<Double>weather2_low = null;
+        boolean hasSecondCity = false;
+        if(elements.size() > 1){
+            weather2 = elements.get(1).getWeather();
+            weather2_low = elements.get(1).getWeatherlow();
+            hasSecondCity = true;
+        }
         List<Line> lines = new ArrayList<Line>();
         List<AxisValue> axisValues = new ArrayList<AxisValue>();
         //add city 1 weather
-        for (int i = 0; i < numberOfLines*2; i+=2) {
+        int numberOfLines = 12;
+        int numberOfPoints = 2;
+        boolean hasLines = true;
+        boolean hasPoints = true;
+        boolean isFilled = false;
+        boolean hasLabels = false;
+        boolean isCubic = true;
+        boolean hasLabelForSelected = true;
+        for (int i = 0; i < numberOfLines *2; i+=2) {
 
             List<PointValue> values = new ArrayList<PointValue>();
             //create axis labels
@@ -129,7 +141,7 @@ public class WeatherFragment extends Fragment {
                     value = weather1_low.get(index).floatValue();
                 }
                 PointValue pv = new PointValue(i , value);
-                pv.setLabel(value+"°F");
+                pv.setLabel((int) value+"°F");
                 values.add(pv);
             }
 
@@ -145,9 +157,9 @@ public class WeatherFragment extends Fragment {
             lines.add(line);
         }
         //add city 2
-        if(weather2.size() > 0){
+        if(hasSecondCity){
             //offset bounds so values are not in same columns
-            for (int i = 1; i < numberOfLines*2; i+=2) {
+            for (int i = 1; i < numberOfLines *2; i+=2) {
                 List<PointValue> values = new ArrayList<PointValue>();
                 for (int j = 0; j < numberOfPoints; ++j) {
                     int index = (i - 1)/2;
@@ -160,7 +172,7 @@ public class WeatherFragment extends Fragment {
                         value = weather2_low.get(index).floatValue();
                     }
                     PointValue pv = new PointValue(i , value);
-                    pv.setLabel(value+"°F");
+                    pv.setLabel((int)value+"°F");
                     values.add(pv);
                 }
 
@@ -177,11 +189,12 @@ public class WeatherFragment extends Fragment {
             }
         }
 
-        data = new LineChartData(lines);
+        LineChartData data = new LineChartData(lines);
 
+        boolean hasAxes = true;
         if (hasAxes) {
             Axis axisX = new Axis(axisValues);
-            Axis axisY = new Axis().setHasLines(true).setName("Average High and Low Temperatures");
+            Axis axisY = new Axis().setHasLines(true).setName("High and Low Temperature Range");
             data.setAxisXBottom(axisX);
             data.setAxisYLeft(axisY);
         } else {
@@ -192,25 +205,18 @@ public class WeatherFragment extends Fragment {
         data.setBaseValue(Float.NEGATIVE_INFINITY);
         chart.setLineChartData(data);
 
-
-
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
 
-
-
-//    private class ValueTouchListener implements BubbleChartOnValueSelectListener {
-//
-//        @Override
-//        public void onValueSelected(int bubbleIndex, BubbleValue value) {
-////            Toast.makeText(getActivity(), "Selected: " + value, Toast.LENGTH_SHORT).show();
-//        }
-//
-//        @Override
-//        public void onValueDeselected() {
-//            // TODO Auto-generated method stub
-//
-//        }
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
+    }
 
 }

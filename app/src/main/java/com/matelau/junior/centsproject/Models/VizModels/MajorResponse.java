@@ -1,7 +1,6 @@
 package com.matelau.junior.centsproject.Models.VizModels;
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,136 +10,27 @@ import java.util.List;
  */
 public class MajorResponse {
 
-    @SerializedName("major_2_name")
     @Expose
-    private String major2Name;
-    @SerializedName("major_1_name")
-    @Expose
-    private String major1Name;
-
-    @SerializedName("jobs_1")
-    @Expose
-    private List<Object> jobs1 = new ArrayList<Object>();
-    @SerializedName("major_1")
-    @Expose
-    private List<Float> major1 = new ArrayList<Float>();
-    @SerializedName("jobs_2")
-    @Expose
-    private List<Object> jobs2 = new ArrayList<Object>();
-    @SerializedName("major_2")
-    @Expose
-    private List<Float> major2 = new ArrayList<Float>();
+    private List<Element> elements = new ArrayList<Element>();
     @Expose
     private String operation;
 
-
     /**
      *
      * @return
-     * The major2Name
+     * The elements
      */
-    public String getMajor2Name() {
-        return major2Name;
+    public List<Element> getElements() {
+        return elements;
     }
 
     /**
      *
-     * @param major2Name
-     * The major_2_name
+     * @param elements
+     * The elements
      */
-    public void setMajor2Name(String major2Name) {
-        this.major2Name = major2Name;
-    }
-
-    /**
-     *
-     * @return
-     * The major1Name
-     */
-    public String getMajor1Name() {
-        return major1Name;
-    }
-
-    /**
-     *
-     * @param major1Name
-     * The major_1_name
-     */
-    public void setMajor1Name(String major1Name) {
-        this.major1Name = major1Name;
-    }
-
-
-    /**
-     *
-     * @return
-     * The jobs1
-     */
-    public List<Object> getJobs1() {
-        return jobs1;
-    }
-
-    /**
-     *
-     * @param jobs1
-     * The jobs_1
-     */
-    public void setJobs1(List<Object> jobs1) {
-        this.jobs1 = jobs1;
-    }
-
-    /**
-     *
-     * @return
-     * The major1
-     */
-    public List<Float> getMajor1() {
-        return major1;
-    }
-
-    /**
-     *
-     * @param major1
-     * The major_1
-     */
-    public void setMajor1(List<Float> major1) {
-        this.major1 = major1;
-    }
-
-    /**
-     *
-     * @return
-     * The jobs2
-     */
-    public List<Object> getJobs2() {
-        return jobs2;
-    }
-
-    /**
-     *
-     * @param jobs2
-     * The jobs_2
-     */
-    public void setJobs2(List<Object> jobs2) {
-        this.jobs2 = jobs2;
-    }
-
-    /**
-     *
-     * @return
-     * The major2
-     */
-    public List<Float> getMajor2() {
-        return major2;
-    }
-
-    /**
-     *
-     * @param major2
-     * The major_2
-     */
-    public void setMajor2(List<Float> major2) {
-        this.major2 = major2;
+    public void setElements(List<Element> elements) {
+        this.elements = elements;
     }
 
     /**
@@ -159,5 +49,71 @@ public class MajorResponse {
      */
     public void setOperation(String operation) {
         this.operation = operation;
+    }
+
+
+    public class Element {
+
+        @Expose
+        private String name;
+        @Expose
+        private List<Float> degree = new ArrayList<>();
+        @Expose
+        private List<String> jobs = new ArrayList<String>();
+
+        /**
+         *
+         * @return
+         * The name
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         *
+         * @param name
+         * The name
+         */
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        /**
+         *
+         * @return
+         * The degree
+         */
+        public List<Float> getDegree() {
+            return degree;
+        }
+
+        /**
+         *
+         * @param degree
+         * The degree
+         */
+        public void setDegree(List<Float> degree) {
+            this.degree = degree;
+        }
+
+        /**
+         *
+         * @return
+         * The jobs
+         */
+        public List<String> getJobs() {
+            return jobs;
+        }
+
+        /**
+         *
+         * @param jobs
+         * The jobs
+         */
+        public void setJobs(List<String> jobs) {
+            this.jobs = jobs;
+        }
+
     }
 }

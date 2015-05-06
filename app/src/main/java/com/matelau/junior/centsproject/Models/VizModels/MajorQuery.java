@@ -12,7 +12,7 @@ public class MajorQuery {
     @Expose
     private String operation;
     @Expose
-    private List<Major> majors = new ArrayList<Major>();
+    private List<Major> degrees = new ArrayList<Major>();
 
     /**
      *
@@ -39,7 +39,7 @@ public class MajorQuery {
      * The majors
      */
     public List<Major> getMajors() {
-        return majors;
+        return degrees;
     }
 
     /**
@@ -48,7 +48,7 @@ public class MajorQuery {
      * The majors
      */
     public void setMajors(List<Major> majors) {
-        this.majors = majors;
+        this.degrees = majors;
     }
 
 

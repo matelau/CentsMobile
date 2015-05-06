@@ -3,6 +3,7 @@
     android:layout_height="match_parent"
     tools:context="com.matelau.junior.centsproject.Views.VisualizationFragments.CostOfLiving.CostOfLivingFragment">
 
+
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/spending_card_view"
@@ -14,6 +15,8 @@
         android:layout_margin="5dp"
         android:elevation="30dp"
         >
+
+
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
@@ -97,7 +100,24 @@
                     android:id="@+id/imageSearchButton" />
                 </RelativeLayout>
              </RelativeLayout>
+
+
         </LinearLayout>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/spending_instructions"
+                android:padding="5dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/compliment_primary"
+                android:textSize="10sp"/>
+        </RelativeLayout>
     </android.support.v7.widget.CardView>
 
 </RelativeLayout>

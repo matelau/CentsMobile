@@ -37,6 +37,11 @@ dependencies {
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile 'com.squareup.picasso:picasso:2.4.0'
     compile 'com.googlecode.android-query:android-query:0.25.9'
-    compile 'com.github.lecho:hellocharts-library:1.5.2@aar'
+//    visualization
+    compile 'com.github.lecho:hellocharts-library:1.5.3@aar'
+//    ads
     compile 'com.google.android.gms:play-services:7.0.0'
+//    slider
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.daimajia.slider:library:1.1.2@aar'
 }

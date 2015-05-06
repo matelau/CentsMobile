@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -114,7 +115,8 @@ public class WizardDialogFragment extends DialogFragment {
     private void switchToVisFrag(String selected){
         //close wizard
         dismiss();
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
         //Add Intros here as they are created
         getActivity().getActionBar().setTitle(selected);
         if(selected.equals("COL Comparison")){
@@ -155,6 +157,10 @@ public class WizardDialogFragment extends DialogFragment {
 
     }
 
+    /**
+     * Switches view to College Comp or Major Comp
+     * @param pos
+     */
     private void selectCollegeOrMajor(int pos){
         Log.d(LOG_TAG, "College Item Selected: " + pos);
         switch(pos){
@@ -174,6 +180,10 @@ public class WizardDialogFragment extends DialogFragment {
         }
     }
 
+    /**
+     * Switches view to Spending Breakdown or Cost of Living
+     * @param pos
+     */
     private void selectCost(int pos){
         Log.d(LOG_TAG, "Cost Item Selected: " + pos);
         switch(pos) {
@@ -193,4 +203,15 @@ public class WizardDialogFragment extends DialogFragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "resumed");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "destroyed");
+    }
 }

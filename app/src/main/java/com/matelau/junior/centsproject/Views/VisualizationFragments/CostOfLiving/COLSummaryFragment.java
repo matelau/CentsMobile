@@ -20,17 +20,13 @@ import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.R;
 import com.matelau.junior.centsproject.Views.VisualizationFragments.SummaryAdapter;
 
+import java.util.List;
+
 /**
  * Displays summary for Cost of Living Visualizations
  */
 public class COLSummaryFragment extends Fragment {
 
-    private LinearLayout _rootLayout;
-    private TextView _city1Title;
-    private TextView _city2Title;
-    private ListView _citiesSum;
-    private SummaryAdapter _citiesAdapter;
-    private ImageButton _search;
     private String LOG_TAG = COLSummaryFragment.class.getSimpleName();
 
 
@@ -46,21 +42,29 @@ public class COLSummaryFragment extends Fragment {
         // Inflate the layout for this fragment
         Log.d(LOG_TAG, "CreateView");
 
-        _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_col_summary, container, false);
+        LinearLayout _rootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_col_summary, container, false);
         //get MajorResponse
         ColiResponse colResponse = CentsApplication.get_colResponse();
+        if(CentsApplication.isDebug()){
+//            do nothing
+        }
+        else{
+            AdView mAdView = (AdView) _rootLayout.findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        }
 
-        AdView mAdView = (AdView) _rootLayout.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        if(CentsApplication.isDebug())
-            adRequest = new AdRequest.Builder().addTestDevice("84B46C4862CAF80187170C1A7901502C").build();
-        mAdView.loadAd(adRequest);
 
+        TextView _city1Title = (TextView) _rootLayout.findViewById(R.id.title1);
+        List<ColiResponse.Element> elements = colResponse.getElements();
+        boolean hasSecondCity = elements.size() > 1;
+        _city1Title.setText(elements.get(0).getName());
+        TextView _city2Title = (TextView) _rootLayout.findViewById(R.id.title2);
+        String title2 = null;
+        if(hasSecondCity){
+            title2 = elements.get(1).getName();
+        }
 
-        _city1Title = (TextView) _rootLayout.findViewById(R.id.title1);
-        _city1Title.setText(colResponse.getLocation1());
-        _city2Title = (TextView) _rootLayout.findViewById(R.id.title2);
-        String title2 = colResponse.getLocation2();
         if(title2 != null){
             _city2Title.setText(title2);
         }
@@ -69,7 +73,7 @@ public class COLSummaryFragment extends Fragment {
         }
 
         //Setup summary list
-        _search = (ImageButton) _rootLayout.findViewById(R.id.imageSearchButton);
+        ImageButton _search = (ImageButton) _rootLayout.findViewById(R.id.imageSearchButton);
         _search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,14 +81,16 @@ public class COLSummaryFragment extends Fragment {
                 showCitySelectionDialog();
             }
         });
-        _citiesSum = (ListView) _rootLayout.findViewById(R.id.col_sum_list);
-        _citiesAdapter = new SummaryAdapter(0, getActivity());
+        ListView _citiesSum = (ListView) _rootLayout.findViewById(R.id.col_sum_list);
+        SummaryAdapter _citiesAdapter = new SummaryAdapter(0, getActivity());
         _citiesSum.setAdapter(_citiesAdapter);
         return _rootLayout;
     }
 
 
-
+    /**
+     * Shows selection dialog
+     */
     private void showCitySelectionDialog(){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         CitySelectionDialogFragment csd = new CitySelectionDialogFragment();
@@ -92,8 +98,15 @@ public class COLSummaryFragment extends Fragment {
         csd.show(fm, "tag");
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
 
-
-
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
+    }
 }

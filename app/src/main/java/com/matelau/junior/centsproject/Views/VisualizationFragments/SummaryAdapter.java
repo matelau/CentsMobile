@@ -2,22 +2,23 @@ package com.matelau.junior.centsproject.Views.VisualizationFragments;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
+import com.matelau.junior.centsproject.Models.VizModels.CareerResponse;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
 import com.matelau.junior.centsproject.Models.VizModels.SchoolResponse;
 import com.matelau.junior.centsproject.R;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by matelau on 3/5/15.
@@ -28,7 +29,9 @@ public class SummaryAdapter extends BaseAdapter {
     private MajorResponse _mResponse;
     private ColiResponse _colResponse;
     private SchoolResponse _sResponse;
+    private CareerResponse _cResponse;
     private Context _context;
+    private final NumberFormat _formatter = new DecimalFormat("#.##");
     public SummaryAdapter(int type, Context context){
         //Set Type -  0 COL Sum, 1 Major Sum, 2 College Sum, 3 Career Sum
         Log.d(LOG_TAG, "Type: "+type);
@@ -49,6 +52,7 @@ public class SummaryAdapter extends BaseAdapter {
                 break;
             default:
                 //get careerResponse
+                _cResponse = CentsApplication.get_cResponse();
                 break;
         }
     }
@@ -57,13 +61,9 @@ public class SummaryAdapter extends BaseAdapter {
     public int getCount() {
         switch(_type){
             case 0:
-                //+1 for add
-                return 5;
+                return 4;
             case 1:
-                if( _mResponse != null)
-                    return _mResponse.getMajor1().size();
-                else
-                    return 4;
+                return 4;
             case 2:
                 return 6;
             default:
@@ -90,10 +90,9 @@ public class SummaryAdapter extends BaseAdapter {
         TextView catTitle = (TextView) rowView.findViewById(R.id.element_category);
         TextView leftVal = (TextView) rowView.findViewById(R.id.cat1_value);
         TextView rightVal = (TextView) rowView.findViewById(R.id.cat2_value);
-        AdView ad = (AdView) rowView.findViewById(R.id.adView);
         switch(_type){
             case 0:
-                createColSumView(position, leftVal, rightVal, ad, catTitle);
+                createColSumView(position, leftVal, rightVal,catTitle);
                 break;
             case 1:
                 createMajorSumView(position, leftVal, rightVal, catTitle);
@@ -102,95 +101,119 @@ public class SummaryAdapter extends BaseAdapter {
                 createCollegeSumView(position, leftVal, rightVal, catTitle);
                 break;
             default:
-                createCareerSumView(position, leftVal, rightVal, ad, catTitle);
+                createCareerSumView(position, leftVal, rightVal, catTitle);
                 break;
         }
         return rowView;
     }
 
-    private void createCareerSumView(int position, TextView leftVal, TextView rightVal, AdView ad, TextView catTitle) {
+    private void createCareerSumView(int position, TextView leftVal, TextView rightVal, TextView catTitle) {
         //get necessary data from col response
+        //if the user searched for only one career hide second view
+        boolean secondCareer = false;
+        List<CareerResponse.Element> elements = _cResponse.getElements();
+        if(elements.size() == 1){
+            rightVal.setVisibility(View.GONE);
+        }
+        else{
+            secondCareer = true;
+        }
         if(position == 0){
-            ad.setVisibility(View.GONE);
             catTitle.setText("2013 AVERAGE SALARY");
-            leftVal.setText("$88000");
-            leftVal.setTextSize(14);
-            rightVal.setText("$88000");
-            rightVal.setTextSize(14);
-//            if(cli2.size() > 0){
-//                overall = cli2.get(0) - 100;
-//                avgCost = costString(overall);
-//                rightVal.setText(avgCost);
-//                rightVal.setTextSize(14);
-//            }
-//            else{
-//                rightVal.setVisibility(View.GONE);
-//            }
+            if(elements.get(0).getCareerSalary().get(10) != null){
+                int val = elements.get(0).getCareerSalary().get(10).intValue();
+                leftVal.setText("$" + NumberFormat.getNumberInstance(Locale.US).format(val));
+            }
+            else{
+                leftVal.setText("UNKNOWN");
+            }
+            if(secondCareer){
+                if(elements.get(1).getCareerSalary().get(10) != null){
+                    int val2 = elements.get(1).getCareerSalary().get(10).intValue();
+                    rightVal.setText("$" + NumberFormat.getNumberInstance(Locale.US).format(val2));
+                }
+                else{
+                    rightVal.setText("UNKNOWN");
+                }
+
+            }
         }
         else if(position == 1){
-            ad.setVisibility(View.GONE);
+            //update cents rating
             catTitle.setText("CENTS JOB RATING");
-            leftVal.setText("4.8 OUT OF 5.0");
-            leftVal.setTextSize(14);
-            rightVal.setText("2.9 OUT OF 5.0");
-            rightVal.setTextSize(14);
-//            if(labor2.size() > 0){
-//                income = labor1.get(1).intValue();
-//                rightVal.setText("$"+income);
-//            }
-//            else{
-//                rightVal.setVisibility(View.GONE);
-//            }
+            if(elements.get(0).getCareerRating() != null){
+                leftVal.setText(_formatter.format( elements.get(0).getCareerRating()) + " OUT OF 5.0");
+            }
+            if(secondCareer){
+                if(elements.get(1).getCareerRating() != null){
+                    rightVal.setText(_formatter.format(elements.get(1).getCareerRating()) + " OUT OF 5.0");
+                }
+
+            }
         }
         else if(position == 2){
-            ad.setVisibility(View.GONE);
             catTitle.setText("PROJECTED JOB DEMAND");
-            leftVal.setText("353,200 JOBS");
-            leftVal.setTextSize(14);
-            rightVal.setText("35,000 JOBS");
-            rightVal.setTextSize(14);
-//            if(taxes2.size() > 0){
-//                tax1 = taxes2.get(1);
-//                tax2 = taxes2.get(2);
-//                value = taxValues(tax1, tax2);
-//                rightVal.setText(value);
-//            }
-//            else{
-//                rightVal.setVisibility(View.GONE);
-//            }
+            if(elements.get(0).getCareerDemand().get(0) != null){
+                int jDemand = elements.get(0).getCareerDemand().get(0).intValue();
+                leftVal.setText(NumberFormat.getNumberInstance(Locale.US).format(jDemand) + " JOBS");
+            }
+            else{
+                leftVal.setText("UNKNOWN");
+            }
+
+            if(secondCareer){
+                if(elements.get(1).getCareerDemand().get(0) != null){
+                    int jDemand2 = elements.get(1).getCareerDemand().get(0).intValue();
+                    rightVal.setText(NumberFormat.getNumberInstance(Locale.US).format(jDemand2) + " JOBS");
+                }
+                else{
+                    rightVal.setText("UNKNOWN");
+                }
+            }
         }
         else if(position == 3){
-            ad.setVisibility(View.GONE);
             catTitle.setText("2012 UNEMPLOYMENT");
-            leftVal.setText("3.8%");
-            leftVal.setTextSize(14);
-            rightVal.setText("8.1%");
-            rightVal.setTextSize(14);
-//            if(weather2.size() > 0){
-//                value = weatherLow2.get(0)+"°- "+weather2.get(13)+"°";
-//                rightVal.setText(value);
-//            }
-//            else{
-//                rightVal.setVisibility(View.GONE);
-//            }
-        }
-//        else if(position == 4){
-//            //show ad hide other views
-//            catTitle.setText("SPONSORS");
-//            AdRequest adRequest = new AdRequest.Builder().build();
-//            if(CentsApplication.isDebug())
-//                adRequest = new AdRequest.Builder().addTestDevice("84B46C4862CAF80187170C1A7901502C").build();
-//            ad.loadAd(adRequest);
-//            rightVal.setVisibility(View.GONE);
-//            leftVal.setVisibility(View.GONE);
-//        }
+            if(elements.get(0).getCareerUnemploy().get(1) != null){
+                leftVal.setText(elements.get(0).getCareerUnemploy().get(1) + "%");
+            }
+            else{
+                leftVal.setText("UNKNOWN");
+            }
 
+            if(secondCareer){
+                if(elements.get(1).getCareerUnemploy().get(1) != null){
+                    rightVal.setText(elements.get(1).getCareerUnemploy().get(1) + "%");
+                }
+                else{
+                    rightVal.setText("UNKNOWN");
+                }
+            }
+        }
+        leftVal.setTextSize(14);
+        rightVal.setTextSize(14);
     }
 
-
+    /**
+     * Sets College sum views to represent models
+     * @param position
+     * @param leftVal
+     * @param rightVal
+     * @param catTitle
+     */
     private void createCollegeSumView(int position, TextView leftVal, TextView rightVal, TextView catTitle){
-        List<Double> school1 = _sResponse.getSchool1();
-        List<Double> school2 = _sResponse.getSchool2();
+        List<SchoolResponse.Element> elements = _sResponse.getElements();
+        List<Double> school1 = elements.get(0).getSchool();
+        List<Double> school2 = null;
+        boolean hasSecondSchool = true;
+        //hide school2 if no data
+        if(elements.size() == 1){
+            rightVal.setVisibility(View.GONE);
+            hasSecondSchool = false;
+        }
+        else{
+            school2 = elements.get(1).getSchool();
+        }
+
         //all fields could possibly be null - must check
         //ntl ranking [4]
         if(position == 0){
@@ -204,7 +227,7 @@ public class SummaryAdapter extends BaseAdapter {
                 leftVal.setText("UNRANKED");
             }
 
-            if(school2.size() > 0){
+            if(hasSecondSchool){
                 dRank = school2.get(4);
                 if(dRank != null){
                     int rank = dRank.intValue();
@@ -221,16 +244,16 @@ public class SummaryAdapter extends BaseAdapter {
             Double tuition = school1.get(0);
             if(tuition != null){
                 int t = tuition.intValue();
-                leftVal.setText("$"+t);
+                leftVal.setText("$"+NumberFormat.getNumberInstance(Locale.US).format(t));
             }
             else{
                 leftVal.setText("UNKNOWN");
             }
-            if(school2.size() > 0){
+            if(hasSecondSchool){
                 tuition = school2.get(0);
                 if(tuition != null){
                     int t = tuition.intValue();
-                    rightVal.setText("$"+t);
+                    rightVal.setText("$"+NumberFormat.getNumberInstance(Locale.US).format(t));
                 }
                 else{
                     rightVal.setText("UNKNOWN");
@@ -243,16 +266,16 @@ public class SummaryAdapter extends BaseAdapter {
             Double tuition = school1.get(1);
             if(tuition != null){
                 int t = tuition.intValue();
-                leftVal.setText("$"+t);
+                leftVal.setText("$"+NumberFormat.getNumberInstance(Locale.US).format(t));
             }
             else{
                 leftVal.setText("UNKNOWN");
             }
-            if(school2.size() > 0){
+            if(hasSecondSchool){
                 tuition = school2.get(1);
                 if(tuition != null){
                     int t = tuition.intValue();
-                    rightVal.setText("$"+t);
+                    rightVal.setText("$"+NumberFormat.getNumberInstance(Locale.US).format(t));
                 }
                 else{
                     rightVal.setText("UNKNOWN");
@@ -270,7 +293,7 @@ public class SummaryAdapter extends BaseAdapter {
             else{
                 leftVal.setText("UNKNOWN");
             }
-            if(school2.size() > 0){
+            if(hasSecondSchool){
                 gRate = school2.get(2);
                 if(gRate != null){
                     int t = gRate.intValue();
@@ -287,16 +310,16 @@ public class SummaryAdapter extends BaseAdapter {
             Double enrollment = school1.get(3);
             if(enrollment != null){
                 int t = enrollment.intValue();
-                leftVal.setText(""+t);
+                leftVal.setText(""+NumberFormat.getNumberInstance(Locale.US).format(t));
             }
             else{
                 leftVal.setText("UNKNOWN");
             }
-            if(school2.size() > 0){
+            if(hasSecondSchool){
                 enrollment = school2.get(3);
                 if(enrollment != null){
                     int t = enrollment.intValue();
-                    rightVal.setText(""+t);
+                    rightVal.setText(""+NumberFormat.getNumberInstance(Locale.US).format(t));
                 }
                 else{
                     rightVal.setText("UNKNOWN");
@@ -308,45 +331,50 @@ public class SummaryAdapter extends BaseAdapter {
             catTitle.setText("CENTS USER RATING");
             Double userRating = school1.get(5);
             if(userRating != null){
-                leftVal.setText(userRating+" OUT OF 5.0");
+                leftVal.setText(_formatter.format(userRating)+" OUT OF 5.0");
             }
             else{
                 leftVal.setText("UNKNOWN");
             }
-            if(school2.size() > 0){
+            if(hasSecondSchool){
                 userRating = school2.get(5);
                 if(userRating != null){
-                    rightVal.setText(userRating+" OUT OF 5.0");
+                    rightVal.setText(_formatter.format(userRating)+" OUT OF 5.0");
                 }
                 else{
                     rightVal.setText("UNKNOWN");
                 }
             }
         }
-
-
-        //hide school2 if no data
-        if(school2.size() == 0){
-            rightVal.setVisibility(View.GONE);
-            leftVal.setGravity(Gravity.CENTER_HORIZONTAL);
-        }
-
     }
 
-
-    private void createColSumView(int position, TextView leftVal, TextView rightVal, AdView ad, TextView catTitle){
+    /**
+     * Sets COL sum views to represent models
+     * @param position
+     * @param leftVal
+     * @param rightVal
+     * @param catTitle
+     */
+    private void createColSumView(int position, TextView leftVal, TextView rightVal, TextView catTitle){
         //get necessary data from col response
         //avg cost of living cli_i[0]-100
+        List<ColiResponse.Element> elements = _colResponse.getElements();
+        boolean hasSecondCity = false;
+        if(elements.size() > 1){
+            hasSecondCity = true;
+        }
         if(position == 0){
-            ad.setVisibility(View.GONE);
             catTitle.setText("AVERAGE COST OF LIVING");
-            List<Double> cli1 = _colResponse.getCli1();
-            List<Double> cli2 = _colResponse.getCli2();
+            List<Double> cli1 = elements.get(0).getCli();
+            List<Double> cli2 = null;
+            if(hasSecondCity){
+                cli2 = elements.get(1).getCli();
+            }
             Double overall = cli1.get(0) - 100;
             String avgCost = costString(overall);
             leftVal.setText(avgCost);
             leftVal.setTextSize(14);
-            if(cli2.size() > 0){
+            if(hasSecondCity){
                 overall = cli2.get(0) - 100;
                 avgCost = costString(overall);
                 rightVal.setText(avgCost);
@@ -358,15 +386,17 @@ public class SummaryAdapter extends BaseAdapter {
         }
         //avg income - labor_i[1]
         else if(position == 1){
-            ad.setVisibility(View.GONE);
             catTitle.setText("AVERAGE INCOME");
-            List<Double> labor1 = _colResponse.getLabor1();
-            List<Double> labor2 = _colResponse.getLabor2();
+            List<Double> labor1 = elements.get(0).getLabor();
+            List<Double> labor2 = null;
+            if(hasSecondCity){
+                labor2 = elements.get(1).getLabor();
+            }
             int income = labor1.get(1).intValue();
-            leftVal.setText("$"+income);
-            if(labor2.size() > 0){
-                income = labor1.get(1).intValue();
-                rightVal.setText("$"+income);
+            leftVal.setText("$"+NumberFormat.getNumberInstance(Locale.US).format(income));
+            if(hasSecondCity){
+                income = labor2.get(1).intValue();
+                rightVal.setText("$"+NumberFormat.getNumberInstance(Locale.US).format(income));
             }
             else{
                 rightVal.setVisibility(View.GONE);
@@ -374,15 +404,17 @@ public class SummaryAdapter extends BaseAdapter {
         }
         //income tax range taxes_i[1]-taxes_i[2] if 1 != 2
         else if(position == 2){
-            ad.setVisibility(View.GONE);
             catTitle.setText("INCOME TAX RANGE");
-            List<Double> taxes1 = _colResponse.getTaxes1();
-            List<Double> taxes2 = _colResponse.getTaxes2();
+            List<Double> taxes1 = elements.get(0).getTaxes();
+            List<Double> taxes2 = null;
+            if(hasSecondCity){
+                taxes2 = elements.get(1).getTaxes();
+            }
             Double tax1 = taxes1.get(1);
             Double tax2 = taxes1.get(2);
             String value = taxValues(tax1,tax2);
             leftVal.setText(value);
-            if(taxes2.size() > 0){
+            if(hasSecondCity){
                 tax1 = taxes2.get(1);
                 tax2 = taxes2.get(2);
                 value = taxValues(tax1, tax2);
@@ -393,58 +425,60 @@ public class SummaryAdapter extends BaseAdapter {
             }
         }
         //avg temp range weatherlow_i[0]-weather_i[length]
-        else if(position == 3){
-            ad.setVisibility(View.GONE);
+        else{//if(position == 3)
             catTitle.setText("AVERAGE TEMPERATURES");
-            List<Double> weatherLow1 = _colResponse.getWeatherlow1();
-            List<Double> weather1 = _colResponse.getWeather1();
-            List<Double> weatherLow2 = _colResponse.getWeatherlow2();
-            List<Double> weather2 = _colResponse.getWeather2();
+            List<Double> weatherLow1 = elements.get(0).getWeatherlow();
+            List<Double> weather1 = elements.get(0).getWeather();
+            List<Double> weatherLow2 = null;
+            List<Double> weather2 = null;
+            if(hasSecondCity){
+                weatherLow2 = elements.get(1).getWeatherlow();
+                weather2 = elements.get(1).getWeather();
+            }
 
-            String value = weatherLow1.get(0)+"°- "+weather1.get(13)+"°";
+            String value = weatherLow1.get(0).intValue()+"°- "+weather1.get(13).intValue()+"°";
             leftVal.setText(value);
-            if(weather2.size() > 0){
-                value = weatherLow2.get(0)+"°- "+weather2.get(13)+"°";
+            if(hasSecondCity){
+                value = weatherLow2.get(0).intValue()+"°- "+weather2.get(13).intValue()+"°";
                 rightVal.setText(value);
             }
             else{
                 rightVal.setVisibility(View.GONE);
             }
         }
-        else if(position == 4){
-            //show ad hide other views
-            catTitle.setText("SPONSORS");
-            AdRequest adRequest = new AdRequest.Builder().build();
-            if(CentsApplication.isDebug())
-                 adRequest = new AdRequest.Builder().addTestDevice("84B46C4862CAF80187170C1A7901502C").build();
-            ad.loadAd(adRequest);
-            rightVal.setVisibility(View.GONE);
-            leftVal.setVisibility(View.GONE);
-        }
-
-
     }
 
+    /**
+     * converts col values to proper string format for display
+     * @param overall
+     * @return
+     */
     private String costString(Double overall){
         String avgCost = "";
         if(overall > 0){
-            avgCost = Math.abs(overall)+"% ABOVE NATIONAL AVERAGE";
+            avgCost = (int)Math.abs(overall)+"% ABOVE NATIONAL AVERAGE";
 
         }
         else{
-            avgCost = Math.abs(overall)+"% BELOW NATIONAL AVERAGE";
+            avgCost = (int)Math.abs(overall)+"% BELOW NATIONAL AVERAGE";
         }
 
         return avgCost;
     }
 
+    /**
+     * converts tax values to proper string format for display
+     * @param tax1
+     * @param tax2
+     * @return
+     */
     private String taxValues(Double tax1, Double tax2){
         String value = "";
         if(tax1.equals(tax2)){
             value = tax1+"%";
         }
         else{
-            value = tax1+"%-"+tax2+"%";
+            value = _formatter.format(tax1)+"%-"+_formatter.format(tax2)+"%";
         }
 
         return value;
@@ -453,26 +487,37 @@ public class SummaryAdapter extends BaseAdapter {
     }
 
 
-
+    /**
+     * Sets major sum views to match model
+     * @param position
+     * @param leftVal
+     * @param rightVal
+     * @param catTitle
+     */
     private void createMajorSumView(int position, TextView leftVal, TextView rightVal, TextView catTitle){
-        List<Float> vals1 = _mResponse.getMajor1();
-        List<Float> vals2 = _mResponse.getMajor2();
-        if(vals2.size() == 0){
-            vals2 = null;
+        List<MajorResponse.Element> elements = _mResponse.getElements();
+        List<Float> vals1 = elements.get(0).getDegree();
+        List<Float> vals2 = null;
+        if(elements.size() > 1){
+            vals2 = elements.get(1).getDegree();
+        }
+
+        if(vals2 == null){
+            rightVal.setVisibility(View.GONE);
         }
 
         //major sum consists of avg sal, major rec, maj sat, cents major rating
         if(position == 0){
             catTitle.setText("AVERAGE SALARY");
             if(vals1.get(position) != null){
-                leftVal.setText("$"+vals1.get(position).intValue());
+                leftVal.setText("$"+NumberFormat.getNumberInstance(Locale.US).format(vals1.get(position).intValue()));
             }
             else{
                 leftVal.setText("Unknown");
             }
             if(vals2 != null){
                 if(vals2.get(position) != null)
-                    rightVal.setText("$"+vals2.get(position).intValue());
+                    rightVal.setText("$"+NumberFormat.getNumberInstance(Locale.US).format(vals2.get(position).intValue()));
                 else
                     rightVal.setText("Unknown");
 
@@ -511,23 +556,20 @@ public class SummaryAdapter extends BaseAdapter {
         else if(position == 3){
             catTitle.setText("CENTS MAJOR RATING");
             if(vals1.get(position) != null){
-                leftVal.setText(vals1.get(position)+" OUT OF 5.0");
+                leftVal.setText(_formatter.format(vals1.get(position))+" OUT OF 5.0");
             }
             else{
                 leftVal.setText("Unknown");
             }
             if(vals2 != null){
                 if(vals2.get(position) != null)
-                    rightVal.setText(vals2.get(position)+ " OUT OF 5.0");
+                    rightVal.setText(_formatter.format(vals2.get(position))+ " OUT OF 5.0");
                 else
                     rightVal.setText("Unknown");
 
             }
         }
 
-        if(vals2 == null){
-            rightVal.setVisibility(View.GONE);
-            leftVal.setGravity(Gravity.CENTER_HORIZONTAL);
-        }
+
     }
 }

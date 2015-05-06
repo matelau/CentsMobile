@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
@@ -18,7 +17,6 @@ import com.matelau.junior.centsproject.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import lecho.lib.hellocharts.listener.ComboLineColumnChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
@@ -36,27 +34,11 @@ import lecho.lib.hellocharts.view.ComboLineColumnChartView;
 public class LaborStatsFragment extends Fragment {
     private String LOG_TAG = LaborStatsFragment.class.getSimpleName();
     private ComboLineColumnChartView chart;
-    private ComboLineColumnChartData data;
 
-    private int numberOfLines = 1;
-    private int maxNumberOfLines = 4;
-    private int numberOfPoints = 2;
-
-    private boolean hasAxes = true;
-    private boolean hasAxesNames = false;
-    private boolean hasPoints = true;
-    private boolean hasLines = true;
-    private boolean isCubic = false;
-    private boolean hasLabels = false;
     private ColiResponse _cResponse;
     private  Double _avgUnemployment;
     private Double _avgEGrowth;
     private final String[] _labels = {"Unemployment Rate", "Economic Growth"};
-
-    private static String _location;
-    private static String _location2;
-    private ImageButton _search;
-    private View _rootView;
 
     public LaborStatsFragment() {
         // Required empty public constructor
@@ -68,18 +50,22 @@ public class LaborStatsFragment extends Fragment {
                              Bundle savedInstanceState) {
         //Get Data
         _cResponse = CentsApplication.get_colResponse();
+        List<ColiResponse.Element> elements = _cResponse.getElements();
         // set avgs
         _avgUnemployment = _cResponse.getLabor3().get(0);
         _avgEGrowth = _cResponse.getLabor3().get(2);
 
-        Log.d(LOG_TAG, "Create View unemployment: "+_avgUnemployment+ " Economic Growth: "+ _avgEGrowth);
+        Log.d(LOG_TAG, "Create View unemployment: " + _avgUnemployment + " Economic Growth: " + _avgEGrowth);
         setHasOptionsMenu(false);
 
-        _rootView = inflater.inflate(R.layout.fragment_labor_stats, container, false);
-        _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
+        View _rootView = inflater.inflate(R.layout.fragment_labor_stats, container, false);
+        ImageButton _search = (ImageButton) _rootView.findViewById(R.id.imageSearchButton);
         //update locations
-        _location = _cResponse.getLocation1();
-        _location2 = _cResponse.getLocation2();
+        String _location = elements.get(0).getName();
+        String _location2 = null;
+        if(elements.size() > 1){
+            _location2 = elements.get(1).getName();
+        }
         TextView loc1 = (TextView) _rootView.findViewById(R.id.col_location1);
         TextView loc2 = (TextView) _rootView.findViewById(R.id.col_location2);
         loc1.setText(_location);
@@ -103,13 +89,16 @@ public class LaborStatsFragment extends Fragment {
         });
 
         chart = (ComboLineColumnChartView) _rootView.findViewById(R.id.chart);
-        chart.setOnValueTouchListener(new ValueTouchListener());
 
         generateData();
 
         return _rootView;
     }
 
+
+    /**
+     * Shows selection dialog
+     */
     private void showCitySelectionDialog(){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         CitySelectionDialogFragment csd = new CitySelectionDialogFragment();
@@ -117,20 +106,20 @@ public class LaborStatsFragment extends Fragment {
         csd.show(fm, "tag");
     }
 
+    /**
+     * generates data to be displayed in vis
+     */
     private void generateData() {
         // Chart looks the best when line data and column data have similar maximum viewports.
-        data = new ComboLineColumnChartData(generateColumnData(), generateLineData());
+        ComboLineColumnChartData data = new ComboLineColumnChartData(generateColumnData(), generateLineData());
         List<AxisValue> axisValues = new ArrayList<AxisValue>();
         //add labels to axis
         axisValues.add(new AxisValue(0, _labels[0].toCharArray() ));
         axisValues.add(new AxisValue(1, _labels[1].toCharArray() ));
+        boolean hasAxes = true;
         if (hasAxes) {
             Axis axisX = new Axis(axisValues);
             Axis axisY = new Axis().setHasLines(true);
-            if (hasAxesNames) {
-//                axisX.setName("Percent");
-//                axisY.setName("Percent");
-            }
             data.setAxisXBottom(axisX);
             data.setAxisYLeft(axisY);
         } else {
@@ -140,11 +129,18 @@ public class LaborStatsFragment extends Fragment {
         chart.setComboLineColumnChartData(data);
     }
 
+
+    /**
+     * generates avg data for vis
+     * @return
+     */
     private LineChartData generateLineData() {
 
         List<Line> lines = new ArrayList<Line>();
+        int numberOfLines = 1;
         for (int i = 0; i < numberOfLines; ++i) {
             List<PointValue> values = new ArrayList<PointValue>();
+            int numberOfPoints = 2;
             for (int j = 0; j < numberOfPoints; ++j) {
                 PointValue pt = new PointValue();
                 if(j == 0){
@@ -160,9 +156,12 @@ public class LaborStatsFragment extends Fragment {
 
             Line line = new Line(values);
             line.setColor(getResources().getColor(R.color.black));
+            boolean isCubic = false;
             line.setCubic(isCubic);
             line.setHasLabels(true);
+            boolean hasLines = true;
             line.setHasLines(hasLines);
+            boolean hasPoints = true;
             line.setHasPoints(hasPoints);
             lines.add(line);
         }
@@ -175,8 +174,11 @@ public class LaborStatsFragment extends Fragment {
 
     private ColumnChartData generateColumnData() {
         int numSubcolumns = 1;
-        if(_cResponse.getLabor2().size() > 0){
+        List<ColiResponse.Element> elements = _cResponse.getElements();
+        boolean hasSecondCity = false;
+        if(elements.size() > 1){
             numSubcolumns = 2;
+            hasSecondCity = true;
         }
         int numColumns = 2;
         // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
@@ -190,8 +192,8 @@ public class LaborStatsFragment extends Fragment {
                 String label = "";
                 if(i == 0 && j == 0){
                     sc.setColor(getResources().getColor(R.color.compliment_primary));
-                    if(_cResponse.getLabor1().get(0) != null){
-                        float val = _cResponse.getLabor1().get(0).floatValue();
+                    if(elements.get(0).getLabor().get(0) != null){
+                        float val = elements.get(0).getLabor().get(0).floatValue();
                         if(val == 0.0f){
                             val = 0.1f;
                             label = "0%";
@@ -209,8 +211,8 @@ public class LaborStatsFragment extends Fragment {
                 }
                 else if (numSubcolumns == 2 && i == 0  && j == 1){
                     sc.setColor( getResources().getColor(R.color.gray));
-                    if(_cResponse.getLabor2().get(0) != null){
-                        float val = _cResponse.getLabor2().get(0).floatValue();
+                    if(elements.get(1).getLabor().get(0) != null){
+                        float val = elements.get(1).getLabor().get(0).floatValue();
                         if(val == 0.0f){
                             val = 0.1f;
                             label = "0%";
@@ -229,8 +231,8 @@ public class LaborStatsFragment extends Fragment {
                 //i = 1 economic growth
                 if(i == 1 && j == 0){
                     sc.setColor(getResources().getColor(R.color.compliment_primary));
-                    if(_cResponse.getLabor1().get(2) != null){
-                        float val = _cResponse.getLabor1().get(2).floatValue();
+                    if(elements.get(0).getLabor().get(2) != null){
+                        float val = elements.get(0).getLabor().get(2).floatValue();
                         if(val == 0.0f){
                             val = 0.1f;
                             label = "0%";
@@ -247,8 +249,8 @@ public class LaborStatsFragment extends Fragment {
                 }
                 else if (numSubcolumns == 2 && i == 1  && j == 1){
                     sc.setColor( getResources().getColor(R.color.gray));
-                    if(_cResponse.getLabor2().get(2) != null){
-                        float val =_cResponse.getLabor2().get(2).floatValue();
+                    if(elements.get(1).getLabor().get(2) != null){
+                        float val =elements.get(1).getLabor().get(2).floatValue();
                         if(val == 0.0f){
                             val = 0.1f;
                             label = "0%";
@@ -279,35 +281,16 @@ public class LaborStatsFragment extends Fragment {
         return columnChartData;
     }
 
-    private void addLineToData() {
-        if (data.getLineChartData().getLines().size() >= maxNumberOfLines) {
-            Toast.makeText(getActivity(), "Samples app uses max 4 lines!", Toast.LENGTH_SHORT).show();
-            return;
-        } else {
-            ++numberOfLines;
-        }
-
-        generateData();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
     }
 
-    private class ValueTouchListener implements ComboLineColumnChartOnValueSelectListener {
-
-        @Override
-        public void onValueDeselected() {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public void onColumnValueSelected(int columnIndex, int subcolumnIndex, SubcolumnValue value) {
-//            Toast.makeText(getActivity(), "Selected column: " + value, Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onPointValueSelected(int lineIndex, int pointIndex, PointValue value) {
-//            Toast.makeText(getActivity(), "Selected line point: " + value, Toast.LENGTH_SHORT).show();
-        }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
     }
 
 

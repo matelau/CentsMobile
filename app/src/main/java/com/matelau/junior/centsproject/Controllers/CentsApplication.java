@@ -7,8 +7,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.matelau.junior.centsproject.Models.Design.Col;
-import com.matelau.junior.centsproject.Models.Design.JobInfo;
+import com.matelau.junior.centsproject.Models.VizModels.CareerResponse;
 import com.matelau.junior.centsproject.Models.VizModels.ColiResponse;
 import com.matelau.junior.centsproject.Models.VizModels.Major;
 import com.matelau.junior.centsproject.Models.VizModels.MajorResponse;
@@ -34,8 +33,10 @@ import retrofit.RestAdapter;
  * Maintains Central state of the application
  */
 public class CentsApplication extends Application{
+
+    //debug true = show toast, set login credentials
+    private static boolean debug = false;
     private static String LOG_TAG = CentsApplication.class.getSimpleName();
-    private static Context _centsContext;
     //Api Services
     private static RestAdapter _gdRestAdapter = new RestAdapter.Builder().setEndpoint("https://api.glassdoor.com/").build();
     private static RestAdapter _indeedRestAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("http://api.indeed.com").build();
@@ -61,16 +62,11 @@ public class CentsApplication extends Application{
     private static String _password;
 
     //Lists
-    private static List<JobInfo> _jobSearchResultList;
     private static String[] _states;
     private static String[] _cities;
-    private static List<Col> _cols;
-
-    //debug true = show toast, set login credentials
-    private static boolean debug = false;
 
     //Spending Breakdown Vis
-    private static String _occupationSalary = "45000";
+    private static String _occupationSalary = null;
     private static Float _disposableIncome;
     private static List<String> _sbLabels;
     private static List<Float> _sbPercents;
@@ -80,23 +76,32 @@ public class CentsApplication extends Application{
     private static SpendingBreakdownModDialogFragment.SBArrayAdapter _rAdapter;
     private static String _currentBreakdown = "default";
     private static boolean _sbToast = false;
+    private static boolean _incomeFromQP = false;
 
     //Cost of Living Vis
     private static ColiResponse _colResponse;
+    private static String[] _allCities;
 
     //School Comp vars
     //response from api
     private static SchoolResponse _sApiResponse;
     private static String _university1;
     private static String _university2;
+    //the position of the universities state in the state array
+    private static int pos1 = -1;
+    private static int pos2 = -1;
+    private static String[] _unis;
 
     //Major Comp Vars
     private static MajorResponse _mResponse;
     private static Major _major1;
     private static Major _major2;
+    private static String[] _majors;
 
-    public static Context getAppContext() {return _centsContext;}
-
+    //Career comp vars
+    private static CareerResponse _cResponse;
+    private static String[] _careers;
+    
     public static RestAdapter get_gdRestAdapter() {return _gdRestAdapter;}
 
     public static RestAdapter get_indeedRestAdapter() {
@@ -105,14 +110,6 @@ public class CentsApplication extends Application{
 
     public static void set_indeedRestAdapter(RestAdapter _indeedRestAdapter) {
         CentsApplication._indeedRestAdapter = _indeedRestAdapter;
-    }
-
-    public static List<JobInfo> get_jobSearchResultList() {
-        return _jobSearchResultList;
-    }
-
-    public static void set_jobSearchResultList(List<JobInfo> _jobSearchResultList) {
-        CentsApplication._jobSearchResultList = _jobSearchResultList;
     }
 
     public static String get_searchedCity() {
@@ -183,6 +180,14 @@ public class CentsApplication extends Application{
         return _cities;
     }
 
+    public static String[] get_allCities() {
+        return _allCities;
+    }
+
+    public static void set_allCities(String[] _allCities) {
+        CentsApplication._allCities = _allCities;
+    }
+
     public static void set_cities(String[] _cities) {
         CentsApplication._cities = _cities;
     }
@@ -202,15 +207,6 @@ public class CentsApplication extends Application{
     public static void set_searchState2(String _searchState2) {
         CentsApplication._searchState2 = _searchState2;
     }
-
-    public static List<Col> get_cols() {
-        return _cols;
-    }
-
-    public static void set_cols(List<Col> _cols) {
-        CentsApplication._cols = _cols;
-    }
-
 
     public static RestAdapter get_queryParsingRestAdapter() {
         return _queryParsingRestAdapter;
@@ -321,7 +317,13 @@ public class CentsApplication extends Application{
         CentsApplication._sbToast = _sbToast;
     }
 
+    public static boolean is_incomeFromQP() {
+        return _incomeFromQP;
+    }
 
+    public static void set_incomeFromQP(boolean _incomeFromQP) {
+        CentsApplication._incomeFromQP = _incomeFromQP;
+    }
 
     public static ColiResponse get_colResponse() {
         return _colResponse;
@@ -355,6 +357,14 @@ public class CentsApplication extends Application{
         CentsApplication._university2 = _university2;
     }
 
+    public static String[] get_unis() {
+        return _unis;
+    }
+
+    public static void set_unis(String[] _unis) {
+        CentsApplication._unis = _unis;
+    }
+
     public static MajorResponse get_mResponse() {
         return _mResponse;
     }
@@ -377,6 +387,46 @@ public class CentsApplication extends Application{
 
     public static void set_major2(Major _major2) {
         CentsApplication._major2 = _major2;
+    }
+
+    public static int getPos2() {
+        return pos2;
+    }
+
+    public static void setPos2(int pos2) {
+        CentsApplication.pos2 = pos2;
+    }
+
+    public static int getPos1() {
+        return pos1;
+    }
+
+    public static void setPos1(int pos1) {
+        CentsApplication.pos1 = pos1;
+    }
+
+    public static String[] get_majors() {
+        return _majors;
+    }
+
+    public static void set_majors(String[] _majors) {
+        CentsApplication._majors = _majors;
+    }
+
+    public static String[] get_careers(){
+        return _careers;
+    }
+
+    public static void set_careers(String[] _careers) {
+        CentsApplication._careers = _careers;
+    }
+
+    public static CareerResponse get_cResponse() {
+        return _cResponse;
+    }
+
+    public static void set_cResponse(CareerResponse _cResponse) {
+        CentsApplication._cResponse = _cResponse;
     }
 
     /************************** Static Helper Methods ***********************************************************/
@@ -504,61 +554,5 @@ public class CentsApplication extends Application{
         return true;
     }
 
-//    private static OkHttpClient getTrustingClient(){
-//        SelfSignedSSLSocketFactory sf;
-//        OkHttpClient client = new OkHttpClient();
-//        try {
-//            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-//            trustStore.load(null, null);
-//            sf = new SelfSignedSSLSocketFactory(trustStore);
-//            sf.setHostnameVerifier(SelfSignedSSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-//            client.setSslSocketFactory(sf);
-////            client.setSSLSocketFactory(sf);
-//        }
-//        catch (Exception e) {
-//        }
-//
-//        return client;
-//    }
-    //    private static OkHttpClient getUnsafeOkHttpClient() {
-//        try {
-//            // Create a trust manager that does not validate certificate chains
-//            final TrustManager[] trustAllCerts = new TrustManager[] {
-//                    new X509TrustManager() {
-//                        @Override
-//                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-//                        }
-//
-//                        @Override
-//                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-//                        }
-//
-//                        @Override
-//                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-//                            return null;
-//                        }
-//                    }
-//            };
-//
-//            // Install the all-trusting trust manager
-//            final SSLContext sslContext = SSLContext.getInstance("SSL");
-//            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-//            // Create an ssl socket factory with our all-trusting manager
-//            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-//
-//            OkHttpClient okHttpClient = new OkHttpClient();
-//            okHttpClient.setSslSocketFactory(sslSocketFactory);
-//            okHttpClient.setHostnameVerifier(new HostnameVerifier() {
-//                @Override
-//                public boolean verify(String hostname, SSLSession session) {
-//                    return true;
-//                }
-//            });
-//
-//            return okHttpClient;
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 
 }

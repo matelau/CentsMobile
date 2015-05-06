@@ -5,13 +5,13 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -29,25 +29,23 @@ import android.widget.Toast;
 
 import com.matelau.junior.centsproject.Controllers.CentsApplication;
 import com.matelau.junior.centsproject.Controllers.VisualizationPagerFragment;
+import com.matelau.junior.centsproject.Models.CentsAPIServices.UserService;
 import com.matelau.junior.centsproject.Models.VizModels.SpendingBreakdownCategory;
 import com.matelau.junior.centsproject.R;
 
+import java.util.HashMap;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class SpendingBreakdownModDialogFragment extends DialogFragment {
     private String LOG_TAG = SpendingBreakdownModDialogFragment.class.getSimpleName();
-    private RelativeLayout _rootLayout;
-    private RelativeLayout _circle;
     private ImageButton _spending_plus;
-    private ImageButton _lock;
-    private ListView _sbAttributes;
-    private LinearLayoutManager _sbLayoutManager;
-    private SBArrayAdapter _rAdapter;
-    private List<String> _sbAttr;
-    private List<Float> _sbAttrVals;
     private int _sizeBeforeMod;
 
 
@@ -61,8 +59,8 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
         Log.d(LOG_TAG, "OnCreateDialog");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
-        _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_spending_breakdown_mod_dialog, null, false);
-        _circle = (RelativeLayout) _rootLayout.findViewById(R.id.plus_spending_category);
+        RelativeLayout _rootLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_spending_breakdown_mod_dialog, null, false);
+        RelativeLayout _circle = (RelativeLayout) _rootLayout.findViewById(R.id.plus_spending_category);
         _spending_plus = (ImageButton) _circle.findViewById(R.id.circle_btn);
 
         //add more cats
@@ -81,13 +79,13 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
 
         //******  setup Attribute List ********************
         //get Attr
-        _sbAttr = CentsApplication.get_sbLabels();
-        _sbAttrVals = CentsApplication.get_sbPercents();
+        List<String> _sbAttr = CentsApplication.get_sbLabels();
+        List<Float> _sbAttrVals = CentsApplication.get_sbPercents();
         _sizeBeforeMod = CentsApplication.get_sbValues().size();
 
         //setup dynamic listview
-        _sbAttributes = (ListView) _rootLayout.findViewById(R.id.sb_attr_list);
-        _rAdapter = new SBArrayAdapter();
+        ListView _sbAttributes = (ListView) _rootLayout.findViewById(R.id.sb_attr_list);
+        final SBArrayAdapter _rAdapter = new SBArrayAdapter();
         CentsApplication.set_rAdapter(_rAdapter);
         _sbAttributes.setAdapter(_rAdapter);
 
@@ -96,6 +94,8 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                //save all changes via api on submit if logged in
+                _rAdapter.save(true);
                 //reload viz
                 CentsApplication.set_selectedVis("Spending Breakdown");
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -122,20 +122,37 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
         return builder.create();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Destroyed");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "Resumed");
+    }
 
 
-
+    /**
+     * Adapter to handle the modification of spending breakdown elements
+     */
     public class SBArrayAdapter extends BaseAdapter{
         List<SpendingBreakdownCategory> _values;
 
         public SBArrayAdapter(){
             _values = CentsApplication.get_sbValues();
-
         }
 
-
+        /**
+         * updates Application context with new List
+         */
         public void add(){
+            _values = CentsApplication.get_sbValues();
             notifyDataSetChanged();
+
+
 
         }
 
@@ -182,9 +199,7 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
             //add listeners
             et.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -196,13 +211,11 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
                     }
 
                     _values.get(position)._percent = percent;
-                    save();
+                    save(false);
                 }
 
                 @Override
-                public void afterTextChanged(Editable s) {
-
-                }
+                public void afterTextChanged(Editable s) {}
             });
 
             lock.setOnClickListener(new View.OnClickListener() {
@@ -219,7 +232,7 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
                         lock.setBackground(getResources().getDrawable(R.drawable.lock_color_small));
                     }
                     //save change
-                    save();
+                    save(false);
 
                     notifyDataSetChanged();
                 }
@@ -236,7 +249,7 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
                         _values.remove(position);
                     }
                     //save change
-                    save();
+                    save(true);
                     notifyDataSetChanged();
 
                 }
@@ -246,10 +259,66 @@ public class SpendingBreakdownModDialogFragment extends DialogFragment {
         }
 
 
-
-        public void save(){
+        /**
+         * Stores values to local storage and db if logged in
+         */
+        public void save(boolean saveAPI){
             String filename = CentsApplication.get_currentBreakdown()+".dat";
-            CentsApplication.saveSB(filename,getActivity());
+            CentsApplication.saveSB(filename, getActivity());
+            if(CentsApplication.is_loggedIN() && saveAPI){
+                updateCompleted("Create Custom Spending");
+                //store sb to db via api
+                HashMap<String, String> elements = new HashMap<String,String>();
+                for(SpendingBreakdownCategory current : _values){
+                    //dont store taxes it will be calculated
+                    if(!current._category.equals("TAXES")){
+                        float percent = current._percent * 100f;
+                        elements.put(current._category, ""+percent);
+                    }
+                }
+                SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+                int _id = settings.getInt("ID", 0);
+
+                HashMap<String, HashMap<String, String>> fields = new HashMap<String, HashMap<String,String>>();
+                fields.put("fields", elements);
+                UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+                service.initSpendingFields(_id, CentsApplication.get_currentBreakdown(), fields, new Callback<Response>() {
+                    @Override
+                    public void success(Response response, Response response2) {
+                        Log.d(LOG_TAG, "updated spending records for: " + CentsApplication.get_currentBreakdown());
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e(LOG_TAG, error.getMessage());
+                    }
+                });
+
+            }
+
+        }
+
+        /**
+         * update the users completed section
+         */
+        private void updateCompleted(String completed){
+            SharedPreferences settings = getActivity().getSharedPreferences("com.matelau.junior.centsproject", Context.MODE_PRIVATE);
+            int id = settings.getInt("ID", 0);
+            UserService service = CentsApplication.get_centsRestAdapter().create(UserService.class);
+            HashMap<String,String> completedTask = new HashMap<String, String>();
+            completedTask.put("section", completed);
+            service.updateCompletedData(id, completedTask, new Callback<Response>() {
+                @Override
+                public void success(Response response, Response response2) {
+
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(LOG_TAG, error.getMessage());
+
+                }
+            });
         }
 
 
